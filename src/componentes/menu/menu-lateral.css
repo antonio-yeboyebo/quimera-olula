@@ -11,14 +11,15 @@ menu-lateral {
     aside {
         background-color: var(--color-deshabilitado);
         height: 100%;
-        padding: 1rem;
+        padding: 0 1rem;
 
         #buscador {
             display: flex;
             gap: 0.25rem;
+            align-items: center;
 
             quimera-icono {
-                padding-top: 12px;
+                padding-top: 10px;
             }
         }
     }

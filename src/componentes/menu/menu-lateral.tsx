@@ -7,7 +7,8 @@ import {
   ElementoMenuPadre,
   elementosDelMenu,
 } from "../../contextos/comun/menu";
-import { Icono } from "../wrappers/icono.tsx";
+import { QIcono } from "../atomos/qicono.tsx";
+import { QInput } from "../atomos/qinput.tsx";
 
 export const MenuLateral = () => {
   const [busqueda, setBusqueda] = useState("");
@@ -15,12 +16,13 @@ export const MenuLateral = () => {
   const renderBuscador = () => {
     return (
       <div id="buscador">
-        <Icono nombre="search-alt-2" />
-        <quimera-input
+        <QIcono nombre="buscar" tamaño="sm" />
+        <QInput
           nombre="buscador"
           label=""
           condensado
           placeholder="Buscar..."
+          valor={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
       </div>
@@ -28,7 +30,9 @@ export const MenuLateral = () => {
   };
 
   const renderizaElemento = (elemento: ElementoMenu, filtro: string) => {
-    const icono = elemento.icono ? <Icono nombre={elemento.icono} /> : null;
+    const icono = elemento.icono ? (
+      <QIcono nombre={elemento.icono} tamaño="sm" />
+    ) : null;
     const cumpleFiltro = elemento.nombre.toLowerCase().includes(filtro);
 
     if ("url" in elemento && elemento.url) {

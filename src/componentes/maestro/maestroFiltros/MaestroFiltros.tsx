@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
 import { Entidad, Filtro } from "../../../contextos/comun/diseño.ts";
+import { QBoton } from "../../atomos/qboton.tsx";
 import {
   CampoFormularioGenerico,
   OpcionCampo,
@@ -27,7 +28,7 @@ const selectorCampo = (campos: OpcionCampo[]) => {
 const inputFiltro = () => {
   const attrsValor: CampoFormularioGenerico = {
     nombre: "valor",
-    etiqueta: "&nbsp;",
+    etiqueta: "",
     placeholder: "Valor a filtrar",
     tipo: "text",
     requerido: true,
@@ -85,12 +86,12 @@ export const MaestroFiltros = ({
       <form onSubmit={onBuscar} onReset={resetearFiltro}>
         {selectorCampo(camposFormateados)}
         {inputFiltro()}
-        <quimera-boton tipo="submit" tamaño="pequeño">
+        <QBoton tipo="submit" tamaño="pequeño">
           Buscar
-        </quimera-boton>
-        <quimera-boton tipo="reset" variante="texto" tamaño="pequeño">
+        </QBoton>
+        <QBoton tipo="reset" variante="texto" tamaño="pequeño">
           Limpiar
-        </quimera-boton>
+        </QBoton>
       </form>
       <etiquetas-filtro>{filtrosActuales}</etiquetas-filtro>
     </div>

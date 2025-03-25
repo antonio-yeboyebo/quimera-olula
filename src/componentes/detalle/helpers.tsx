@@ -1,6 +1,6 @@
-import React from "react";
 import { Entidad } from "../../contextos/comun/diseño.ts";
-import { Select } from "../wrappers/select.tsx";
+import { QInput } from "../atomos/qinput.tsx";
+import { QSelect } from "../atomos/qselect.tsx";
 import { CampoFormularioGenerico } from "./FormularioGenerico.tsx";
 
 export const renderSelect = (
@@ -23,7 +23,7 @@ export const renderSelect = (
     "todo-ancho": campo.ancho === "100%" ? "true" : undefined,
   };
 
-  return <Select key={campo.nombre} {...attrs} />;
+  return <QSelect key={campo.nombre} {...attrs} />;
 };
 
 export const renderInput = (
@@ -42,11 +42,8 @@ export const renderInput = (
     deshabilitado: campo.soloLectura,
     "todo-ancho": campo.ancho === "100%" ? "true" : undefined,
   };
-  return (
-    <React.Fragment key={campo.nombre}>
-      <quimera-input {...attrs}></quimera-input>
-    </React.Fragment>
-  );
+
+  return <QInput key={campo.nombre} {...attrs} />;
 };
 
 export const renderSpace = () => {

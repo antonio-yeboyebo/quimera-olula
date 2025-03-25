@@ -13,10 +13,10 @@ export interface ElementoMenuHijo {
 export type ElementoMenu = ElementoMenuPadre | ElementoMenuHijo;
 
 export const elementosDelMenu: ElementoMenu[] = [
-  { nombre: "Inicio", url: "/", icono: "home" },
+  { nombre: "Inicio", url: "/", icono: "inicio" },
   {
     nombre: "Ventas",
-    icono: "file",
+    icono: "fichero",
     subelementos: [
       {
         nombre: "Clientes",
@@ -31,7 +31,7 @@ export const elementosDelMenu: ElementoMenu[] = [
     ],
   },
   {
-    nombre: "Financiera", icono: "bar-chart-alt-2", subelementos: [{
+    nombre: "Financiera", icono: "grafico_barras", subelementos: [{
       nombre: "Cuentas",
       url: "/financiera/cuenta",
       icono: "",
