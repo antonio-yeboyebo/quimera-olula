@@ -42,3 +42,5 @@ export type NuevaDireccion = {
 
 
 export type GetCliente = (id: string) => Promise<Cliente>;
+
+export type GetDirecciones = (clienteId: string) => Promise<DirCliente[]>;

@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import { InputNumerico } from "../../../../componentes/detalle/FormularioGenerico.tsx";
+import { emitir } from "../../../../componentes/eventos/pubsub.ts";
 import { Tabla } from "../../../../componentes/wrappers/tabla2.tsx";
-import { Entidad } from "../../../comun/diseño.ts";
-import { refrescarSeleccionada } from "../../../comun/dominio.ts";
-import { LineaPresupuesto as Linea } from "../diseño.ts";
-import { camposLinea, deleteLinea, getLineas, patchCantidadLinea } from "../infraestructura.ts";
+import { LineaPresupuesto as Linea, LineaPresupuesto } from "../diseño.ts";
+import { eventoCantidadLineaCambiada, eventoLineaBorrada } from "../dominio.ts";
+import { camposLinea, deleteLinea, patchCantidadLinea } from "../infraestructura.ts";
 
 const EditarCantidad = ({
     linea,
@@ -36,72 +35,73 @@ const getMetaTablaLineas = (cambiarCantidad: (linea: Linea, cantidad: number) =>
 
 
 export const LineasLista = ({
+    cargando,
+    // onLineaBorrada,
+    // onLineaCambiada,
+    // setLineas,
     presupuestoId,
-    onEditarLinea,
-    onCrearLinea,
-    onLineaBorrada,
-    onLineaCambiada,
+    onEditarLineaClicked,
+    onCrearLineaClicked,
     lineas,
-    setLineas,
     seleccionada,
     setSeleccionada,
   }: {
+    cargando: boolean;
+    // onLineaBorrada: () => void;
+    // onLineaCambiada: (linea: Linea) => void;
+    // setLineas: (lineas: Linea[]) => void;
     presupuestoId: string;
-    onEditarLinea: (linea: Linea) => void;
-    onCrearLinea: () => void;
-    onLineaBorrada: () => void;
-    onLineaCambiada: (linea: Linea) => void;
+    onEditarLineaClicked: (linea: Linea) => void;
+    onCrearLineaClicked: () => void;
     lineas: Linea[];
-    setLineas: (lineas: Linea[]) => void;
     seleccionada: Linea | null;
     setSeleccionada: (linea: Linea | null) => void;
   }) => {
 
-    const [cargando, setCargando] = useState(true);
+    // const [cargando, setCargando] = useState(true);
 
-    const borrarLinea = async() => {
-        if (!seleccionada) {
-            return;
-        }
-        setLineas(quitarElemento(lineas, seleccionada));
-        await deleteLinea(presupuestoId, seleccionada.id);
-        onLineaBorrada();
+    const borrarLinea = async(linea: LineaPresupuesto) => {
+        // setLineas(quitarElemento(lineas, linea));
+        await deleteLinea(presupuestoId, linea.id);
+        emitir(eventoLineaBorrada(linea));
+        // onLineaBorrada();
     }
 
     const cambiarCantidad = async(linea: Linea, cantidad: number) => {
         await patchCantidadLinea(presupuestoId, linea.id, cantidad);
-        onLineaCambiada(linea);
+        // onLineaCambiada(linea);
+        emitir(eventoCantidadLineaCambiada(linea, cantidad));
     }
 
-    const quitarElemento = <T extends Entidad>(lista: T[], elemento: T): T[] => {
-        return lista.filter((e) => e.id !== elemento.id);
-    }
+    // const quitarElemento = <T extends Entidad>(lista: T[], elemento: T): T[] => {
+    //     return lista.filter((e) => e.id !== elemento.id);
+    // }
 
-    const cargar = useCallback(async() => {
-        setCargando(true);
-        const lineas = await getLineas(presupuestoId);
-        setLineas(lineas);
-        refrescarSeleccionada(lineas, seleccionada?.id, setSeleccionada);
-        setCargando(false);
-    }, [presupuestoId, setLineas, seleccionada?.id, setSeleccionada]);
+    // const cargar = useCallback(async() => {
+    //     setCargando(true);
+    //     const lineas = await getLineas(presupuestoId);
+    //     setLineas(lineas);
+    //     refrescarSeleccionada(lineas, seleccionada?.id, setSeleccionada);
+    //     setCargando(false);
+    // }, [presupuestoId, setLineas, seleccionada?.id, setSeleccionada]);
 
-    useEffect(() => {
-        if (presupuestoId) cargar();
-    }, [presupuestoId, cargar]);
+    // useEffect(() => {
+    //     if (presupuestoId) cargar();
+    // }, [presupuestoId, cargar]);
     
     return (<>
             <button
-                onClick={onCrearLinea}
+                onClick={onCrearLineaClicked}
             > Nueva
             </button>
             <button
-                onClick={() => seleccionada && onEditarLinea(seleccionada)}
+                onClick={() => seleccionada && onEditarLineaClicked(seleccionada)}
                 disabled={!seleccionada}
             > Editar
             </button>
             <button
                 disabled={!seleccionada}
-                onClick={borrarLinea}
+                onClick={() => seleccionada && borrarLinea(seleccionada)}
             > Borrar
             </button>
            

@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Input, InputNumerico } from "../../../../componentes/detalle/FormularioGenerico.tsx";
+import { emitir } from "../../../../componentes/eventos/pubsub.ts";
 import { LineaPresupuestoNueva } from "../diseño.ts";
+import { eventoLineaCreada } from "../dominio.ts";
 import { camposLinea, postLinea } from "../infraestructura.ts";
 
 export const AltaLinea = (
     {
         presupuestoId,
-        onLineaCreada,
-        onCancelar,
+        // onLineaCreada,
+        onCancelada,
     }: {
         presupuestoId: string;
-        onLineaCreada: (linea: LineaPresupuestoNueva, id: string) => void;
-        onCancelar: () => void;
+        // onLineaCreada: (linea: LineaPresupuestoNueva, id: string) => void;
+        onCancelada: () => void;
     }
 ) => {
 
@@ -33,7 +35,8 @@ export const AltaLinea = (
         setGuardando(true);
         const id = await postLinea(presupuestoId, linea);
         setGuardando(false);
-        onLineaCreada(linea, id);
+        emitir(eventoLineaCreada(id));
+        // onLineaCreada(linea, id);
     };
     return (
         <>
@@ -53,7 +56,7 @@ export const AltaLinea = (
             <button onClick={onGuardarClicked}>
                 Guardar
             </button>
-            <button onClick={onCancelar}>
+            <button onClick={onCancelada}>
                 Cancelar
             </button>
         </>

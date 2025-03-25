@@ -4,10 +4,11 @@ import estilos from "../../../../componentes/detalle/detalle.module.css";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
 import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
+import { useSuscribir } from "../../../../componentes/eventos/pubsub.ts";
 import { Entidad } from "../../../comun/diseño.ts";
 import { guardar } from "../../cliente/dominio.ts";
-import { Presupuesto, Cliente as TipoCliente } from "../diseño.ts";
-import { presupuestoVacio } from "../dominio.ts";
+import { Presupuesto } from "../diseño.ts";
+import { CANTIDAD_LINEA_CAMBIADA, LINEA_BORRADA, LINEA_CREADA, presupuestoVacio, REFERENCIA_LINEA_CAMBIADA } from "../dominio.ts";
 import {
   camposPresupuesto,
   getPresupuesto,
@@ -15,6 +16,13 @@ import {
 } from "../infraestructura.ts";
 import { Cliente } from "./Cliente.tsx";
 import { Lineas } from "./Lineas.tsx";
+
+// type EventoCabeceraCambiada = (
+//   EventoCantidadLineaCambiada | 
+//   EventoReferenciaLineaCambiada | 
+//   EventoLineaBorrada |
+//   EventoLineaCreada
+// );
 
 export const DetallePresupuesto = (
   {
@@ -26,6 +34,7 @@ export const DetallePresupuesto = (
   }
 ) => {
   const { detalle } = estilos;
+
 
   const params = useParams();
   
@@ -51,29 +60,44 @@ export const DetallePresupuesto = (
       onEntidadActualizada(nuevoPresupuesto);
     };
 
-    const onAgenteIdCambiado = async (_: string, valor: string) => {
-      setGuardando(true);
+    // const onAgenteIdCambiado = async (_: string, valor: string) => {
+    //   if (!presupuestoId) {
+    //     return;
+    //   }
+    //   setGuardando(true);
+    //   await patchCambiarAgente(presupuestoId, valor)
+    //   setGuardando(false);
+    //   recargarCabecera();
+    // };
+    
+    const onPresupuestoCambiado = <T,>(cambiar: (id: string, valor: T) => Promise<void>): ((_: string, valor: T) => void) => {
       if (!presupuestoId) {
-        return;
+        return () => {};
       }
-      await patchCambiarAgente(presupuestoId, valor)
-      const nuevoPresupuesto = await getPresupuesto(presupuestoId)
-      setGuardando(false);
-      setPresupuesto(nuevoPresupuesto);
-      onEntidadActualizada(nuevoPresupuesto);
+      const ret = async(_: string, valor: T) => {
+        setGuardando(true);
+        await cambiar(presupuestoId, valor)
+        // await patchCambiarAgente(presupuestoId, valor)
+        const nuevoPresupuesto = await getPresupuesto(presupuesto.id)
+        setPresupuesto(nuevoPresupuesto);
+        onEntidadActualizada(nuevoPresupuesto);
+        setGuardando(false);
+      }
+      return ret;
     };
-
-    const onClienteCambiadoCallback = async (_: TipoCliente) => {
-      const nuevoPresupuesto = await getPresupuesto(presupuesto.id)
-      setPresupuesto(nuevoPresupuesto);
-      onEntidadActualizada(nuevoPresupuesto);
-    }
 
     const recargarCabecera = async () => {
       const nuevoPresupuesto = await getPresupuesto(presupuesto.id)
       setPresupuesto(nuevoPresupuesto);
       onEntidadActualizada(nuevoPresupuesto);
     }
+
+    useSuscribir([
+      [CANTIDAD_LINEA_CAMBIADA, recargarCabecera],
+      [REFERENCIA_LINEA_CAMBIADA, recargarCabecera],
+      [LINEA_BORRADA, recargarCabecera],
+      [LINEA_CREADA, recargarCabecera],
+    ]);
 
   return (
     <div className={detalle}>
@@ -93,7 +117,7 @@ export const DetallePresupuesto = (
                 <>
                   <Cliente
                     presupuesto={presupuesto}
-                    onClienteCambiadoCallback={onClienteCambiadoCallback}
+                    onClienteCambiadoCallback={recargarCabecera}
                   />
                   <Input
                       campo={camposPresupuesto.nombre_cliente}
@@ -107,7 +131,7 @@ export const DetallePresupuesto = (
                   />
                   <Input
                       campo={camposPresupuesto.agente_id}
-                      onCampoCambiado={onAgenteIdCambiado}
+                      onCampoCambiado={onPresupuestoCambiado(patchCambiarAgente)}
                       valorEntidad={presupuesto.agente_id}
                   />
                   <label>{presupuesto.nombre_agente}</label>
@@ -170,7 +194,7 @@ export const DetallePresupuesto = (
         </div>
         <Lineas
           presupuestoId={presupuesto.id}
-          onCabeceraModificada={recargarCabecera}
+          // onCabeceraModificada={recargarCabecera}
         />
       </Detalle>
     </div>

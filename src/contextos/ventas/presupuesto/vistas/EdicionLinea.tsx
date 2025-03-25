@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
+import { emitir } from "../../../../componentes/eventos/pubsub.ts";
 import { LineaPresupuesto as Linea } from "../diseño.ts";
+import { eventoReferenciaLineaCambiada } from "../dominio.ts";
 import { camposLinea, patchArticuloLinea } from "../infraestructura.ts";
 
 export const EdicionLinea = (
     {
         presupuestoId,
         linea,
-        onLineaActualizada,
-        onCancelar,
+        // onLineaActualizada,
+        onCancelada,
     }: {
         presupuestoId: string;
         linea: Linea;
-        onLineaActualizada: (linea: Linea) => void;
-        onCancelar: () => void;
+        // onLineaActualizada: (linea: Linea) => void;
+        onCancelada: () => void;
     }
 ) => {
 
@@ -23,7 +25,8 @@ export const EdicionLinea = (
         setGuardando(true);
         await patchArticuloLinea(presupuestoId, linea.id, valor);
         setGuardando(false);
-        if (onLineaActualizada) onLineaActualizada(linea);
+        // if (onLineaActualizada) onLineaActualizada(linea);
+        emitir(eventoReferenciaLineaCambiada(linea, valor));
     };
  
     return (
@@ -34,7 +37,7 @@ export const EdicionLinea = (
                 onCampoCambiado={onReferenciaCambiada}
                 valorEntidad={linea.referencia}
             />
-            <button onClick={onCancelar}>
+            <button onClick={onCancelada}>
                 Listo
             </button>
         </>
