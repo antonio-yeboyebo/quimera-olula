@@ -3,6 +3,8 @@
         margin-top: 0;
         margin-bottom: 15px;
         border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
     }
 
     &>form {

@@ -1,64 +1,67 @@
 import { useState } from "react";
-import { Input, InputNumerico } from "../../../../componentes/detalle/FormularioGenerico.tsx";
-import { emitir } from "../../../../componentes/eventos/pubsub.ts";
+import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
+import { QForm } from "../../../../componentes/atomos/qform.tsx";
+import { QInput } from "../../../../componentes/atomos/qinput.tsx";
 import { LineaPresupuestoNueva } from "../diseño.ts";
-import { eventoLineaCreada } from "../dominio.ts";
-import { camposLinea, postLinea } from "../infraestructura.ts";
+import { postLinea } from "../infraestructura.ts";
 
-export const AltaLinea = (
-    {
-        presupuestoId,
-        // onLineaCreada,
-        onCancelada,
-    }: {
-        presupuestoId: string;
-        // onLineaCreada: (linea: LineaPresupuestoNueva, id: string) => void;
-        onCancelada: () => void;
-    }
-) => {
+const validacion = (datos: Record<string, string>) => {
+  const cantidad = parseInt(datos.cantidad);
 
-    const [_, setGuardando] = useState(false);
-    const [linea, setLinea] = useState<LineaPresupuestoNueva>({
-        referencia: '',
-        cantidad: 1,
-    });
+  return {
+    cantidad:
+      isNaN(cantidad) || cantidad < 0
+        ? "Debe tener una cantidad mayor que cero."
+        : "",
+  };
+};
 
-    const onCambio = async (campo: string, valor: string) => {
-        const nuevaLinea = { ...linea, [campo]: valor };
-        setLinea(nuevaLinea);
+export const AltaLinea = ({
+  presupuestoId,
+  onLineaCreada,
+  onCancelar,
+}: {
+  presupuestoId: string;
+  onLineaCreada: (linea: LineaPresupuestoNueva, id: string) => void;
+  onCancelar: () => void;
+}) => {
+  const [estado, setEstado] = useState({} as Record<string, string>);
+
+  const onGuardar = async (datos: Record<string, string>) => {
+    const nuevoEstado = validacion(datos);
+    setEstado(nuevoEstado);
+
+    if (Object.values(nuevoEstado).some((v) => v.length > 0)) return;
+
+    const linea: LineaPresupuestoNueva = {
+      referencia: datos.referencia,
+      cantidad: parseInt(datos.cantidad),
     };
-    const onCambioCantidad = async (campo: string, valor: number) => {
-        const nuevaLinea = { ...linea, [campo]: valor };
-        setLinea(nuevaLinea);
-    };
-    const onGuardarClicked = async () => {
-        setGuardando(true);
-        const id = await postLinea(presupuestoId, linea);
-        setGuardando(false);
-        emitir(eventoLineaCreada(id));
-        // onLineaCreada(linea, id);
-    };
-    return (
-        <>
-            <h2>Nueva línea</h2>
-            <Input
-                controlado
-                campo={camposLinea.referencia}
-                onCampoCambiado={onCambio}
-                valorEntidad={linea.referencia}
-            />
-            <InputNumerico
-                controlado
-                campo={camposLinea.cantidad}
-                onCampoCambiado={onCambioCantidad}
-                valorEntidad={linea.cantidad}
-            />
-            <button onClick={onGuardarClicked}>
-                Guardar
-            </button>
-            <button onClick={onCancelada}>
-                Cancelar
-            </button>
-        </>
-    );
-}
+
+    postLinea(presupuestoId, linea).then((id) => onLineaCreada(linea, id));
+  };
+
+  return (
+    <>
+      <h2>Nueva línea</h2>
+      <QForm onSubmit={onGuardar} onReset={onCancelar}>
+        <section>
+          <QInput label="Referencia" nombre="referencia" />
+          <QInput
+            label="Cantidad"
+            nombre="cantidad"
+            valor="1"
+            erroneo={!!estado.cantidad && estado.cantidad.length > 0}
+            textoValidacion={estado.cantidad}
+          />
+        </section>
+        <section>
+          <QBoton tipo="submit">Guardar</QBoton>
+          <QBoton tipo="reset" variante="texto">
+            Cancelar
+          </QBoton>
+        </section>
+      </QForm>
+    </>
+  );
+};

@@ -16,10 +16,11 @@ export const renderSelect = (
     opcional: !campo.requerido,
     deshabilitado: campo.soloLectura,
     condensado: campo.condensado,
-    opciones: campo.opciones?.map(([valor, descripcion]) => ({
-      valor,
-      descripcion,
-    })),
+    opciones:
+      campo.opciones?.map(([valor, descripcion]) => ({
+        valor,
+        descripcion,
+      })) ?? [],
     "todo-ancho": campo.ancho === "100%" ? "true" : undefined,
   };
 

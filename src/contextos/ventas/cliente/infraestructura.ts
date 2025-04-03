@@ -1,7 +1,7 @@
 import { CampoFormularioGenerico, OpcionCampo } from "../../../componentes/detalle/FormularioGenerico.tsx";
 import { RestAPI } from "../../comun/api/rest_api.ts";
 import { Filtro, Orden } from "../../comun/diseño.ts";
-import { Cliente, DirCliente, GetCliente, NuevaDireccion } from "./diseño.ts";
+import { Cliente, DirCliente, GetCliente, NuevaDireccion, PatchCliente, PostCliente } from "./diseño.ts";
 
 const baseUrl = `/ventas/cliente`;
 
@@ -58,19 +58,37 @@ const dirClienteToAPI = (d: DirCliente): DireccionAPI => (
 export const getCliente: GetCliente = async (id) =>
   await RestAPI.get<{ datos: Cliente }>(`${baseUrl}/${id}`).then((respuesta) => clienteFromAPI(respuesta.datos));
 
-export const getClientes = async (_: Filtro, __: Orden): Promise<Cliente[]> =>
-  await RestAPI.get<{ datos: ClienteApi[] }>(`${baseUrl}`).then((respuesta) => {
-    const clientes = respuesta.datos.map((d) => clienteFromAPI(d));
-    return clientes
+export const getClientes = async (filtro: Filtro, orden: Orden): Promise<Cliente[]> => {
+  const q = filtro || orden ? "?q=" + btoa(JSON.stringify({ filtro, orden })) : "";
+
+  return RestAPI.get<{ datos: ClienteApi[] }>(baseUrl + q).then((respuesta) => respuesta.datos.map(clienteFromAPI));
+}
+
+export const patchCliente: PatchCliente = async (id, cliente) =>
+  await RestAPI.patch(`${baseUrl}/${id}`, {
+    nombre: cliente.nombre,
+    id_fiscal: cliente.id_fiscal,
   });
 
+export const deleteCliente = async (id: string): Promise<void> =>
+  await RestAPI.delete(`${baseUrl}/${id}`);
+
+export const postCliente: PostCliente = async (cliente) => {
+  const payload = {
+    cliente: {
+      ...cliente,
+    }
+  }
+  return await RestAPI.post(baseUrl, payload).then((respuesta) => respuesta.id);
+}
+
 export const getDireccion = async (clienteId: string, direccionId: string): Promise<DirCliente> =>
-  await RestAPI.get<{ datos: DirClienteAPI }>(`${baseUrl}/${clienteId}/direcciones/${direccionId}`).then((respuesta) =>
+  await RestAPI.get<{ datos: DirClienteAPI }>(`${baseUrl}/${clienteId}/direccion/${direccionId}`).then((respuesta) =>
     dirClienteFromAPI(respuesta.datos)
   );
 
 export const getDirecciones = async (id: string): Promise<DirCliente[]> =>
-  await RestAPI.get<{ datos: DirClienteAPI[] }>(`${baseUrl}/${id}/direcciones`).then((respuesta) => {
+  await RestAPI.get<{ datos: DirClienteAPI[] }>(`${baseUrl}/${id}/direccion`).then((respuesta) => {
     const direcciones = respuesta.datos.map((d) => dirClienteFromAPI(d));
     return direcciones
   });
@@ -81,21 +99,21 @@ export const postDireccion = async (clienteId: string, direccion: NuevaDireccion
       ...direccion,
     }
   }
-  return await RestAPI.post(`${baseUrl}/${clienteId}/direcciones`, payload).then((respuesta) => respuesta.id);
+  return await RestAPI.post(`${baseUrl}/${clienteId}/direccion`, payload).then((respuesta) => respuesta.id);
 }
 
 export const setDirFacturacion = async (clienteId: string, direccionId: string): Promise<void> =>
-  RestAPI.patch(`${baseUrl}/${clienteId}/direcciones/${direccionId}/facturacion`, {});
+  RestAPI.patch(`${baseUrl}/${clienteId}/direccion/${direccionId}/facturacion`, {});
 
 
 export const actualizarDireccion = async (clienteId: string, direccion: DirCliente): Promise<void> =>
   RestAPI.patch(
-    `${baseUrl}/${clienteId}/direcciones/${direccion.id}`
+    `${baseUrl}/${clienteId}/direccion/${direccion.id}`
     , { direccion: dirClienteToAPI(direccion) }
   );
 
 export const deleteDireccion = async (clienteId: string, direccionId: string): Promise<void> =>
-  await RestAPI.delete(`${baseUrl}/${clienteId}/direcciones/${direccionId}`);
+  await RestAPI.delete(`${baseUrl}/${clienteId}/direccion/${direccionId}`);
 
 
 export const obtenerOpcionesSelector =
@@ -124,7 +142,9 @@ export const camposDireccion: Record<string, CampoFormularioGenerico> = {
 export const camposCliente: Record<string, CampoFormularioGenerico> = {
   id: { nombre: "id", etiqueta: "Código", tipo: "text", oculto: true },
   nombre: { nombre: "nombre", etiqueta: "Nombre", tipo: "text", ancho: "100%", xtipo: "no controlado", },
-  id_fiscal: { nombre: "id_fiscal", etiqueta: "CIF/NIF", tipo: "text", xtipo: "controlado", },
+  id_fiscal: {
+    nombre: "id_fiscal", etiqueta: "CIF/NIF", tipo: "text", xtipo: "controlado"
+  },
   agente_id: { nombre: "agente_id", etiqueta: "Agente", tipo: "text" },
   divisa_id: {
     nombre: "divisa_id",
@@ -132,7 +152,17 @@ export const camposCliente: Record<string, CampoFormularioGenerico> = {
     tipo: "select",
     opciones: opcionesDivisa,
   },
-  tipo_id_fiscal: { nombre: "tipo_id_fiscal", etiqueta: "Tipo ID Fiscal", tipo: "text", xtipo: "controlado" },
+  empresa_id: { nombre: "empresa_id", etiqueta: "Empresa", tipo: "text" },
+  tipo_id_fiscal: {
+    nombre: "tipo_id_fiscal", etiqueta: "Tipo ID Fiscal", tipo: "text", xtipo: "controlado", opciones: [
+      ["NIF", "NIF"],
+      ["NIF/IVA", "NIF/IVA"],
+      ["Pasaporte", "Pasaporte"],
+      ["Doc.Oficial País", "Doc.Oficial País"],
+      ["Cert.Residencia", "Cert.Residencia"],
+      ["Otro", "Otro"],
+    ]
+  },
   serie_id: { nombre: "serie_id", etiqueta: "Serie", tipo: "text", soloLectura: true },
   forma_pago_id: { nombre: "forma_pago_id", etiqueta: "Forma de Pago", tipo: "text" },
   grupo_iva_negocio_id: { nombre: "grupo_iva_negocio_id", etiqueta: "Grupo IVA Negocio", tipo: "text" },

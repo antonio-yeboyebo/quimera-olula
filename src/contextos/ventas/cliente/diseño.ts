@@ -17,6 +17,14 @@ export interface IdFiscal {
   tipo_id_fiscal: string;
 }
 
+export type NuevoCliente = {
+  nombre: string;
+  id_fiscal: string;
+  empresa_id: string;
+  tipo_id_fiscal: string;
+  agente_id: string;
+};
+
 export type DirCliente = {
   id: string;
   dir_envio: boolean;
@@ -42,5 +50,5 @@ export type NuevaDireccion = {
 
 
 export type GetCliente = (id: string) => Promise<Cliente>;
-
-export type GetDirecciones = (clienteId: string) => Promise<DirCliente[]>;
+export type PostCliente = (cliente: NuevoCliente) => Promise<string>;
+export type PatchCliente = (id: string, cliente: Cliente) => Promise<void>;

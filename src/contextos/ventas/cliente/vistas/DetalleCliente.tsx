@@ -5,20 +5,21 @@ import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
 import { Cliente, IdFiscal as TipoIdFiscal } from "../diseño.ts";
-import { clienteVacio, guardar } from "../dominio.ts";
-import { camposCliente, getCliente } from "../infraestructura.ts";
+import { clienteVacio } from "../dominio.ts";
+import { camposCliente, getCliente, patchCliente } from "../infraestructura.ts";
+import "./DetalleCliente.css";
 import { IdFiscal } from "./IdFiscal.tsx";
 import { TabDirecciones } from "./TabDirecciones.tsx";
 
-export const DetalleCliente = (
-  {
-    clienteInicial=null,
-    onEntidadActualizada=()=>{},
-  }: {
-    clienteInicial?: Cliente | null;
-    onEntidadActualizada?: (entidad: Cliente) => void;
-  }
-) => {
+export const DetalleCliente = ({
+  clienteInicial = null,
+  onEntidadActualizada = () => {},
+  cancelarSeleccionada,
+}: {
+  clienteInicial?: Cliente | null;
+  onEntidadActualizada?: (entidad: Cliente) => void;
+  cancelarSeleccionada?: () => void;
+}) => {
   const params = useParams();
 
   const [guardando, setGuardando] = useState(false);
@@ -26,7 +27,8 @@ export const DetalleCliente = (
   const clienteId = clienteInicial?.id ?? params.id;
 
   const sufijoTitulo = guardando ? " (Guardando...)" : "";
-  const titulo = (cliente: Entidad) => `${cliente.nombre} ${sufijoTitulo}` as string;
+  const titulo = (cliente: Entidad) =>
+    `${cliente.nombre} ${sufijoTitulo}` as string;
 
   const [cliente, setCliente] = useState<Cliente>(clienteVacio());
 
@@ -40,35 +42,35 @@ export const DetalleCliente = (
     setCliente(nuevoCliente);
     setGuardando(false);
     onEntidadActualizada(nuevoCliente);
-  }
+  };
 
   const onCampoCambiado = async (campo: string, valor: string) => {
     if (!clienteId) {
       return;
     }
     setGuardando(true);
-    await guardar(clienteId,{
-      [campo]: valor
-    })
-    setGuardando(false);
     const nuevoCliente: Cliente = { ...cliente, [campo]: valor };
+    await patchCliente(clienteId, nuevoCliente);
+    setGuardando(false);
     setCliente(nuevoCliente);
     onEntidadActualizada(nuevoCliente);
   };
 
   return (
-
-     <Detalle
-       id={clienteId}
-       obtenerTitulo={titulo}
-       setEntidad={(c) => setCliente(c as Cliente)}
-       entidad={cliente}
-       cargar={getCliente}
-     >
-     <Input
+    <Detalle
+      id={clienteId}
+      obtenerTitulo={titulo}
+      setEntidad={(c) => setCliente(c as Cliente)}
+      entidad={cliente}
+      cargar={getCliente}
+      className="detalle-cliente"
+      cerrarDetalle={cancelarSeleccionada}
+    >
+      {/* <h2 className="detalle-cliente-titulo">{titulo(cliente)}</h2> */}
+      <Input
         campo={camposCliente.nombre}
         onCampoCambiado={onCampoCambiado}
-        valorEntidad={cliente?.nombre ?? ''}
+        valorEntidad={cliente?.nombre ?? ""}
       />
       <IdFiscal
         cliente={cliente}
@@ -77,53 +79,84 @@ export const DetalleCliente = (
       <Input
         campo={camposCliente.agente_id}
         onCampoCambiado={onCampoCambiado}
-        valorEntidad={cliente?.agente_id ?? ''}
+        valorEntidad={cliente?.agente_id ?? ""}
       />
 
       {!!clienteId && (
         <Tabs
+          className="detalle-cliente-tabs"
           children={[
             <Tab
               key="tab-1"
               label="Comercial"
-              children={<div> Comercial contenido </div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Comercial contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-2"
               label="Direcciones"
               children={
-                <TabDirecciones clienteId={clienteId} />
+                <div className="detalle-cliente-tab-contenido">
+                  <TabDirecciones clienteId={clienteId} />
+                </div>
               }
             />,
             <Tab
               key="tab-3"
               label="Cuentas Bancarias"
-              children={<div> Cuentas Bancarias Master contenido </div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Cuentas Bancarias Master contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-4"
               label="Agenda"
-              children={<div> Agenda contenido </div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Agenda contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-5"
               label="Descuentos"
-              children={<div> Descuentos contenido</div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Descuentos contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-6"
               label="Documentos"
-              children={<div> Documentos contenido</div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Documentos contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-7"
               label="Contabilidad"
-              children={<div> Contabilidad contenido</div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Contabilidad contenido
+                </div>
+              }
             />,
             <Tab
               key="tab-8"
               label="Factura-e"
-              children={<div> Factura-e contenido</div>}
+              children={
+                <div className="detalle-cliente-tab-contenido">
+                  Factura-e contenido
+                </div>
+              }
             />,
           ]}
         ></Tabs>

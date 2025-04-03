@@ -1,19 +1,8 @@
+import { FormInputProps } from "./qinput.tsx";
 import "./qselect.css";
 
-type QSelectProps = {
-  label: string;
-  nombre: string;
-  deshabilitado?: boolean;
-  placeholder?: string;
-  opciones?: { valor: string; descripcion: string }[];
-  valor?: string;
-  textoValidacion?: string;
-  erroneo?: boolean;
-  advertido?: boolean;
-  valido?: boolean;
-  opcional?: boolean;
-  condensado?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+type QSelectProps = FormInputProps & {
+  opciones: { valor: string; descripcion: string }[];
 };
 
 export const QSelect = ({
@@ -21,7 +10,7 @@ export const QSelect = ({
   nombre,
   deshabilitado,
   placeholder,
-  opciones = [],
+  opciones,
   valor = "",
   textoValidacion = "",
   erroneo,
@@ -30,6 +19,7 @@ export const QSelect = ({
   opcional,
   condensado,
   onChange,
+  onBlur,
 }: QSelectProps) => {
   const attrs = { erroneo, advertido, valido, opcional, condensado };
 
@@ -50,8 +40,10 @@ export const QSelect = ({
           name={nombre}
           defaultValue={onChange ? undefined : valor}
           value={onChange ? valor : undefined}
+          required={!opcional}
           disabled={deshabilitado}
-          onChange={onChange}
+          onChange={onChange ? (e) => onChange(e.target.value, e) : undefined}
+          onBlur={onBlur ? (e) => onBlur(e.target.value, e) : undefined}
         >
           <option hidden value="">
             -{placeholder}-

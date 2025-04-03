@@ -7,6 +7,7 @@ type QIconoProps = {
 
 const iconos: Record<string, string> = {
   buscar: "search-alt-2",
+  cerrar: "x",
   inicio: "home",
   fichero: "file",
   grafico_barras: "bar-chart-alt-2",

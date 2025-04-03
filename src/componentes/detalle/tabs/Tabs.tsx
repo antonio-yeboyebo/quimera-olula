@@ -8,13 +8,14 @@ interface TabProps {
 
 interface TabsProps {
   children: React.ReactElement<TabProps>[];
+  className?: string;
 }
 
 const Tab: React.FC<TabProps> = ({ children }) => {
   return <div>{children}</div>;
 };
 
-const Tabs: React.FC<TabsProps> = ({ children }) => {
+const Tabs: React.FC<TabsProps> = ({ children, className }) => {
   const [activeTab, setActiveTab] = React.useState(0);
   const { detalleTabs } = estilos;
 
@@ -23,9 +24,10 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
   };
 
   return (
-    <div className={detalleTabs}>
-      <h2>{children[activeTab].props.label}</h2>
-      <div className="tab">
+    <div className={`${detalleTabs} ${className || ""}`.trim()}>
+      {" "}
+      {/* Aplicar className */}
+      <div className="tab-header">
         {children.map((tab, index) => (
           <button
             key={index}

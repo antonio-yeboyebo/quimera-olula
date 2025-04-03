@@ -23,7 +23,7 @@ export const MenuLateral = () => {
           condensado
           placeholder="Buscar..."
           valor={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={setBusqueda}
         />
       </div>
     );

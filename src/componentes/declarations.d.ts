@@ -12,9 +12,11 @@ interface BoxIcon extends NodoComun {
 declare namespace React {
     namespace JSX {
         interface IntrinsicElements {
+            'quimera-formulario': NodoComun;
             'quimera-boton': NodoComun;
             'quimera-input': NodoComun;
             'quimera-select': NodoComun;
+            'quimera-autocompletar': NodoComun;
             'quimera-tabla': NodoComun;
             'etiquetas-filtro': NodoComun;
             'menu-lateral': NodoComun;

@@ -1,5 +1,5 @@
 import { stringNoVacio } from "../../comun/dominio.ts";
-import { Cliente, DirCliente, NuevaDireccion } from "./diseño.ts";
+import { Cliente, DirCliente, NuevaDireccion, NuevoCliente } from "./diseño.ts";
 
 export const idFiscalValido = (tipo: string) => (valor: string) => {
     if (tipo === "NIF") {
@@ -53,7 +53,12 @@ export const validadoresDireccion = {
     ciudad: (valor: string) => stringNoVacio(valor),
 }
 
-
+export const validadoresCliente = {
+    nombre: (valor: string) => stringNoVacio(valor),
+    id_fiscal: (valor: string) => stringNoVacio(valor),
+    nuevoCliente: (cliente: NuevoCliente) =>
+        cliente.nombre && cliente.id_fiscal,
+};
 
 
 const simularApi = async () => {

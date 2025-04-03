@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./qinput.css";
 
-type QInputProps = {
+export type FormInputProps = {
   label: string;
   nombre: string;
   deshabilitado?: boolean;
@@ -13,7 +13,14 @@ type QInputProps = {
   valido?: boolean;
   opcional?: boolean;
   condensado?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (valor: string, evento: React.ChangeEvent<HTMLElement>) => void;
+  onBlur?: (valor: string, evento: React.FocusEvent<HTMLElement>) => void;
+};
+
+type QInputProps = FormInputProps & {
+  lista?: string;
+  autocompletar?: "off" | "on";
+  onInput?: (valor: string, evento: React.FormEvent<HTMLInputElement>) => void;
 };
 
 export const QInput = ({
@@ -28,7 +35,11 @@ export const QInput = ({
   valido,
   opcional,
   condensado,
+  lista,
+  autocompletar,
   onChange,
+  onBlur,
+  onInput,
 }: QInputProps) => {
   const attrs = { erroneo, advertido, valido, opcional, condensado };
 
@@ -46,7 +57,12 @@ export const QInput = ({
           value={onChange ? valor : undefined}
           defaultValue={onChange ? undefined : valor}
           disabled={deshabilitado}
-          onChange={onChange}
+          required={!opcional}
+          list={lista}
+          autoComplete={autocompletar}
+          onChange={(e) => onChange?.(e.target.value, e)}
+          onBlur={(e) => onBlur?.(e.target.value, e)}
+          onInput={(e) => onInput?.((e.target as HTMLInputElement).value, e)}
         />
         <span className="texto-validacion">{textoValidacion}</span>
       </label>

@@ -1,6 +1,6 @@
 import { Evento } from "../../../componentes/eventos/pubsub.ts";
 import { Direccion } from "../../comun/diseño.ts";
-import { EventoCantidadLineaCambiada, EventoLineaBorrada, EventoLineaCreada, EventoReferenciaLineaCambiada, LineaPresupuesto, Presupuesto } from "./diseño.ts";
+import { EventoLineaBorrada, EventoLineaCreada, EventoReferenciaLineaCambiada, LineaPresupuesto, NuevoPresupuesto, Presupuesto } from "./diseño.ts";
 
 export const direccionVacia = (): Direccion => ({
     dir_envio: false,
@@ -30,13 +30,21 @@ export const presupuestoVacio = (): Presupuesto => ({
     direccion: direccionVacia(),
     agente_id: '',
     nombre_agente: '',
+    divisa_id: '',
+    aprobado: false,
 })
 
-export const CANTIDAD_LINEA_CAMBIADA = 'ventas.presupuesto.linea.cantidad_cambiada'
-export const eventoCantidadLineaCambiada = (linea: LineaPresupuesto, cantidad: number): EventoCantidadLineaCambiada => ({
-    id: CANTIDAD_LINEA_CAMBIADA,
-    payload: { linea, cantidad, }
-})
+export const validadoresPresupuesto = {
+    cliente_id: (valor: string) => valor.trim() !== "",
+    direccion_id: (valor: string) => valor.trim() !== "",
+    fecha: (valor: string) => !isNaN(Date.parse(valor)),
+    empresa_id: (valor: string) => valor.trim() !== "",
+    nuevoPresupuesto: (presupuesto: NuevoPresupuesto) =>
+        validadoresPresupuesto.cliente_id(presupuesto.cliente_id) &&
+        validadoresPresupuesto.direccion_id(presupuesto.direccion_id) &&
+        validadoresPresupuesto.empresa_id(presupuesto.empresa_id),
+};
+
 
 export const REFERENCIA_LINEA_CAMBIADA = 'ventas.presupuesto.linea.referencia_cambiada'
 export const eventoReferenciaLineaCambiada = (linea: LineaPresupuesto, referencia: string): EventoReferenciaLineaCambiada => ({

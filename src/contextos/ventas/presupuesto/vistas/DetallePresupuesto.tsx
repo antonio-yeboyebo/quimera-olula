@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useParams } from "react-router";
-import { QInput2 } from "../../../../componentes/atomos/qinput.tsx";
 import estilos from "../../../../componentes/detalle/detalle.module.css";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
-import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
+import {
+  Input,
+  InputSelect,
+} from "../../../../componentes/detalle/FormularioGenerico.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { useSuscribir } from "../../../../componentes/eventos/pubsub.ts";
 import { Entidad } from "../../../comun/diseño.ts";
@@ -13,85 +15,85 @@ import { CANTIDAD_LINEA_CAMBIADA, LINEA_BORRADA, LINEA_CREADA, presupuestoVacio,
 import {
   camposPresupuesto,
   getPresupuesto,
-  patchCambiarAgente
+  patchCambiarAgente,
+  patchCambiarDivisa,
 } from "../infraestructura.ts";
 import { Cliente } from "./Cliente.tsx";
 import { Lineas } from "./Lineas.tsx";
 
-// type EventoCabeceraCambiada = (
-//   EventoCantidadLineaCambiada | 
-//   EventoReferenciaLineaCambiada | 
-//   EventoLineaBorrada |
-//   EventoLineaCreada
-// );
-
-export const DetallePresupuesto = (
-  {
-    presupuestoInicial=null,
-    onEntidadActualizada: onEntidadActualizada=()=>{},
-  }: {
-    presupuestoInicial?: Presupuesto | null;
-    onEntidadActualizada?: (entidad: Presupuesto) => void;
-  }
-) => {
+export const DetallePresupuesto = ({
+  presupuestoInicial = null,
+  onEntidadActualizada: onEntidadActualizada = () => {},
+}: {
+  presupuestoInicial?: Presupuesto | null;
+  onEntidadActualizada?: (entidad: Presupuesto) => void;
+}) => {
   const { detalle } = estilos;
 
 
   const params = useParams();
-  
+
   const [guardando, setGuardando] = useState(false);
-  
+
   const presupuestoId = presupuestoInicial?.id ?? params.id;
 
   const sufijoTitulo = guardando ? " (Guardando...)" : "";
-  const titulo = (presupuesto: Entidad) => `${presupuesto.codigo} ${sufijoTitulo}` as string;
+  const titulo = (presupuesto: Entidad) =>
+    `${presupuesto.codigo} ${sufijoTitulo}` as string;
 
-  const [presupuesto, setPresupuesto] = useState<Presupuesto>(presupuestoVacio());
+  const [presupuesto, setPresupuesto] = useState<Presupuesto>(
+    presupuestoVacio()
+  );
 
   const onCampoCambiado = async (campo: string, valor: string) => {
-      setGuardando(true);
-      if (presupuestoId) {
-        await guardar(presupuestoId,{
-          [campo]: valor
-        })
-      }
-      setGuardando(false);
-      const nuevoPresupuesto: Presupuesto = { ...presupuesto, [campo]: valor };
-      setPresupuesto(nuevoPresupuesto);
-      onEntidadActualizada(nuevoPresupuesto);
-    };
+    setGuardando(true);
 
-    // const onAgenteIdCambiado = async (_: string, valor: string) => {
-    //   if (!presupuestoId) {
-    //     return;
-    //   }
-    //   setGuardando(true);
-    //   await patchCambiarAgente(presupuestoId, valor)
-    //   setGuardando(false);
-    //   recargarCabecera();
-    // };
-    
-    const onPresupuestoCambiado = <T,>(cambiar: (id: string, valor: T) => Promise<void>): ((valor: T) => void) => {
-      if (!presupuestoId) {
-        return () => {};
-      }
-      const ret = async(valor: T) => {
-        setGuardando(true);
-        await cambiar(presupuestoId, valor)
-        // await patchCambiarAgente(presupuestoId, valor)
-        const nuevoPresupuesto = await getPresupuesto(presupuesto.id)
-        setPresupuesto(nuevoPresupuesto);
-        onEntidadActualizada(nuevoPresupuesto);
-        setGuardando(false);
-      }
-      return ret;
-    };
-
-    const recargarCabecera = async () => {
-      const nuevoPresupuesto = await getPresupuesto(presupuesto.id)
-      setPresupuesto(nuevoPresupuesto);
-      onEntidadActualizada(nuevoPresupuesto);
+    if (presupuestoId) {
+      await guardar(presupuestoId, {
+        [campo]: valor,
+      });
     }
+    setGuardando(false);
+    const nuevoPresupuesto: Presupuesto = { ...presupuesto, [campo]: valor };
+    setPresupuesto(nuevoPresupuesto);
+    onEntidadActualizada(nuevoPresupuesto);
+  };
+
+  const onAgenteIdCambiado = async (_: string, valor: string) => {
+    setGuardando(true);
+    if (!presupuestoId) {
+      return;
+    }
+    await patchCambiarAgente(presupuestoId, valor);
+    const nuevoPresupuesto = await getPresupuesto(presupuestoId);
+    setGuardando(false);
+    setPresupuesto(nuevoPresupuesto);
+    onEntidadActualizada(nuevoPresupuesto);
+  };
+
+  const onDivisaIdCambiado = async (_: string, valor: string) => {
+    setGuardando(true);
+    if (!presupuestoId) {
+      return;
+    }
+    await patchCambiarDivisa(presupuestoId, valor);
+    const nuevoPresupuesto = await getPresupuesto(presupuestoId);
+    setGuardando(false);
+    setPresupuesto(nuevoPresupuesto);
+    onEntidadActualizada(nuevoPresupuesto);
+  };
+
+  const onClienteCambiadoCallback = async (_: TipoCliente) => {
+    const nuevoPresupuesto = await getPresupuesto(presupuesto.id);
+    setPresupuesto(nuevoPresupuesto);
+    onEntidadActualizada(nuevoPresupuesto);
+  };
+
+  const recargarCabecera = async () => {
+    const nuevoPresupuesto = await getPresupuesto(presupuesto.id);
+    setPresupuesto(nuevoPresupuesto);
+    onEntidadActualizada(nuevoPresupuesto);
+  };
 
     useSuscribir([
       [CANTIDAD_LINEA_CAMBIADA, recargarCabecera],
@@ -121,24 +123,32 @@ export const DetallePresupuesto = (
                     onClienteCambiadoCallback={recargarCabecera}
                   />
                   <Input
-                      campo={camposPresupuesto.nombre_cliente}
-                      onCampoCambiado={onCampoCambiado}
-                      valorEntidad={presupuesto.nombre_cliente}
+                    campo={camposPresupuesto.nombre_cliente}
+                    onCampoCambiado={onCampoCambiado}
+                    valorEntidad={presupuesto.nombre_cliente}
                   />
                   <Input
-                      campo={camposPresupuesto.id_fiscal}
-                      onCampoCambiado={onCampoCambiado}
-                      valorEntidad={presupuesto.id_fiscal}
+                    campo={camposPresupuesto.id_fiscal}
+                    onCampoCambiado={onCampoCambiado}
+                    valorEntidad={presupuesto.id_fiscal}
                   />
-                  <QInput2
-                      // campo={camposPresupuesto.agente_id}
-                      valor={presupuesto.agente_id}
-                      label="Agente"
-                      nombre="agente_id"
-                      condensado
-                      onChange={onPresupuestoCambiado(patchCambiarAgente)}
-                      // onCampoCambiado={onPresupuestoCambiado(patchCambiarAgente)}
-                      // valorEntidad={presupuesto.agente_id}
+                </>
+              }
+            />,
+            <Tab
+              key="tab-2"
+              label="Datos"
+              children={
+                <>
+                  <InputSelect
+                    campo={camposPresupuesto.divisa_id}
+                    onCampoCambiado={onDivisaIdCambiado}
+                    valorEntidad={presupuesto.divisa_id}
+                  />
+                  <Input
+                    campo={camposPresupuesto.agente_id}
+                    onCampoCambiado={onAgenteIdCambiado}
+                    valorEntidad={presupuesto.agente_id}
                   />
                   <label>{presupuesto.nombre_agente}</label>
                 </>
@@ -205,4 +215,4 @@ export const DetallePresupuesto = (
       </Detalle>
     </div>
   );
-}
+};

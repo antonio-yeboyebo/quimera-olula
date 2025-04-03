@@ -1,22 +1,21 @@
+import { ReactNode } from "react";
 import { Entidad, Orden } from "../../contextos/comun/diseño.ts";
-import "./tabla.css";
+import "./qtabla.css";
 
 type MetaColumna<T extends Entidad> = {
   id: string;
   cabecera: string;
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  render?: (entidad: T) => any;
+  render?: (entidad: T) => string | ReactNode;
 };
 
 export type MetaTabla<T extends Entidad> = MetaColumna<T>[];
-
 
 const cabecera = <T extends Entidad>(
   metaTabla: MetaTabla<T>,
   orden: Orden,
   onOrdenar?: (clave: string) => void
 ) => {
-  return metaTabla.map(({ id, cabecera }) => (
+  const renderCabecera = ({ id, cabecera }: MetaColumna<T>) => (
     <th
       key={id}
       data-modo="columna"
@@ -25,26 +24,29 @@ const cabecera = <T extends Entidad>(
     >
       {cabecera}
     </th>
-  ));
-};
-  
+  );
 
-const fila = <T extends Entidad>(entidad: Entidad, metaTabla: MetaTabla<T>, onSeleccion: ((entidad: T) => void) | undefined) => {
-  const datosFila = metaTabla.map(({ id, render }) => render ? render(entidad as T) : entidad[id]);
-
-  return [
-    datosFila.map((valorCelda, columna) => (
-      <td
-      key={[entidad.id, columna].join("-")}
-      onClick={() => onSeleccion && onSeleccion(entidad as T)}
-      >
-        {valorCelda}
-      </td>
-    )),
-  ];
+  return metaTabla.map(renderCabecera);
 };
 
-export type TablaProps<T extends Entidad> = {
+const fila = <T extends Entidad>(entidad: Entidad, metaTabla: MetaTabla<T>) => {
+  const renderColumna = ({ id, render }: MetaColumna<T>, idx: number) => {
+    const Tag = idx === 0 ? "th" : "td";
+
+    const attrs = {
+      key: [entidad.id, id].join("-"),
+      "data-modo": idx === 0 ? "fila" : undefined,
+    };
+
+    const datos = render?.(entidad as T) ?? (entidad[id] as string);
+
+    return <Tag {...attrs}>{datos}</Tag>;
+  };
+
+  return metaTabla.map(renderColumna);
+};
+
+export type QTablaProps<T extends Entidad> = {
   metaTabla: MetaTabla<T>;
   datos: T[];
   cargando: boolean;
@@ -54,15 +56,15 @@ export type TablaProps<T extends Entidad> = {
   onOrdenar?: (clave: string) => void;
 };
 
-export const Tabla = <T extends Entidad>({
-  cargando,
-  datos,
-  orden,
+export const QTabla = <T extends Entidad>({
   metaTabla,
+  datos,
+  cargando,
   seleccionadaId,
-  onOrdenar,
   onSeleccion,
-}: TablaProps<T>) => {
+  orden,
+  onOrdenar,
+}: QTablaProps<T>) => {
   return (
     <quimera-tabla>
       <table>
@@ -73,10 +75,10 @@ export const Tabla = <T extends Entidad>({
           {datos.map((entidad: T) => (
             <tr
               key={entidad.id}
-              // onClick={() => onSeleccion && onSeleccion(entidad)}
+              onClick={() => onSeleccion && onSeleccion(entidad)}
               data-seleccionada={entidad.id === seleccionadaId}
             >
-              {fila(entidad, metaTabla, onSeleccion)}
+              {fila(entidad, metaTabla)}
             </tr>
           ))}
         </tbody>

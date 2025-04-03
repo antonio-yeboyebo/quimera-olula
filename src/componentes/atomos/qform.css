@@ -1,0 +1,13 @@
+quimera-formulario {
+    section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    section:has(button[type="submit"]) {
+        display: flex;
+        justify-content: flex-end;
+        margin: 1rem 0;
+    }
+}

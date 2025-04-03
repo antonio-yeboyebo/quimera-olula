@@ -1,0 +1,22 @@
+.detalle-cliente {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detalle-cliente-tabs {
+    margin-top: 1rem;
+}
+
+.detalle-cliente-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.detalle-cliente-tab-contenido {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}

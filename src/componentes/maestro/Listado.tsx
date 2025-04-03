@@ -3,26 +3,30 @@ import {
   Criteria,
   Entidad,
   Filtro,
-  Orden
+  Orden,
 } from "../../contextos/comun/diseño.ts";
+import { MetaTabla, QTabla } from "../atomos/qtabla.tsx";
 import { expandirEntidad } from "../detalle/helpers.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
-import { MetaTabla, Tabla } from "../wrappers/tabla2.tsx";
 import { filtrarEntidad } from "./maestroFiltros/filtro.ts";
 import { MaestroFiltros } from "./maestroFiltros/MaestroFiltros.tsx";
 
 const datosCargando = <T extends Entidad>() =>
-  new Array(10).fill(null).map((_, i) => ({
-    id: i.toString(),
-    ...Object.fromEntries(new Array(10).fill(null).map((_, j) => [j, "U00A0"])),
-  } as T));
+  new Array(10).fill(null).map(
+    (_, i) =>
+      ({
+        id: i.toString(),
+        ...Object.fromEntries(
+          new Array(10).fill(null).map((_, j) => [j, "U00A0"])
+        ),
+      } as T)
+  );
 
 const obtenerCampos = (entidad: Entidad | null): string[] => {
   if (!entidad) return [];
 
   return expandirEntidad(entidad).map(([clave]) => clave);
 };
-
 
 export type MaestroProps<T extends Entidad> = {
   metaTabla: MetaTabla<T>;
@@ -75,7 +79,7 @@ export const Listado = <T extends Entidad>({
       : datosCargando<T>();
 
     return (
-      <Tabla
+      <QTabla
         metaTabla={metaTabla}
         datos={datos}
         cargando={cargando}

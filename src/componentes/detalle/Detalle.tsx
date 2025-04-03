@@ -1,5 +1,7 @@
 import { PropsWithChildren, useEffect } from "react";
 import { Entidad } from "../../contextos/comun/diseño.ts";
+import { QBoton } from "../atomos/qboton.tsx";
+import { QIcono } from "../atomos/qicono.tsx";
 import estilos from "./detalle.module.css";
 
 interface DetalleProps<T extends Entidad> {
@@ -8,6 +10,8 @@ interface DetalleProps<T extends Entidad> {
   entidad: T | null;
   setEntidad: (entidad: T) => void;
   cargar: (id: string) => Promise<T>;
+  className?: string;
+  cerrarDetalle?: () => void;
 }
 
 export function Detalle<T extends Entidad>({
@@ -17,17 +21,19 @@ export function Detalle<T extends Entidad>({
   entidad,
   setEntidad,
   cargar,
+  className,
+  cerrarDetalle,
 }: PropsWithChildren<DetalleProps<T>>) {
   const { detalle } = estilos;
 
   useEffect(() => {
     if (id && (!entidad || id !== entidad.id)) {
       const load = async () => {
-        const cliente = await cargar(id)
-        if(cliente) {
+        const cliente = await cargar(id);
+        if (cliente) {
           setEntidad(cliente);
         }
-      }
+      };
       load();
     }
   }, [id, entidad, cargar, setEntidad]);
@@ -41,8 +47,24 @@ export function Detalle<T extends Entidad>({
   }
 
   return (
-    <div className={detalle}>
-      {obtenerTitulo && <h2>{obtenerTitulo(entidad)}</h2>}
+    <div className={`${detalle} ${className || ""}`.trim()}>
+      {" "}
+      {/* Combinar clases */}
+      {obtenerTitulo && (
+        <h2>
+          <span>{obtenerTitulo(entidad)}</span>
+          {cerrarDetalle && (
+            <QBoton
+              onClick={cerrarDetalle}
+              variante="texto"
+              tamaño="pequeño"
+              destructivo
+            >
+              <QIcono nombre="cerrar" tamaño="xs" />
+            </QBoton>
+          )}
+        </h2>
+      )}
       {children}
     </div>
   );
