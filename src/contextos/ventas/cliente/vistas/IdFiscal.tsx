@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-    Input
-} from "../../../../componentes/detalle/FormularioGenerico";
-import {
-    guardar,
     idFiscalValido,
     idFiscalValidoGeneral,
     tipoIdFiscalValido
 } from "../dominio.ts";
 
+import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
+import { QInput2 } from "../../../../componentes/atomos/qinput.tsx";
 import { Cliente } from "../diseño.ts";
-import {
-    camposCliente
-} from "../infraestructura.ts";
 interface IdFiscalProps {
   cliente: Cliente;
   onIdFiscalCambiadoCallback: (idFiscal: IdFiscal) => void;
@@ -93,7 +88,7 @@ const IdFiscalEdicion = (
         tipo_id_fiscal: cliente.tipo_id_fiscal,
         });
 
-    const [guardando, setGuardando] = useState(false);
+    // const [guardando, setGuardando] = useState(false);
 
     useEffect(
         () => {
@@ -115,44 +110,41 @@ const IdFiscalEdicion = (
 
 
     const guardarIdFiscalClicked = async() => {
-        setGuardando(true);
-        await guardar(cliente.id, {
-            id_fiscal: idFiscal.id_fiscal,
-            tipo_id_fiscal: idFiscal.tipo_id_fiscal
-        });
-        setGuardando(false);
         onIdFiscalCambiadoCallback(idFiscal)
     }
     
 
     return (
         <>
-            <Input
+            <QInput2
                 controlado
-                campo={camposCliente.tipo_id_fiscal}
-                onCampoCambiado={onIdFiscalCambiado}
-                valorEntidad={idFiscal.tipo_id_fiscal}
-                validador={tipoIdFiscalValido}
+                label="Tipo"
+                nombre="tipo_id_fiscal"
+                valor={idFiscal.tipo_id_fiscal}
+                onChange={(v: string) => onIdFiscalCambiado('tipo_id_fiscal', v)}
+                valido={tipoIdFiscalValido}
             />
-            <Input
+            <QInput2
                 controlado
-                campo={camposCliente.id_fiscal}
-                onCampoCambiado={onIdFiscalCambiado}
-                valorEntidad={idFiscal.id_fiscal}
-                validador={idFiscalValido(idFiscal.tipo_id_fiscal)}
+                label="ID"
+                nombre="id_fiscal"
+                valor={idFiscal.id_fiscal}
+                onChange={(v: string) => onIdFiscalCambiado('id_fiscal', v)}
+                valido={idFiscalValido(idFiscal.tipo_id_fiscal)}
             />
 
-            <button
-                disabled={guardando || !idFiscalValidoGeneral(idFiscal.tipo_id_fiscal, idFiscal.id_fiscal)}
+            <QBoton
+                deshabilitado={!idFiscalValidoGeneral(idFiscal.tipo_id_fiscal, idFiscal.id_fiscal)}
                 onClick={guardarIdFiscalClicked}
             >
-                { guardando ? 'Guardando' : 'Guardar' }
-            </button>
-            <button
+                Guardar
+            </QBoton>
+            <QBoton
+                variante="borde"
                 onClick={canceladoCallback}
             >
                 Cancelar
-            </button>
+            </QBoton>
         </>
     );
 };

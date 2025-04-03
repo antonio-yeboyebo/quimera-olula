@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router";
+import { QInput2 } from "../../../../componentes/atomos/qinput.tsx";
 import estilos from "../../../../componentes/detalle/detalle.module.css";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
 import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
@@ -70,11 +71,11 @@ export const DetallePresupuesto = (
     //   recargarCabecera();
     // };
     
-    const onPresupuestoCambiado = <T,>(cambiar: (id: string, valor: T) => Promise<void>): ((_: string, valor: T) => void) => {
+    const onPresupuestoCambiado = <T,>(cambiar: (id: string, valor: T) => Promise<void>): ((valor: T) => void) => {
       if (!presupuestoId) {
         return () => {};
       }
-      const ret = async(_: string, valor: T) => {
+      const ret = async(valor: T) => {
         setGuardando(true);
         await cambiar(presupuestoId, valor)
         // await patchCambiarAgente(presupuestoId, valor)
@@ -129,10 +130,15 @@ export const DetallePresupuesto = (
                       onCampoCambiado={onCampoCambiado}
                       valorEntidad={presupuesto.id_fiscal}
                   />
-                  <Input
-                      campo={camposPresupuesto.agente_id}
-                      onCampoCambiado={onPresupuestoCambiado(patchCambiarAgente)}
-                      valorEntidad={presupuesto.agente_id}
+                  <QInput2
+                      // campo={camposPresupuesto.agente_id}
+                      valor={presupuesto.agente_id}
+                      label="Agente"
+                      nombre="agente_id"
+                      condensado
+                      onChange={onPresupuestoCambiado(patchCambiarAgente)}
+                      // onCampoCambiado={onPresupuestoCambiado(patchCambiarAgente)}
+                      // valorEntidad={presupuesto.agente_id}
                   />
                   <label>{presupuesto.nombre_agente}</label>
                 </>

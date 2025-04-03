@@ -30,9 +30,15 @@ export const DetalleCliente = (
 
   const [cliente, setCliente] = useState<Cliente>(clienteVacio());
 
-  const onIdFiscalCambiadoCallback = (idFiscal: TipoIdFiscal) => {
+  const onIdFiscalCambiadoCallback = async(idFiscal: TipoIdFiscal) => {
+    setGuardando(true);
+    await guardar(cliente.id, {
+        id_fiscal: idFiscal.id_fiscal,
+        tipo_id_fiscal: idFiscal.tipo_id_fiscal
+    });
     const nuevoCliente = { ...cliente, ...idFiscal };
     setCliente(nuevoCliente);
+    setGuardando(false);
     onEntidadActualizada(nuevoCliente);
   }
 
