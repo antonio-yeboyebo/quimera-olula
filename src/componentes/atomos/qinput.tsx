@@ -64,7 +64,7 @@ export const QInput = ({
           onBlur={(e) => onBlur?.(e.target.value, e)}
           onInput={(e) => onInput?.((e.target as HTMLInputElement).value, e)}
         />
-        <span className="texto-validacion">{textoValidacion}</span>
+        { textoValidacion && <span className="texto-validacion">{textoValidacion}</span> }
       </label>
     </quimera-input>
   );
@@ -128,7 +128,7 @@ export const QInput2 = ({
     <quimera-input {...attrs}>
       <label>
         <span className="etiqueta">
-          {label}&nbsp;
+          {label + "1"}&nbsp;
           <span className="etiqueta-opcional">(opcional)</span>
         </span>
         <input
@@ -142,7 +142,7 @@ export const QInput2 = ({
           onChange={onChangeInterno}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) => !controlado && onChange && onChange(e.target.value)}
         />
-        <span className="texto-validacion">{textoValidacion}</span>
+        {/* { textoValidacion == 'a' && <span className="texto-validacion">{textoValidacion}</span> } */}
       </label>
     </quimera-input>
   );

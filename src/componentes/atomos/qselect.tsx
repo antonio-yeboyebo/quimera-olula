@@ -50,7 +50,7 @@ export const QSelect = ({
           </option>
           {renderOpciones}
         </select>
-        <span className="texto-validacion">{textoValidacion}</span>
+        { textoValidacion && <span className="texto-validacion">{textoValidacion}</span> }
       </label>
     </quimera-select>
   );

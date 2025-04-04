@@ -3,8 +3,10 @@ import { Entidad } from "../../comun/diseño.ts";
 export interface Cliente extends Entidad {
   id: string;
   nombre: string;
+  nombre_comercial: string | null;
   id_fiscal: string;
-  agente_id: string;
+  agente_id: string | null;
+  nombre_agente: string | null;
   divisa_id: string;
   tipo_id_fiscal: string;
   serie_id: string;
@@ -23,6 +25,10 @@ export type NuevoCliente = {
   empresa_id: string;
   tipo_id_fiscal: string;
   agente_id: string;
+  divisa_id: string;
+  serie_id: string;
+  forma_pago_id: string;
+  grupo_iva_negocio_id: string;
 };
 
 export type DirCliente = {

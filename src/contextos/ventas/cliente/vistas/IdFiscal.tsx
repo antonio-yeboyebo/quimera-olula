@@ -7,12 +7,12 @@ import { QInput } from "../../../../componentes/atomos/qinput.tsx";
 import { QSelect } from "../../../../componentes/atomos/qselect.tsx";
 import { Cliente } from "../diseño.ts";
 import { camposCliente } from "../infraestructura.ts";
+import "./IdFiscal.css";
 
 interface IdFiscalProps {
   cliente: Cliente;
   onIdFiscalCambiadoCallback: (idFiscal: IdFiscal) => void;
 }
-
 interface IdFiscal {
   id_fiscal: string;
   tipo_id_fiscal: string;
@@ -104,15 +104,112 @@ const IdFiscalEdicion = ({
 
   return (
     <QForm onSubmit={guardarIdFiscalClicked} onReset={canceladoCallback}>
-      <section>
+      <div className="container">
+        <div style={{ gridColumn: 'span 2' }}>
+          <QSelect
+            label="Tipo ID Fiscal"
+            nombre="tipo_id_fiscal"
+            condensado
+            valor={cliente.tipo_id_fiscal}
+            opciones={opcionesTipoIdFiscal}
+            erroneo={!!estado.tipo_id_fiscal && estado.tipo_id_fiscal.length > 0}
+            textoValidacion={estado.tipo_id_fiscal}
+          />
+          {/* <QInput
+            label="Tipo Id Fiscal"
+            nombre="id_fiscal"
+            valor={cliente.id_fiscal}
+            erroneo={!!estado.id_fiscal && estado.id_fiscal.length > 0}
+            textoValidacion={estado.id_fiscal}
+          /> */}
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <QInput
+            label="CIF/NIF"
+            nombre="id_fiscal"
+            valor={cliente.id_fiscal}
+            erroneo={!!estado.id_fiscal && estado.id_fiscal.length > 0}
+            textoValidacion={estado.id_fiscal}
+          />
+        </div>
+        {/* <div style={{ gridColumn: 'span 2' }}>
+          <QInput
+            label="CIF/NIF"
+            nombre="id_fiscal"
+            valor={cliente.id_fiscal}
+            erroneo={!!estado.id_fiscal && estado.id_fiscal.length > 0}
+            textoValidacion={estado.id_fiscal}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <QInput
+            label="CIF/NIF"
+            nombre="id_fiscal"
+            valor={cliente.id_fiscal}
+            erroneo={!!estado.id_fiscal && estado.id_fiscal.length > 0}
+            textoValidacion={estado.id_fiscal}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 4' }}>1
+        </div>
+        <div style={{ gridColumn: 'span 12' }}>
+          <QInput
+            label="Nombre"
+            nombre="nombre"
+            valor={cliente.nombre}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 6' }}>
+          <QInput
+            label="Nombre"
+            nombre="nombre"
+            valor={cliente.nombre}
+            deshabilitado={true}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 6' }}>
+          <QInput
+            label="Nombre"
+            nombre="nombre"
+            valor={cliente.nombre}
+            valido
+          />
+        </div>
+        <div style={{ gridColumn: 'span 12' }}>
+          <QInput
+            label="Nombre"
+            nombre="nombre"
+            valor={cliente.nombre}
+            erroneo={true}
+          />
+        </div> */}
+      </div>
+        <div className='botones'>
+          <QBoton
+            tipo="submit"
+            deshabilitado={Object.values(estado).some((v) => v.length > 0)}
+          >
+          Guardar
+          </QBoton>
+          <QBoton tipo="reset" variante="texto">
+            Cancelar
+          </QBoton>
+      </div>
+      {/* <div className="flex-container">
+      <div style={{ flexGrow: 2 }}>
+
+        
         <QSelect
           label="Tipo ID Fiscal"
           nombre="tipo_id_fiscal"
+          condensado
           valor={cliente.tipo_id_fiscal}
           opciones={opcionesTipoIdFiscal}
           erroneo={!!estado.tipo_id_fiscal && estado.tipo_id_fiscal.length > 0}
           textoValidacion={estado.tipo_id_fiscal}
         />
+        </div>
+        <div style={{ flexGrow: 3 }}>
         <QInput
           label="CIF/NIF"
           nombre="id_fiscal"
@@ -120,8 +217,17 @@ const IdFiscalEdicion = ({
           erroneo={!!estado.id_fiscal && estado.id_fiscal.length > 0}
           textoValidacion={estado.id_fiscal}
         />
-      </section>
-      <section>
+      </div>
+      </div>
+      <div className="flex-container">
+      <div style={{ flexGrow: 2 }}>
+        <QInput
+          label="Nombe"
+          nombre="nombre"
+          valor={cliente.nombre}
+        />
+      </div>
+      <div style={{ flexGrow: 3 }}>
         <QBoton
           tipo="submit"
           deshabilitado={Object.values(estado).some((v) => v.length > 0)}
@@ -131,7 +237,8 @@ const IdFiscalEdicion = ({
         <QBoton tipo="reset" variante="texto">
           Cancelar
         </QBoton>
-      </section>
+      </div>
+      </div> */}
     </QForm>
   );
 };

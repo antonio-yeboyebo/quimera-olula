@@ -45,7 +45,7 @@ export const validadoresPresupuesto = {
         validadoresPresupuesto.empresa_id(presupuesto.empresa_id),
 };
 
-
+export const CANTIDAD_LINEA_CAMBIADA = 'ventas.presupuesto.linea.cantidad_cambiada'
 export const REFERENCIA_LINEA_CAMBIADA = 'ventas.presupuesto.linea.referencia_cambiada'
 export const eventoReferenciaLineaCambiada = (linea: LineaPresupuesto, referencia: string): EventoReferenciaLineaCambiada => ({
     id: CANTIDAD_LINEA_CAMBIADA,
