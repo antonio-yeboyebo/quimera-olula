@@ -9,7 +9,6 @@ import {
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { useSuscribir } from "../../../../componentes/eventos/pubsub.ts";
 import { Entidad } from "../../../comun/diseño.ts";
-import { guardar } from "../../cliente/dominio.ts";
 import { Presupuesto } from "../diseño.ts";
 import { CANTIDAD_LINEA_CAMBIADA, LINEA_BORRADA, LINEA_CREADA, presupuestoVacio, REFERENCIA_LINEA_CAMBIADA } from "../dominio.ts";
 import {
@@ -49,9 +48,9 @@ export const DetallePresupuesto = ({
     setGuardando(true);
 
     if (presupuestoId) {
-      await guardar(presupuestoId, {
-        [campo]: valor,
-      });
+      // await guardar(presupuestoId, {
+      //   [campo]: valor,
+      // });
     }
     setGuardando(false);
     const nuevoPresupuesto: Presupuesto = { ...presupuesto, [campo]: valor };
@@ -83,11 +82,11 @@ export const DetallePresupuesto = ({
     onEntidadActualizada(nuevoPresupuesto);
   };
 
-  const onClienteCambiadoCallback = async (_: TipoCliente) => {
-    const nuevoPresupuesto = await getPresupuesto(presupuesto.id);
-    setPresupuesto(nuevoPresupuesto);
-    onEntidadActualizada(nuevoPresupuesto);
-  };
+  // const onClienteCambiadoCallback = async (_: TipoCliente) => {
+  //   const nuevoPresupuesto = await getPresupuesto(presupuesto.id);
+  //   setPresupuesto(nuevoPresupuesto);
+  //   onEntidadActualizada(nuevoPresupuesto);
+  // };
 
   const recargarCabecera = async () => {
     const nuevoPresupuesto = await getPresupuesto(presupuesto.id);
@@ -210,7 +209,7 @@ export const DetallePresupuesto = ({
         </div>
         <Lineas
           presupuestoId={presupuesto.id}
-          // onCabeceraModificada={recargarCabecera}
+          onCabeceraModificada={recargarCabecera}
         />
       </Detalle>
     </div>

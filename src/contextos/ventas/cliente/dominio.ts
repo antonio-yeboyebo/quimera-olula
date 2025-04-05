@@ -63,31 +63,34 @@ export const validadoresCliente = {
 };
 
 
-const simularApi = async () => {
-    const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-    await delay(700);
-}
+// const simularApi = async () => {
+//     const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+//     await delay(700);
+// }
 
 export type EstadoCliente = {
     valor: Cliente;
     valor_inicial: Cliente;
     validacion: Validacion;
 }
+type ValidacionCampo = {
+    valido: boolean;
+    advertido: boolean;
+    // erroneo: boolean;
+    textoValidacion: string;
+    deshabilitado: boolean;
+}
 
 export type Validacion = Record<
-    string, {
-        valido: boolean;
-        advertido: boolean;
-        erroneo: boolean;
-        textoValidacion: string;
-        deshabilitado: boolean;
-    }
+    string, ValidacionCampo
 >;
 
-export const puedoGuardarCliente = (validacion: Validacion) => {
+export const puedoGuardarCliente = (estado: EstadoCliente) => {
+    const valor_inicial = estado.valor_inicial;
+    const valor = estado.valor;
     return (
-        !Object.values(validacion).some((v) => v.erroneo)
-        && Object.values(validacion).some((v) => v.valido)
+        Object.values(estado.validacion).every((v) => v.valido)
+        && Object.keys(valor).some((k) => valor[k] !== valor_inicial[k])
     )
 }
 
@@ -96,9 +99,8 @@ export const initEstadoCliente = (cliente: Cliente): EstadoCliente => {
     const validacion: Validacion = {}
     for (const k in cliente) {
         validacion[k] = {
-            valido: false,
+            valido: true,
             advertido: false,
-            erroneo: false,
             textoValidacion: "",
             deshabilitado: deshabilitados.includes(k),
         };
@@ -112,31 +114,49 @@ export const initEstadoCliente = (cliente: Cliente): EstadoCliente => {
 }
 
 export const cambiarCliente = (cliente: EstadoCliente, campo: string, valor: string): EstadoCliente => {
-    console.log("cambiarCliente", campo, valor);
-    const clienteCambiado = {
+    return validarCambio(
+        cambiarCampo(cliente, campo, valor),
+        campo
+    );
+
+}
+
+const cambiarCampo = (cliente: EstadoCliente, campo: string, valor: string): EstadoCliente => {
+    return {
         ...cliente,
         valor: {
             ...cliente.valor,
             [campo]: valor
         }
-    };
-    const clienteValidado = {
-        ...clienteCambiado,
-        validacion: validar(clienteCambiado, campo)
-
     }
-    return clienteValidado;
+}
+const validarCambio = (cliente: EstadoCliente, campo: string): EstadoCliente => {
+    return {
+        ...cliente,
+        validacion: validar(cliente, campo)
+    }
 }
 
-export const reductor = (cliente: EstadoCliente, payload): EstadoCliente => {
-    console.log("reductor", payload, payload.campo);
-    switch (payload.type) {
-        case "set_cliente": {
-            return initEstadoCliente(payload.cliente);
+type Accion = {
+    type: 'init';
+    payload: {
+        entidad: Cliente
+    }
+} | {
+    type: 'set_campo';
+    payload: {
+        campo: string;
+        valor: string;
+    }
+}
+
+export const reductor = (cliente: EstadoCliente, accion: Accion): EstadoCliente => {
+    switch (accion.type) {
+        case "init": {
+            return initEstadoCliente(accion.payload.entidad);
         }
-        case "cambiar_cliente": {
-            const nuevoCliente = cambiarCliente(cliente, payload.campo, payload.valor);
-            console.log("nuevoCliente", nuevoCliente);
+        case "set_campo": {
+            const nuevoCliente = cambiarCliente(cliente, accion.payload.campo, accion.payload.valor);
             return nuevoCliente;
         }
         default: {
@@ -145,77 +165,87 @@ export const reductor = (cliente: EstadoCliente, payload): EstadoCliente => {
     }
 }
 
+export type EstadoClienteInput = {
+    nombre: string;
+    valor: string;
+    textoValidacion: string;
+    deshabilitado: boolean;
+    erroneo: boolean;
+    advertido: boolean;
+    valido: boolean;
+}
+export const estadoAInput = (estado: EstadoCliente, campo: string): EstadoClienteInput => {
+    const validacion = estado.validacion[campo];
+    const cliente = estado.valor;
+    const valor = cliente[campo] as string;
+    const cambiado = valor !== estado.valor_inicial[campo];
+    return {
+        nombre: campo,
+        valor: valor,
+        deshabilitado: validacion.deshabilitado,
+        valido: cambiado && validacion.valido,
+        erroneo: !validacion.valido,
+        advertido: validacion.advertido,
+        textoValidacion: validacion.textoValidacion,
+    }
+}
 
-export const validar = (estado: EstadoCliente, campo: string): Validacion => {
+const validaciones = {
+    nombre: (validacion: ValidacionCampo, valor: string): ValidacionCampo => {
+        return {
+            ...validacion,
+            ...validarRequerido(validacion, valor),
+        }
+    },
+    tipo_id_fiscal: (validacion: ValidacionCampo, valor: string): ValidacionCampo => {
+        const valido = tipoIdFiscalValido(valor);
+        return {
+            ...validacion,
+            valido: valido,
+            advertido: false,
+            textoValidacion: valido ? "" : "Tipo de ID Fiscal no válido",
+        }
+    },
+    id_fiscal: (validacion: ValidacionCampo, valor: string, cliente: EstadoCliente): ValidacionCampo => {
+        const tipoValido = tipoIdFiscalValido(cliente.valor.tipo_id_fiscal);
+        const valido = tipoValido !== true || idFiscalValido(cliente.valor.tipo_id_fiscal)(valor);
+        return {
+            ...validacion,
+            // ...validarRequerido(validacion, valor),
+            valido: valido,
+            textoValidacion: valido ? "" : "Formato no válido",
+        }
+    },
+}
+
+const validarRequerido = (validacion: ValidacionCampo, valor: string): ValidacionCampo => {
+    return {
+        ...validacion,
+        valido: stringNoVacio(valor),
+        textoValidacion: stringNoVacio(valor) ? "" : "Campo requerido",
+    }
+}
+const validar = (estado: EstadoCliente, campo: string): Validacion => {
     const cliente = estado.valor;
     const validacion = estado.validacion;
     switch (campo) {
         case "nombre": {
-            const vacio = cliente.nombre.length == 0;
-            const modificado = cliente.nombre !== estado.valor_inicial.nombre;
-            const valido = !vacio
-            const datos = {
-                ...validacion[campo],
-                valido: modificado && valido,
-                advertido: false,
-                erroneo: !valido,
-                textoValidacion: vacio ? "El nombre no puede estar vacío" : "",
-            }
             return {
                 ...validacion,
-                [campo]: datos,
+                [campo]: validaciones.nombre(validacion[campo], cliente[campo]),
             };
-            break
         }
         case "tipo_id_fiscal": {
-            const tipoIdFiscalEsValido = tipoIdFiscalValido(cliente.tipo_id_fiscal)
-            const idFiscalEsValido = !tipoIdFiscalEsValido || idFiscalValido(cliente.tipo_id_fiscal)(cliente.id_fiscal)
-            const validacionTipoIdFiscal = {
-                ...validacion.tipo_id_fiscal,
-                valido: tipoIdFiscalEsValido,
-                advertido: false,
-                erroneo: !tipoIdFiscalEsValido,
-                textoValidacion: !tipoIdFiscalEsValido ? "El tipo de ID Fiscal no es válido" : "",
-            }
-            const validacionIdFiscal = {
-                ...validacion.id_fiscal,
-                valido: idFiscalEsValido,
-                advertido: false,
-                erroneo: !idFiscalEsValido,
-                textoValidacion: !idFiscalEsValido ? "El ID Fiscal no es válido para el tipo indicado" : "",
-            }
             return {
                 ...validacion,
-                tipo_id_fiscal: validacionTipoIdFiscal,
-                id_fiscal: validacionIdFiscal,
+                tipo_id_fiscal: validaciones.tipo_id_fiscal(validacion.tipo_id_fiscal, cliente.tipo_id_fiscal),
+                id_fiscal: validaciones.id_fiscal(validacion.id_fiscal, cliente.id_fiscal, estado),
             };
-            break
         }
         case "id_fiscal": {
-            const tipoIdFiscalEsValido = tipoIdFiscalValido(cliente.tipo_id_fiscal)
-            const idFiscalEsValido = !tipoIdFiscalEsValido || idFiscalValido(cliente.tipo_id_fiscal)(cliente.id_fiscal)
-            const validacionIdFiscal = {
-                ...validacion.id_fiscal,
-                valido: idFiscalEsValido,
-                advertido: false,
-                erroneo: !idFiscalEsValido,
-                textoValidacion: !idFiscalEsValido ? "El ID Fiscal no es válido para el tipo indicado" : "",
-            }
             return {
                 ...validacion,
-                id_fiscal: validacionIdFiscal,
-            };
-            break
-        }
-        default: {
-            const modificado = estado.valor[campo] !== estado.valor_inicial[campo];
-            const validacionCampo = {
-                ...validacion[campo],
-                valido: modificado,
-            }
-            return {
-                ...validacion,
-                [campo]: validacionCampo,
+                id_fiscal: validaciones.id_fiscal(validacion.id_fiscal, cliente.id_fiscal, estado),
             };
         }
     }
