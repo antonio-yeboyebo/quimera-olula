@@ -23,7 +23,7 @@ export const QBoton = ({
 
   return (
     <quimera-boton {...attrs}>
-      <button type={tipo} onClick={onClick}>
+      <button type={tipo} onClick={onClick} disabled={deshabilitado}>
         {children}
       </button>
     </quimera-boton>

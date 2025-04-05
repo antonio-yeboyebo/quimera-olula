@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { guardar, idFiscalValido, tipoIdFiscalValido } from "../dominio.ts";
+import { idFiscalValido, tipoIdFiscalValido } from "../dominio.ts";
 
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
 import { QForm } from "../../../../componentes/atomos/qform.tsx";
@@ -94,12 +94,12 @@ const IdFiscalEdicion = ({
 
     if (Object.values(nuevoEstado).some((v) => v.length > 0)) return;
 
-    guardar(cliente.id, datos).then(() => {
-      onIdFiscalCambiadoCallback({
-        id_fiscal: datos.id_fiscal,
-        tipo_id_fiscal: datos.tipo_id_fiscal,
-      });
-    });
+    // patchCliente(cliente.id, datos).then(() => {
+    //   onIdFiscalCambiadoCallback({
+    //     id_fiscal: datos.id_fiscal,
+    //     tipo_id_fiscal: datos.tipo_id_fiscal,
+    //   });
+    // });
   };
 
   return (

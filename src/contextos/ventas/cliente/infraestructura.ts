@@ -66,8 +66,19 @@ export const getClientes = async (filtro: Filtro, orden: Orden): Promise<Cliente
 
 export const patchCliente: PatchCliente = async (id, cliente) =>
   await RestAPI.patch(`${baseUrl}/${id}`, {
-    nombre: cliente.nombre,
-    id_fiscal: cliente.id_fiscal,
+    cambios: {
+      nombre: cliente.nombre,
+      id_fiscal: {
+        id: cliente.id_fiscal,
+        tipo: cliente.tipo_id_fiscal,
+      },
+      agente_id: cliente.agente_id,
+      divisa_id: cliente.divisa_id,
+      serie_id: cliente.serie_id,
+      forma_pago_id: cliente.forma_pago_id,
+      grupo_iva_negocio_id: cliente.grupo_iva_negocio_id,
+      nombre_comercial: cliente.nombre_comercial,
+    }
   });
 
 export const deleteCliente = async (id: string): Promise<void> =>

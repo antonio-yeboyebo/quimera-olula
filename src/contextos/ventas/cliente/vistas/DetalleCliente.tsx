@@ -1,70 +1,17 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { useParams } from "react-router";
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
 import { QInput } from "../../../../componentes/atomos/qinput.tsx";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
-import { Input } from "../../../../componentes/detalle/FormularioGenerico.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
-import { Cliente, IdFiscal as TipoIdFiscal } from "../diseño.ts";
-import { clienteVacio, guardar, idFiscalValido, tipoIdFiscalValido } from "../dominio.ts";
-import { camposCliente, getCliente } from "../infraestructura.ts";
+import { Cliente } from "../diseño.ts";
+import { initEstadoClienteVacio, puedoGuardarCliente, reductor } from "../dominio.ts";
+import { getCliente, patchCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
-import { IdFiscal } from "./IdFiscal.tsx";
 import { TabDirecciones } from "./TabDirecciones.tsx";
 
-type Validacion = Record<
-  string,{
-    valido: boolean;
-    advertido: boolean;
-    erroneo: boolean;
-    textoValidacion: string;
-  }
->;
 
-
-const validar = (validacion: Validacion, cliente: Cliente, campo: string): Validacion => {
-  switch (campo) {
-    case "nombre": {
-      const vacio = cliente.nombre.length == 0;
-      const valido = !vacio
-      const datos = {
-        valido: valido,
-        advertido: false,
-        erroneo: !valido,
-        textoValidacion: vacio ? "El nombre no puede estar vacío" : "",
-      }
-      return {
-        ...validacion,
-        [campo]: datos,
-      };
-      break
-    }
-    case "tipo_id_fiscal": {
-      const tipoIdFiscalEsValido = tipoIdFiscalValido(cliente.tipo_id_fiscal)
-      const idFiscalEsValido = !tipoIdFiscalEsValido || idFiscalValido(cliente.tipo_id_fiscal)(cliente.id_fiscal)
-      const validacionTipoIdFiscal = {
-        valido: tipoIdFiscalEsValido,
-        advertido: false,
-        erroneo: !tipoIdFiscalEsValido,
-        textoValidacion: !tipoIdFiscalEsValido ? "El tipo de ID Fiscal no es válido" : "",
-      }
-      const validacionIdFiscal = {
-        valido: idFiscalEsValido,
-        advertido: false,
-        erroneo: !idFiscalEsValido,
-        textoValidacion: !idFiscalEsValido ? "El ID Fiscal no es válido para el tipo indicado" : "",
-      }
-      return {
-        ...validacion,
-        tipo_id_fiscal: validacionTipoIdFiscal,
-        id_fiscal: validacionIdFiscal,
-      };
-      break
-    }
-  }
-    return validacion
-}
 
 export const DetalleCliente = ({
   clienteInicial = null,
@@ -85,50 +32,57 @@ export const DetalleCliente = ({
   const titulo = (cliente: Entidad) =>
     `${cliente.nombre} ${sufijoTitulo}` as string;
 
-  const [cliente, setCliente] = useState<Cliente>(clienteVacio());
-  const [validacion, setValidacion] = useState<Validacion>({
-    nombre: {
-      valido: true,
-      advertido: false,
-      erroneo: false,
-      textoValidacion: "",
-    },
-    
-  });
+  // const [cliente, setCliente] = useState<EstadoCliente>(initEstadoClienteVacio);
+  const [cliente, dispatch] = useReducer(reductor, initEstadoClienteVacio());
 
-  const onIdFiscalCambiadoCallback = async(idFiscal: TipoIdFiscal) => {
+  // const [validacion, setValidacion] = useState<Validacion>({
+  //   nombre: {
+  //     valido: true,
+  //     advertido: false,
+  //     erroneo: false,
+  //     textoValidacion: "",
+  //   },
+  // });
+
+   const onGuardarClicked = async() => {
     setGuardando(true);
-    await guardar(cliente.id, {
-        id_fiscal: idFiscal.id_fiscal,
-        tipo_id_fiscal: idFiscal.tipo_id_fiscal
-    });
-    const nuevoCliente = { ...cliente, ...idFiscal };
-    setCliente(nuevoCliente);
+    await patchCliente(cliente.valor.id, cliente.valor);
+    const cliente_guardado = await getCliente(cliente.valor.id);
+    // setCliente(initEstadoCliente(cliente_guardado));
+    dispatch({ type: "set_cliente", cliente: cliente_guardado });
     setGuardando(false);
-    onEntidadActualizada(nuevoCliente);
+    onEntidadActualizada(cliente.valor);
   };
 
+
+
+  // const onIdFiscalCambiadoCallback = async(idFiscal: TipoIdFiscal) => {
+  //   setGuardando(true);
+  //   await guardar(cliente.valor.id, {
+  //       id_fiscal: idFiscal.id_fiscal,
+  //       tipo_id_fiscal: idFiscal.tipo_id_fiscal
+  //   });
+  //   const nuevoCliente = { ...cliente, ...idFiscal };
+  //   setCliente(nuevoCliente);
+  //   setGuardando(false);
+  //   onEntidadActualizada(nuevoCliente);
+  // };
+
   const onCampoCambiado = async (campo: string, valor: string) => {
-    const nuevoCliente = { ...cliente, [campo]: valor };
-    setCliente(nuevoCliente);
-    setValidacion(validar(validacion, nuevoCliente, campo))
-    // if (!clienteId) {
-    //   return;
-    // }
-    // setGuardando(true);
-    // const nuevoCliente: Cliente = { ...cliente, [campo]: valor };
-    // await patchCliente(clienteId, nuevoCliente);
-    // setGuardando(false);
-    // setCliente(nuevoCliente);
-    // onEntidadActualizada(nuevoCliente);
+    // setCliente(cambiarCliente(cliente, campo, valor));
+    dispatch({
+      type: "cambiar_cliente",
+      campo, valor, 
+    });
   };
 
   return (
     <Detalle
       id={clienteId}
       obtenerTitulo={titulo}
-      setEntidad={(c) => setCliente(c as Cliente)}
-      entidad={cliente}
+      // setEntidad={(c) => setCliente(initEstadoCliente(c as Cliente))}
+      setEntidad={(c) => dispatch({ type: "set_cliente", cliente: c as Cliente })}
+      entidad={cliente.valor}
       cargar={getCliente}
       className="detalle-cliente"
       cerrarDetalle={cancelarSeleccionada}
@@ -139,34 +93,36 @@ export const DetalleCliente = ({
           <QInput
             label="Nombre"
             nombre="nombre"
-            valor={cliente.nombre}
+            valor={cliente.valor.nombre}
             onChange={(v) => onCampoCambiado("nombre", v)}
-            {...validacion.nombre}
+            {...cliente.validacion.nombre}
           />
         </div>
         <div style={{ gridColumn: 'span 12' }}>
           <QInput
             label="Nombre Comercial"
             nombre="nombre comercial"
-            valor={cliente.nombre_comercial ?? ""}
+            valor={cliente.valor.nombre_comercial ?? ""}
+            onChange={(v) => onCampoCambiado("nombre_comercial", v)}
+            {...cliente.validacion.nombre_comercial}
           />
         </div>
         <div style={{ gridColumn: 'span 1' }}>
           <QInput
             label="Tipo Id Fiscal"
             nombre="tipo_id_fiscal"
-            valor={cliente.tipo_id_fiscal}
+            valor={cliente.valor.tipo_id_fiscal}
             onChange={(v) => onCampoCambiado("tipo_id_fiscal", v)}
-            {...validacion.tipo_id_fiscal}
+            {...cliente.validacion.tipo_id_fiscal}
           />
         </div>
         <div style={{ gridColumn: 'span 2' }}>
           <QInput
             label="Id Fiscal"
             nombre="id_fiscal"
-            valor={cliente.id_fiscal}
+            valor={cliente.valor.id_fiscal}
             onChange={(v) => onCampoCambiado("id_fiscal", v)}
-            {...validacion.id_fiscal}
+            {...cliente.validacion.id_fiscal}
           />
         </div>
         <div style={{ gridColumn: 'span 8' }}>
@@ -175,21 +131,25 @@ export const DetalleCliente = ({
           <QInput
             label="Agente"
             nombre="agente_id"
-            valor={cliente.agente_id ?? ""}
+            onChange={(v) => onCampoCambiado("agente_id", v)}
+            valor={cliente.valor.agente_id ?? ""}
+            {...cliente.validacion.agente_id}
           />
         </div>
         <div style={{ gridColumn: 'span 10' }}>
+         
           <QInput
             label="Nombre"
             nombre="nombre_agente"
-            valor={cliente.nombre_agente ?? ""}
+            valor={cliente.valor.nombre_agente ?? ""}
+            {...cliente.validacion.nombre_agente}
           />
         </div>
         <div style={{ gridColumn: 'span 1' }}>
           <QInput
             label="Divisa"
             nombre="divisa"
-            valor={cliente.divisa_id ?? ""}
+            valor={cliente.valor.divisa_id ?? ""}
           />
         </div>
         <div style={{ gridColumn: 'span 11' }}>
@@ -197,27 +157,33 @@ export const DetalleCliente = ({
         <div style={{ gridColumn: 'span 12' }}>
           <div className='botones'>
             <QBoton
-              tipo="submit"
-              // deshabilitado={Object.values(estado).some((v) => v.length > 0)}
+              onClick={onGuardarClicked}
+              deshabilitado={!puedoGuardarCliente(cliente.validacion)} 
             >
             Guardar
             </QBoton>
-            <QBoton tipo="reset" variante="texto">
+            <QBoton tipo="reset" variante="texto"
+              onClick={() => {
+                // setCliente(initEstadoCliente(cliente.valor_inicial));
+                dispatch({ type: "set_cliente", cliente: cliente.valor_inicial });
+              }}
+            >
               Cancelar
             </QBoton>
           </div>
         </div>
 
       </div>
-      <IdFiscal
-        cliente={cliente}
-        onIdFiscalCambiadoCallback={onIdFiscalCambiadoCallback}
+      {/* <IdFiscal
+        cliente={cliente.valor}
+        onIdFiscalCambiadoCallback={() => {}}
+        // onIdFiscalCambiadoCallback={onIdFiscalCambiadoCallback}
       />
       <Input
         campo={camposCliente.agente_id}
         onCampoCambiado={onCampoCambiado}
-        valorEntidad={cliente?.agente_id ?? ""}
-      />
+        valorEntidad={cliente.valor?.agente_id ?? ""}
+      /> */}
 
       {!!clienteId && (
         <Tabs

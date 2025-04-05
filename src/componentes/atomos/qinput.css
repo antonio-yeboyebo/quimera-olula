@@ -35,8 +35,14 @@ quimera-input {
                 /* box-shadow: inset 0 0 0 var(--tamaño-borde-m) var(--color-borde); */
                 /* background-color: yellow; */
                 /* border-top: var(--tamaño-borde-m) solid green; */
-                border-bottom: var(--tamaño-borde-m) solid green;
-                /* border-right: var(--tamaño-borde-m) solid green; */
+                /* border-bottom: var(--tamaño-borde-m) solid green;
+                border-right: var(--tamaño-borde-m) solid green;
+                border-left: var(--tamaño-borde-m) solid green; */
+                background-color: lightblue;
+                border-bottom: var(--tamaño-borde-s) solid transparent;
+                border: var(--tamaño-borde-m) solid transparent;
+                border-radius: var(--redondeo-borde-xs);
+
                 /* border: var(--tamaño-borde-m) solid green; */
                 /* border-radius: var(--redondeo-borde-xs); */
             }
@@ -66,32 +72,26 @@ quimera-input {
     &[erroneo] {
         input {
             --color-borde: var(--color-error);
-            /* border-bottom: var(--tamaño-borde-m) solid red; */
+            border-bottom: var(--tamaño-borde-m) solid red;
 
             &:focus {
-                /* box-shadow: inset 0 0 0 var(--tamaño-borde-m) var(--color-borde); */
-                /* background-color: yellow; */
-                /* border-top: var(--tamaño-borde-m) solid green; */
-                /* border-right: var(--tamaño-borde-m) solid red; */
-                border-bottom: var(--tamaño-borde-m) solid red;
-                /* border: var(--tamaño-borde-m) solid green; */
-                /* border-radius: var(--redondeo-borde-xs); */
+                background-color: lightcoral;
             }
         }
 
-        & .etiqueta {
+        /* & .etiqueta {
             &::before {
                 content: "❌";
             }
-        }
+        } */
 
 
         & .texto-validacion {
             color: var(--color-error);
 
-            &::before {
+            /* &::before {
                 content: "❌";
-            }
+            } */
         }
     }
 
@@ -111,8 +111,15 @@ quimera-input {
 
     &[valido] {
         input {
-            --color-borde: var(--color-exito);
+            border-bottom: var(--tamaño-borde-m) solid green;
+
+            /* --color-borde: var(--color-exito); */
+            &:focus {
+                background-color: lightgreen;
+            }
         }
+
+
 
         & .texto-validacion {
             color: var(--color-exito);
