@@ -3,8 +3,9 @@ import { useParams } from "react-router";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
+import { campoEntidadAInput, makeReductor } from "../../../comun/dominio.ts";
 import { Cliente } from "../diseño.ts";
-import { estadoAInput, initEstadoClienteVacio, reductor } from "../dominio.ts";
+import { configReductorCliente, initEstadoClienteVacio } from "../dominio.ts";
 import { getCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
 import { TabComercial } from "./TabComercial.tsx";
@@ -23,28 +24,12 @@ export const DetalleCliente = ({
 }) => {
   const params = useParams();
 
-  // const [guardando, setGuardando] = useState(false);
-
   const clienteId = clienteInicial?.id ?? params.id;
-
-  // const sufijoTitulo = guardando ? " (Guardando...)" : "";
   const titulo = (cliente: Entidad) => cliente.nombre as string;
 
-  // const [cliente, setCliente] = useState<EstadoCliente>(initEstadoClienteVacio);
-  const [cliente, dispatch] = useReducer(reductor, initEstadoClienteVacio());
-
-  // const onGuardarClicked = async() => {
-  //   setGuardando(true);
-  //   await patchCliente(cliente.valor.id, cliente.valor);
-  //   const cliente_guardado = await getCliente(cliente.valor.id);
-  //   // setCliente(initEstadoCliente(cliente_guardado));
-  //   dispatch({ type: "init", payload: {entidad: cliente_guardado }});
-  //   setGuardando(false);
-  //   onEntidadActualizada(cliente.valor);
-  // };
+  const [cliente, dispatch] = useReducer(makeReductor(configReductorCliente), initEstadoClienteVacio());
 
   const setCampo = (campo: string) => (valor: string) => {
-    // setCliente(cambiarCliente(cliente, campoalor));
     dispatch({
       type: "set_campo",
       payload: {campo, valor, }
@@ -52,7 +37,7 @@ export const DetalleCliente = ({
   };
 
   const getProps = (campo: string) => {
-    return estadoAInput(cliente, campo);
+    return campoEntidadAInput(cliente, campo);
   };
 
   return (

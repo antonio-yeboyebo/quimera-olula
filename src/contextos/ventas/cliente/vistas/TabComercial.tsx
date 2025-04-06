@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
 import { QInput } from "../../../../componentes/atomos/qinput.tsx";
+import { Accion, EstadoEntidad, puedoGuardarEntidad } from "../../../comun/dominio.ts";
 import { Cliente } from "../diseño.ts";
-import { Accion, EstadoCliente, puedoCancelarCliente, puedoGuardarCliente } from "../dominio.ts";
+import { puedoCancelarCliente } from "../dominio.ts";
 import { getCliente, patchCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
 
@@ -17,47 +18,23 @@ export const TabComercial = ({
 }: {
     getProps: (campo: string) => any;
     setCampo: (campo: string) => any;
-    cliente: EstadoCliente
-    dispatch: (action: Accion) => void;
+    cliente: EstadoEntidad<Cliente>;
+    dispatch: (action: Accion<Cliente>) => void;
     onEntidadActualizada: (entidad: Cliente) => void;
 }) => {
-//   const params = useParams();
 
   const [_, setGuardando] = useState(false);
-
-//   const clienteId = clienteInicial?.id ?? params.id;
-
-//   const sufijoTitulo = guardando ? " (Guardando...)" : "";
-//   const titulo = (cliente: Entidad) =>
-//     `${cliente.nombre} ${sufijoTitulo}` as string;
-
-//   // const [cliente, setCliente] = useState<EstadoCliente>(initEstadoClienteVacio);
-//   const [cliente, dispatch] = useReducer(reductor, initEstadoClienteVacio());
 
   const onGuardarClicked = async() => {
     setGuardando(true);
     await patchCliente(cliente.valor.id, cliente.valor);
     const cliente_guardado = await getCliente(cliente.valor.id);
-    // setCliente(initEstadoCliente(cliente_guardado));
     dispatch({ type: "init", payload: {entidad: cliente_guardado }});
     setGuardando(false);
     onEntidadActualizada(cliente.valor);
   };
 
-//   const setCampo = (campo: string) => (valor: string) => {
-//     // setCliente(cambiarCliente(cliente, campoalor));
-//     dispatch({
-//       type: "set_campo",
-//       payload: {campo, valor, }
-//     });
-//   };
-
-//   const getProps = (campo: string) => {
-//     return estadoAInput(cliente, campo);
-//   };
-
   return (
-    
       <div className="container">
         <div style={{ gridColumn: 'span 12' }}>
           <QInput
@@ -115,7 +92,7 @@ export const TabComercial = ({
           <div className='botones'>
             <QBoton
               onClick={onGuardarClicked}
-              deshabilitado={!puedoGuardarCliente(cliente)} 
+              deshabilitado={!puedoGuardarEntidad(cliente)} 
             >
             Guardar
             </QBoton>
