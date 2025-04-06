@@ -5,7 +5,7 @@ import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
 import { campoEntidadAInput, makeReductor } from "../../../comun/dominio.ts";
 import { Cliente } from "../diseño.ts";
-import { configReductorCliente, initEstadoClienteVacio } from "../dominio.ts";
+import { initEstadoClienteVacio, metaCliente } from "../dominio.ts";
 import { getCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
 import { TabComercial } from "./TabComercial.tsx";
@@ -27,7 +27,7 @@ export const DetalleCliente = ({
   const clienteId = clienteInicial?.id ?? params.id;
   const titulo = (cliente: Entidad) => cliente.nombre as string;
 
-  const [cliente, dispatch] = useReducer(makeReductor(configReductorCliente), initEstadoClienteVacio());
+  const [cliente, dispatch] = useReducer(makeReductor(metaCliente), initEstadoClienteVacio());
 
   const setCampo = (campo: string) => (valor: string) => {
     dispatch({

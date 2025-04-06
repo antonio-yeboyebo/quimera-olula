@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
 import { QInput } from "../../../../componentes/atomos/qinput.tsx";
-import { Accion, EstadoEntidad, puedoGuardarEntidad } from "../../../comun/dominio.ts";
+import { Accion, entidadModificada, EstadoEntidad, puedoGuardarEntidad } from "../../../comun/dominio.ts";
 import { Cliente } from "../diseño.ts";
-import { puedoCancelarCliente } from "../dominio.ts";
 import { getCliente, patchCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
 
@@ -100,7 +99,7 @@ export const TabComercial = ({
               onClick={() => {
                 dispatch({ type: "init", payload: {entidad: cliente.valor_inicial }});
               }}
-              deshabilitado={!puedoCancelarCliente(cliente)} 
+              deshabilitado={!entidadModificada(cliente)} 
             >
               Cancelar
             </QBoton>

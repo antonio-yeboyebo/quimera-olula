@@ -57,12 +57,12 @@ export const entidadModificada = <T extends Entidad>(estado: EstadoEntidad<T>) =
 export type Validador<T extends Entidad> = (estado: EstadoEntidad<T>, campo: string) => Validacion;
 
 export type MetaEntidad<T extends Entidad> = {
-    deshabilitados: string[];
+    bloqueados: string[];
     requeridos: string[];
     validador: Validador<T>;
 }
 
-export const makeReductor = <T extends Entidad>(config: MetaEntidad<T>) => {
+export const makeReductor = <T extends Entidad>(meta: MetaEntidad<T>) => {
 
     return (estado: EstadoEntidad<T>, accion: Accion<T>): EstadoEntidad<T> => {
 
@@ -71,8 +71,7 @@ export const makeReductor = <T extends Entidad>(config: MetaEntidad<T>) => {
             case "init": {
                 return initEstadoEntidad<T>(
                     accion.payload.entidad,
-                    config.deshabilitados,
-                    config.requeridos
+                    meta
                 );
             }
 
@@ -81,7 +80,7 @@ export const makeReductor = <T extends Entidad>(config: MetaEntidad<T>) => {
                     estado,
                     accion.payload.campo,
                     accion.payload.valor,
-                    config.validador
+                    meta.validador
                 );
             }
 
@@ -92,14 +91,14 @@ export const makeReductor = <T extends Entidad>(config: MetaEntidad<T>) => {
     }
 }
 
-export const initEstadoEntidad = <T extends Entidad>(entidad: T, bloqueados: string[], requeridos: string[]) => {
+export const initEstadoEntidad = <T extends Entidad>(entidad: T, meta: MetaEntidad<T>) => {
     const validacion: Validacion = {}
     for (const k in entidad) {
         validacion[k] = {
             valido: true,
             textoValidacion: "",
-            bloqueado: bloqueados.includes(k),
-            requerido: requeridos.includes(k),
+            bloqueado: meta.bloqueados.includes(k),
+            requerido: meta.requeridos.includes(k),
         };
     }
     const estado = {
