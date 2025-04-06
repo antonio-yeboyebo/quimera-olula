@@ -1,4 +1,4 @@
-import { Evento } from "../../../componentes/eventos/pubsub.ts";
+// import { Evento } from "../../../componentes/eventos/pubsub.ts";
 import { Direccion, Entidad, Filtro, Orden } from "../../comun/diseño.ts";
 
 export interface Presupuesto extends Entidad {
@@ -41,30 +41,34 @@ export type Cliente = {
   direccion_id: string;
 }
 
-export interface EventoCantidadLineaCambiada extends Evento {
-  payload: {
-    linea: LineaPresupuesto;
-    cantidad: number;
-  };
-};
+// export interface EventoCantidadLineaCambiada extends Evento {
+//   id: string;
+//   payload: {
+//     linea: LineaPresupuesto;
+//     cantidad: number;
+//   };
+// };
 
-export interface EventoReferenciaLineaCambiada extends Evento {
-  payload: {
-    linea: LineaPresupuesto;
-    referencia: string;
-  };
-};
-export interface EventoLineaBorrada extends Evento {
-  payload: {
-    linea: LineaPresupuesto;
-  };
-};
+// export interface EventoReferenciaLineaCambiada extends Evento {
+//   id: string;
+//   payload: {
+//     linea: LineaPresupuesto;
+//     referencia: string;
+//   };
+// };
+// export interface EventoLineaBorrada extends Evento {
+//   id: string;
+//   payload: {
+//     linea: LineaPresupuesto;
+//   };
+// };
 
-export interface EventoLineaCreada extends Evento {
-  payload: {
-    lineaId: string;
-  };
-};
+// export interface EventoLineaCreada extends Evento {
+//   id: string;
+//   payload: {
+//     lineaId: string;
+//   };
+// };
 
 export type GetPresupuestos = (filtro: Filtro, orden: Orden) => Promise<Presupuesto[]>;
 

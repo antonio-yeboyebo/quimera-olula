@@ -1,6 +1,7 @@
-import { Evento } from "../../../componentes/eventos/pubsub.ts";
+// import { Evento } from "../../../componentes/eventos/pubsub.ts";
 import { Direccion } from "../../comun/diseño.ts";
-import { EventoLineaBorrada, EventoLineaCreada, EventoReferenciaLineaCambiada, LineaPresupuesto, NuevoPresupuesto, Presupuesto } from "./diseño.ts";
+import { NuevoPresupuesto, Presupuesto } from "./diseño.ts";
+// import { EventoLineaBorrada, EventoLineaCreada, EventoReferenciaLineaCambiada, LineaPresupuesto, NuevoPresupuesto, Presupuesto } from "./diseño.ts";
 
 export const direccionVacia = (): Direccion => ({
     dir_envio: false,
@@ -45,28 +46,28 @@ export const validadoresPresupuesto = {
         validadoresPresupuesto.empresa_id(presupuesto.empresa_id),
 };
 
-export const CANTIDAD_LINEA_CAMBIADA = 'ventas.presupuesto.linea.cantidad_cambiada'
-export const REFERENCIA_LINEA_CAMBIADA = 'ventas.presupuesto.linea.referencia_cambiada'
-export const eventoReferenciaLineaCambiada = (linea: LineaPresupuesto, referencia: string): EventoReferenciaLineaCambiada => ({
-    id: CANTIDAD_LINEA_CAMBIADA,
-    payload: { linea, referencia, }
-})
+// export const CANTIDAD_LINEA_CAMBIADA = 'ventas.presupuesto.linea.cantidad_cambiada'
+// export const REFERENCIA_LINEA_CAMBIADA = 'ventas.presupuesto.linea.referencia_cambiada'
+// export const eventoReferenciaLineaCambiada = (linea: LineaPresupuesto, referencia: string): EventoReferenciaLineaCambiada => ({
+//     id: CANTIDAD_LINEA_CAMBIADA,
+//     payload: { linea, referencia, }
+// })
 
-export const LINEA_BORRADA = 'ventas.presupuesto.linea.borrada'
-export const eventoLineaBorrada = (linea: LineaPresupuesto): EventoLineaBorrada => ({
-    id: LINEA_BORRADA,
-    payload: { linea, }
-})
+// export const LINEA_BORRADA = 'ventas.presupuesto.linea.borrada'
+// export const eventoLineaBorrada = (linea: LineaPresupuesto): EventoLineaBorrada => ({
+//     id: LINEA_BORRADA,
+//     payload: { linea, }
+// })
 
-export const LINEA_CREADA = 'ventas.presupuesto.linea.creada'
-export const eventoLineaCreada = (lineaId: string): EventoLineaCreada => ({
-    id: LINEA_CREADA,
-    payload: { lineaId }
-})
+// export const LINEA_CREADA = 'ventas.presupuesto.linea.creada'
+// export const eventoLineaCreada = (lineaId: string): EventoLineaCreada => ({
+//     id: LINEA_CREADA,
+//     payload: { lineaId }
+// })
 
-export const CABECERA_CAMBIADA = 'ventas.presupuesto.cabecera.cambiada'
-export enum CambioCabecera { GENERICO, CLIENTE }
-export const eventoCabeceraCambiada = (presupuesto: Presupuesto, cambio = CambioCabecera.GENERICO): Evento => ({
-    id: CABECERA_CAMBIADA,
-    payload: { presupuesto, cambio }
-})
+// export const CABECERA_CAMBIADA = 'ventas.presupuesto.cabecera.cambiada'
+// export enum CambioCabecera { GENERICO, CLIENTE }
+// export const eventoCabeceraCambiada = (presupuesto: Presupuesto, cambio = CambioCabecera.GENERICO): Evento => ({
+//     id: CABECERA_CAMBIADA,
+//     payload: { presupuesto, cambio }
+// })

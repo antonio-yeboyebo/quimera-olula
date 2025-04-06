@@ -91,6 +91,17 @@ export const puedoGuardarCliente = (estado: EstadoEntidad<Cliente>) => {
     )
 }
 
+
+
+
+export const puedoCancelarCliente = (estado: EstadoEntidad<Cliente>) => {
+    const valor_inicial = estado.valor_inicial;
+    const valor = estado.valor;
+    return (
+        Object.keys(valor).some((k) => valor[k] !== valor_inicial[k])
+    )
+}
+
 const initEstadoEntidad = <T extends Entidad>(entidad: T, deshabilitados: string[], requeridos: string[]) => {
     const validacion: Validacion = {}
     for (const k in entidad) {
@@ -164,7 +175,7 @@ const validarCambio = <T extends Entidad>(estado: EstadoEntidad<T>,
     }
 }
 
-type Accion = {
+export type Accion = {
     type: 'init';
     payload: {
         entidad: Cliente
@@ -263,7 +274,7 @@ const validar: Validador<Cliente> = (estado, campo) => {
         }
         default: {
             if (campo in validaciones) {
-                // @ts-ignore
+                // @ts-expect-error campo puede ni estar en validaciones, pero se asume que sí
                 const validacionCampo = validaciones[campo];
                 return {
                     ...validacion,

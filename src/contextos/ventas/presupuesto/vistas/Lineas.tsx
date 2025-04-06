@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { refrescarSeleccionada } from "../../../comun/dominio.ts";
-import { EventoCantidadLineaCambiada, EventoReferenciaLineaCambiada, LineaPresupuesto as Linea, LineaPresupuestoNueva } from "../diseño.ts";
+import { LineaPresupuesto as Linea, LineaPresupuestoNueva } from "../diseño.ts";
 import { getLineas } from "../infraestructura.ts";
 import { AltaLinea } from "./AltaLinea.tsx";
 import { EdicionLinea } from "./EdicionLinea.tsx";
 import { LineasLista } from "./LineasLista.tsx";
 
-type EventoLineaModificada = EventoCantidadLineaCambiada | EventoReferenciaLineaCambiada;
+// type EventoLineaModificada = EventoCantidadLineaCambiada | EventoReferenciaLineaCambiada;
 
 export const Lineas = ({
   onCabeceraModificada,

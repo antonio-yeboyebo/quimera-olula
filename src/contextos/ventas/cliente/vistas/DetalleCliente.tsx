@@ -1,14 +1,13 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { useParams } from "react-router";
-import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
-import { QInput } from "../../../../componentes/atomos/qinput.tsx";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
 import { Cliente } from "../diseño.ts";
-import { estadoAInput, initEstadoClienteVacio, puedoGuardarCliente, reductor } from "../dominio.ts";
-import { getCliente, patchCliente } from "../infraestructura.ts";
+import { estadoAInput, initEstadoClienteVacio, reductor } from "../dominio.ts";
+import { getCliente } from "../infraestructura.ts";
 import "./DetalleCliente.css";
+import { TabComercial } from "./TabComercial.tsx";
 import { TabDirecciones } from "./TabDirecciones.tsx";
 
 
@@ -24,26 +23,25 @@ export const DetalleCliente = ({
 }) => {
   const params = useParams();
 
-  const [guardando, setGuardando] = useState(false);
+  // const [guardando, setGuardando] = useState(false);
 
   const clienteId = clienteInicial?.id ?? params.id;
 
-  const sufijoTitulo = guardando ? " (Guardando...)" : "";
-  const titulo = (cliente: Entidad) =>
-    `${cliente.nombre} ${sufijoTitulo}` as string;
+  // const sufijoTitulo = guardando ? " (Guardando...)" : "";
+  const titulo = (cliente: Entidad) => cliente.nombre as string;
 
   // const [cliente, setCliente] = useState<EstadoCliente>(initEstadoClienteVacio);
   const [cliente, dispatch] = useReducer(reductor, initEstadoClienteVacio());
 
-  const onGuardarClicked = async() => {
-    setGuardando(true);
-    await patchCliente(cliente.valor.id, cliente.valor);
-    const cliente_guardado = await getCliente(cliente.valor.id);
-    // setCliente(initEstadoCliente(cliente_guardado));
-    dispatch({ type: "init", payload: {entidad: cliente_guardado }});
-    setGuardando(false);
-    onEntidadActualizada(cliente.valor);
-  };
+  // const onGuardarClicked = async() => {
+  //   setGuardando(true);
+  //   await patchCliente(cliente.valor.id, cliente.valor);
+  //   const cliente_guardado = await getCliente(cliente.valor.id);
+  //   // setCliente(initEstadoCliente(cliente_guardado));
+  //   dispatch({ type: "init", payload: {entidad: cliente_guardado }});
+  //   setGuardando(false);
+  //   onEntidadActualizada(cliente.valor);
+  // };
 
   const setCampo = (campo: string) => (valor: string) => {
     // setCliente(cambiarCliente(cliente, campoalor));
@@ -67,81 +65,6 @@ export const DetalleCliente = ({
       className="detalle-cliente"
       cerrarDetalle={cancelarSeleccionada}
     >
-      {/* <h2 className="detalle-cliente-titulo">{titulo(cliente)}</h2> */}
-      <div className="container">
-        <div style={{ gridColumn: 'span 12' }}>
-          <QInput
-            label="Nombre"
-            onChange={setCampo("nombre")}
-            {...getProps("nombre")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 12' }}>
-          <QInput
-            label="Nombre Comercial"
-            onChange={setCampo("nombre_comercial")}
-            {...getProps("nombre_comercial")}
-            />
-        </div>
-        <div style={{ gridColumn: 'span 1' }}>
-          <QInput
-            label="Tipo Id Fiscal"
-            onChange={setCampo("tipo_id_fiscal")}
-            {...getProps("tipo_id_fiscal")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 2' }}>
-          <QInput
-            label="Id Fiscal"
-            onChange={setCampo("id_fiscal")}
-            {...getProps("id_fiscal")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 8' }}>
-        </div>
-        <div style={{ gridColumn: 'span 2' }}>
-          <QInput
-            label="Agente"
-            onChange={setCampo("agente_id")}
-            {...getProps("agente_id")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 10' }}>
-          <QInput
-            label="Nombre"
-            {...getProps("nombre_agente")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 1' }}>
-          <QInput
-            label="Divisa"
-            onChange={setCampo("divisa_id")}
-            {...getProps("divisa_id")}
-          />
-        </div>
-        <div style={{ gridColumn: 'span 11' }}>
-        </div>
-        <div style={{ gridColumn: 'span 12' }}>
-          <div className='botones'>
-            <QBoton
-              onClick={onGuardarClicked}
-              deshabilitado={!puedoGuardarCliente(cliente)} 
-            >
-            Guardar
-            </QBoton>
-            <QBoton tipo="reset" variante="texto"
-              onClick={() => {
-                // setCliente(initEstadoCliente(cliente.valor_inicial));
-                dispatch({ type: "init", payload: {entidad: cliente.valor_inicial }});
-              }}
-            >
-              Cancelar
-            </QBoton>
-          </div>
-        </div>
-
-      </div>
-
       {!!clienteId && (
         <Tabs
           className="detalle-cliente-tabs"
@@ -151,7 +74,13 @@ export const DetalleCliente = ({
               label="Comercial"
               children={
                 <div className="detalle-cliente-tab-contenido">
-                  Comercial contenido
+                  <TabComercial
+                    getProps={getProps}
+                    setCampo={setCampo}
+                    cliente={cliente}
+                    dispatch={dispatch}
+                    onEntidadActualizada={onEntidadActualizada}
+                    />
                 </div>
               }
             />,

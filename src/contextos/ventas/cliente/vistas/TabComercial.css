@@ -1,0 +1,30 @@
+.flex-container>div {
+    background-color: DodgerBlue;
+    color: white;
+    margin: 10px;
+    text-align: center;
+    /* line-height: 75px; */
+    font-size: 30px;
+}
+
+.botones {
+    display: flex;
+    width: 100%;
+    justify-content: right;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    /* background-color: dodgerblue; */
+    padding: 0px;
+    row-gap: 10px;
+}
+
+.container>div {
+    background-color: #f1f1f1;
+    border: 0px solid black;
+    padding: 4px;
+    font-size: 30px;
+    /* text-align: center; */
+}

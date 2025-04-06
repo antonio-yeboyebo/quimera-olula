@@ -7,10 +7,9 @@ import {
   InputSelect,
 } from "../../../../componentes/detalle/FormularioGenerico.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
-import { useSuscribir } from "../../../../componentes/eventos/pubsub.ts";
 import { Entidad } from "../../../comun/diseño.ts";
 import { Presupuesto } from "../diseño.ts";
-import { CANTIDAD_LINEA_CAMBIADA, LINEA_BORRADA, LINEA_CREADA, presupuestoVacio, REFERENCIA_LINEA_CAMBIADA } from "../dominio.ts";
+import { presupuestoVacio } from "../dominio.ts";
 import {
   camposPresupuesto,
   getPresupuesto,
@@ -93,13 +92,6 @@ export const DetallePresupuesto = ({
     setPresupuesto(nuevoPresupuesto);
     onEntidadActualizada(nuevoPresupuesto);
   };
-
-    useSuscribir([
-      [CANTIDAD_LINEA_CAMBIADA, recargarCabecera],
-      [REFERENCIA_LINEA_CAMBIADA, recargarCabecera],
-      [LINEA_BORRADA, recargarCabecera],
-      [LINEA_CREADA, recargarCabecera],
-    ]);
 
   return (
     <div className={detalle}>
