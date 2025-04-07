@@ -1,4 +1,4 @@
-import { EstadoEntidad, initEstadoEntidad, MetaEntidad, stringNoVacio, ValidacionCampo, validacionDefecto, Validador } from "../../comun/dominio.ts";
+import { EstadoEntidad, initEstadoEntidad, makeValidador, MetaEntidad, stringNoVacio, ValidacionCampo, ValidadorCampos, validarCampo } from "../../comun/dominio.ts";
 import { Cliente, DirCliente, NuevaDireccion, NuevoCliente } from "./diseño.ts";
 
 export const idFiscalValido = (tipo: string) => (valor: string) => {
@@ -40,6 +40,7 @@ export const clienteVacio = (): Cliente => ({
 })
 
 
+
 export const validadoresDireccion = {
     nuevaDireccion: (valor: NuevaDireccion) => (
         validadoresDireccion.tipo_via(valor.tipo_via) &&
@@ -67,7 +68,7 @@ export const initEstadoDireccion = (direccion: DirCliente): EstadoEntidad<DirCli
     return initEstadoEntidad(direccion, metaDireccion);
 }
 
-const validacionesCliente = {
+const validacionesCliente: ValidadorCampos<Cliente> = {
     tipo_id_fiscal: (cliente: EstadoEntidad<Cliente>): ValidacionCampo => {
         const valido = tipoIdFiscalValido(cliente.valor.tipo_id_fiscal);
         return {
@@ -83,40 +84,31 @@ const validacionesCliente = {
             : true;
         return {
             ...cliente.validacion.id_fiscal,
-            // ...validarRequerido(validacion, valor),
             valido: valido === true,
             textoValidacion: typeof valido === "string" ? valido : "",
         }
     },
 }
 
-const validadorCliente: Validador<Cliente> = (estado, campo) => {
-    const cliente = estado.valor;
-    const validacion = estado.validacion;
-    switch (campo) {
-        case "tipo_id_fiscal": {
-            return {
-                ...validacion,
-                tipo_id_fiscal: validacionesCliente.tipo_id_fiscal(estado),
-                id_fiscal: validacionesCliente.id_fiscal(estado),
-            };
-        }
-        default: {
-            if (campo in validacionesCliente) {
-                const validacionCampo = validacionesCliente[campo as keyof typeof validacionesCliente];
+const makeValidadorCliente = (validadorCampos: ValidadorCampos<Cliente>) =>
+
+    (estado: EstadoEntidad<Cliente>, campo: string) => {
+
+        const validacion = estado.validacion;
+
+        switch (campo) {
+            case "tipo_id_fiscal": {
                 return {
                     ...validacion,
-                    [campo]: validacionCampo(estado),
-                }
-            } else {
-                return {
-                    ...validacion,
-                    [campo]: validacionDefecto(validacion[campo], cliente[campo] as string),
-                }
+                    tipo_id_fiscal: validarCampo(estado, campo, validadorCampos.tipo_id_fiscal),
+                    id_fiscal: validarCampo(estado, "id_fiscal", validadorCampos.id_fiscal),
+                };
+            }
+            default: {
+                return makeValidador(validadorCampos)(estado, campo);
             }
         }
     }
-}
 
 export const metaCliente: MetaEntidad<Cliente> = {
     bloqueados: ['nombre_agente'],
@@ -125,7 +117,7 @@ export const metaCliente: MetaEntidad<Cliente> = {
         'tipo_id_fiscal',
         'id_fiscal'
     ],
-    validador: validadorCliente,
+    validador: makeValidadorCliente(validacionesCliente),
 };
 
 export const metaDireccion: MetaEntidad<DirCliente> = {
@@ -135,14 +127,7 @@ export const metaDireccion: MetaEntidad<DirCliente> = {
         'nombre_via',
         'ciudad'
     ],
-    validador: (estado, campo) => {
-        const entidad = estado.valor;
-        const validacion = estado.validacion;
-        return {
-            ...validacion,
-            [campo]: validacionDefecto(validacion[campo], entidad[campo as keyof DirCliente] as string),
-        }
-    }
+    validador: makeValidador({}),
 };
 
 export const initEstadoClienteVacio = () => initEstadoCliente(clienteVacio())

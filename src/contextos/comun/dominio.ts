@@ -18,7 +18,19 @@ export const refrescarSeleccionada = <T extends Entidad>(entidades: T[], id: str
 }
 
 export const direccionCompleta = (valor: Direccion) => `${valor.tipo_via ? (valor.tipo_via + ' ') : ''} ${valor.nombre_via}, ${valor.ciudad}`;
-
+export const direccionVacia: Direccion = {
+    tipo_via: '',
+    nombre_via: '',
+    ciudad: '',
+    numero: '',
+    otros: '',
+    cod_postal: '',
+    provincia_id: 0,
+    provincia: '',
+    pais_id: '',
+    apartado: '',
+    telefono: '',
+}
 export const boolAString = (valor: boolean) => valor ? "Sí" : "No";
 
 export const stringNoVacio = (valor: string) => valor.length > 0;
@@ -164,7 +176,11 @@ export type EstadoInput = {
     advertido: boolean;
     valido: boolean;
 }
-export const campoEntidadAInput = <T extends Entidad>(estado: EstadoEntidad<T>, campo: string): EstadoInput => {
+export const campoEntidadAInput = <T extends Entidad>(
+    estado: EstadoEntidad<T>,
+    campo: string
+): EstadoInput => {
+
     const validacion = estado.validacion[campo];
     const valor = estado.valor[campo] as string;
     const cambiado = valor !== estado.valor_inicial[campo];
@@ -185,5 +201,58 @@ export const validacionDefecto = (validacion: ValidacionCampo, valor: string): V
         ...validacion,
         valido,
         textoValidacion: valido ? "" : "Campo requerido",
+    }
+}
+
+export type ValidadorCampo<T extends Entidad> = (estado: EstadoEntidad<T>) => ValidacionCampo;
+export type ValidadorCampos<T extends Entidad> = Record<string, ValidadorCampo<T>>;
+
+export const makeValidador = <T extends Entidad>(
+    validadorCampos: ValidadorCampos<T>
+) => (
+    estado: EstadoEntidad<T>, campo: string
+) => {
+
+        const validacion = estado.validacion;
+
+        return (campo in validadorCampos)
+            ? {
+                ...validacion,
+                [campo]: validarCampo(estado, campo, validadorCampos[campo]),
+            }
+            : {
+                ...validacion,
+                [campo]: validarCampo(estado, campo),
+            }
+
+    }
+
+export const validarCampo = <T extends Entidad>(
+    estado: EstadoEntidad<T>,
+    campo: string, validador?: ValidadorCampo<T>
+): ValidacionCampo => {
+
+    const entidad = estado.valor;
+    const validacion = estado.validacion;
+    const valor = entidad[campo] as string;
+    const valido = !validacion[campo].requerido || stringNoVacio(valor);
+    if (valido !== true) {
+        return {
+            ...validacion[campo],
+            valido: false,
+            textoValidacion: "Campo requerido",
+        }
+    }
+    if (validador) {
+        const validacionCampo = validador(estado);
+        return {
+            ...validacion[campo],
+            ...validacionCampo,
+        }
+    }
+    return {
+        ...validacion[campo],
+        valido: true,
+        textoValidacion: "",
     }
 }

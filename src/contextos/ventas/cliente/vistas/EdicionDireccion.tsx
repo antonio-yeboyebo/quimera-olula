@@ -1,9 +1,9 @@
 import { useReducer } from "react";
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
 import { QInput } from "../../../../componentes/atomos/qinput.tsx";
-import { campoEntidadAInput, makeReductor, puedoGuardarEntidad } from "../../../comun/dominio.ts";
+import { campoEntidadAInput, initEstadoEntidad, makeReductor, puedoGuardarEntidad } from "../../../comun/dominio.ts";
 import { DirCliente } from "../diseño.ts";
-import { initEstadoDireccion, metaDireccion } from "../dominio.ts";
+import { metaDireccion } from "../dominio.ts";
 import { actualizarDireccion } from "../infraestructura.ts";
 
 export const EdicionDireccion = ({
@@ -18,7 +18,7 @@ export const EdicionDireccion = ({
   onCancelar: () => void;
 }) => {
 
-  const [estado, dispatch] = useReducer(makeReductor(metaDireccion), initEstadoDireccion(direccion));
+  const [estado, dispatch] = useReducer(makeReductor(metaDireccion), initEstadoEntidad(direccion, metaDireccion));
 
   const setCampo = (campo: string) => (valor: string) => {
     dispatch({
