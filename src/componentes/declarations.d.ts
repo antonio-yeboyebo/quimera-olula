@@ -14,7 +14,9 @@ declare namespace React {
         interface IntrinsicElements {
             'quimera-formulario': NodoComun;
             'quimera-boton': NodoComun;
+            'quimera-date': NodoComun;
             'quimera-input': NodoComun;
+            'quimera-checkbox': NodoComun;
             'quimera-select': NodoComun;
             'quimera-autocompletar': NodoComun;
             'quimera-tabla': NodoComun;

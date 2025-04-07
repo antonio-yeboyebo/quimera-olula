@@ -12,6 +12,8 @@ export interface Cliente extends Entidad {
   serie_id: string;
   forma_pago_id: string;
   grupo_iva_negocio_id: string;
+  de_baja: boolean;
+  fecha_baja: string | null;
 };
 
 export interface IdFiscal {

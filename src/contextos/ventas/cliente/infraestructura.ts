@@ -7,7 +7,11 @@ const baseUrl = `/ventas/cliente`;
 
 type ClienteApi = Cliente;
 
-const clienteFromAPI = (c: ClienteApi): Cliente => c;
+const clienteFromAPI = (c: ClienteApi): Cliente => ({
+  ...c,
+  de_baja: false,
+  fecha_baja: '',
+});
 
 export type DireccionAPI = {
   nombre_via: string;

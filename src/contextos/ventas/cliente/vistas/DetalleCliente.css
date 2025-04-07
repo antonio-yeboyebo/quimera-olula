@@ -36,10 +36,9 @@
     justify-content: right;
 }
 
-.container {
+/* .container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    /* background-color: dodgerblue; */
     padding: 0px;
     row-gap: 10px;
 }
@@ -49,5 +48,4 @@
     border: 0px solid black;
     padding: 4px;
     font-size: 30px;
-    /* text-align: center; */
-}
+} */

@@ -1,70 +1,67 @@
-import "./qinput.css";
+import "./qcheckbox.css";
 
-export type FormInputProps = {
+type FormInputProps = {
   label: string;
   nombre: string;
   deshabilitado?: boolean;
   placeholder?: string;
-  valor?: string;
+  valor?: boolean;
   textoValidacion?: string;
   erroneo?: boolean;
   advertido?: boolean;
   valido?: boolean;
   opcional?: boolean;
   condensado?: boolean;
-  onChange?: (valor: string, evento: React.ChangeEvent<HTMLElement>) => void;
-  onBlur?: (valor: string, evento: React.FocusEvent<HTMLElement>) => void;
+  onChange?: (valor: boolean, evento: React.ChangeEvent<HTMLElement>) => void;
+  onBlur?: (valor: boolean, evento: React.FocusEvent<HTMLElement>) => void;
 };
 
-type QInputProps = FormInputProps & {
+type QCheckBoxProps = FormInputProps & {
   lista?: string;
   autocompletar?: "off" | "on";
   onInput?: (valor: string, evento: React.FormEvent<HTMLInputElement>) => void;
 };
 
-export const QInput = ({
+export const QCheckbox = ({
   label,
   nombre,
   deshabilitado,
   placeholder,
-  valor = "",
+  valor = false,
   textoValidacion = "",
   erroneo,
   advertido,
   valido,
   opcional,
   condensado,
-  lista,
-  autocompletar,
   onChange,
   onBlur,
   onInput,
-}: QInputProps) => {
+}: QCheckBoxProps) => {
   const attrs = { erroneo, advertido, valido, opcional, condensado };
 
   return (
-    <quimera-input {...attrs}>
+    <quimera-checkbox {...attrs}>
       <label>
         <span className="etiqueta">
           {label}&nbsp;
           <span className="etiqueta-opcional">(opcional)</span>
         </span>
         <input
+          type="checkbox"
           name={nombre}
           placeholder={placeholder}
-          value={onChange ? valor : undefined}
-          defaultValue={onChange ? undefined : valor}
+          checked={onChange ? valor : undefined}
+          defaultChecked={onChange ? undefined : valor}
           disabled={deshabilitado}
           required={!opcional}
-          list={lista}
-          autoComplete={autocompletar}
-          onChange={(e) => onChange?.(e.target.value, e)}
-          onBlur={(e) => onBlur?.(e.target.value, e)}
+          onChange={(e) => onChange?.(e.target.checked, e)}
+          onBlur={(e) => onBlur?.(e.target.checked, e)}
           onInput={(e) => onInput?.((e.target as HTMLInputElement).value, e)}
         />
         { textoValidacion && <span className="texto-validacion">{textoValidacion}</span> }
       </label>
-    </quimera-input>
+    </quimera-checkbox>
   );
 };
 

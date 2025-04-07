@@ -15,16 +15,14 @@
 
 .container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    /* background-color: dodgerblue; */
+    grid-template-columns: repeat(12, 1fr);
     padding: 0px;
-    row-gap: 10px;
+    gap: 10px;
 }
 
-.container>div {
+/* .container>div {
     background-color: #f1f1f1;
     border: 0px solid black;
     padding: 4px;
     font-size: 30px;
-    /* text-align: center; */
-}
+} */

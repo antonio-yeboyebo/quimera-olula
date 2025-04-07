@@ -15,7 +15,6 @@ export const AltaDireccion = ({
   onDireccionCreada?: (direccion: DirCliente) => void;
   onCancelar: () => void;
 }) => {
-  // const [estado, dispatch] = useReducer(makeReductor(metaDireccion), initEstadoEntidad(direccionVacia, metaDireccion));
   const [estado, setEstado] = useState({} as Record<string, string>);
 
   const onGuardar = async (datos: Record<string, string>) => {

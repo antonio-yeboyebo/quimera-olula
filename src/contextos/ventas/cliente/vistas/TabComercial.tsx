@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { QBoton } from "../../../../componentes/atomos/qboton.tsx";
+import { QCheckbox } from "../../../../componentes/atomos/qcheckbox.tsx";
+import { QDate } from "../../../../componentes/atomos/qdate.tsx";
 import { QInput } from "../../../../componentes/atomos/qinput.tsx";
-import { Accion, entidadModificada, EstadoEntidad, puedoGuardarEntidad } from "../../../comun/dominio.ts";
+import { QSelect } from "../../../../componentes/atomos/qselect.tsx";
+import { Accion, entidadModificada, EstadoObjetoValor, puedoGuardarObjetoValor } from "../../../comun/dominio.ts";
+import { opcionesTipoIdFiscal } from "../../../valores/idfiscal.ts";
 import { Cliente } from "../diseño.ts";
 import { getCliente, patchCliente } from "../infraestructura.ts";
-import "./DetalleCliente.css";
-
-
+import "./TabComercial.css";
 
 export const TabComercial = ({
   getProps,
@@ -17,7 +19,7 @@ export const TabComercial = ({
 }: {
     getProps: (campo: string) => any;
     setCampo: (campo: string) => any;
-    cliente: EstadoEntidad<Cliente>;
+    cliente: EstadoObjetoValor<Cliente>;
     dispatch: (action: Accion<Cliente>) => void;
     onEntidadActualizada: (entidad: Cliente) => void;
 }) => {
@@ -50,8 +52,9 @@ export const TabComercial = ({
             />
         </div>
         <div style={{ gridColumn: 'span 1' }}>
-          <QInput
+          <QSelect
             label="Tipo Id Fiscal"
+            opciones={opcionesTipoIdFiscal}
             onChange={setCampo("tipo_id_fiscal")}
             {...getProps("tipo_id_fiscal")}
           />
@@ -85,13 +88,27 @@ export const TabComercial = ({
             {...getProps("divisa_id")}
           />
         </div>
-        <div style={{ gridColumn: 'span 11' }}>
+        <div style={{ gridColumn: 'span 3' }}>
+          <QDate
+            label="Fecha Baja"
+            onChange={setCampo("fecha_baja")}
+            {...getProps("fecha_baja")}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 3' }}>
+          <QCheckbox
+            label="De Baja"
+            onChange={setCampo("de_baja")}
+            {...getProps("de_baja")}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 5' }}>
         </div>
         <div style={{ gridColumn: 'span 12' }}>
           <div className='botones'>
             <QBoton
               onClick={onGuardarClicked}
-              deshabilitado={!puedoGuardarEntidad(cliente)} 
+              deshabilitado={!puedoGuardarObjetoValor(cliente)} 
             >
             Guardar
             </QBoton>

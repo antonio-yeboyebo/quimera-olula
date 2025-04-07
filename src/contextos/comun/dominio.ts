@@ -1,4 +1,4 @@
-import { Direccion, Entidad } from "./diseño.ts";
+import { Direccion, Entidad, ObjetoValor } from "./diseño.ts";
 
 export const actualizarEntidadEnLista = <T extends Entidad>(entidades: T[], entidad: T): T[] => {
     return entidades.map(e => {
@@ -44,21 +44,21 @@ export type ValidacionCampo = {
 
 export type Validacion = Record<string, ValidacionCampo>;
 
-export type EstadoEntidad<T extends Entidad> = {
+export type EstadoObjetoValor<T extends ObjetoValor> = {
     valor: T;
     valor_inicial: T;
     validacion: Validacion;
 }
 
-export const puedoGuardarEntidad = <T extends Entidad>(estado: EstadoEntidad<T>) => {
+export const puedoGuardarObjetoValor = <T extends ObjetoValor>(estado: EstadoObjetoValor<T>) => {
     return entidadModificada(estado) && entidadValida(estado);
 }
 
-export const entidadValida = <T extends Entidad>(estado: EstadoEntidad<T>) =>
+export const entidadValida = <T extends ObjetoValor>(estado: EstadoObjetoValor<T>) =>
     Object.values(estado.validacion).every((v) => v.valido)
 
 
-export const entidadModificada = <T extends Entidad>(estado: EstadoEntidad<T>) => {
+export const entidadModificada = <T extends ObjetoValor>(estado: EstadoObjetoValor<T>) => {
     const valor_inicial = estado.valor_inicial;
     const valor = estado.valor;
     return (
@@ -66,29 +66,29 @@ export const entidadModificada = <T extends Entidad>(estado: EstadoEntidad<T>) =
     )
 }
 
-export type Validador<T extends Entidad> = (estado: EstadoEntidad<T>, campo: string) => Validacion;
+export type Validador<T extends ObjetoValor> = (estado: EstadoObjetoValor<T>, campo: string) => Validacion;
 
-export type MetaEntidad<T extends Entidad> = {
+export type MetaObjetoValor<T extends ObjetoValor> = {
     bloqueados: string[];
     requeridos: string[];
     validador: Validador<T>;
 }
 
-export const makeReductor = <T extends Entidad>(meta: MetaEntidad<T>) => {
+export const makeReductor = <T extends ObjetoValor>(meta: MetaObjetoValor<T>) => {
 
-    return (estado: EstadoEntidad<T>, accion: Accion<T>): EstadoEntidad<T> => {
+    return (estado: EstadoObjetoValor<T>, accion: Accion<T>): EstadoObjetoValor<T> => {
 
         switch (accion.type) {
 
             case "init": {
-                return initEstadoEntidad<T>(
+                return initEstadoObjetoValor<T>(
                     accion.payload.entidad,
                     meta
                 );
             }
 
             case "set_campo": {
-                return cambiarEstadoEntidad<T>(
+                return cambiarEstadoObjetoValor<T>(
                     estado,
                     accion.payload.campo,
                     accion.payload.valor,
@@ -103,30 +103,31 @@ export const makeReductor = <T extends Entidad>(meta: MetaEntidad<T>) => {
     }
 }
 
-export const initEstadoEntidad = <T extends Entidad>(entidad: T, meta: MetaEntidad<T>) => {
+export const initEstadoObjetoValor = <T extends ObjetoValor>(objetoValor: T, meta: MetaObjetoValor<T>) => {
     const validacion: Validacion = {}
-    for (const k in entidad) {
+    for (const k in objetoValor) {
+        const requerido = meta.requeridos.includes(k);
         validacion[k] = {
-            valido: true,
+            valido: requerido && objetoValor[k] === '' ? false : true,
             textoValidacion: "",
             bloqueado: meta.bloqueados.includes(k),
-            requerido: meta.requeridos.includes(k),
+            requerido: requerido,
         };
     }
     const estado = {
-        valor: entidad,
-        valor_inicial: { ...entidad },
+        valor: objetoValor,
+        valor_inicial: { ...objetoValor },
         validacion
     }
     return estado;
 }
 
-export const cambiarEstadoEntidad = <T extends Entidad>(
-    estado: EstadoEntidad<T>,
+export const cambiarEstadoObjetoValor = <T extends ObjetoValor>(
+    estado: EstadoObjetoValor<T>,
     campo: string,
     valor: string,
     validador: Validador<T>,
-): EstadoEntidad<T> => {
+): EstadoObjetoValor<T> => {
 
     return validarCambio(
         cambiarCampo<T>(estado, campo, valor),
@@ -134,7 +135,13 @@ export const cambiarEstadoEntidad = <T extends Entidad>(
     );
 }
 
-const cambiarCampo = <T extends Entidad>(estado: EstadoEntidad<T>, campo: string, valor: string): EstadoEntidad<T> => {
+const cambiarCampo = <T extends ObjetoValor>(
+    estado: EstadoObjetoValor<T>,
+    campo: string,
+    valor: string
+): EstadoObjetoValor<T> => {
+
+    console.log('cambiarCampo', campo, valor, typeof valor);
     return {
         ...estado,
         valor: {
@@ -144,17 +151,17 @@ const cambiarCampo = <T extends Entidad>(estado: EstadoEntidad<T>, campo: string
     }
 }
 
-const validarCambio = <T extends Entidad>(estado: EstadoEntidad<T>,
+const validarCambio = <T extends ObjetoValor>(estado: EstadoObjetoValor<T>,
     campo: string,
     validador: Validador<T>
-): EstadoEntidad<T> => {
+): EstadoObjetoValor<T> => {
     return {
         ...estado,
         validacion: validador(estado, campo)
     }
 }
 
-export type Accion<T extends Entidad> = {
+export type Accion<T extends ObjetoValor> = {
     type: 'init';
     payload: {
         entidad: T
@@ -176,8 +183,8 @@ export type EstadoInput = {
     advertido: boolean;
     valido: boolean;
 }
-export const campoEntidadAInput = <T extends Entidad>(
-    estado: EstadoEntidad<T>,
+export const campoObjetoValorAInput = <T extends ObjetoValor>(
+    estado: EstadoObjetoValor<T>,
     campo: string
 ): EstadoInput => {
 
@@ -204,13 +211,13 @@ export const validacionDefecto = (validacion: ValidacionCampo, valor: string): V
     }
 }
 
-export type ValidadorCampo<T extends Entidad> = (estado: EstadoEntidad<T>) => ValidacionCampo;
-export type ValidadorCampos<T extends Entidad> = Record<string, ValidadorCampo<T>>;
+export type ValidadorCampo<T extends ObjetoValor> = (estado: EstadoObjetoValor<T>) => ValidacionCampo;
+export type ValidadorCampos<T extends ObjetoValor> = Record<string, ValidadorCampo<T>>;
 
-export const makeValidador = <T extends Entidad>(
+export const makeValidador = <T extends ObjetoValor>(
     validadorCampos: ValidadorCampos<T>
 ) => (
-    estado: EstadoEntidad<T>, campo: string
+    estado: EstadoObjetoValor<T>, campo: string
 ) => {
 
         const validacion = estado.validacion;
@@ -227,8 +234,8 @@ export const makeValidador = <T extends Entidad>(
 
     }
 
-export const validarCampo = <T extends Entidad>(
-    estado: EstadoEntidad<T>,
+export const validarCampo = <T extends ObjetoValor>(
+    estado: EstadoObjetoValor<T>,
     campo: string, validador?: ValidadorCampo<T>
 ): ValidacionCampo => {
 

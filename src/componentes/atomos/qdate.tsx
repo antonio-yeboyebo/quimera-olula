@@ -1,4 +1,4 @@
-import "./qinput.css";
+import "./qdate.css";
 
 export type FormInputProps = {
   label: string;
@@ -22,7 +22,7 @@ type QInputProps = FormInputProps & {
   onInput?: (valor: string, evento: React.FormEvent<HTMLInputElement>) => void;
 };
 
-export const QInput = ({
+export const QDate = ({
   label,
   nombre,
   deshabilitado,
@@ -34,8 +34,6 @@ export const QInput = ({
   valido,
   opcional,
   condensado,
-  lista,
-  autocompletar,
   onChange,
   onBlur,
   onInput,
@@ -43,28 +41,27 @@ export const QInput = ({
   const attrs = { erroneo, advertido, valido, opcional, condensado };
 
   return (
-    <quimera-input {...attrs}>
+    <quimera-date {...attrs}>
       <label>
         <span className="etiqueta">
           {label}&nbsp;
           <span className="etiqueta-opcional">(opcional)</span>
         </span>
         <input
+          type="date"
           name={nombre}
           placeholder={placeholder}
           value={onChange ? valor : undefined}
           defaultValue={onChange ? undefined : valor}
           disabled={deshabilitado}
           required={!opcional}
-          list={lista}
-          autoComplete={autocompletar}
           onChange={(e) => onChange?.(e.target.value, e)}
           onBlur={(e) => onBlur?.(e.target.value, e)}
           onInput={(e) => onInput?.((e.target as HTMLInputElement).value, e)}
         />
         { textoValidacion && <span className="texto-validacion">{textoValidacion}</span> }
       </label>
-    </quimera-input>
+    </quimera-date>
   );
 };
 

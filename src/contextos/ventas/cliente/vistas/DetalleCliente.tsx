@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { Detalle } from "../../../../componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "../../../../componentes/detalle/tabs/Tabs.tsx";
 import { Entidad } from "../../../comun/diseño.ts";
-import { campoEntidadAInput, makeReductor } from "../../../comun/dominio.ts";
+import { campoObjetoValorAInput, makeReductor } from "../../../comun/dominio.ts";
 import { Cliente } from "../diseño.ts";
 import { initEstadoClienteVacio, metaCliente } from "../dominio.ts";
 import { getCliente } from "../infraestructura.ts";
@@ -37,7 +37,7 @@ export const DetalleCliente = ({
   };
 
   const getProps = (campo: string) => {
-    return campoEntidadAInput(cliente, campo);
+    return campoObjetoValorAInput(cliente, campo);
   };
 
   return (
