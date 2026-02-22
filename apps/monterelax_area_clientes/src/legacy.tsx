@@ -16,6 +16,7 @@ const environment = {
   },
   getUrlImages: () => import.meta.env.VITE_URL_IMAGES,
   renderHeader: false,
+  loginType: "clientes",
 };
 
 const LegacyAppComp = (

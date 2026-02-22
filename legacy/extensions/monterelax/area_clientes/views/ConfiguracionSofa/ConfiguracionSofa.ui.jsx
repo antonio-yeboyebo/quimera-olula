@@ -51,7 +51,7 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
               Modelo {idModelo}
             </Typography>
           </DialogTitle>
-          <DialogContent>
+          <DialogContent >
             <DragDropContext
               onDragEnd={result =>
                 dispatch({
@@ -62,14 +62,15 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
               }
               onDragStart={result => dispatch({ type: "handleDragStart", payload: { result } })}
             >
-              <Grid container justifyContent="center" direction="row">
-                <Grid container item xs={9} justifyContent="center" direction="column">
+              <Grid container justifyContent="center" direction="row" >
+                <Grid container item xs={1} justifyContent="center" direction="column" style={{ width: '75%' }}>
                   <Grid
                     container
                     item
                     // xs={12}
                     justifyContent="center"
                   // style={{ height: "300px" }}
+
                   >
                     <Grid container item xs={6} justifyContent="center" alignItems="flex-start">
                       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
@@ -124,9 +125,9 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
                 <Grid
                   container
                   item
-                  xs={3}
+                  xs={6}
                   justifyContent="center"
-                  style={{ borderLeft: "1px solid lightgrey" }}
+                  style={{ borderLeft: "1px solid lightgrey", width: '25%' }}
                 >
                   {!idTela ? (
                     <Typography variant="h4" align="center">
@@ -205,7 +206,7 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
             )}
           </DialogActions>
         </Dialog>
-      </Quimera.Template>
+      </Quimera.Template >
     )
   );
 }

@@ -6,7 +6,6 @@ import { crearMenu, MenuContextFactory } from "@olula/lib/menu.ts";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router";
 
-import { StrictMode } from "react";
 import { FactoryLegacy } from "./factory.ts";
 import { routerLegacy } from "./legacy.tsx";
 import { router } from "./router_factory.ts";
@@ -37,9 +36,9 @@ const App = () => {
 };
 
 root.render(
-  <StrictMode>
-    <FactoryProvider>
-      <App />
-    </FactoryProvider>
-  </StrictMode>
+  // <StrictMode>
+  <FactoryProvider>
+    <App />
+  </FactoryProvider>
+  // </StrictMode>
 );

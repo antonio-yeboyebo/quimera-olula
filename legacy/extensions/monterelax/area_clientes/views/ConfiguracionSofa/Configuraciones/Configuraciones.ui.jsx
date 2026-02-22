@@ -95,8 +95,8 @@ function Configuraciones() {
                   {configuraciones?.idList?.map((conf, indice) => {
                     return (
                       <Draggable
-                        key={`KEY${configuraciones.dict[conf].idpreciobase}`}
-                        draggableId={`ID${configuraciones.dict[conf].idpreciobase}`}
+                        key={`CONFIG_${configuraciones.dict[conf].idpreciobase}`}
+                        draggableId={`CONFIG_ID_${configuraciones.dict[conf].idpreciobase}`}
                         index={indice}
                         isDragDisabled={false}
                       >

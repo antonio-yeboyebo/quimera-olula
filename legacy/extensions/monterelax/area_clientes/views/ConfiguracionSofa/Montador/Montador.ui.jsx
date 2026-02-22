@@ -77,8 +77,8 @@ function Montador() {
                 {misConfiguraciones?.map((conf, indice) => {
                   return (
                     <Draggable
-                      key={`${indice}${conf.idpreciobase}`}
-                      draggableId={conf.idpreciobase}
+                      key={`MONTADOR_${indice}_${conf.idpreciobase}`}
+                      draggableId={`MONTADOR_ID_${indice}_${conf.idpreciobase}`}
                       index={indice}
                       isDragDisabled={false}
                     >

@@ -37,14 +37,24 @@ export const bunch = parent => {
       {
         type: "setStateKey",
         plug: ({ result }, { misConfiguraciones, configuraciones }) => {
+          // Cancelación del drag
           if (!result.destination) {
-            return;
+            return { path: "misConfiguraciones", value: misConfiguraciones };
           }
           const { source, destination } = result;
-          const auxStatus = misConfiguraciones;
-          const configuracion = configuraciones.dict[result.draggableId.substr(2)];
-          auxStatus.splice(destination.index, 0, configuracion);
+          // Crear copia del array para no mutar el estado
+          const auxStatus = [...misConfiguraciones];
+          // Remover prefijo "CONFIG_ID_" del draggableId
+          // Formato: CONFIG_ID_12345
+          const idConfig = result.draggableId.replace(/^CONFIG_ID_/, '');
+          const configuracion = configuraciones.dict[idConfig];
 
+          if (!configuracion) {
+            console.warn('Configuración no encontrada:', idConfig, 'draggableId:', result.draggableId);
+            return { path: "misConfiguraciones", value: misConfiguraciones };
+          }
+
+          auxStatus.splice(destination.index, 0, configuracion);
           return { path: "misConfiguraciones", value: auxStatus };
         },
       },
@@ -57,11 +67,20 @@ export const bunch = parent => {
       {
         type: "setStateKey",
         plug: ({ result }, { misConfiguraciones }) => {
+          // Cancelación del drag
           if (!result.destination) {
-            return;
+            return { path: "misConfiguraciones", value: misConfiguraciones };
           }
+
           const { source, destination } = result;
-          const auxStatus = misConfiguraciones;
+
+          // Si la posición es la misma, no hacer nada
+          if (source.index === destination.index) {
+            return { path: "misConfiguraciones", value: misConfiguraciones };
+          }
+
+          // Crear copia del array para no mutar el estado
+          const auxStatus = [...misConfiguraciones];
           const [removed] = auxStatus.splice(source.index, 1);
           auxStatus.splice(destination.index, 0, removed);
 
@@ -73,7 +92,8 @@ export const bunch = parent => {
       {
         type: "setStateKey",
         plug: ({ indice }, { misConfiguraciones }) => {
-          const auxStatus = misConfiguraciones;
+          // Crear copia del array para no mutar el estado
+          const auxStatus = [...misConfiguraciones];
           auxStatus.splice(indice, 1);
 
           return { path: "misConfiguraciones", value: auxStatus };
