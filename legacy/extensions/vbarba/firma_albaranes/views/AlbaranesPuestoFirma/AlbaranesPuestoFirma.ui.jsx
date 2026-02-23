@@ -1,11 +1,27 @@
-import { Box, Dialog, DialogContent, DialogTitle, QBoxButton } from "@quimera/comps";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  QBoxButton,
+} from "@quimera/comps";
 import { LinearProgress } from "@quimera/thirdparty";
-import Quimera, { PropValidation, useStateValue, useWidth, util } from "quimera";
+import Quimera, { useStateValue, useWidth, util } from "quimera";
 import React, { useEffect } from "react";
 
 function AlbaranesPuestoFirma({ useStyles }) {
   const [
-    { cargandoTabla, albaranSeleccionado, modalVistaEnviarAlbaran, modalFirmaVisible },
+    {
+      cargandoTabla,
+      albaranSeleccionado,
+      modalAceptarEnviarAlbaran,
+      modalVistaEnviarAlbaran,
+      modalFirmaVisible,
+    },
     dispatch,
   ] = useStateValue();
   // const _c = useStyles()
@@ -38,11 +54,41 @@ function AlbaranesPuestoFirma({ useStyles }) {
   //     appDispatch({ type: 'setRecargarPaginaAlbaranesPuestoFirma', payload: { value: false } })
   //   }
   // }, [recargarPaginaAlbaranesPuestoFirma])
-  console.log("hola mundo", cargandoTabla);
+  // console.log("hola mundo", cargandoTabla);
 
   return (
     <Quimera.Template id="AlbaranesPuestoFirma">
       {cargandoTabla ? <LinearProgress /> : null}
+      <Dialog open={modalAceptarEnviarAlbaran} fullWidth maxWidth="xs" fullScreen={width === "xs"}>
+        <DialogTitle id="form-dialog-title">
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box className={"tituloModal"}>Enviar por email</Box>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="form-dialog-description">
+            ¿Desea enviar el albarán firmado por email?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Grid container justifyContent="space-between">
+            <Button
+              id="concelar"
+              text="CANCELAR"
+              variant="text"
+              color="primary"
+              onClick={() => dispatch({ type: "onEnviarEmailRechazado" })}
+            />
+            <Button
+              id="confirmar"
+              text="CONFIRMAR"
+              variant="text"
+              color="secondary"
+              onClick={() => dispatch({ type: "onEnviarEmailAceptado" })}
+            />
+          </Grid>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={modalFirmaVisible}
         fullWidth

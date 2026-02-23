@@ -1,8 +1,8 @@
-import { Cliente, DirCliente } from "@quimera-extension/base-ventas";
 import { Grid, Icon, QSection } from "@quimera/comps";
 import { CircularProgress } from "@quimera/thirdparty";
-import Quimera, { getSchemas, useStateValue, util } from "quimera";
-import { useEffect } from "react";
+import { Cliente, DirCliente } from "@quimera-extension/base-ventas";
+import Quimera, { getSchemas, PropValidation, useStateValue, util } from "quimera";
+import React, { useEffect } from "react";
 // import { Cliente, DirCliente } from "../../comps";
 
 function FacturasCliNueva({ callbackGuardado, useStyles, ...props }) {

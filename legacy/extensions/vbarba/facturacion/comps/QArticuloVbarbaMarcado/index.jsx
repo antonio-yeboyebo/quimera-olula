@@ -3,7 +3,12 @@ import { useStateValue, util } from "quimera";
 import { API } from "quimera/lib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-function QArticuloVbarbaMarcado({ seVende = false, codFamilia = null, noOptionsText = "Buscar artículo por nombre", ...props }) {
+function QArticuloVbarbaMarcado({
+  seVende = false,
+  codFamilia = null,
+  noOptionsText = "Buscar artículo por nombre",
+  ...props
+}) {
   const [options, setOptions] = useState([]);
   const [_, dispatch] = useStateValue();
   const containerRef = useRef(null);

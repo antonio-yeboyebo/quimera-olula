@@ -1,0 +1,23 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    parentId: idAlbaran
+    schemaName: lineasAlbaranesCli
+    mode: insert
+    # remoteBufferChanged: false
+state: {}
+bunch:
+  {}
+  # onLineaBufferChanged:
+  #   - _type: set
+  #     condition:
+  #       operator: A = B
+  #       A:
+  #         payloadPath: field
+  #       B:
+  #         const: cantidad
+  #     path: linea.buffer.canFactura
+  #     value:
+  #       payloadPath: value

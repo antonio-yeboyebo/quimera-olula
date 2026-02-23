@@ -1,4 +1,3 @@
-import { Totales } from "@quimera-extension/base-area_clientes";
 import {
   Box,
   Button,
@@ -10,7 +9,8 @@ import {
   QSection,
   Typography,
 } from "@quimera/comps";
-import Quimera, { getSchemas, useStateValue, util } from "quimera";
+import { Totales } from "@quimera-extension/base-area_clientes";
+import Quimera, { getSchemas, PropValidation, useStateValue, util } from "quimera";
 import { useEffect } from "react";
 
 import { ProveedorArticulo, QArticuloVbarba } from "../../comps";

@@ -1,6 +1,8 @@
 import { Grid, QTitleBox, Typography } from "@quimera/comps";
-import Quimera, { getSchemas, useStateValue } from "quimera";
+import Quimera, { getSchemas, PropValidation, useStateValue, util } from "quimera";
+import { useEffect } from "react";
 
+import { Totales } from "@quimera-extension/base-area_clientes";
 // import { Totales } from "../../comps";
 
 function ToLineaCarrito({ callbackGuardada, disabled, lineaInicial, useStyles }) {

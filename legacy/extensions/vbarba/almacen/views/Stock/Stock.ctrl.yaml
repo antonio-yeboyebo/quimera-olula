@@ -14,23 +14,23 @@ state:
   miFinca: {}
   totalStockFinca: 0
   callbackChanged: null
-bunch: 
-  onInit: 
-    - _type: set 
+bunch:
+  onInit:
+    - _type: set
       path: callbackChanged
       value:
-        payloadPath: callbackChanged         
+        payloadPath: callbackChanged
     - _type: set
       path: miFinca
-      value: 
+      value:
         localStorageValue: finca
     - _type: grape
       name: cargaAlmacenes
   onInitStockByIdPrevio:
     - _type: set
       path: miFinca
-      value: 
-        localStorageValue: finca         
+      value:
+        localStorageValue: finca
     - condition:
         operator: A is defined
         A:
@@ -39,8 +39,8 @@ bunch:
       name: onInitStockById
       payload:
         getStockParams:
-          code: 'return {codFinca: state.miFinca.codfinca}'               
-  cargaAlmacenes:     
+          code: "return {codFinca: state.miFinca.codfinca}"
+  cargaAlmacenes:
     - _type: patch
       schema: stocks
       action: get_stock_almacenes
@@ -53,16 +53,16 @@ bunch:
         - key: referencia
           value:
             statePath: stock.buffer.referencia
-      success: onGetAlmacenesSucceded      
-  onGetAlmacenesSucceded:  
+      success: onGetAlmacenesSucceded
+  onGetAlmacenesSucceded:
     - _type: set
       path: almacenes
-      value: 
+      value:
         payloadPath: response.almacenes
     - _type: set
       path: totalStockFinca
-      value: 
-        payloadPath: response.totalStockFinca  
+      value:
+        payloadPath: response.totalStockFinca
   cambiarCantidadStock:
     - _type: patch
       schema: stocks
@@ -75,18 +75,18 @@ bunch:
             payloadPath: almacen.idstock
         - key: codalmacen
           value:
-            payloadPath: almacen.codalmacen            
+            payloadPath: almacen.codalmacen
         - key: cantidadfinal
           value:
-            payloadPath: almacen.cantidad            
+            payloadPath: almacen.cantidad
         - key: descripcion
           value:
-            statePath: stock.data.descripcion 
+            statePath: stock.data.descripcion
         - key: referencia
           value:
-            statePath: stock.buffer.referencia                    
-      success: onCambiarCantidadSucceded  
-  onCambiarCantidadSucceded: 
+            statePath: stock.buffer.referencia
+      success: onCambiarCantidadSucceded
+  onCambiarCantidadSucceded:
     - _type: setItem
       path: almacenes
       key:
@@ -94,13 +94,13 @@ bunch:
       prop:
         const: "cantidad"
       value:
-        payloadPath: response.cantidadfin            
+        payloadPath: response.cantidadfin
     - _type: grape
-      name: cargaAlmacenes      
+      name: cargaAlmacenes
     - _type: alert
       text: Cantidad de stock modificada.
-      severity: success      
-  sumarCantidad:   
+      severity: success
+  sumarCantidad:
     - _type: patch
       schema: stocks
       action: sumar_cantidad
@@ -112,21 +112,21 @@ bunch:
             payloadPath: almacen.idstock
         - key: codalmacen
           value:
-            payloadPath: almacen.codalmacen            
+            payloadPath: almacen.codalmacen
         - key: cantidadinicial
           value:
-            payloadPath: almacen.cantidad            
+            payloadPath: almacen.cantidad
         - key: cantidadsumar
           value:
-            payloadPath: value 
+            payloadPath: value
         - key: descripcion
           value:
-            statePath: stock.data.descripcion 
+            statePath: stock.data.descripcion
         - key: referencia
           value:
-            statePath: stock.buffer.referencia                    
-      success: onSumarCantidadSucceded  
-  onSumarCantidadSucceded: 
+            statePath: stock.buffer.referencia
+      success: onSumarCantidadSucceded
+  onSumarCantidadSucceded:
     - _type: setItem
       path: almacenes
       key:
@@ -134,11 +134,11 @@ bunch:
       prop:
         const: "cantidad"
       value:
-        payloadPath: response.cantidadfin            
+        payloadPath: response.cantidadfin
     - _type: set
       path: totalStockFinca
-      value: 
-        code: return state.totalStockFinca + parseInt(payload.response.cantidadsumar)
+      value:
+        code: return state.totalStockFinca
     # - _type: setItem
     #   path: almacenes
     #   key:
@@ -146,10 +146,10 @@ bunch:
     #   prop:
     #     const: "suma"
     #   value:
-    #     const: 0           
+    #     const: 0
     - _type: alert
       text: Cantidad de stock modificada.
-      severity: success              
+      severity: success
   onDetalleUbicacionChanged:
     - _type: setItem
       path: almacenes
@@ -167,7 +167,7 @@ bunch:
       prop:
         const: "cantidad"
       value:
-        payloadPath: value               
+        payloadPath: value
   cambiarDetalleUbicacion:
     - _type: patch
       schema: stocks
@@ -177,13 +177,13 @@ bunch:
         - key: detalleubicacion
           value:
             payloadPath: value
-      success: onDetalleUbicaonCambiado   
+      success: onDetalleUbicaonCambiado
   onDetalleUbicaonCambiado:
     - _type: alert
       text: Detalle de ubicación de stock modificado.
-      severity: success   
+      severity: success
   onVolverClicked:
-    - _type: navigate 
+    - _type: navigate
       url:
         code: 'return "/stocks"'
     # - _type: grape
@@ -194,15 +194,15 @@ bunch:
       action: get_url_image
       id:
         statePath: stock.buffer.referencia
-      success: onGetUrlImageSucceded  
+      success: onGetUrlImageSucceded
   onGetUrlImageSucceded:
     - _type: navigate
       url:
         payloadPath: response.direccion
-  # onEditarArticuloClicked: 
+  # onEditarArticuloClicked:
   #   - _type: navigate
   #     url:
-  #       const: 
+  #       const:
   #         code: return `/articulos/${state.stock.data.referencia}`
   onCambiarDisponibleClicked:
     - _type: patch
@@ -213,56 +213,56 @@ bunch:
       data:
         - key: disponible
           value:
-            code: return !state.stock.data.disponible 
+            code: return !state.stock.data.disponible
         - key: referencia
           value:
-            statePath: stock.data.referencia   
+            statePath: stock.data.referencia
         - key: codproveedor
           value:
-            statePath: miFinca.codproveedor    
+            statePath: miFinca.codproveedor
         - key: nombreProveedor
           value:
-            statePath: miFinca.nombreproveedor                   
+            statePath: miFinca.nombreproveedor
       success: onDisponibleActualizado
-  onDisponibleActualizado:   
+  onDisponibleActualizado:
     - _type: set
       path: stock.data.disponible
       value:
-        payloadPath: response.disponible    
+        payloadPath: response.disponible
     - _type: set
       path: stock.buffer.disponible
       value:
-        payloadPath: response.disponible 
+        payloadPath: response.disponible
     - _type: alert
       text: Disponibilidad actualizada.
-      severity: success  
+      severity: success
     - _type: grape
       name: stockCambiado
       payload:
         field:
-          const: disponible 
+          const: disponible
         value:
-          statePath: stock.data.disponible                                        
-  onAddAlmacenClicked: 
+          statePath: stock.data.disponible
+  onAddAlmacenClicked:
     - _type: set
       path: modalAddAlmacen
-      value: 
-        const: true  
+      value:
+        const: true
   onCerrarAddAlmacenConfirm:
     - _type: set
       path: modalAddAlmacen
-      value: 
-        const: false        
+      value:
+        const: false
     - _type: set
       path: nuevoAlmacen
-      value: 
-        const: ''  
+      value:
+        const: ""
   onAddAlmacenConfirmClicked:
     - _type: if
       if:
         operator: A is defined
         A:
-          code: return state.almacenes[state.nuevoAlmacen.codalmacen] 
+          code: return state.almacenes[state.nuevoAlmacen.codalmacen]
       then:
         _type: alert
         text: Este almacén ya está añadido.
@@ -274,20 +274,20 @@ bunch:
         data:
           - key: codalmacen
             value:
-              statePath: nuevoAlmacen.codalmacen 
+              statePath: nuevoAlmacen.codalmacen
           - key: referencia
             value:
               statePath: stock.data.referencia
-        success: onAlmacenAnadido    
-  onAlmacenAnadido:    
+        success: onAlmacenAnadido
+  onAlmacenAnadido:
     - _type: grape
-      name: cargaAlmacenes            
+      name: cargaAlmacenes
     - _type: grape
-      name: onCerrarAddAlmacenConfirm     
+      name: onCerrarAddAlmacenConfirm
     - _type: alert
       text: Almacén añadido.
       severity: success
-  onImagenAdjuntada:   
+  onImagenAdjuntada:
     - _type: patch
       schema: articuloimages
       action: update_image
@@ -296,21 +296,20 @@ bunch:
       files:
         payloadPath: files
       success: onImagenActualizada
-      error: onImagenActualizadaError  
+      error: onImagenActualizadaError
   onImagenActualizada:
     - _type: set
       path: stock.data.tieneFoto
       value:
-        const: true    
+        const: true
     - _type: set
       path: stock.buffer.tieneFoto
       value:
-        const: true 
+        const: true
     - _type: alert
       text: Imagen añadida.
-      severity: success          
-  onImagenActualizadaError:  
+      severity: success
+  onImagenActualizadaError:
     - _type: alert
-      text: 'Error: La imagen no se ha podido almacenar.'
-      severity: error            
-
+      text: "Error: La imagen no se ha podido almacenar."
+      severity: error

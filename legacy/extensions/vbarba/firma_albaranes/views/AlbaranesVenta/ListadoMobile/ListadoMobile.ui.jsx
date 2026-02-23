@@ -1,6 +1,7 @@
 import { Button, Grid, ListInfiniteScroll, Typography } from "@quimera/comps";
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText } from "@quimera/thirdparty";
-import Quimera, { useStateValue, useWidth, util } from "quimera";
+import Quimera, { PropValidation, useStateValue, useWidth, util } from "quimera";
+import React from "react";
 
 function ListadoMobile({ useStyles }) {
   const [{ albaranes }, dispatch] = useStateValue();
@@ -30,7 +31,7 @@ function ListadoMobile({ useStyles }) {
               <ListItemText
                 disableTypography
                 primary={
-                  <Grid xs={12} sm container spacing={1} justifyContent="space-between" alignItems="center">
+                  <Grid xs={12} sm container item>
                     <Grid item xs={8}>
                       <Typography component="div" variant="body1">
                         <strong>{`${albaran.codigo}`}</strong>
@@ -74,8 +75,8 @@ function ListadoMobile({ useStyles }) {
                   </Grid>
                 }
                 secondary={
-                  <Grid xs={12} sm container justifyContent="space-between" alignItems="center">
-                    <Grid xs={8} sm container direction="column">
+                  <Grid item xs={12} sm container>
+                    <Grid item xs={8} sm container>
                       <Grid item xs={12}>
                         <Typography
                           component="span"

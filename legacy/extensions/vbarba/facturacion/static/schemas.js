@@ -31,6 +31,7 @@ export default parent => {
     lineasAlbaranesCli: parent.lineasAlbaranesCli.fields({
       codProveedor: Field.Text("codproveedor", "Cod proveedor"),
       pvpReferencia: Field.Currency("pvpreferencia", "Precio Referencia"),
+      canFactura: Field.Int("canfactura", "Cantidad factura"),
     }),
     emailDocsCliente: Schema("clientes", "codcliente").fields({
       codCliente: Field.Int("codcliente", "codcliente").auto(),

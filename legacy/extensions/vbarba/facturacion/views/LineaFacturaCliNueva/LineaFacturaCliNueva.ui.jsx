@@ -1,6 +1,6 @@
 import { Box, Collapse, Field, Grid, Icon, IconButton, QSection, Typography } from "@quimera/comps";
 import Quimera, { getSchemas, useStateValue, util } from "quimera";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import {
   FieldConNavegacionEnter,

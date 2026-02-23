@@ -1,14 +1,15 @@
 ---
 shortcuts: []
-state: 
+state:
+  modalAceptarEnviarAlbaran: false
   modalVistaEnviarAlbaran: false
-bunch: 
+bunch:
   onIrESCarrosClicked:
     - _type: navigate
       condition:
-          operator: A is defined
-          A:
-            payloadPath: idParteES
+        operator: A is defined
+        A:
+          payloadPath: idParteES
       url:
         code: "return '/parteCarros/' + payload.codigoParte + '/' + payload.idParteES"
   onCrearESCarrosConfrimado:
@@ -17,57 +18,71 @@ bunch:
       data:
         - key: tipoDocCli
           value:
-            const: 'Albarán' 
+            const: "Albarán"
         - key: idDocumentoCli
           value:
-            payloadPath: idAlbaran  
+            payloadPath: idAlbaran
         - key: codDocumentoCli
           value:
-            payloadPath: codigo              
+            payloadPath: codigo
         - key: aplicadoA
           value:
-            const: 'Cliente'    
+            const: "Cliente"
         - key: porCliente
           value:
-            const: true  
+            const: true
         - key: nombreCliente
           value:
-            payloadPath: nombreCliente               
+            payloadPath: nombreCliente
         - key: codCliente
           value:
-            payloadPath: codCliente         
+            payloadPath: codCliente
         - key: codAgente
           value:
-            payloadPath: codAgente              
+            payloadPath: codAgente
         - key: firmado
           value:
-            const: false                                                             
+            const: false
       success: successCrearESCarros
-      error: errorCrearESCarros  
+      error: errorCrearESCarros
   successCrearESCarros:
     - _type: navigate
       condition:
-          operator: A is defined
-          A:
-            payloadPath: response.codparte
+        operator: A is defined
+        A:
+          payloadPath: response.codparte
       url:
-        code: "return '/parteCarros/' + payload.response.codparte + '/' + payload.response.pk"       
-  errorCrearESCarros:   
-    - _type: alert 
-      text: Error al crear parte de movimiento de E/S de carros 
-      severity: error 
+        code: "return '/parteCarros/' + payload.response.codparte + '/' + payload.response.pk"
+  errorCrearESCarros:
+    - _type: alert
+      text: Error al crear parte de movimiento de E/S de carros
+      severity: error
   onCallbackEnviaEmail:
-    - _type: set 
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: true
+  onEnviarEmailRechazado:
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: false
+  onEnviarEmailAceptado:
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: false
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: true
   onCancelEnviarEmailClicked:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: false
   onEmailEnviado:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
-        const: false         
+        const: false

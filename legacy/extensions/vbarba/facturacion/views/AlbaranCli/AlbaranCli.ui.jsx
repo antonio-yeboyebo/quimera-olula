@@ -14,7 +14,7 @@ import {
 import { CircularProgress } from "@quimera/thirdparty";
 import { Totales } from "@quimera-extension/base-area_clientes";
 import { DocAgente, DocClienteYDir, DocFecha } from "@quimera-extension/base-ventas";
-import Quimera, { getSchemas, PropValidation, useStateValue, useWidth, util } from "quimera";
+import Quimera, { getSchemas, useStateValue, useWidth, util } from "quimera";
 import React, { useCallback, useEffect } from "react";
 
 import { LineaAlbaranCliComp } from "../../comps";
@@ -104,9 +104,27 @@ function AlbaranCli({ callbackChanged, idAlbaran, initAlbaran, useStyles }) {
               />
               <QBoxButton
                 id="imprimirAlbaran"
-                title="Imprimir albarán"
-                icon="print"
+                title="Imprimir albarán valorado"
+                icon="receipt_long"
                 disabled={false}
+                onClick={() =>
+                  dispatch({
+                    type: "onImprimirAlbaranClicked",
+                    payload: { tipo: "valorado" },
+                  })
+                }
+              />
+              <QBoxButton
+                id="imprimirAlbaranNoValorado"
+                title="Imprimir albarán no valorado"
+                icon="receipt"
+                disabled={false}
+                onClick={() =>
+                  dispatch({
+                    type: "onImprimirAlbaranClicked",
+                    payload: { tipo: "no_valorado" },
+                  })
+                }
               />
               <QBoxButton
                 id="generarFactura"

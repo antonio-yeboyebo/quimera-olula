@@ -2,6 +2,7 @@ import { Avatar, Grid, Icon, IconButton, Typography } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { util } from "quimera";
 import { useFilterValue } from "quimera/hooks";
+import React from "react";
 import { QExpandButton } from "../";
 
 const useStyles = makeStyles(theme => ({

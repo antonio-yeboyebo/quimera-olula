@@ -6,30 +6,31 @@ shortcuts:
     schema: albaranescli
     # url: "/albaranesVenta"
     logicDelete: true
-state: 
+state:
+  modalAceptarEnviarAlbaran: false
   modalFirmaVisible: false
   modalVistaEnviarAlbaran: false
   albaranSeleccionado: null
-  fechaHoy: 'util.today()'
+  fechaHoy: "util.today()"
   puestoLocal: null
-bunch: 
-  onInit: 
+bunch:
+  onInit:
     - _type: grape
       name: getAlbaranesPuesto
   onInitPuestoFirma:
     - _type: set
       path: puestoLocal
-      value: 
-        localStorageValue: puestoFirma.puesto  
-  onFirmarAlbaranClicked:     
+      value:
+        localStorageValue: puestoFirma.puesto
+  onFirmarAlbaranClicked:
     - _type: set
       path: modalFirmaVisible
       value:
-        const: true 
+        const: true
     - _type: set
       path: albaranSeleccionado
       value:
-        payloadPath: data.albaran 
+        payloadPath: data.albaran
   onCerrarFirmaAlbaran:
     - _type: set
       path: modalFirmaVisible
@@ -37,32 +38,45 @@ bunch:
         const: false
     - _type: grape
       condition:
-          operator: A is defined
-          A:
-            payloadPath: albaran
+        operator: A is defined
+        A:
+          payloadPath: albaran
       name: onRecargarPaginaClicked
   onRecargarPaginaClicked:
     - _type: grape
       name: getAlbaranesPuesto
   onCallbackEnviaEmail:
-    - _type: set 
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: true
+  onEnviarEmailRechazado:
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: false
+  onEnviarEmailAceptado:
+    - _type: set
+      path: modalAceptarEnviarAlbaran
+      value:
+        const: false
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: true
   onCancelEnviarEmailClicked:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: false
   onEmailEnviado:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
-        const: false           
-  onCallbackEstadoFirmaModificado: 
+        const: false
+  onCallbackEstadoFirmaModificado:
     - _type: alert
       text: El albarán ya no está disponible para firmar.
       severity: error
     - _type: grape
       name: onCerrarFirmaAlbaran
-         

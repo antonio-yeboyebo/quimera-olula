@@ -17,10 +17,13 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@olula/olula": "workspace:*",
         "@olula/componentes": "workspace:*",
         "@olula/ctx": "workspace:*",
         "@olula/lib": "workspace:*",
+        "@olula/olula": "workspace:*",
         "quimera": "workspace:@quimera/core@*"
+    },
+    "devDependencies": {
+        "baseline-browser-mapping": "^2.9.19"
     }
 }

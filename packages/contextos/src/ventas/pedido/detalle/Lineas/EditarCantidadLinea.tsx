@@ -14,10 +14,12 @@ export const EditarCantidadLinea = ({
   linea,
   onCantidadEditada,
   validacion,
+  deshabilitado = false,
 }: {
   linea: Linea;
   onCantidadEditada: (linea: Linea, cantidad: number) => void;
   validacion?: (cantidadRaw: string) => string;
+  deshabilitado?: boolean;
 }) => {
   const [estado, setEstado] = useState("");
   const [valor, setValor] = useState(linea.cantidad.toString());
@@ -51,6 +53,7 @@ export const EditarCantidadLinea = ({
         onChange={handleChange}
         autoSeleccion
         onBlur={submit}
+        deshabilitado={deshabilitado}
       />
     </quimera-formulario>
   );
