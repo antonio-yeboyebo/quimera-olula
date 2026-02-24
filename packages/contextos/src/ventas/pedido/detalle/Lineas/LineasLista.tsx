@@ -1,20 +1,33 @@
 import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { FactoryCtx } from "@olula/lib/factory_ctx.js";
+import { useContext } from "react";
 import { LineaPedido as Linea } from "../../diseño.ts";
 import { EditarCantidadLinea } from "./EditarCantidadLinea.tsx";
 
-export const LineasLista = ({
+
+export type LineasListaProps<L extends Linea = Linea> = {
+  lineas: L[];
+  seleccionada?: string;
+  onCambioCantidad?: (linea: L, cantidad: number) => void;
+  pedidoEditable?: boolean;
+  publicar: (evento: string, payload?: unknown) => void;
+};
+
+export const LineasLista = (props: LineasListaProps) => {
+  
+  const { app } = useContext(FactoryCtx);
+  const LineasLista_ = app.Ventas.pedido_detalle_lineas_LineasLista as typeof LineasListaBase;
+
+  return LineasLista_(props);
+}
+
+export const LineasListaBase = ({
   lineas,
   seleccionada,
   onCambioCantidad,
   pedidoEditable,
   publicar,
-}: {
-  lineas: Linea[];
-  seleccionada?: string;
-  onCambioCantidad?: (linea: Linea, cantidad: number) => void;
-  pedidoEditable?: boolean;
-  publicar: (evento: string, payload?: unknown) => void;
-}) => {
+}: LineasListaProps) => {
   const setSeleccionada = (linea: Linea) => {
     publicar("linea_seleccionada", linea);
   };

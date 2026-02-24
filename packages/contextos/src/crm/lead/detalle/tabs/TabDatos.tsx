@@ -1,5 +1,6 @@
 import { PaisSelector } from "#/comun/componentes/pais/pais.tsx";
 import { Cliente } from "#/crm/comun/componentes/cliente_con_nombre.tsx";
+import { ContactoSelector } from "#/crm/comun/componentes/contacto.tsx";
 import { EstadoLead } from "#/crm/comun/componentes/estado_lead.tsx";
 import { FuenteLead } from "#/crm/comun/componentes/fuente_lead.tsx";
 import { TipoEntidadLead } from "#/crm/comun/componentes/tipo_entidad_lead.tsx";
@@ -16,10 +17,13 @@ export const TabDatos = ({ lead }: { lead: HookModelo<Lead> }) => {
       <quimera-formulario>
         <EstadoLead {...uiProps("estado_id")} />
         <FuenteLead {...uiProps("fuente_id")} />
-        {/* <MoleculaContacto
-          contactoId={modelo.contacto_id as string | null}
-          onChange={uiProps("contacto_id").onChange}
-        /> */}
+        <ContactoSelector
+          {...uiProps("contacto_id")}
+          label="Contacto"
+          valor={modelo.contacto_id ?? ""}
+          descripcion={modelo.contacto_id ?? ""}
+        />
+
         <TipoEntidadLead {...uiProps("tipo")} />
         {modelo.tipo === "Cliente" && modelo.cliente_id ? (
           <Cliente {...uiProps("cliente_id", "nombre")} />

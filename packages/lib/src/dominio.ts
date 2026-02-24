@@ -333,7 +333,7 @@ export const formatoValorCampoValido = <T extends Modelo>(meta: MetaModelo<T>) =
 // }
 
 const valorDecimalEsValido = (valor: string, decimales: number): boolean => {
-    return new RegExp(`^(\\d?)+(\\.\\d{0,${decimales}})?$`).test(String(valor));
+    return new RegExp(`^-?(\\d?)+(\\.\\d{0,${decimales}})?$`).test(String(valor));
 }
 // No permite .23 y es incómodo de editar
 // const valorDecimalEsValido2 = (valor: string, decimales: number): boolean => {
@@ -341,7 +341,6 @@ const valorDecimalEsValido = (valor: string, decimales: number): boolean => {
 // }
 
 export const convertirCampoHaciaUI = <T extends Modelo>(meta: MetaModelo<T>) => (campo: string, valor: unknown): ValorCampoUI => {
-    console.log('convertirCampoHaciaUI', campo, valor, typeof valor);
 
     if (valor === null || valor === undefined) {
         return '';
@@ -361,8 +360,16 @@ export const convertirCampoHaciaUI = <T extends Modelo>(meta: MetaModelo<T>) => 
         case 'checkbox':
             return (valor as boolean).toString();
 
-        case 'fecha':
-            return (valor as Date).toISOString().split('T')[0];
+        // case 'fecha':
+        //     return (valor as Date).toISOString().split('T')[0];
+        case 'fecha': {
+            // Convertir fecha a formato ISO local (YYYY-MM-DD) respetando zona horaria
+            const fecha = valor as Date;
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            return `${año}-${mes}-${dia}`;
+        }
 
         default:
             return valor as string;
@@ -475,6 +482,7 @@ const setCampo = <M extends Modelo>(
 };
 
 export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => (modelo: T, campo: string) => {
+    console.log('validacionCampoModelo', campo);
     const campos = meta.campos || {};
     const valor = modelo[campo];
     const tipoCampo = campos[campo]?.tipo;
@@ -498,8 +506,9 @@ export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => 
     if (tipoCampo && ["texto", "fecha", "numero", "selector", "autocompletar"].includes(tipoCampo) && requerido && valor === '') {
         return "Campo requerido";
     }
+    const tipoCampoEsNumero = ['numero', 'decimal', 'entero'].includes(tipoCampo as string);
 
-    if (tipoCampo === "numero") {
+    if (tipoCampoEsNumero) {
         const numero = Number(valor);
 
         if (campos[campo]?.positivo) {
@@ -507,7 +516,6 @@ export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => 
                 return "El número debe ser positivo";
             }
         }
-
 
         if (campos[campo]?.maximo) {
             const maximo = Number(campos[campo]?.maximo);

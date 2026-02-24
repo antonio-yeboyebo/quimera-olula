@@ -9,7 +9,16 @@ export const puntoVentaLocal = {
         localStorage.setItem(CLAVE_PUNTO_VENTA, JSON.stringify(puntoVenta));
     },
 
-    obtener: (): PuntoVentaTpv | null => {
+    obtener: (): PuntoVentaTpv => {
+        const puntoVentaStorage = localStorage.getItem(CLAVE_PUNTO_VENTA);
+        if (puntoVentaStorage) {
+            const puntoVenta = JSON.parse(puntoVentaStorage);
+            return puntoVenta
+        }
+        throw new Error("No hay punto de venta activo");
+    },
+
+    obtenerSeguro: (): PuntoVentaTpv | null => {
         const puntoVentaStorage = localStorage.getItem(CLAVE_PUNTO_VENTA);
         if (puntoVentaStorage) {
             const puntoVenta = JSON.parse(puntoVentaStorage);
@@ -31,7 +40,17 @@ export const agenteActivo = {
         localStorage.setItem(CLAVE_AGENTE_TPV, JSON.stringify(agente));
     },
 
-    obtener: (): AgenteTpv | null => {
+    obtener: (): AgenteTpv => {
+        const agenteStorage = localStorage.getItem(CLAVE_AGENTE_TPV);
+        console.log('agenteStorage', agenteStorage)
+        if (agenteStorage) {
+            const agente = JSON.parse(agenteStorage);
+            return agente
+        }
+        throw new Error("No hay agente activo");
+    },
+
+    obtenerSegudo: (): AgenteTpv | null => {
         const agenteStorage = localStorage.getItem(CLAVE_AGENTE_TPV);
         console.log('agenteStorage', agenteStorage)
         if (agenteStorage) {

@@ -1,5 +1,5 @@
 // --- Hooks y helpers para experiencia móvil ---
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { QIcono } from "../atomos/qicono.tsx";
 import { CabeceraGrid } from "./CabeceraGrid.tsx";
 import "./calendario.css";
@@ -80,8 +80,9 @@ export function Calendario<T extends DatoBase>({
     getDatosPorFecha: getDatosPorFechaConfig,
     onNecesitaDatosAnteriores,
     onNecesitaDatosPosteriores,
-    seleccion: configuracionSeleccion,
+    // seleccion: configuracionSeleccion,
   } = config;
+  const configuracionSeleccion = useMemo(() => config.seleccion, []);
 
   // Hook para selección de fechas (opcional)
   const seleccionFechas = useSeleccionFechas(configuracionSeleccion);

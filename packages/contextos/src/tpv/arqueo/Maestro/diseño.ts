@@ -1,6 +1,6 @@
 import { MetaTabla } from "@olula/componentes/index.js";
 import { ListaEntidades } from "@olula/lib/ListaEntidades.js";
-import { ArqueoTpv } from "../diseño.ts";
+import { CabeceraArqueoTpv } from "../diseño.ts";
 
 export type EstadoMaestroArqueosTpv = (
     'INICIAL'
@@ -15,10 +15,10 @@ export type EstadoMaestroArqueosTpv = (
 
 export type ContextoMaestroArqueosTpv = {
     estado: EstadoMaestroArqueosTpv;
-    arqueos: ListaEntidades<ArqueoTpv>
+    arqueos: ListaEntidades<CabeceraArqueoTpv>
 };
 
-export const metaTablaArqueo: MetaTabla<ArqueoTpv> = [
+export const metaTablaArqueo: MetaTabla<CabeceraArqueoTpv> = [
     {
         id: "id",
         cabecera: "Código",

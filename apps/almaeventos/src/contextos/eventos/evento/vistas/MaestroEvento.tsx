@@ -1,6 +1,6 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
-import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
+import { QModal } from "@olula/componentes/index.js";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { useLista } from "@olula/lib/useLista.ts";
 import { Maquina, useMaquina } from "@olula/lib/useMaquina.ts";
@@ -96,13 +96,15 @@ export const MaestroEvento = () => {
         totalEntidades={totalRegistros}
       />
 
-      <QModal
-        nombre="modal"
-        abierto={estado === "alta"}
-        onCerrar={() => emitir("ALTA_CANCELADA")}
-      >
-        <AltaEvento emitir={emitir} />
-      </QModal>
+      {estado === "alta" && (
+        <QModal
+          nombre="modal"
+          abierto={estado === "alta"}
+          onCerrar={() => emitir("ALTA_CANCELADA")}
+        >
+          <AltaEvento emitir={emitir} />
+        </QModal>
+      )}
     </div>
   );
 };

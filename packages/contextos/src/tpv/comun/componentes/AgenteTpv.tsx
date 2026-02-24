@@ -1,16 +1,10 @@
 import { AgenteTpv as TipoAgenteTpv } from "#/tpv/agente/diseño.ts";
 import { getAgentesTpv } from "#/tpv/agente/infraestructura.ts";
-import { QSelect } from "@olula/componentes/index.js";
+import { QSelect, QSelectProps } from "@olula/componentes/index.js";
 import { Criteria } from "@olula/lib/diseño.js";
 import { useEffect, useState } from "react";
 
-interface AgenteProps {
-    valor: string;
-    nombre?: string;
-    label?: string;
-    ref?: React.RefObject<HTMLSelectElement | null>;
-    onChange: (opcion: { valor: string; descripcion: string } | null) => void;
-}
+type AgenteProps =  Omit<QSelectProps, 'opciones'>;
 
 type OpcionAgente = {
     valor: string;

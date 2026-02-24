@@ -1,5 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { publicar } from "@olula/lib/dominio.js";
+import { ArqueoTpv } from "../diseño.ts";
 import { ContextoArqueoTpv, EstadoArqueoTpv } from "./diseño.ts";
 import {
     cargarContexto,
@@ -28,15 +29,35 @@ export const getMaquina: () => Maquina<EstadoArqueoTpv, ContextoArqueoTpv> = () 
 
             borrar_solicitado: "BORRANDO_ARQUEO",
 
+            borrado_de_movimiento_solicitado: "BORRANDO_MOVIMIENTO",
+
             recuento_solicitado: "RECONTANDO",
 
             cierre_solicitado: "CERRANDO",
+
+            creacion_de_movimiento_solicitada: "CREANDO_MOVIMIENTO",
+
+        },
+
+        BORRANDO_MOVIMIENTO: {
+
+            movimiento_borrado: [refrescarArqueo, "ABIERTO"],
+
+            borrado_de_movimiento_cancelado: "ABIERTO",
 
         },
 
         CERRADO: {
 
             reapertura_solicitada: "REABRIENDO",
+        },
+
+        CREANDO_MOVIMIENTO: {
+
+            movimiento_creado: [refrescarArqueo, "ABIERTO"],
+
+            creacion_de_movimiento_cancelada: "ABIERTO",
+
         },
 
         RECONTANDO: {
@@ -68,7 +89,7 @@ export const getMaquina: () => Maquina<EstadoArqueoTpv, ContextoArqueoTpv> = () 
 
             arqueo_borrado: [
                 getContextoVacio,
-                publicar('arqueo_borrado', null)
+                publicar('arqueo_borrado', (_, arqueo) => (arqueo as ArqueoTpv).id)
             ]
         },
     }

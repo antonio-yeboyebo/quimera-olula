@@ -5,7 +5,7 @@ import { QModal } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
-import { moneda } from "../dominio.ts";
+import { moneda, totalEfectivo, totalMovimientos } from "../dominio.ts";
 import "./RecuentoArqueoTpv.css";
 import { metaRecuentoArqueoTpv } from "./diseño.ts";
 import { getRecuentoInicial, guardarRecuento, recuentoEfectivo } from "./recuento.ts";
@@ -56,7 +56,7 @@ export const RecuentoArqueoTpv = ({
                 <h2>Recuento de arqueo</h2>
 
                 <quimera-formulario>
-                    <h4>Caja</h4>
+                    <h4>Recuento</h4>
                     <QInput label="B 500€" {...uiProps("b500")} />
                     <QInput label="B 200€" {...uiProps("b200")} />
                     <QInput label="B 100€" {...uiProps("b100")} />
@@ -78,9 +78,20 @@ export const RecuentoArqueoTpv = ({
                     <QInput label="Tarjeta" {...uiProps("recuentoTarjeta")} />
                     <QInput label="Vales" {...uiProps("recuentoVales")} />
 
-                    <h4>Pagos</h4>
+                    <h4>Teórico</h4>
+
                     <div id='recuento' >
-                        {`Efectivo: ${moneda(arqueo.pagosEfectivo)}`}
+                        {`Efectivo inicial: ${moneda(arqueo.efectivoInicial)}`}
+                    </div>
+                    <div id='recuento' >
+                        {`Pagos efectivo: ${moneda(arqueo.pagosEfectivo)}`}
+                    </div>
+                    <div id='recuento' >
+                        {`Movimientos efectivo: ${moneda(totalMovimientos(arqueo.movimientos))}`}
+                    </div>
+                    
+                    <div id='recuento' >
+                        {`Efectivo: ${moneda(totalEfectivo(arqueo))}`}
                     </div>
                     <div id='recuento' >
                         {`Tarjeta: ${moneda(arqueo.pagosTarjeta)}`}
@@ -91,7 +102,7 @@ export const RecuentoArqueoTpv = ({
 
                     <h4>Diferencia</h4>
                     <div id='recuento' >
-                        {`Efectivo: ${moneda(recuentoEfectivo(modelo) - arqueo.pagosEfectivo)}`}
+                        {`Efectivo: ${moneda(recuentoEfectivo(modelo) - totalEfectivo(arqueo))}`}
                     </div>
                     <div id='recuento' >
                         {`Tarjeta: ${moneda(modelo.recuentoTarjeta - arqueo.pagosTarjeta)}`}

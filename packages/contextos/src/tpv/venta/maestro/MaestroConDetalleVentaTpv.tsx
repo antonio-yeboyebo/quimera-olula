@@ -1,12 +1,13 @@
 import { ColumnaEstadoTabla } from "#/comun/componentes/ColumnaEstadoTabla.tsx";
 import { AgenteTpvActual } from "#/tpv/agente/agente_actual/AgenteTpvActual.tsx";
+import { puntoVentaLocal } from "#/tpv/comun/infraestructura.ts";
 import { PuntoVentaTpvActual } from "#/tpv/punto_de_venta/punto_actual/PuntoVentaTpvActual.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { QIcono } from "@olula/componentes/index.js";
 import { ListadoControlado } from "@olula/componentes/maestro/ListadoControlado.js";
 import { MaestroDetalleControlado } from "@olula/componentes/maestro/MaestroDetalleControlado.tsx";
-import { Criteria } from "@olula/lib/diseño.js";
+import { ClausulaFiltro, Criteria } from "@olula/lib/diseño.js";
 import { criteriaDefecto, formatearFechaDate, formatearMoneda } from "@olula/lib/dominio.js";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useCallback, useEffect, useState } from "react";
@@ -17,13 +18,15 @@ import "./MaestroConDetalleVentaTpv.css";
 import { getMaquina } from "./maquina.ts";
 
 // const maquina = getMaquina();
+const miPuntoVentaLocal = puntoVentaLocal.obtener() ;
 
+const filtroPuntoVenta: ClausulaFiltro = ["punto_venta_id", miPuntoVentaLocal?.id];
 const criteriaBaseVentas = {
     ...criteriaDefecto,
-    filtro: {
+    filtro: [
         ...criteriaDefecto.filtro,
-        punto_venta_id: 'x'
-    },
+        filtroPuntoVenta
+    ],
     orden: ["codigo", "DESC"]
     
 }

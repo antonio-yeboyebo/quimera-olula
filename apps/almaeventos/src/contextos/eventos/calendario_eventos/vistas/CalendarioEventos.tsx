@@ -6,7 +6,7 @@ import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.ts";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { Filtro } from "@olula/lib/diseño.ts";
 import { Maquina, useMaquina } from "@olula/lib/useMaquina.ts";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { TextoConTooltip } from "../../../comun/componentes/TextoConTooltip/TextoConTooltip.tsx";
 import { AltaEvento } from "../../evento/vistas/AltaEvento.tsx";
 import { EventoCalendario } from "../diseño.ts";
@@ -81,15 +81,84 @@ export const CalendarioEventos = () => {
   const resetearFiltro = () => setFiltro([]);
 
   // Manejar selección del calendario
-  const manejarSeleccionCalendario = (seleccion: EstadoSeleccion) => {
-    if (seleccion.esValida && seleccion.fechas.length > 0) {
-      setFechaSeleccionada(seleccion.fechas[0]);
-    } else {
-      setFechaSeleccionada(new Date());
-    }
-  };
+  const manejarSeleccionCalendario = useCallback(
+    (seleccion: EstadoSeleccion) => {
+      if (seleccion.esValida && seleccion.fechaInicio) {
+        setFechaSeleccionada(seleccion.fechaInicio);
+      } else {
+        setFechaSeleccionada(new Date());
+      }
+    },
+    [setFechaSeleccionada]
+  );
 
-  // Generar enlace a calendario
+  const config = useMemo(
+    () => ({
+      // ✅ Activar selección simple
+      seleccion: {
+        tipo: "simple" as const,
+      },
+      // inicioSemana: "domingo",
+      // seleccion: {tipo: 'rango'},
+      maxDatosVisibles: 5,
+      onNecesitaDatosAnteriores: expandirRangoAnterior,
+      onNecesitaDatosPosteriores: expandirRangoPosterior,
+      teclado: {
+        atajos: {
+          nuevo: "n", // Atajo personalizado para crear evento
+          playground: "p", // Atajo para abrir el playground
+        },
+        onAccion: (accion: string) => {
+          if (accion === "nuevo") {
+            emitir("ALTA_INICIADA");
+          }
+          // Se pueden añadir más acciones personalizadas aquí
+        },
+      },
+      cabecera: {
+        botonesDerModo: !esMovil
+          ? [
+              <MaestroFiltros
+                key="filtros"
+                campos={camposFiltro}
+                filtro={filtro}
+                cambiarFiltro={cambiarFiltro}
+                borrarFiltro={borrarFiltro}
+                resetearFiltro={resetearFiltro}
+              />,
+            ]
+          : [],
+        botonesDerHoy: [
+          <QBoton
+            key="nuevo-evento"
+            onClick={() => emitir("ALTA_INICIADA")}
+            variante={esMovil ? "texto" : "solido"}
+          >
+            Nuevo evento
+          </QBoton>,
+          // <QBoton key="ejemplo-seleccion" onClick={() => emitir("VER_EJEMPLO_SELECCION")} variante="texto">🎯 Demo Selección</QBoton>,
+          // <BotonConTooltip tooltip="Generar enlace a calendario" tamaño={"pequeño"} onClick={generarEnlace}>
+          //   <QIcono nombre={"copiar"} tamaño={"sm"} color={"white"} style={{margin: '4px'}}/>
+          // </BotonConTooltip>
+        ],
+        // modos: ['semana', 'mes', 'anio'],
+        // mostrarBotonHoy: false,
+        // mostrarCambioModo: false,
+        // modoCalendario: 'anio'
+      },
+    }),
+    [
+      emitir,
+      esMovil,
+      filtro,
+      expandirRangoAnterior,
+      expandirRangoPosterior,
+      camposFiltro,
+      cambiarFiltro,
+      borrarFiltro,
+      resetearFiltro,
+    ]
+  );
 
   return (
     <div className="calendario-eventos">
@@ -97,61 +166,8 @@ export const CalendarioEventos = () => {
         calendarioId="calendario-eventos-principal"
         datos={eventos}
         cargando={cargando}
+        config={config}
         // playground={true}
-        config={{
-          // ✅ Activar selección simple
-          seleccion: {
-            tipo: "simple",
-          },
-          // inicioSemana: "domingo",
-          // seleccion: {tipo: 'rango'},
-          maxDatosVisibles: 5,
-          onNecesitaDatosAnteriores: expandirRangoAnterior,
-          onNecesitaDatosPosteriores: expandirRangoPosterior,
-          teclado: {
-            atajos: {
-              nuevo: "n", // Atajo personalizado para crear evento
-              playground: "p", // Atajo para abrir el playground
-            },
-            onAccion: (accion) => {
-              if (accion === "nuevo") {
-                emitir("ALTA_INICIADA");
-              }
-              // Se pueden añadir más acciones personalizadas aquí
-            },
-          },
-          cabecera: {
-            botonesDerModo: !esMovil
-              ? [
-                  <MaestroFiltros
-                    key="filtros"
-                    campos={camposFiltro}
-                    filtro={filtro}
-                    cambiarFiltro={cambiarFiltro}
-                    borrarFiltro={borrarFiltro}
-                    resetearFiltro={resetearFiltro}
-                  />,
-                ]
-              : [],
-            botonesDerHoy: [
-              <QBoton
-                key="nuevo-evento"
-                onClick={() => emitir("ALTA_INICIADA")}
-                variante={esMovil ? "texto" : "solido"}
-              >
-                Nuevo evento
-              </QBoton>,
-              // <QBoton key="ejemplo-seleccion" onClick={() => emitir("VER_EJEMPLO_SELECCION")} variante="texto">🎯 Demo Selección</QBoton>,
-              // <BotonConTooltip tooltip="Generar enlace a calendario" tamaño={"pequeño"} onClick={generarEnlace}>
-              //   <QIcono nombre={"copiar"} tamaño={"sm"} color={"white"} style={{margin: '4px'}}/>
-              // </BotonConTooltip>
-            ],
-            // modos: ['semana', 'mes', 'anio'],
-            // mostrarBotonHoy: false,
-            // mostrarCambioModo: false,
-            // modoCalendario: 'anio'
-          },
-        }}
         // ✅ Capturar selección
         onSeleccionCambio={manejarSeleccionCalendario}
         renderDato={(dato: EventoCalendario) => (

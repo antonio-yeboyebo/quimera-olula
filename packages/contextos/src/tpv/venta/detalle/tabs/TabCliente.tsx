@@ -30,6 +30,7 @@ export const TabCliente = ({
         <div className="TabCliente">
             <quimera-formulario>
                 <CompAgenteTpv 
+                    label='Agente'
                     {...uiProps("idAgente", "agente")}
                     nombre="tpv_venta_agente_id"
                 />

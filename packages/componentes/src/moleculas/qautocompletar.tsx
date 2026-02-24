@@ -4,7 +4,7 @@ import { QInput } from "../atomos/qinput.tsx";
 
 type Opcion = { valor: string; descripcion: string };
 
-type QAutocompletarProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
+export type QAutocompletarProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
   tiempoEspera?: number;
   longitudMinima?: number;
   descripcion?: string;

@@ -8,8 +8,8 @@
         grid-column: span 4;
     }
 
-    .MoleculaContacto {
-        grid-column: 1 / span 4;
+    quimera-autocompletar[nombre="contacto_id"] {
+        grid-column: span 4;
     }
 
     quimera-select[nombre="tipo"] {

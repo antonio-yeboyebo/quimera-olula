@@ -71,6 +71,7 @@ const CambiarAgenteTpv = ({
 
             <quimera-formulario>
                 <CompAgenteTpv 
+                    label='Agente'
                     {...uiProps("idAgente", "nombre")}
                     nombre="agente_id"
                     ref={focus}

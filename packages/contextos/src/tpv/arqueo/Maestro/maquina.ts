@@ -15,7 +15,7 @@ export const getMaquina: () => Maquina<EstadoMaestroArqueosTpv, ContextoMaestroA
 
             arqueo_deseleccionado: [Arqueos.desactivar],
 
-            arqueo_borrada: [Arqueos.quitar],
+            arqueo_borrado: [Arqueos.quitar],
 
             recarga_de_arqueos_solicitada: recargarArqueos,
 

@@ -1,0 +1,24 @@
+{
+    "name": "@olula/naranjas_jimenez",
+    "version": "0.0.1",
+    "type": "module",
+    "types": "./**/declarations.d.ts",
+    "main": "./index.ts",
+    "exports": {
+        "./*": "./src/*"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "lint": "eslint src",
+        "type-check": "tsc -p ./tsconfig.json --noEmit",
+        "ci": "pnpm lint && pnpm type-check && pnpm test run",
+        "test": "vitest",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@olula/componentes": "workspace:*",
+        "@olula/ctx": "workspace:*",
+        "@olula/lib": "workspace:*"
+    }
+}

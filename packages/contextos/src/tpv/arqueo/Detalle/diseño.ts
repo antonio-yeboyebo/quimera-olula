@@ -39,13 +39,15 @@ export const arqueoTpvVacio: ArqueoTpv = {
     recuentoTarjeta: 0,
     recuentoVales: 0,
     movimientoCierre: 0,
-    efectivoInicial: 0
+    efectivoInicial: 0,
+    movimientos: []
 };
 
 export type EstadoArqueoTpv = (
     'INICIAL' | "ABIERTO" | "CERRADO"
     | "BORRANDO_ARQUEO" | "RECONTANDO" | "CERRANDO"
     | "REABRIENDO"
+    | "CREANDO_MOVIMIENTO" | "BORRANDO_MOVIMIENTO"
 );
 
 

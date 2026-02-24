@@ -1,0 +1,1 @@
+export { TextoConTooltip } from "./TextoConTooltip.tsx";

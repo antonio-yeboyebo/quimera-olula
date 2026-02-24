@@ -1,0 +1,15 @@
+@import "@olula/componentes/tema/tema.css";
+
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: light;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    scroll-behavior: smooth;
+    scrollbar-width: auto;
+    scrollbar-color: #bdbdbd #e0e0e0;
+}

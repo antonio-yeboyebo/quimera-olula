@@ -5,12 +5,39 @@ import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
 import { DeleteLinea, GetLineasPedido, GetPedido, GetPedidos, LineaPedido, PatchArticuloLinea, PatchCantidadLinea, PatchClientePedido, PatchLinea, Pedido, PostLinea, PostPedido } from "./diseño.ts";
 
-type LineaPedidoAPI = LineaPedido
+export interface LineaPedidoAPI {
+  id: string;
+  referencia: string | null;
+  descripcion: string;
+  cantidad: number;
+  pvp_unitario: number;
+  dto_porcentual: number;
+  pvp_total: number;
+  grupo_iva_producto_id: string;
+};
+
 type PedidoAPI = Pedido & { fecha: string };
 
 const baseUrl = new ApiUrls().PEDIDO;
 
-export const lineaPedidoFromAPI = (l: LineaPedidoAPI): LineaPedido => l;
+type LineaPedidoDesdeApi = (l: LineaPedidoAPI) => LineaPedido;
+
+export interface VentasPedidoInfra {
+  linea_desde_api: LineaPedidoDesdeApi
+}
+
+const getInfra = (): VentasPedidoInfra => FactoryObj.app.Ventas.pedido_infraestructura as VentasPedidoInfra
+
+const lineaPedidoDesdeApi: LineaPedidoDesdeApi = (l) => {
+  return getInfra().linea_desde_api(l)
+};
+
+const lineaPedidoDesdeApiBase: LineaPedidoDesdeApi = (l) => l as LineaPedido;
+
+export const ventasPedidoInfra: VentasPedidoInfra = {
+  linea_desde_api: lineaPedidoDesdeApiBase
+}
+
 export const pedidoDesdeAPI = (p: PedidoAPI): Pedido => ({
   ...p,
   fecha: new Date(Date.parse(p.fecha)),
@@ -61,7 +88,7 @@ export const patchCambiarCliente: PatchClientePedido = async (id, cambio) => {
 export const getLineas: GetLineasPedido = async (id) =>
   await RestAPI.get<{ datos: LineaPedidoAPI[] }>(
     `${baseUrl}/${id}/linea`).then((respuesta) => {
-      const lineas = respuesta.datos.map((d) => lineaPedidoFromAPI(d));
+      const lineas = respuesta.datos.map((d) => lineaPedidoDesdeApi(d));
       return lineas
     });
 

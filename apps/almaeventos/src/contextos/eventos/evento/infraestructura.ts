@@ -6,6 +6,14 @@ import { reemplazarNulls } from "./dominio.ts";
 
 const baseUrlEvento = `/eventos/evento`;
 
+// Helper para convertir fechas a string ISO respetando zona horaria local
+const fechaAISOLocal = (fecha: Date): string => {
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    return `${año}-${mes}-${dia}`;
+};
+
 type EventoAPI = Evento & {
     fecha_inicio: string
 }
@@ -20,9 +28,12 @@ export const eventoDesdeAPI = (e: EventoAPI): Evento => (
 
 export const eventoToAPI = (e: NuevoEvento) => {
     const { fechaInicio, ...resto } = e;
+    const fechaFormateada = !fechaInicio ? null : (fechaInicio instanceof Date ? fechaAISOLocal(fechaInicio) : fechaInicio);
+
     return {
         ...resto,
-        fecha_inicio: !fechaInicio ? null : (fechaInicio instanceof Date ? fechaInicio.toISOString().split('T')[0] : fechaInicio),
+        fecha_inicio: fechaFormateada,
+        // fecha_inicio: !fechaInicio ? null : (fechaInicio instanceof Date ? fechaInicio.toISOString().split('T')[0] : fechaInicio),
         // valordefecto: e.valor_defecto,
     };
 };

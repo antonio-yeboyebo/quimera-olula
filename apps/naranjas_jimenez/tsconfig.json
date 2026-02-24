@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.app.json",
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "#/*": [
+                "../node_modules/@olula/ctx/src/*"
+            ],
+        }
+    },
+    "include": [
+        ".",
+        "../../eslint.config.js",
+        "../../vite.config.ts"
+    ]
+}

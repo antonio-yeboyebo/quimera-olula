@@ -3,7 +3,7 @@ import { Etiqueta, FormFieldProps, Validacion } from "./_forminput.tsx";
 
 type Opcion = { valor: string; descripcion: string };
 
-type QSelectProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
+export type QSelectProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
   opciones: Opcion[];
   onChange?: (
     opcion: Opcion | null,

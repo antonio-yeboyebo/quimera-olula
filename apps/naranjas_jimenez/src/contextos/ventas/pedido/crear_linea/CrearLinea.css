@@ -1,0 +1,26 @@
+.CrearLinea {
+    quimera-formulario {
+        min-width: 500px;
+    }
+
+    quimera-autocompletar[nombre="idVariedad"] {
+        grid-column: span 12;
+    }
+
+    quimera-autocompletar[nombre="idTipoPalet"] {
+        grid-column: span 12;
+    }
+
+    quimera-input[nombre="cantidadPalets"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="cantidadEnvases"] {
+        grid-column: span 4;
+    }
+
+    div[id="espacio4"] {
+        grid-column: span 4;
+    }
+
+}

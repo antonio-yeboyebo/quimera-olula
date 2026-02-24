@@ -6,7 +6,5 @@ export const menuCrm = {
     "CRM/Acciones": { url: "/crm/accion", regla: "crm.accion.leer" },
     "CRM/Leads": { url: "/crm/lead", regla: "crm.lead.leer" },
     "CRM/Incidencias": { url: "/crm/incidencia", regla: "crm.incidencia.leer" },
-    "CRM/Estados de oportunidad": { url: "/crm/estadooportunidadventa", regla: "crm.estado_oportunidad_venta.leer" },
-    "CRM/Estados de lead": { url: "/crm/estadolead", regla: "crm.estado_lead.leer" },
-    "CRM/Fuentes de lead": { url: "/crm/fuentelead", regla: "crm.fuente_lead.leer" },
+    "CRM/Otros": { url: "/crm/otros", regla: "crm.otros.leer" },
 };

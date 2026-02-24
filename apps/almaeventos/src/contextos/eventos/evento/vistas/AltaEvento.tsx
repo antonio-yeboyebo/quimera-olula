@@ -3,14 +3,15 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { Producto } from "../../componentes/producto.tsx";
+import { NuevoEvento } from "../diseño.ts";
 import { metaNuevoEvento, nuevoEventoVacio } from "../dominio.ts";
 import { getEvento, postEvento } from "../infraestructura.ts";
 
 export const AltaEvento = ({
   emitir = async () => {},
-  fechaInicial = new Date(),
+  fechaInicial,
 }: {
   emitir?: ProcesarEvento;
   fechaInicial?: Date;
@@ -21,13 +22,18 @@ export const AltaEvento = ({
   //   const dia = String(fecha.getDate()).padStart(2, "0");
   //   return `${año}-${mes}-${dia}`;
   // };
-  nuevoEventoVacio.fechaInicio = fechaInicial;
-  const nuevoEvento = useModelo(metaNuevoEvento, nuevoEventoVacio);
+  const nuevoEventoInicial: NuevoEvento = useMemo(() => {
+    const fecha = fechaInicial || new Date();
+    return { ...nuevoEventoVacio, fechaInicio: fecha };
+  }, [fechaInicial]);
+
+  // nuevoEventoVacio.fechaInicio = fechaInicial;
+  const nuevoEvento = useModelo(metaNuevoEvento, nuevoEventoInicial);
   const { intentar } = useContext(ContextoError);
 
   const guardar = async () => {
     const evento_id = await intentar(() => postEvento(nuevoEvento.modelo));
-    nuevoEvento.init(nuevoEventoVacio);
+    nuevoEvento.init(nuevoEventoInicial);
     const EventoCreado = await getEvento(evento_id);
     emitir("EVENTO_CREADO", EventoCreado);
   };

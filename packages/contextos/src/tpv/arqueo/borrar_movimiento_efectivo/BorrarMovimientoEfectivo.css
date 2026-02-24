@@ -1,0 +1,14 @@
+.CrearMovimiento {
+
+    div[id="agente"] {
+        grid-column: span 12;
+    }
+
+    quimera-input[nombre="importe"] {
+        grid-column: span 6;
+    }
+
+    quimera-date[nombre="fecha"] {
+        grid-column: span 6;
+    }
+}

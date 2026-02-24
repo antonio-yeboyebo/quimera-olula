@@ -8,13 +8,13 @@ import { Criteria } from "@olula/lib/diseño.js";
 import { criteriaDefecto, procesarEvento } from "@olula/lib/dominio.js";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { DetalleArqueoTpv } from "../Detalle/ArqueoTpv.tsx";
-import { ArqueoTpv } from "../diseño.ts";
+import { CabeceraArqueoTpv } from "../diseño.ts";
 import "./MaestroConDetalleArqueoTpv.css";
 import { ContextoMaestroArqueosTpv, metaTablaArqueo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
 
 const puntoVentaActivo = puntoVentaLocal.obtener() ;
-const miAgenteActivo = agenteActivo.obtener() ;
+const miAgenteActivo = agenteActivo.obtener();
 
 const maquina = getMaquina();
 
@@ -35,7 +35,7 @@ export const MaestroConDetalleArqueoTpv = () => {
 
     const [ctx, setCtx] = useState<ContextoMaestroArqueosTpv>({
         estado: "INICIAL",
-        arqueos: listaEntidadesInicial<ArqueoTpv>(),
+        arqueos: listaEntidadesInicial<CabeceraArqueoTpv>(),
         // totalArqueos: 0,
         // arqueoActivo: null,
     })
@@ -57,7 +57,7 @@ export const MaestroConDetalleArqueoTpv = () => {
     );
 
     const setSeleccionada = useCallback(
-        (payload: ArqueoTpv) => emitir("arqueo_seleccionado", payload),
+        (payload: CabeceraArqueoTpv) => emitir("arqueo_seleccionado", payload),
         [emitir]
     );
 
@@ -76,7 +76,7 @@ export const MaestroConDetalleArqueoTpv = () => {
 
     return ( 
         <div className="Arqueo"> 
-            <MaestroDetalleControlado<ArqueoTpv>
+            <MaestroDetalleControlado<CabeceraArqueoTpv>
                 Maestro={
                     <>
                         <h2>Arqueos TPV</h2>
@@ -102,9 +102,9 @@ export const MaestroConDetalleArqueoTpv = () => {
                     </>
                 }
                 Detalle={
-                    <DetalleArqueoTpv arqueoInicial={ctx.arqueos.activo} publicar={emitir} />
+                    <DetalleArqueoTpv arqueoIdProp={ctx.arqueos.activo?.id} publicar={emitir} />
                 }
-                seleccionada={ctx.arqueos.activo}
+                seleccionada={ctx.arqueos.activo} 
                 modoDisposicion="maestro-50"
             />
         </div>
