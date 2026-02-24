@@ -117,7 +117,7 @@ export const deleteVentaTpv: DeleteVentaTpv = async (id) => {
 };
 
 export const patchDevolverVenta: PatchDevolverVenta = async (id, ventaADevolver) => {
-    await RestAPI.patch(`${baseUrlFactura}/${id}/rectificar`, {
+    await RestAPI.patch(`${baseUrl}/${id}/rectificar`, {
         rectificada_id: ventaADevolver.id,
         lineas_rectificadas: ventaADevolver.lineas.filter(
             (l) => l.aDevolver > 0
@@ -133,7 +133,7 @@ export const postEmitirVale: PostEmitirVale = async (venta) => {
     await RestAPI.post(
         `${baseUrl}/${venta.id}/emitir_vale`,
         {
-            punto_venta_id: puntoVentaLocal.obtener(),
+            punto_venta_id: puntoVentaLocal.obtener().id,
         },
         "Error al emitir el vale"
     );
