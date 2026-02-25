@@ -8,9 +8,11 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { ArqueoTpv } from "../diseño.ts";
 import { patchCrearMovimiento } from "../infraestructura.ts";
-import { metaMovimientoEfectivo, movimientoEfectivoVacio } from "./crear_movimiento_efectivo.ts";
+import {
+  metaMovimientoEfectivo,
+  movimientoEfectivoVacio,
+} from "./crear_movimiento_efectivo.ts";
 import "./CrearMovimientoEfectivo.css";
-const miAgenteActivo = agenteActivo.obtener();
 
 export const CrearMovimientoEfectivo = ({
   publicar,
@@ -19,59 +21,52 @@ export const CrearMovimientoEfectivo = ({
   publicar: EmitirEvento;
   arqueo: ArqueoTpv;
 }) => {
+  const miAgenteActivo = agenteActivo.obtenerSegudo();
 
-    const { modelo, uiProps, valido } = useModelo(
-        metaMovimientoEfectivo, movimientoEfectivoVacio
-    );
+  const { modelo, uiProps, valido } = useModelo(
+    metaMovimientoEfectivo,
+    movimientoEfectivoVacio
+  );
 
-    const crear = useCallback(
-        async () => {
-            await patchCrearMovimiento(
-                arqueo.id,
-                {
-                    importe: modelo.importe,
-                    fecha: modelo.fecha,
-                    idAgente: miAgenteActivo.id
-                }
-            );
-            publicar("movimiento_creado");
-        },
-        [modelo, publicar]
-    );
+  const crear = useCallback(async () => {
+    await patchCrearMovimiento(arqueo.id, {
+      importe: modelo.importe,
+      fecha: modelo.fecha,
+      idAgente: miAgenteActivo?.id ?? "",
+    });
+    publicar("movimiento_creado");
+  }, [modelo, publicar]);
 
-    const cancelar = useCallback(
-        () => publicar("creacion_de_movimiento_cancelada"),
-        [publicar]
-    );
+  const cancelar = useCallback(
+    () => publicar("creacion_de_movimiento_cancelada"),
+    [publicar]
+  );
 
-    const focus = useFocus(true);
+  const focus = useFocus(true);
 
-    return (
-        <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+  return (
+    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+      <div className="CrearMovimiento">
+        <h2>Crear movimiento de efectivo</h2>
 
-            <div className="CrearMovimiento">
+        <quimera-formulario>
+          <div id="agente">
+            {`Agente: ${miAgenteActivo?.id ?? ""} ${miAgenteActivo?.nombre ?? ""}`}
+          </div>
 
-                <h2>Crear movimiento de efectivo</h2>
+          <QInput label="Importe" {...uiProps("importe")} ref={focus} />
 
-                <quimera-formulario>
-                    <div id='agente'>
-                        {`Agente: ${miAgenteActivo.id} ${miAgenteActivo.nombre}`}
-                    </div>
+          <QDate label="Fecha" {...uiProps("fecha")} />
+        </quimera-formulario>
 
-                    <QInput label="Importe" {...uiProps("importe")} ref={focus}/>
-
-                    <QDate label="Fecha" {...uiProps("fecha")}/>
-
-                </quimera-formulario>
-
-                <div className="botones maestro-botones ">
-                    <QBoton texto="Crear"
-                        onClick={crear} deshabilitado={!valido}
-                    />
-                </div>
-
-            </div>
-
-        </QModal>
-    );
+        <div className="botones maestro-botones ">
+          <QBoton
+            texto="Crear"
+            onClick={crear}
+            deshabilitado={!valido || !miAgenteActivo}
+          />
+        </div>
+      </div>
+    </QModal>
+  );
 };

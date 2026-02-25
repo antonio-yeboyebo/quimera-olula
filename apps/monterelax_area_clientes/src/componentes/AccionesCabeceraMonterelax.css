@@ -1,0 +1,10 @@
+.accion-cabecera-carrito {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+
+    quimera-icono {
+        fill: var(--blanco);
+    }
+}

@@ -40,6 +40,7 @@ const iconos: Record<string, string | Icono> = {
   x_circle: "x-circle",
   minus: "minus",
   lista: "list-ul",
+  carrito: "cart",
   tarjeta: "credit-card",
   ver: "show",
   crear: "plus",

@@ -25,7 +25,7 @@ header {
 }
 
 #etiqueta-menu-usuario-abierto {
-    margin-left: auto;
+    margin-left: 0;
     order: 99;
     display: flex;
     align-items: center;
@@ -33,6 +33,13 @@ header {
     quimera-icono {
         fill: var(--blanco);
     }
+}
+
+#cabecera-acciones-extra {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 #boton-menu-lateral,

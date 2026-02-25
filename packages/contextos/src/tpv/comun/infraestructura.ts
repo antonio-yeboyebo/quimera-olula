@@ -42,7 +42,6 @@ export const agenteActivo = {
 
     obtener: (): AgenteTpv => {
         const agenteStorage = localStorage.getItem(CLAVE_AGENTE_TPV);
-        console.log('agenteStorage', agenteStorage)
         if (agenteStorage) {
             const agente = JSON.parse(agenteStorage);
             return agente
@@ -52,7 +51,6 @@ export const agenteActivo = {
 
     obtenerSegudo: (): AgenteTpv | null => {
         const agenteStorage = localStorage.getItem(CLAVE_AGENTE_TPV);
-        console.log('agenteStorage', agenteStorage)
         if (agenteStorage) {
             const agente = JSON.parse(agenteStorage);
             return agente
@@ -61,6 +59,6 @@ export const agenteActivo = {
     },
 
     borrar: () => {
-        localStorage.removeItem(CLAVE_PUNTO_VENTA);
+        localStorage.removeItem(CLAVE_AGENTE_TPV);
     },
 }

@@ -8,7 +8,7 @@ const environment = {
   getCurrentTitle: () => import.meta.env.VITE_APP_TITLE,
   inDevelopment: () => import.meta.env.MODE === "development",
   getAPIUrl: () =>
-    import.meta.env.VITE_LEGACY_API_URL || "http://127.0.0.1:8005/api/",
+    import.meta.env.VITE_LEGACY_API_URL || "http://127.0.0.1:8006/api/",
   getUrlDict: () => JSON.parse(import.meta.env.VITE_URL_DICT ?? "{}"),
   getToken: () => {
     const tk = localStorage.getItem("token-refresco");
