@@ -1,3 +1,5 @@
+import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
+import { useContext } from "react";
 import { Link } from "react-router";
 import { QIcono } from "../atomos/qicono.tsx";
 import "./Cabecera.css";
@@ -10,6 +12,10 @@ function toggleMenu(selector: string) {
 }
 
 export const Cabecera = () => {
+  const { app } = useContext(FactoryCtx);
+  const AccionesCabecera = app.Componentes
+    ?.cabecera_acciones as () => React.ReactNode;
+
   return (
     <>
       <header>
@@ -23,18 +29,9 @@ export const Cabecera = () => {
         <Link to="/">
           <img src="/olula_header_blanco.png" alt="Olula | Inicio" />
         </Link>
-        {/* <img
-          src="/olula_header_blanco.png"
-          alt="Olula | Inicio"
-          onClick={() => {
-            if (window.location.pathname === "/") {
-              window.location.reload();
-            } else {
-              window.location.href = "/";
-            }
-          }}
-          style={{ cursor: "pointer" }}
-        /> */}
+        <div id="cabecera-acciones-extra">
+          {AccionesCabecera ? <AccionesCabecera /> : null}
+        </div>
         <button
           id="boton-menu-usuario"
           aria-label="Abrir menú usuario"

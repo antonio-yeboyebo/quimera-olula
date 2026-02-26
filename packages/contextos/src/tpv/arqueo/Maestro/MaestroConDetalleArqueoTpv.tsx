@@ -13,100 +13,101 @@ import "./MaestroConDetalleArqueoTpv.css";
 import { ContextoMaestroArqueosTpv, metaTablaArqueo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
 
-const puntoVentaActivo = puntoVentaLocal.obtener() ;
-const miAgenteActivo = agenteActivo.obtener();
-
 const maquina = getMaquina();
 
 const criteriaBaseArqueos = {
-    ...criteriaDefecto,
-    // filtro: {
-    //     ...criteriaDefecto.filtro,
-    //     punto_arqueo_id: 'x'
-    // },
-    // orden: ["codigo", "DESC"]
-}
+  ...criteriaDefecto,
+  // filtro: {
+  //     ...criteriaDefecto.filtro,
+  //     punto_arqueo_id: 'x'
+  // },
+  // orden: ["codigo", "DESC"]
+};
 
 export const MaestroConDetalleArqueoTpv = () => {
+  const puntoVentaActivo = puntoVentaLocal.obtenerSeguro();
+  const miAgenteActivo = agenteActivo.obtenerSegudo();
 
-    const { intentar } = useContext(ContextoError);
+  const { intentar } = useContext(ContextoError);
 
-    const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
-    const [ctx, setCtx] = useState<ContextoMaestroArqueosTpv>({
-        estado: "INICIAL",
-        arqueos: listaEntidadesInicial<CabeceraArqueoTpv>(),
-        // totalArqueos: 0,
-        // arqueoActivo: null,
-    })
+  const [ctx, setCtx] = useState<ContextoMaestroArqueosTpv>({
+    estado: "INICIAL",
+    arqueos: listaEntidadesInicial<CabeceraArqueoTpv>(),
+    // totalArqueos: 0,
+    // arqueoActivo: null,
+  });
 
-    const emitir = useCallback(
-        async (evento: string, payload?: unknown) => {
+  const emitir = useCallback(
+    async (evento: string, payload?: unknown) => {
+      const [nuevoContexto, _] = await intentar(() =>
+        procesarEvento(maquina, ctx, evento, payload)
+      );
+      setCtx(nuevoContexto);
+    },
+    [ctx, setCtx, intentar]
+  );
 
-            const [nuevoContexto, _] = await intentar(
-                () => procesarEvento(maquina, ctx, evento, payload, )
-            );
-            setCtx(nuevoContexto);
-        },
-        [ctx, setCtx, intentar]
-    );
-    
-    const abrir = useCallback(
-        () => emitir("creacion_de_arqueo_solicitada"),
-        [emitir]
-    );
+  const abrir = useCallback(
+    () => emitir("creacion_de_arqueo_solicitada"),
+    [emitir]
+  );
 
-    const setSeleccionada = useCallback(
-        (payload: CabeceraArqueoTpv) => emitir("arqueo_seleccionado", payload),
-        [emitir]
-    );
+  const setSeleccionada = useCallback(
+    (payload: CabeceraArqueoTpv) => emitir("arqueo_seleccionado", payload),
+    [emitir]
+  );
 
-    const recargar = useCallback(
-        async (criteria: Criteria) => {
-            setCargando(true);
-            await emitir("recarga_de_arqueos_solicitada", criteria);
-            setCargando(false);
-        },
-        [emitir, setCargando]
-    );
+  const recargar = useCallback(
+    async (criteria: Criteria) => {
+      setCargando(true);
+      await emitir("recarga_de_arqueos_solicitada", criteria);
+      setCargando(false);
+    },
+    [emitir, setCargando]
+  );
 
-    useEffect(() => {
-        recargar(criteriaBaseArqueos);
-    }, [])
+  useEffect(() => {
+    recargar(criteriaBaseArqueos);
+  }, []);
 
-    return ( 
-        <div className="Arqueo"> 
-            <MaestroDetalleControlado<CabeceraArqueoTpv>
-                Maestro={
-                    <>
-                        <h2>Arqueos TPV</h2>
-                        <h2>Punto de arqueo {puntoVentaActivo?.nombre} </h2>
-                        <h2>Agente {miAgenteActivo?.nombre} </h2>
-                        <div className="maestro-botones">
-                            <QBoton onClick={abrir}>Abrir arqueo</QBoton>
-                        </div>
-                        <ListadoControlado
-                            metaTabla={metaTablaArqueo}
-                            metaFiltro={true}
-                            cargando={cargando}
-                            criteriaInicial={criteriaDefecto}
-                            modo={'tabla'}
-                            // setModo={handleSetModoVisualizacion}
-                            // tarjeta={tarjeta}
-                            entidades={ctx.arqueos.lista}
-                            totalEntidades={ctx.arqueos.total}
-                            seleccionada={ctx.arqueos.activo}
-                            onSeleccion={setSeleccionada}
-                            onCriteriaChanged={recargar}
-                        />
-                    </>
-                }
-                Detalle={
-                    <DetalleArqueoTpv arqueoIdProp={ctx.arqueos.activo?.id} publicar={emitir} />
-                }
-                seleccionada={ctx.arqueos.activo} 
-                modoDisposicion="maestro-50"
+  return (
+    <div className="Arqueo">
+      <MaestroDetalleControlado<CabeceraArqueoTpv>
+        Maestro={
+          <>
+            <h2>Arqueos TPV</h2>
+            <h2>Punto de arqueo {puntoVentaActivo?.nombre} </h2>
+            <h2>Agente {miAgenteActivo?.nombre} </h2>
+            <div className="maestro-botones">
+              <QBoton onClick={abrir}>Abrir arqueo</QBoton>
+            </div>
+            <ListadoControlado
+              metaTabla={metaTablaArqueo}
+              metaFiltro={true}
+              cargando={cargando}
+              criteriaInicial={criteriaDefecto}
+              modo={"tabla"}
+              // setModo={handleSetModoVisualizacion}
+              // tarjeta={tarjeta}
+              entidades={ctx.arqueos.lista}
+              totalEntidades={ctx.arqueos.total}
+              seleccionada={ctx.arqueos.activo}
+              onSeleccion={setSeleccionada}
+              onCriteriaChanged={recargar}
             />
-        </div>
-    );
+          </>
+        }
+        Detalle={
+          <DetalleArqueoTpv
+            arqueoIdProp={ctx.arqueos.activo?.id}
+            publicar={emitir}
+          />
+        }
+        seleccionada={ctx.arqueos.activo}
+        modoDisposicion="maestro-50"
+      />
+    </div>
+  );
 };
