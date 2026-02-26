@@ -29,6 +29,9 @@ export const Lineas = ({
     publicar("albaranado_confirmado");
   };
 
+  const esConfirmandoAlbaranado = estado === "CONFIRMANDO_ALBARANADO";
+  const esAlbaranadoCompletado = estado === "ALBARANADO_COMPLETADO";
+
   const habilitarBoton = puedeAlbaranar({ pedido, lineas });
 
   return (
@@ -44,7 +47,9 @@ export const Lineas = ({
         </div>
       </div>
       <QTarjetas
-        tarjeta={(l: Linea) => <TarjetaLinea linea={l} publicar={publicar} />}
+        tarjeta={(l: Linea) => (
+          <TarjetaLinea linea={l} pedidoId={pedido.id} publicar={publicar} />
+        )}
         datos={lineas.lista}
         cargando={estado === "ALBARANANDO"}
         seleccionadaId={seleccionada?.id}
@@ -54,11 +59,27 @@ export const Lineas = ({
       />
       <QModalConfirmacion
         nombre="albaranarPedido"
-        abierto={estado === "CONFIRMANDO_ALBARANADO"}
-        titulo="Confirmar"
-        mensaje="¿Está seguro de que desea albaranar este pedido?"
-        onCerrar={() => publicar("albaranado_cancelado")}
-        onAceptar={albaranarPedido}
+        abierto={esConfirmandoAlbaranado || esAlbaranadoCompletado}
+        titulo={esConfirmandoAlbaranado ? "Confirmar" : "Albarán generado"}
+        mensaje={
+          esConfirmandoAlbaranado
+            ? "¿Está seguro de que desea albaranar este pedido?"
+            : "El pedido se ha albaranado correctamente."
+        }
+        labelAceptar={esConfirmandoAlbaranado ? "Aceptar" : "Entendido"}
+        mostrarCancelar={esConfirmandoAlbaranado}
+        onCerrar={() =>
+          publicar(
+            esConfirmandoAlbaranado
+              ? "albaranado_cancelado"
+              : "albaranado_completado_cerrado"
+          )
+        }
+        onAceptar={() =>
+          esConfirmandoAlbaranado
+            ? albaranarPedido()
+            : publicar("albaranado_completado_cerrado")
+        }
       />
     </div>
   );

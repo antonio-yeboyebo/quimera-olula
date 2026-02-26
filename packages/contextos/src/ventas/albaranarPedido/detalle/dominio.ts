@@ -67,6 +67,25 @@ export const actualizarTramos: ProcesarAlbaranarPedido = async (contexto, payloa
     };
 };
 
+export const actualizarEstadoCerradoLinea: ProcesarAlbaranarPedido = async (contexto, payload) => {
+    const { id, cerrada } = payload as { id: string; cerrada: boolean };
+    const lineasActualizadas = contexto.lineas.lista.map((l) => {
+        if (String(l.id) !== String(id)) return l;
+        return {
+            ...l,
+            cerrada,
+        } as LineaAlbaranarPedido;
+    });
+
+    return {
+        ...contexto,
+        lineas: {
+            ...contexto.lineas,
+            lista: lineasActualizadas,
+        },
+    };
+};
+
 export const cancelarSeleccion: ProcesarAlbaranarPedido = async (contexto) => {
     return {
         ...contexto,
@@ -81,10 +100,12 @@ export const albaranarPedido: ProcesarAlbaranarPedido = async (contexto) => {
     await patchAlbaranarPedido(contexto.pedido.id, contexto.lineas.lista);
 
     const pedidoActualizado = await getPedido(contexto.pedido.id);
+    const lineasActualizadas = await getLineas(contexto.pedido.id);
 
     return {
         ...contexto,
         pedido: pedidoActualizado,
+        lineas: cargar(lineasActualizadas)(contexto.lineas),
     };
 };
 

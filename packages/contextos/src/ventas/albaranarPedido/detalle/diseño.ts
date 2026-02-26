@@ -8,6 +8,7 @@ export type EstadoAlbaranarPedido =
     | "CARGANDO"
     | "LISTO"
     | "CONFIRMANDO_ALBARANADO"
+    | "ALBARANADO_COMPLETADO"
     | "ALBARANANDO";
 
 export type ContextoAlbaranarPedido = {

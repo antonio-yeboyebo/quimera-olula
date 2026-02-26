@@ -150,7 +150,7 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
           </Grid>
         </Box>
         <Box>
-          <Grid container direction="column" className={classes.cajaStock}>
+          <Grid container driection="row" className={classes.cajaStock}>
             <Grid item container xs={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">{`Total Stock: ${totalStockFinca}`}</Typography>
             </Grid>

@@ -14,11 +14,13 @@ import * as ListadoAlbaranesMobile from "./views/AlbaranesVenta/ListadoMobile";
 import * as FirmaAlbaran from "./views/FirmaAlbaran";
 import * as FirmaAlbaranPuesto from "./views/FirmaAlbaranPuesto";
 import * as Footer from "./views/Footer";
+import * as Home from "./views/Home";
 import * as PuestoFirma from "./views/PuestoFirma";
 
 export default {
   path: "extensions/vbarba/firma_albaranes",
   views: {
+    Home,
     Footer,
     AlbaranesVenta,
     FirmaAlbaran,
@@ -33,6 +35,7 @@ export default {
     "AlbaranesPuestoFirma/ListadoMobile": ListadoAlbaranesMobilePuesto,
   },
   routes: {
+    "/": { type: "view", view: "Home" },
     "/albaranesPuesto": { type: "view", view: "AlbaranesPuestoFirma" },
     "/puestoFirma": { type: "view", view: "PuestoFirma" },
   },

@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@quimera/comps";
 import { LinearProgress } from "@quimera/thirdparty";
-import Quimera, { useStateValue, util } from "quimera";
+import Quimera, { PropValidation, useStateValue, util } from "quimera";
 import { useCallback, useEffect } from "react";
 
 import { QArticuloVbarba } from "../../comps";

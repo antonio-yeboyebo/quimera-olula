@@ -13,7 +13,7 @@ import {
 import { Totales } from "@quimera-extension/base-area_clientes";
 import { LineaFacturaCliComp } from "@quimera-extension/base-facturas";
 import { DocAgente, DocClienteYDir, DocFecha } from "@quimera-extension/base-ventas";
-import Quimera, { getSchemas, PropValidation, useStateValue, useWidth, util } from "quimera";
+import Quimera, { getSchemas, useStateValue, useWidth, util } from "quimera";
 import React, { useCallback, useEffect } from "react";
 
 function FacturaCli({ callbackChanged, idFactura, initFactura, useStyles }) {
@@ -88,7 +88,7 @@ function FacturaCli({ callbackChanged, idFactura, initFactura, useStyles }) {
               <QBoxButton
                 id="imprimirFactura"
                 title="Imprimir factura"
-                icon="print"
+                icon="receipt_long"
                 disabled={false}
               />
               <QBoxButton id="enviarEmail" title="Enviar por email" icon="email" />

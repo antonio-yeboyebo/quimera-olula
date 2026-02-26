@@ -15,6 +15,9 @@ bunch:
         - key: idalbaran
           value:
             statePath: albaran.buffer.idAlbaran
+        - key: tipo
+          value:
+            payloadPath: tipo
       action: albaran_to_pdf
       filename:
         const: albaran.pdf
@@ -43,7 +46,7 @@ bunch:
     - _type: set
       path: generandoFactura
       value:
-        const: true  
+        const: true
     - _type: patch
       action: generar_factura
       schema: albaranescli
@@ -72,33 +75,33 @@ bunch:
       text: Error al generar factura
       severity: error
   onEnviarEmailClicked:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: true
   onCancelEnviarEmailClicked:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
         const: false
   onEmailEnviado:
-    - _type: set 
+    - _type: set
       path: modalVistaEnviarAlbaran
       value:
-        const: false    
+        const: false
   onAbrirModalFirmaExternaClicked:
-    - _type: set 
+    - _type: set
       path: modalFirmanteExterno
       value:
-        const: true     
+        const: true
   onCloseFirmaExterna:
-    - _type: set 
+    - _type: set
       path: modalFirmanteExterno
       value:
         const: false
   onEnviadoFirmaPuesto:
     - _type: grape
-      name: reloadAlbaran  
+      name: reloadAlbaran
   onModalCancelarFirmaExternaClicked:
     - _type: set
       path: modalFirmanteExterno
@@ -106,50 +109,50 @@ bunch:
         const: false
     - _type: grape
       name: onCancelarFirmaExternaClicked
-  onCancelarFirmaExternaClicked:      
+  onCancelarFirmaExternaClicked:
     - _type: patch
       schema: firmasdealbaranes
       id:
-        statePath: albaran.data.idFirma     
-      data:   
+        statePath: albaran.data.idFirma
+      data:
         - key: firmadopor
           value:
-            const: ' '
+            const: " "
         - key: cifnif
           value:
-            const: ' '
+            const: " "
         - key: puesto
           value:
-            statePath: puesto 
+            statePath: puesto
         - key: observacionesfirma
           value:
-            const: ' '
+            const: " "
         - key: estado
           value:
-            const: "Pendiente"      
-      success: onCancelarFirmaPuestoCompleted  
-      error: onCancelarFirmaPuestoError 
+            const: "Pendiente"
+      success: onCancelarFirmaPuestoCompleted
+      error: onCancelarFirmaPuestoError
   onCancelarFirmaPuestoError:
-    - _type: alert   
+    - _type: alert
       text: No se ha podido cancelar la operación de firma externa.
       severity: error
-    - _type: set 
-      path: estadoEnviarPuestoFirma 
-      value: 
+    - _type: set
+      path: estadoEnviarPuestoFirma
+      value:
         const: null
   onCancelarFirmaPuestoCompleted:
     - _type: grape
-      name: reloadAlbaran  
-    - _type: alert   
+      name: reloadAlbaran
+    - _type: alert
       text: Operación de firma externa cancelada.
-      severity: success   
-  onAlbaranFirmaPuestoFirmado: 
+      severity: success
+  onAlbaranFirmaPuestoFirmado:
     - _type: set
       path: modalFirmanteExterno
       value:
-        const: false  
+        const: false
     - _type: grape
-      name: reloadAlbaran    
-    - _type: alert   
+      name: reloadAlbaran
+    - _type: alert
       text: Albarán firmado correctamente.
-      severity: success                          
+      severity: success

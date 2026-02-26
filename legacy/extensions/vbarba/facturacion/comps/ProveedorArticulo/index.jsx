@@ -32,17 +32,16 @@ function ProveedorArticulo({ referencia = null, ...props }) {
         API("articulos")
           .get(referencia, "get_codiciones_compra")
           .select(
-            "id,referencia,descripcion,codproveedor,dto,costereal,pvp,coste,nombre,disponible,pordefecto",
+            "id,referencia,descripcion,codproveedor,aliasprov,dto,costereal,pvp,coste,nombre,disponible,pordefecto",
           )
-          // .filter(filtro)
+          // .filter(filtroBase)
           .success(response =>
             setOptions(
               response.data.map(proveedor => {
                 return {
                   key: proveedor.codproveedor,
-                  value: `${proveedor.nombre} (${proveedor.codproveedor}) - ${util.euros(
-                    proveedor.costereal,
-                  )}`,
+                  value: `${proveedor.nombre}${proveedor.aliasprov ? ` (${proveedor.aliasprov})` : ""
+                    } (${proveedor.codproveedor}) - ${util.euros(proveedor.costereal)}`,
                   option: proveedor,
                 };
               }),

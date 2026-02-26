@@ -1,7 +1,7 @@
 ---
 shortcuts: []
 state: {}
-bunch: 
+bunch:
   onDescargarAlbaranClicked:
     - _type: download
       schema: misAlbaranes
@@ -9,6 +9,9 @@ bunch:
         - key: idalbaran
           value:
             statePath: albaran.buffer.idAlbaran
+        - key: tipo
+          value:
+            const: "valorado"
       action: albaran_to_pdf
       filename:
         const: albaran.pdf
@@ -28,4 +31,4 @@ bunch:
   onExportarAlbaranError:
     - _type: alert
       text: Error al exportar albaran
-      severity: error    
+      severity: error

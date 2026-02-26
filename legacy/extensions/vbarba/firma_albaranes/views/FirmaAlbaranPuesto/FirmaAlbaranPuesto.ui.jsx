@@ -80,10 +80,28 @@ function FirmaAlbaranPuesto({
             >{`Firma albarán  ${albaran.buffer.codigo}`}</Box>
           </Box>
           <Box m={2}>
-            <Grid container direction="column" justify="space-around">
+            <Grid container direction="row" spacing={1}>
+              {/* <Grid item xs={12} sm={12}>
+                <Contacto
+                  id="firmaAlbaran.codContacto"
+                  codcliente={albaran.buffer.codCliente}
+                  fullWidth
+                  label="Seleccione contacto"
+                  pl={4}
+                />
+              </Grid> */}
               <Grid item xs={8} sm={8}>
                 <Typography variant="body1">{`Firmado por:  ${initAlbaran.firmadoPor}`}</Typography>
               </Grid>
+              {/* <Grid item xs={4} sm={4}>
+                <Field.Text id="firmaAlbaran.cifnif" label="DNI" />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <Field.Date id="firmaAlbaran.fecha" label="Fecha" />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <Field.Time id="firmaAlbaran.hora" label="Hora" />
+              </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Field.TextArea
                   id="firmaAlbaran.observacionesfirma"

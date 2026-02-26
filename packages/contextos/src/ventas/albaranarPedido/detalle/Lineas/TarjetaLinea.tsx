@@ -1,18 +1,23 @@
 import { EditarCantidadLinea } from "#/ventas/pedido/detalle/Lineas/EditarCantidadLinea.tsx";
 import { QIcono, QTabla } from "@olula/componentes/index.js";
+import { ContextoError } from "@olula/lib/contexto.ts";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LineaAlbaranarPedido, Tramo } from "../../diseño.ts";
 import { obtenerClaseEstadoAlbaranado } from "../../dominio.ts";
+import { patchCerrarLineaPedido } from "../../infraestructura.ts";
 import "./TarjetaLinea.css";
 
 export const TarjetaLinea = ({
   linea,
+  pedidoId,
   publicar,
 }: {
   linea: LineaAlbaranarPedido;
+  pedidoId: string;
   publicar: ProcesarEvento;
 }) => {
+  const { intentar } = useContext(ContextoError);
   const { tramos } = linea;
   const servida = linea.servida || 0;
   const aEnviar =
@@ -56,6 +61,20 @@ export const TarjetaLinea = ({
       t.id === tramo.id ? { ...t, cantidad } : t
     );
     publicar("tramos_actualizados", { id: linea.id, tramos: nuevos });
+  };
+
+  const cambiarEstadoLinea = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!linea.id) return;
+
+    const nuevaCerrada = !linea.cerrada;
+    await intentar(() =>
+      patchCerrarLineaPedido(pedidoId, linea.id, nuevaCerrada)
+    );
+    publicar("linea_cerrada_actualizada", {
+      id: linea.id,
+      cerrada: nuevaCerrada,
+    });
   };
 
   const addTramo = (e: React.MouseEvent) => {
@@ -102,6 +121,7 @@ export const TarjetaLinea = ({
               linea={tramo as LineaAlbaranarPedido}
               onCantidadEditada={cambiarCantidad}
               validacion={validacionParaTramo}
+              deshabilitado={linea.cerrada || false}
             />
           );
         },
@@ -126,6 +146,15 @@ export const TarjetaLinea = ({
           <div>A enviar: {aEnviar}</div>
         </div>
         <div className="tarjeta-cabecera-acciones">
+          <button
+            onClick={cambiarEstadoLinea}
+            title={linea.cerrada ? "Abrir línea" : "Cerrar línea"}
+          >
+            <QIcono
+              nombre={linea.cerrada ? "candado" : "candado_abierto"}
+              tamaño="sm"
+            />
+          </button>
           <button
             onClick={addTramo}
             disabled={linea.cerrada || disponible <= 0}

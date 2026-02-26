@@ -1,6 +1,6 @@
 import { Field, Grid, QSection } from "@quimera/comps";
-import Quimera, { getSchemas, useStateValue, util } from "quimera";
-import { useEffect } from "react";
+import Quimera, { getSchemas, PropValidation, useStateValue, util } from "quimera";
+import React, { useEffect } from "react";
 
 function ToCarritoNuevo({ callbackGuardado, useStyles, ...props }) {
   const [{ carrito }, dispatch] = useStateValue();

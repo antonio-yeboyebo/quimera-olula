@@ -12,6 +12,7 @@ interface QModalConfirmacionProps {
   onAceptar: () => void | Promise<void>;
   labelAceptar?: string;
   labelCancelar?: string;
+  mostrarCancelar?: boolean;
 }
 
 export const QModalConfirmacion = ({
@@ -23,6 +24,7 @@ export const QModalConfirmacion = ({
   onAceptar,
   labelAceptar = "Aceptar",
   labelCancelar = "Cancelar",
+  mostrarCancelar = true,
 }: QModalConfirmacionProps) => {
   const { intentar } = useContext(ContextoError);
 
@@ -39,9 +41,11 @@ export const QModalConfirmacion = ({
       <h2>{titulo}</h2>
       <div className="mensaje">{mensaje}</div>
       <div className="botones">
-        <QBoton tipo="reset" variante="texto" onClick={cancelar}>
-          {labelCancelar}
-        </QBoton>
+        {mostrarCancelar && (
+          <QBoton tipo="reset" variante="texto" onClick={cancelar}>
+            {labelCancelar}
+          </QBoton>
+        )}
         <QBoton onClick={aceptar}>{labelAceptar}</QBoton>
       </div>
     </QModal>
