@@ -1,10 +1,9 @@
 import { VentaTpv } from "#/tpv/venta/diseño.ts";
-import { ModeloClienteVentaNoRegistrado } from "#/ventas/comun/componentes/moleculas/ClienteVenta/cliente_venta.ts";
-import { ClienteFactura } from "#/ventas/factura/cliente_factura/ClienteFactura.tsx";
 import { ModeloClienteFacturaRegistrado } from "#/ventas/factura/cliente_factura/cliente_factura.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
+import { guardarClienteRegistrado, guardarClienteSimplificada } from "./cambiar_cliente.ts";
 import "./CambiarClienteVentaTpv.css";
-import { guardarClienteNoRegistrado, guardarClienteRegistrado } from "./cambiar_cliente.ts";
+import { ClienteVentaTpv } from "./ClienteVentaTpv.tsx";
 
 export const CambiarCliente = ({
     publicar = async() => {},
@@ -18,22 +17,21 @@ export const CambiarCliente = ({
         publicar("cambio_cliente_cancelado");
     };
 
-    const guardar = async(cliente: ModeloClienteVentaNoRegistrado | ModeloClienteFacturaRegistrado) => {
+    const guardar = async(cliente: ModeloClienteFacturaRegistrado | null) => {
 
-        if ('idCliente' in cliente) {
+        if (cliente) {
             const registrado = cliente as ModeloClienteFacturaRegistrado
             await guardarClienteRegistrado(venta.id, registrado);
             publicar("cliente_cambiado", registrado);
 
         } else {
-            const noRegistrado = cliente as ModeloClienteVentaNoRegistrado
-            await guardarClienteNoRegistrado(venta.id, noRegistrado);
-            publicar("cliente_cambiado", noRegistrado);
+            await guardarClienteSimplificada(venta.id);
+            publicar("cliente_cambiado", null);
         }
     }
 
     return (
-        <ClienteFactura
+        <ClienteVentaTpv
             venta={venta}
             guardar={guardar}
             cancelar={cancelar}

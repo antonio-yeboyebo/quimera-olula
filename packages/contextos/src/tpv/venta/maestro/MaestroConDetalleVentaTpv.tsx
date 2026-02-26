@@ -27,7 +27,7 @@ const criteriaBaseVentas = {
         ...criteriaDefecto.filtro,
         filtroPuntoVenta
     ],
-    orden: ["codigo", "DESC"]
+    orden: ["fecha", "DESC", 'codigo', 'DESC']
     
 }
 type Layout = "TABLA" | "TARJETA";
