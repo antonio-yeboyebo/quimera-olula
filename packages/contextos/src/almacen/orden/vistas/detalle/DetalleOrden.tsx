@@ -5,13 +5,13 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { QInput } from "@olula/componentes/index.js";
+import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
-import { ContextoError } from "@olula/lib/contexto.ts";
 import { useCallback, useContext, useEffect } from "react";
-import { postCaja } from "../../../caja/infraestructura.ts";
 import { useParams } from "react-router";
+import { postCaja } from "../../../caja/infraestructura.ts";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { metaOrden, ordenVacia } from "../../dominio.ts";
@@ -88,13 +88,6 @@ export const DetalleOrden = ({
         >
             <div className="maestro-botones">
                 <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
-                <QBoton onClick={() => emitir("lectura_solicitada")}>Lectura</QBoton>
-                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
-                )}
-                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura ubicación</QBoton>
-                )}
             </div>
             <div className="DetalleOrden">
                 <quimera-formulario>
@@ -136,7 +129,17 @@ export const DetalleOrden = ({
                     )}
                 </quimera-formulario>
             </div>
+            <div className="maestro-botones">
+                <QBoton onClick={() => emitir("lectura_solicitada")}>Lectura</QBoton>
+                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
+                    <QBoton onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
+                )}
+                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
+                    <QBoton onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura bandeja</QBoton>
+                )}
+            </div>
             <LecturasCajaOrden orden={ctx.orden} />
+            <h3>LÍNEAS</h3>
             <LineasOrden
                 orden={ctx.orden}
                 lineas={ctx.lineas}

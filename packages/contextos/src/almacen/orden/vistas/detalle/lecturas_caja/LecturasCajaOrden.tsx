@@ -70,18 +70,22 @@ export const LecturasCajaOrden = ({
             <ExpansionLecturas entidad={entidad} orden={orden} />
         ),
     };
+    if (!orden.lecturasCaja.length) return <p><i>Sin lecturas de caja</i></p>;
 
     return (
-        <ListadoSemiControlado
-            metaTabla={metaTabla}
-            entidades={orden.lecturasCaja}
-            totalEntidades={orden.lecturasCaja.length}
-            cargando={false}
-            seleccionada={null}
-            onSeleccion={() => null}
-            criteriaInicial={criteriaDefecto}
-            onCriteriaChanged={() => null}
-            modo="tabla"
-        />
+        <>
+            <h3>LECTURAS DE CAJA</h3>
+            <ListadoSemiControlado
+                metaTabla={metaTabla}
+                entidades={orden.lecturasCaja}
+                totalEntidades={orden.lecturasCaja.length}
+                cargando={false}
+                seleccionada={null}
+                onSeleccion={() => null}
+                criteriaInicial={criteriaDefecto}
+                onCriteriaChanged={() => null}
+                modo="tabla"
+            />
+        </>
     );
 };

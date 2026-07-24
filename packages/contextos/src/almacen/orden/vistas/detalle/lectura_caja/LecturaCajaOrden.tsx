@@ -82,9 +82,9 @@ export const LecturaCajaOrden = ({
                     <QBoton onClick={registrar} deshabilitado={!valido}>
                         Registrar
                     </QBoton>
-                    <QBoton onClick={() => publicar("lectura_caja_cancelada")}>
+                    {/* <QBoton onClick={() => publicar("lectura_caja_cancelada")}>
                         Cerrar
-                    </QBoton>
+                    </QBoton> */}
                 </div>
             </div>
         </QModal>
