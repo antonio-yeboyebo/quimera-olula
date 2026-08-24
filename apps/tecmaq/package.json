@@ -1,0 +1,19 @@
+{
+    "name": "@olula/tecmaq",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "lint": "eslint src",
+        "type-check": "tsc -p ./tsconfig.json --noEmit",
+        "test": "vitest --passWithNoTests",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@olula/componentes": "workspace:*",
+        "@olula/ctx": "workspace:*",
+        "@olula/lib": "workspace:*",
+        "@olula/olula": "workspace:*"
+    }
+}

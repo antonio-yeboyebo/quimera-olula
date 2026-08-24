@@ -1,0 +1,15 @@
+.DetalleMaquina {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.DetalleMaquina-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario, #555);
+    border-bottom: 1px solid var(--color-borde, #ddd);
+}

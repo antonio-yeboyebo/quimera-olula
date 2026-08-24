@@ -1,0 +1,29 @@
+.TarjetaMaquina {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 4px;
+}
+
+.TarjetaMaquina-cabecera {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.TarjetaMaquina-referencia {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.TarjetaMaquina-descripcion {
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario, #555);
+}
+
+.TarjetaMaquina-pie {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--color-texto-terciario, #888);
+}

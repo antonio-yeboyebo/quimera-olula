@@ -334,6 +334,21 @@ importers:
         specifier: ^2.9.19
         version: 2.10.0
 
+  apps/tecmaq:
+    dependencies:
+      '@olula/componentes':
+        specifier: workspace:*
+        version: link:../../packages/componentes
+      '@olula/ctx':
+        specifier: workspace:*
+        version: link:../../packages/contextos
+      '@olula/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
+      '@olula/olula':
+        specifier: workspace:*
+        version: link:../olula
+
   apps/yeboyebo:
     dependencies:
       '@olula/componentes':

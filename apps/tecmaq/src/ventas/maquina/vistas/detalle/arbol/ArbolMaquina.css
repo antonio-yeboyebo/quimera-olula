@@ -1,0 +1,150 @@
+.ArbolMaquina {
+    font-size: 0.875rem;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.ArbolMaquina-cabecera {
+    display: grid;
+    grid-template-columns: 1fr 60px 90px;
+    gap: 8px;
+    padding: 6px 8px;
+    background: var(--color-fondo-tabla-cabecera, #f0f0f0);
+    font-weight: bold;
+    border-bottom: 2px solid var(--color-borde, #ccc);
+    border-radius: 4px 4px 0 0;
+}
+
+.ArbolMaquina-nodo {
+    border-bottom: 1px solid var(--color-borde-suave, #eee);
+}
+
+.ArbolMaquina-fila {
+    display: grid;
+    grid-template-columns: 1fr 60px 90px;
+    gap: 8px;
+    padding: 6px 8px;
+    align-items: center;
+}
+
+.ArbolMaquina-fila:hover {
+    background: var(--color-fondo-hover, #f8f8f8);
+}
+
+.ArbolMaquina-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 4px 0 0;
+    font-size: 0.75rem;
+    color: var(--color-acento, #666);
+}
+
+.ArbolMaquina-icono-espacio {
+    display: inline-block;
+    width: 18px;
+}
+
+.ArbolMaquina-descripcion {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ArbolMaquina-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.ArbolMaquina-badge--cuadrado {
+    border-radius: 3px;
+    padding: 1px 6px;
+}
+
+.ArbolMaquina-badge--pendiente {
+    background-color: #888;
+}
+
+.ArbolMaquina-badge--en-curso {
+    background-color: #f90;
+    color: #333;
+}
+
+.ArbolMaquina-badge--listo {
+    background-color: #080;
+}
+
+.ArbolMaquina-hoja-detalle {
+    grid-column: 1 / -1;
+    padding: 4px 8px 8px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ArbolMaquina-ruta {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario, #555);
+}
+
+.ArbolMaquina-fases {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.ArbolMaquina-fases th {
+    text-align: left;
+    padding: 4px 8px;
+    background: var(--color-fondo-tabla-cabecera, #f0f0f0);
+    border-bottom: 1px solid var(--color-borde, #ccc);
+}
+
+.ArbolMaquina-fases td {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--color-borde-suave, #eee);
+}
+
+.ArbolMaquina-children {
+    /* la sangría se aplica inline con padding-left */
+}
+
+.ArbolMaquina-btn-ruta {
+    padding: 1px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--color-borde, #ccc);
+    border-radius: 4px;
+    background: var(--color-fondo-tabla-cabecera, #f0f0f0);
+    cursor: pointer;
+    color: var(--color-texto-primario, #333);
+}
+
+.ArbolMaquina-btn-ruta:hover {
+    background: var(--color-borde, #ccc);
+}
+
+.ArbolMaquina-btn-pedir {
+    margin-left: 6px;
+    padding: 1px 8px;
+    font-size: 0.72rem;
+    border: 1px solid var(--color-acento, #666);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    color: var(--color-acento, #444);
+    vertical-align: middle;
+}
+
+.ArbolMaquina-btn-pedir:hover {
+    background: var(--color-acento, #666);
+    color: #fff;
+}
