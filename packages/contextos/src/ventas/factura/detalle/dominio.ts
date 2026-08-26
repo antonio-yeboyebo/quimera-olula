@@ -13,6 +13,7 @@ import {
     patchCambiarDescuento,
     patchCambiarDivisa,
     patchCantidadLinea,
+    patchEmitirFactura,
     patchFactura,
     patchLinea
 } from "../infraestructura.ts";
@@ -120,6 +121,17 @@ export const abrirFactura: ProcesarFactura = async (contexto) => ({
 export const cambiarFactura: ProcesarFactura = async (contexto, payload) => {
     const factura = payload as Factura;
     await patchFactura(contexto.factura.id, factura);
+
+    return pipeFactura(contexto, [
+        refrescarFactura,
+        refrescarLineas,
+        "ABIERTO",
+    ]);
+};
+
+/** La respuesta solo confirma, así que el nuevo estado llega al recargar. */
+export const emitirFactura: ProcesarFactura = async (contexto) => {
+    await patchEmitirFactura(contexto.factura.id);
 
     return pipeFactura(contexto, [
         refrescarFactura,

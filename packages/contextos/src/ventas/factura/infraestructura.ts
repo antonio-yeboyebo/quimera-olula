@@ -5,7 +5,8 @@ import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
 import { direccionVacia, payloadCambioCliente } from "../venta/dominio.ts";
 import { altaLineaApi, articuloDeLinea } from "../venta/infraestructura.ts";
-import { DeleteLinea, Factura, GetFactura, GetFacturas, GetLineasFactura, GetRecibosFactura, GetReportFactura, LineaFactura, PatchArticuloLinea, PatchCambiarAgente, PatchCambiarDivisa, PatchCantidadLinea, PatchClienteFactura, PatchLinea, PostFactura, PostLinea, ReciboFactura } from "./diseño.ts";
+import { DeleteLinea, Factura, GetFactura, GetFacturas, GetLineasFactura, GetRecibosFactura, GetReportFactura, LineaFactura, PatchArticuloLinea, PatchCambiarAgente, PatchCambiarDivisa, PatchCantidadLinea, PatchClienteFactura, PatchEmitirFactura, PatchLinea, PostFactura, PostLinea, ReciboFactura } from "./diseño.ts";
+import { estadoExpedicionDesdeApi } from "./dominio.ts";
 
 const baseUrl = new ApiUrls().FACTURA;
 
@@ -53,7 +54,7 @@ export const facturaDesdeAPI = (p: FacturaAPI): Factura => ({
   fecha: new Date(Date.parse(p.fecha)),
   dtoPorcentual: p.por_descuento,
   netoSinDto: p.neto_sin_dto,
-  estadoExpedicion: p.estado_expedicion,
+  estadoExpedicion: estadoExpedicionDesdeApi(p.estado_expedicion),
   cliente: {
     cliente_id: p.cliente_id ?? null,
     nombre_cliente: p.nombre_cliente ?? "",
@@ -85,6 +86,10 @@ export const getFacturas: GetFacturas = async (
 
   const respuesta = await RestAPI.get<{ datos: FacturaAPI[]; total: number }>(baseUrl + q);
   return { datos: respuesta.datos.map(facturaDesdeAPI), total: respuesta.total };
+};
+
+export const patchEmitirFactura: PatchEmitirFactura = async (id) => {
+  await RestAPI.patch(`${baseUrl}/${id}/emitir`, {}, "Error al emitir la factura");
 };
 
 export const getReportFactura: GetReportFactura = async (id) =>

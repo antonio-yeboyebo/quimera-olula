@@ -671,7 +671,7 @@ function AssistantMessageAccionNavegacion() {
     return (
         <div className="asistente-chat__navegacion">
             <QBoton variante="borde" onClick={navegar}>
-                {accion.descripcion ?? "Ir a la pantalla solicitada"}
+                {accion.descripcion ? `Ir a ${accion.descripcion}` : "Ir a la pantalla solicitada"}
             </QBoton>
         </div>
     );

@@ -15,6 +15,19 @@ export const construirUrlNavegacion = (accion: AccionNavegacion): string => {
     return `${ruta}?${new URLSearchParams(accion.parametros).toString()}`;
 };
 
+/** El backend puede devolver en `accion.descripcion` la descripción larga pensada para el
+ * LLM en vez del nombre corto de pantalla acordado en el contrato (o no reconocer aún el
+ * campo `nombre` de `Capacidad`) — las capacidades locales (derivadas del menú) son la
+ * fuente de verdad para el nombre corto, así que se cruza por `ruta` y se sobreescribe con
+ * ese nombre; solo si no hay coincidencia se conserva lo que mandó el backend. */
+export const accionNavegacionConNombreCorto = (
+    accion: AccionNavegacion, capacidades: Capacidad[]
+): AccionNavegacion => {
+    const ruta = accion.ruta.split("?")[0];
+    const capacidad = capacidades.find(c => c.ruta === ruta);
+    return capacidad ? { ...accion, descripcion: capacidad.nombre } : accion;
+};
+
 export const construirCapacidades = (menu: ElementoMenu[]): Capacidad[] => {
     const hojas = menu.flatMap(item =>
         "subelementos" in item ? (item as ElementoMenuPadre).subelementos : [item]
@@ -25,6 +38,7 @@ export const construirCapacidades = (menu: ElementoMenu[]): Capacidad[] => {
         .filter(hoja => !hoja.regla || puede(hoja.regla))
         .map(hoja => ({
             ruta: hoja.url,
+            nombre: hoja.nombre,
             descripcion: hoja.descripcionIA!,
             parametros: hoja.parametrosIA,
             regla: hoja.regla,

@@ -8,6 +8,8 @@ export const getMaquina: () => Maquina<EstadoMaestroReciboVenta, ContextoMaestro
             recibo_seleccionado: [maestro.Recibos.activar],
             recibo_deseleccionado: [maestro.Recibos.desactivar],
 
+            recibo_cambiado: [maestro.Recibos.cambiar],
+
             recarga_de_recibos_solicitada: maestro.recargarRecibos,
 
             criteria_cambiado: [maestro.Recibos.filtrar, maestro.recargarRecibos],

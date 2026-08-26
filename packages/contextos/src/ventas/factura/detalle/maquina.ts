@@ -16,6 +16,7 @@ import {
     cancelarCambioFactura,
     cargarContexto,
     crearLinea,
+    emitirFactura,
     getContextoVacio,
     refrescarFactura,
     refrescarLineas
@@ -48,6 +49,8 @@ export const getMaquina: () => Maquina<EstadoFactura, ContextoFactura> = () => {
 
             borrar_solicitado: "BORRANDO_FACTURA",
 
+            emitir_solicitado: "EMITIENDO_FACTURA",
+
             cambio_cliente_solicitado: "CAMBIANDO_CLIENTE",
 
             cambio_divisa_solicitado: "CAMBIANDO_DIVISA",
@@ -72,6 +75,13 @@ export const getMaquina: () => Maquina<EstadoFactura, ContextoFactura> = () => {
                 getContextoVacio,
                 publicar('factura_deseleccionada', null)
             ]
+        },
+
+        EMITIENDO_FACTURA: {
+
+            emision_lista: [emitirFactura],
+
+            emitir_cancelado: "ABIERTO",
         },
 
         BORRANDO_FACTURA: {

@@ -1,6 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { ElementoMenu } from "@olula/lib/menu.ts";
 import {
+    accionNavegacionConNombreCorto,
     construirCapacidades,
     construirUrlNavegacion,
     hiloDesdeApi,
@@ -55,6 +56,7 @@ describe("[asistente-dom-01] construirCapacidades filtra por descripcionIA y per
         const capacidades = construirCapacidades(menu);
         expect(capacidades[0]).toEqual({
             ruta: "/ventas/pedido",
+            nombre: "Pedidos",
             descripcion: "Gestiona pedidos de venta",
             parametros: { cliente_id: "id del cliente" },
             regla: "ventas.pedido.leer",
@@ -133,6 +135,39 @@ describe("[asistente-dom-04] construirUrlNavegacion añade los parámetros como 
         // parámetro "id" con valor literal "{id}?id=13".
         expect(construirUrlNavegacion({ ruta: "/ventas/pedido?id={id}", parametros: { id: "13" } }))
             .toBe("/ventas/pedido?id=13");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// [asistente-dom-05] accionNavegacionConNombreCorto usa el nombre de la capacidad local
+// ---------------------------------------------------------------------------
+
+describe("[asistente-dom-05] accionNavegacionConNombreCorto usa el nombre de la capacidad local", () => {
+    const capacidades = [
+        {
+            ruta: "/ventas/pedido",
+            nombre: "Pedidos",
+            descripcion: "Gestiona pedidos de venta: crear un pedido nuevo para un cliente con líneas de artículos.",
+        },
+    ];
+
+    test("sobreescribe la descripción larga que devuelve el backend con el nombre corto local", () => {
+        const accion = { ruta: "/ventas/pedido", parametros: {}, descripcion: "Gestiona pedidos de venta: ..." };
+        expect(accionNavegacionConNombreCorto(accion, capacidades)).toEqual({
+            ruta: "/ventas/pedido",
+            parametros: {},
+            descripcion: "Pedidos",
+        });
+    });
+
+    test("ignora el querystring que el LLM pueda haber inventado en la ruta al buscar la capacidad", () => {
+        const accion = { ruta: "/ventas/pedido?id={id}", descripcion: "lo que sea" };
+        expect(accionNavegacionConNombreCorto(accion, capacidades).descripcion).toBe("Pedidos");
+    });
+
+    test("conserva la descripción del backend si la ruta no coincide con ninguna capacidad local", () => {
+        const accion = { ruta: "/otra/ruta", descripcion: "Descripción del backend" };
+        expect(accionNavegacionConNombreCorto(accion, capacidades)).toEqual(accion);
     });
 });
 

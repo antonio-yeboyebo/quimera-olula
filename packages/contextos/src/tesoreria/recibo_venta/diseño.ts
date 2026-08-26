@@ -15,3 +15,10 @@ export interface ReciboVenta extends Entidad {
 export type GetReciboVenta = (id: string) => Promise<ReciboVenta>;
 
 export type GetRecibosVenta = (criteria: Criteria) => RespuestaLista<ReciboVenta>;
+
+export type PagoReciboVenta = {
+    cuentaPagoId: string;
+    fecha: string;
+};
+
+export type PatchPagarReciboVenta = (id: string, pago: PagoReciboVenta) => Promise<void>;

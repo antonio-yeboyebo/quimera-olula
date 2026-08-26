@@ -10,7 +10,7 @@ const respuestaConAccionNavegacion = {
     a2uiMessages: [],
     capacidadesHash: null,
     necesitaCapacidades: false,
-    accionNavegacion: { ruta: "/ventas/pedido", parametros: {}, descripcion: "Gestiona pedidos" },
+    accionNavegacion: { ruta: "/ventas/pedido", parametros: {}, descripcion: "Pedidos" },
 };
 
 vi.mock("#/asistente/infraestructura.ts", () => ({
@@ -43,7 +43,7 @@ test("[asistente-chat-03] accion_navegacion ya no navega sola: muestra un botón
     await userEvent.type(textarea, "¿Cómo creo un pedido?");
     await userEvent.click(screen.getByRole("button", { name: "Enviar" }));
 
-    const boton = await screen.findByRole("button", { name: "Gestiona pedidos" });
+    const boton = await screen.findByRole("button", { name: "Ir a Pedidos" });
     expect(onAccionNavegacion).not.toHaveBeenCalled();
 
     await userEvent.click(boton);

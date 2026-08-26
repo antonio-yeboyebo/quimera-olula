@@ -19,12 +19,12 @@ describe("[asistente-infra-01] consultaAApi mapea ConsultaIa al body snake_case 
         const consulta: ConsultaIa = {
             pregunta: "Crea un pedido",
             threadId: null,
-            capacidades: [{ ruta: "/ventas/pedido", descripcion: "Gestiona pedidos" }],
+            capacidades: [{ ruta: "/ventas/pedido", nombre: "Pedidos", descripcion: "Gestiona pedidos" }],
         };
         expect(consultaAApi(consulta)).toEqual({
             pregunta: "Crea un pedido",
             thread_id: null,
-            capacidades: [{ ruta: "/ventas/pedido", descripcion: "Gestiona pedidos" }],
+            capacidades: [{ ruta: "/ventas/pedido", nombre: "Pedidos", descripcion: "Gestiona pedidos" }],
         });
     });
 

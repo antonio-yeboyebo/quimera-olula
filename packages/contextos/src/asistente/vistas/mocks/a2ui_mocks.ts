@@ -170,7 +170,7 @@ export const getMockRespuestaIa = (consulta: ConsultaIa): RespuestaIa => {
             a2uiMessages: [],
             capacidadesHash,
             necesitaCapacidades: false,
-            accionNavegacion: { ruta: "/ventas/pedido", parametros: {}, descripcion: "Gestiona pedidos" },
+            accionNavegacion: { ruta: "/ventas/pedido", parametros: {}, descripcion: "Pedidos" },
             adjuntos: [],
         };
     }

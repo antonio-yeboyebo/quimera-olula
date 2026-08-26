@@ -1,4 +1,3 @@
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -14,6 +13,9 @@ import { CambiarDivisa } from "../../comun/componentes/moleculas/CambiarDivisa/C
 import { TotalesVenta } from "../../venta/vistas/TotalesVenta.tsx";
 import { BorrarFactura } from "../borrar/BorrarFactura.tsx";
 import { Factura } from "../diseño.ts";
+import { EmitirFactura } from "../emitir/EmitirFactura.tsx";
+import { facturaEmitible } from "../dominio.ts";
+import { EstadoExpedicion } from "../vistas/EstadoExpedicion.tsx";
 import { IndicadorGuardado } from "../../comun/componentes/IndicadorGuardado.tsx";
 import "../../comun/estilos/campos.css";
 import "../../comun/estilos/detalle_documento.css";
@@ -66,12 +68,12 @@ export const DetalleFactura = ({
 
   const { estado, lineaActiva } = ctx;
 
-  const titulo = (factura: Factura) =>
-    tituloDocumentoVenta(factura, "Nueva Factura");
-
-  const handleBorrar = useCallback(() => {
-    emitir("borrar_solicitado");
-  }, [emitir]);
+  const titulo = (factura: Factura) => (
+    <span className="titulo-documento">
+      <EstadoExpedicion factura={factura} />
+      {tituloDocumentoVenta(factura, "Nueva Factura")}
+    </span>
+  );
 
   const imprimir = useCallback(async () => {
     const blob = await getReportFactura(ctx.factura.id);
@@ -79,6 +81,27 @@ export const DetalleFactura = ({
   }, [ctx.factura.id]);
 
   if (!ctx.factura.id) return;
+
+  const esEditable = editable(ctx.factura);
+
+  const acciones = [
+    {
+      texto: "Emitir",
+      onClick: () => emitir("emitir_solicitado"),
+      deshabilitado: !facturaEmitible(ctx.factura),
+    },
+    {
+      texto: "Imprimir",
+      onClick: imprimir,
+    },
+    {
+      icono: "eliminar",
+      texto: "Borrar",
+      advertencia: true,
+      onClick: () => emitir("borrar_solicitado"),
+      deshabilitado: !esEditable,
+    },
+  ];
 
   return (
     <Detalle
@@ -88,28 +111,13 @@ export const DetalleFactura = ({
       entidad={ctx.factura}
       cerrarDetalle={() => emitir("factura_deseleccionada", null)}
     >
-      {editable(ctx.factura) && (
-        <div className="acciones-rapidas">
-          <QBoton tipo="reset" variante="texto" onClick={handleBorrar}>
-            Borrar
-          </QBoton>
-        </div>
-      )}
-
       <div className="fila-acciones-documento">
         <IndicadorGuardado
           modificado={factura.modificado}
           error={factura.errorGuardado}
           guardados={factura.guardados}
         />
-        <QuimeraAcciones
-          acciones={[
-            {
-              texto: "Imprimir",
-              onClick: imprimir,
-            },
-          ]}
-        />
+        <QuimeraAcciones acciones={acciones} vertical />
       </div>
 
       <Tabs>
@@ -159,6 +167,10 @@ export const DetalleFactura = ({
         estadoFactura={estado}
         publicar={emitir}
       />
+
+      {estado === "EMITIENDO_FACTURA" && (
+        <EmitirFactura factura={ctx.factura} publicar={emitir} />
+      )}
 
       {estado === "BORRANDO_FACTURA" && (
         <BorrarFactura factura={ctx.factura} publicar={emitir} />

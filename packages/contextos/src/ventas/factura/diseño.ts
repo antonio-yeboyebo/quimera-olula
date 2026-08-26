@@ -4,9 +4,22 @@ import { Entidad, Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/d
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { AltaLineaVenta, CambioClienteVenta, ClienteVenta, LineaVenta, NuevaLineaVenta, Venta } from "../venta/diseño.ts";
 
+/**
+ * Estado de expedición que devuelve el servidor. "Pte. Firma" no aparece: se
+ * colapsa en EMITIDA porque para la edición son el mismo caso. La cadena vacía
+ * es la factura todavía no cargada.
+ */
+export type EstadoExpedicion =
+    | ''
+    | 'BORRADOR'
+    | 'EMITIDA'
+    | 'FIRMADA'
+    | 'ERROR_FIRMA'
+    | 'PRE_VERIFACTU';
+
 export interface Factura extends Venta {
     cliente: ClienteVenta;
-    estadoExpedicion: string;
+    estadoExpedicion: EstadoExpedicion;
     editable?: boolean;
     por_comision: number;
     lineas?: LineaFactura[];
@@ -78,6 +91,13 @@ export interface ReciboFactura extends Entidad {
 
 export type GetRecibosFactura = (facturaId: string) => Promise<ReciboFactura[]>;
 
+/**
+ * Saca la factura de borrador (o reintenta la emisión tras un error de firma).
+ * La respuesta solo confirma la operación, así que hay que recargar la factura
+ * para ver el nuevo estado_expedicion.
+ */
+export type PatchEmitirFactura = (id: string) => Promise<void>;
+
 
 export type EstadoFactura = (
     'INICIAL'
@@ -90,6 +110,7 @@ export type EstadoFactura = (
     | 'CREANDO_LINEA'
     | 'CAMBIANDO_LINEA'
     | 'BORRANDO_LINEA'
+    | 'EMITIENDO_FACTURA'
 );
 
 export type EstadoMaestroFactura = (

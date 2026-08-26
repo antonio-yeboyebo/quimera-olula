@@ -1,7 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { fechaDesdeApi } from "../comun/infraestructura.js";
 import ApiUrls from "../comun/urls.js";
-import { GetReciboVenta, GetRecibosVenta, ReciboVenta } from "./diseño.js";
+import { GetReciboVenta, GetRecibosVenta, PatchPagarReciboVenta, ReciboVenta } from "./diseño.js";
 
 export interface ReciboVentaApi {
     id: string;
@@ -43,5 +43,16 @@ export const getRecibosVenta: GetRecibosVenta = async (criteria) => {
         criteria,
         reciboVentaDesdeApi,
         "Error al obtener los recibos de venta"
+    );
+};
+
+export const patchPagarReciboVenta: PatchPagarReciboVenta = async (id, pago) => {
+    await RestAPI.patch(
+        `${baseUrl}/${id}/pagar`,
+        {
+            cuenta_pago_id: pago.cuentaPagoId,
+            fecha: pago.fecha,
+        },
+        "Error al pagar el recibo de venta"
     );
 };

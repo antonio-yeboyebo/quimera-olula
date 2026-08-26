@@ -18,6 +18,7 @@ import { CrearFactura } from "../crear/CrearFactura.tsx";
 import { DetalleFactura } from "../detalle/DetalleFactura.tsx";
 import { Factura } from "../diseño.ts";
 import { metaTablaFactura as metaTablaBase } from "../dominio.ts";
+import { EstadoExpedicion } from "../vistas/EstadoExpedicion.tsx";
 import "./MaestroConDetalleFactura.css";
 import { getMaquina } from "./maquina.ts";
 
@@ -36,7 +37,14 @@ export const MaestroConDetalleFactura = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const metaTablaFactura = metaTablaBase as MetaTabla<Factura>;
+  const metaTablaFactura = [
+    {
+      id: "estadoExpedicion",
+      cabecera: "",
+      render: (factura: Factura) => <EstadoExpedicion factura={factura} />,
+    },
+    ...metaTablaBase,
+  ] as MetaTabla<Factura>;
 
   const metaFiltroFactura: MetaFiltro = {
     codigo: filtroCodigo,
