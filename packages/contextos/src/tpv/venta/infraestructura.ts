@@ -266,7 +266,7 @@ export const patchArticuloLinea: PatchArticuloLinea = async (id, lineaId, refere
             },
         },
     };
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar artículo de la línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar artículo de la línea de venta TPV");
 };
 
 export const patchLinea: PatchLinea = async (id, linea) => {
@@ -281,7 +281,7 @@ export const patchLinea: PatchLinea = async (id, linea) => {
             grupo_iva_producto_id: linea.grupo_iva_producto_id,
         },
     };
-    await RestAPI.patch(`${baseUrlFactura}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de venta TPV");
 };
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
@@ -293,7 +293,7 @@ export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad
             cantidad: cantidad,
         },
     };
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar cantidad de la línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar cantidad de la línea de venta TPV");
 };
 
 export const deleteLinea: DeleteLinea = async (id, lineaId): Promise<void> => {
