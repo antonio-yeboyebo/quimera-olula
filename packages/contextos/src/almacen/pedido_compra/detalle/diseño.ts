@@ -9,7 +9,7 @@ import { LineaNuevaEntradaDesdePedido, PedidoCompra } from "../diseño.ts";
  * LEYENDO_ALBARAN: modal de selección de foto para análisis IA.
  * COMPARANDO_ALBARAN: modal de comparativa entre líneas del pedido y lo detectado.
  */
-export type EstadoDetallePedidoCompra = "INICIAL" | "ABIERTO" | "CREANDO_ENTRADA" | "ENTRADA_CREADA" | "LEYENDO_ALBARAN" | "COMPARANDO_ALBARAN";
+export type EstadoDetallePedidoCompra = "INICIAL" | "ABIERTO" | "ENTRADA_CREADA" | "LEYENDO_ALBARAN" | "COMPARANDO_ALBARAN";
 
 /**
  * Contexto del detalle (visualización de un pedido de compra)

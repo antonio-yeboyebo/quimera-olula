@@ -19,23 +19,21 @@ export const getMaquina: () => Maquina<EstadoDetallePedidoCompra, ContextoDetall
             // Cambio de ID: recarga el pedido
             pedido_id_cambiado: [cargarContexto],
 
-            // Apertura del modal de creación de entrada
-            crear_entrada_solicitado: "CREANDO_ENTRADA",
+            // Creación de entrada manual: va directamente a la comparativa con líneas vacías
+            crear_entrada_solicitado: async (ctx) => ({
+                ...ctx,
+                estado: "COMPARANDO_ALBARAN" as const,
+                lineasDetectadas: ctx.pedido.lineas.map((l) => ({
+                    linea_pedido_id: l.id,
+                    cantidad: 0,
+                    lote_id: null,
+                    tipo_caja_id: null,
+                    num_cajas: null,
+                })),
+            }),
 
             // Apertura del diálogo de lectura de albarán
             leer_albaran_solicitado: "LEYENDO_ALBARAN",
-        },
-
-        CREANDO_ENTRADA: {
-            // La entrada se creó correctamente: guarda el ID y muestra confirmación
-            entrada_creada: async (ctx, payload) => ({
-                ...ctx,
-                estado: "ENTRADA_CREADA" as const,
-                idOrdenCreada: payload as string,
-            }),
-
-            // El usuario canceló el modal
-            crear_entrada_cancelado: "ABIERTO",
         },
 
         LEYENDO_ALBARAN: {

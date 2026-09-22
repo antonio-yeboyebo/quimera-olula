@@ -16,23 +16,19 @@ export interface LineaPedidoCompra extends Entidad {
     cantidad: number;
     cantidadRecibida: number;
     cerrada: boolean;
+    porLotes: boolean;
 }
 
 export interface PedidoCompra extends ItemPedidoCompra {
     lineas: LineaPedidoCompra[];
 }
 
-export interface LoteLineaNuevaEntradaDesdePedido {
-    id: string,
-    cantidad: number,
-    caducidad?: Date,
-    lote?: string,
-}
-
 export interface LineaNuevaEntradaDesdePedido {
-    id: string;
+    linea_pedido_id: string;
     cantidad: number;
-    lotes?: LoteLineaNuevaEntradaDesdePedido[];
+    lote_id: string | null;
+    tipo_caja_id: string | null;
+    num_cajas: number | null;
 }
 
 export interface NuevaEntradaDesdePedido extends Modelo {

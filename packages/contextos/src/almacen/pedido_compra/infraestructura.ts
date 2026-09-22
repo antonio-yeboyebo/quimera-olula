@@ -1,6 +1,6 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
-import { GetInfoLineasPedidoCompra, GetPedido, GetPedidos, ItemPedidoCompra, LineaNuevaEntradaDesdePedido, LineaPedidoCompra, LoteLineaNuevaEntradaDesdePedido, NuevaEntradaDesdePedido, PedidoCompra, PostEntradaDesdePedido } from "./diseño.ts";
+import { GetInfoLineasPedidoCompra, GetPedido, GetPedidos, ItemPedidoCompra, LineaNuevaEntradaDesdePedido, LineaPedidoCompra, NuevaEntradaDesdePedido, PedidoCompra, PostEntradaDesdePedido } from "./diseño.ts";
 
 
 interface ItemPedidoCompraApi {
@@ -17,6 +17,7 @@ interface LineaPedidoCompraApi {
     cantidad: number;
     cantidad_recibida: number;
     cerrada: boolean;
+    por_lotes: boolean;
 }
 
 interface PedidoCompraApi extends ItemPedidoCompraApi {
@@ -39,6 +40,7 @@ const lineaPedidoCompraDesdeApi = (api: LineaPedidoCompraApi): LineaPedidoCompra
     cantidad: api.cantidad,
     cantidadRecibida: api.cantidad_recibida,
     cerrada: api.cerrada,
+    porLotes: api.por_lotes,
 });
 
 const pedidoCompraDesdeApi = (api: PedidoCompraApi): PedidoCompra => ({
@@ -61,22 +63,13 @@ export const getPedido: GetPedido = async (id) => {
 
 export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: NuevaEntradaDesdePedido) => {
 
-    const loteAApi = (lote: LoteLineaNuevaEntradaDesdePedido) => ({
-        id: lote.id,
-        cantidad: lote.cantidad,
-        ...(
-            "caducidad" in lote ? { caducidad: lote.caducidad?.toISOString().slice(0, 10) } : {}
-        ),
-    });
-
     const lineaAApi = (linea: LineaNuevaEntradaDesdePedido) => ({
-        id: linea.id,
+        linea_pedido_id: linea.linea_pedido_id,
         cantidad: linea.cantidad,
-        ...(
-            "lotes" in linea ? { lotes: linea.lotes!.map((l) => loteAApi(l)) } : {}
-        )
+        lote_id: linea.lote_id,
+        tipo_caja_id: linea.tipo_caja_id,
+        num_cajas: linea.num_cajas,
     });
-
 
     const respuesta = await RestAPI.post(
         `/almacen/orden/desde_pedido_compra`,
@@ -86,33 +79,29 @@ export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: Nuev
             ...(
                 "lineas" in nueva ? { lineas: nueva.lineas!.map((l) => lineaAApi(l)) } : {}
             )
-
         },
         "Error al crear entrada desde pedido de compra"
     );
     return respuesta.id as string;
 };
 
+// TODO: actualizar cuando el servidor devuelva el formato plano
 interface LineaNuevaEntradaDesdePedidoApi {
     id: string;
     cantidad: number;
     lotes?: {
         id: string;
         cantidad: number;
-        caducidad?: string;
+        caducidad?: string | null;
     }[];
 }
 
 const lineaNuevaEntradaDesdeApi = (api: LineaNuevaEntradaDesdePedidoApi): LineaNuevaEntradaDesdePedido => ({
-    id: api.id,
+    linea_pedido_id: api.id,
     cantidad: api.cantidad,
-    ...(api.lotes ? {
-        lotes: api.lotes.map((l) => ({
-            id: l.id,
-            cantidad: l.cantidad,
-            ...(l.caducidad ? { caducidad: new Date(Date.parse(l.caducidad)) } : {}),
-        })),
-    } : {}),
+    lote_id: api.lotes?.[0]?.id ?? null,
+    tipo_caja_id: null,
+    num_cajas: null,
 });
 
 export const getInfoLineasPedidoCompra: GetInfoLineasPedidoCompra = async (pedidoCompraId, foto) => {

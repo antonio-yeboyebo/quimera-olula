@@ -9,7 +9,6 @@ import { contextoDetallePedidoCompraInicial } from "./detalle.ts";
 import "./DetallePedidoCompra.css";
 import { getMaquina } from "./maquina.ts";
 import { TabLineas } from "./TabLineas.tsx";
-import { CrearEntradaDesdePedido } from "../vistas/crear_entrada_desde_pedido/CrearEntradaDesdePedido.tsx";
 import { EntradaCreada } from "../vistas/entrada_creada/EntradaCreada.tsx";
 import { ComparativaAlbaran } from "../vistas/leer_albaran/ComparativaAlbaran.tsx";
 import { LeerAlbaran } from "../vistas/leer_albaran/LeerAlbaran.tsx";
@@ -79,12 +78,6 @@ export const DetallePedidoCompra = ({
                 ]} />
             </div>
 
-            {ctx.estado === "CREANDO_ENTRADA" && (
-                <CrearEntradaDesdePedido
-                    publicar={emitir}
-                    pedidoCompraId={ctx.pedido.id}
-                />
-            )}
             {ctx.estado === "LEYENDO_ALBARAN" && (
                 <LeerAlbaran
                     publicar={emitir}
