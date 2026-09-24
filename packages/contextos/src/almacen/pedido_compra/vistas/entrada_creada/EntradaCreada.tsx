@@ -1,7 +1,6 @@
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export const EntradaCreada = ({
     publicar,
@@ -10,14 +9,7 @@ export const EntradaCreada = ({
     publicar: EmitirEvento;
     idOrden: string;
 }) => {
-    const navigate = useNavigate();
-
     const cerrar = () => publicar("cerrar_confirmacion");
-
-    const verOrden = () => {
-        publicar("ver_orden");
-        navigate(`/almacen/ordenes?id=${idOrden}`);
-    };
 
     return (
         <QModal
@@ -29,14 +21,10 @@ export const EntradaCreada = ({
             <div className="mensaje">
                 La entrada se ha creado correctamente.
             </div>
-            <div className="botones">
-                <QBoton onClick={verOrden}>
-                    Ver orden de entrada
-                </QBoton>
-                <QBoton variante="texto" onClick={cerrar}>
-                    Cerrar
-                </QBoton>
-            </div>
+            <Link to={`/almacen/ordenes?id=${idOrden}`}>
+                Ver orden de entrada {idOrden}
+            </Link>
+
         </QModal>
     );
 };

@@ -1,43 +1,43 @@
-.comparativa-albaran {
+.recibir-albaran {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.comparativa-tabla {
+.recibir-tabla {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
 }
 
-.comparativa-tabla th,
-.comparativa-tabla td {
+.recibir-tabla th,
+.recibir-tabla td {
     padding: 0.4rem 0.6rem;
     border-bottom: 1px solid var(--color-borde, #ddd);
     text-align: left;
 }
 
-.comparativa-tabla th {
+.recibir-tabla th {
     font-weight: var(--grosor-letra-5);
     background: var(--color-fondo-cabecera, #f5f5f5);
 }
 
-.comparativa-cantidad {
+.recibir-cantidad {
     text-align: right !important;
     font-variant-numeric: tabular-nums;
 }
 
-.comparativa-faltan {
+.recibir-faltan {
     color: var(--color-error, #d32f2f);
     font-weight: 600;
 }
 
-.comparativa-sobran {
+.recibir-sobran {
     color: var(--color-aviso, #f9a825);
     font-weight: 600;
 }
 
-.comparativa-lote td {
+.recibir-lote td {
     font-size: 0.85rem;
     color: var(--color-texto-secundario, #666);
     padding-top: 0.1rem;
@@ -45,6 +45,6 @@
     border-bottom: none;
 }
 
-.comparativa-lote-label {
+.recibir-lote-label {
     padding-left: 1.5rem !important;
 }

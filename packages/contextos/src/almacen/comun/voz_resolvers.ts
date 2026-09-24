@@ -22,6 +22,14 @@ export interface CajaResuelta {
     capacidad: number | null;
 }
 
+export interface CajaCompletaResuelta {
+    id: string;
+    lpn: string;
+    sku: string | null;
+    idLote: string | null;
+    capacidad: number | null;
+}
+
 const normalizarLpn = (texto: string): string => {
     const sinEspacios = texto.replace(/\s+/g, "");
     // Si ya tiene prefijo BX- (dictado completo), dejarlo tal cual
@@ -55,6 +63,35 @@ export const buscarCajaPorTexto = async (texto: string): Promise<CajaResuelta | 
         id: elegida.id,
         lpn: elegida.lpn,
         cantidad: elegida.cantidad,
+        capacidad: elegida.capacidad ?? null,
+    };
+};
+
+export const buscarCajaCompletaPorTexto = async (texto: string): Promise<CajaCompletaResuelta | null> => {
+    const limpio = normalizarLpn(texto);
+    const criteria: Criteria = {
+        ...criteriaDefecto,
+        filtro: [["lpn", "~", limpio]],
+        orden: ["lpn", "ASC"],
+    };
+
+    const respuesta = await RestAPI.getQuery<TagCajaApi, TagCajaApi>(
+        "/almacen/caja",
+        criteria,
+        (c) => c,
+    );
+
+    const cajas = respuesta.datos;
+    if (cajas.length === 0) return null;
+
+    const exacta = cajas.find((c) => c.lpn.toLowerCase() === limpio.toLowerCase());
+    const elegida = exacta ?? cajas[0];
+
+    return {
+        id: elegida.id,
+        lpn: elegida.lpn,
+        sku: elegida.sku ?? null,
+        idLote: elegida.lote_id ?? null,
         capacidad: elegida.capacidad ?? null,
     };
 };

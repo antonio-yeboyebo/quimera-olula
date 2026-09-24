@@ -32,9 +32,11 @@ export const BorrarOrden = ({
             nombre="confirmarBorrarOrden"
             abierto={true}
             titulo="Confirmar borrado"
-            mensaje={`¿Está seguro de que desea borrar la orden "${orden.tipo}"?`}
+            mensaje={`La orden "${orden.tipo}" y sus líneas se borrarán de forma permanente`}
             onCerrar={cancelar}
             onAceptar={borrar}
+            labelAceptar='Borrar orden'
+            destructivo
         />
     );
 };

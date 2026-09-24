@@ -23,8 +23,8 @@ import {
     lineaEditableDesdeDetectada,
     metaLineaCajaEntrada,
     metaLineaEditableEntrada,
-} from "./comparativa_albaran.ts";
-import "./ComparativaAlbaran.css";
+} from "./recibir_albaran.ts";
+import "./RecibirAlbaran.css";
 
 // ---------------------------------------------------------------------------
 // Paso 1 — fila de detección (cantidad + lote)
@@ -55,23 +55,23 @@ const FilaDeteccion = ({
 
     const pendiente = linea.cantidad - linea.cantidadRecibida;
     const claseDiferencia =
-        diferencia < 0 ? "comparativa-faltan" : diferencia > 0 ? "comparativa-sobran" : "";
+        diferencia < 0 ? "recibir-faltan" : diferencia > 0 ? "recibir-sobran" : "";
 
     return (
         <tr>
             <td>{esPrimera ? linea.sku : ""}</td>
             <td>{esPrimera ? linea.descripcion : ""}</td>
-            <td className="comparativa-cantidad">{esPrimera ? pendiente : ""}</td>
-            <td className="comparativa-cantidad comparativa-input">
+            <td className="recibir-cantidad">{esPrimera ? pendiente : ""}</td>
+            <td className="recibir-cantidad recibir-input">
                 <QInput label="" {...uiProps("cantidad")} />
             </td>
-            <td className="comparativa-cantidad comparativa-input">
-                <QInput label="" {...uiProps("lote_id")} />
+            <td className="recibir-cantidad recibir-input">
+                {linea.porLotes && <QInput label="" {...uiProps("lote_id")} />}
             </td>
-            <td className={`comparativa-cantidad ${esPrimera ? claseDiferencia : ""}`}>
+            <td className={`recibir-cantidad ${esPrimera ? claseDiferencia : ""}`}>
                 {esPrimera ? (diferencia > 0 ? `+${diferencia}` : diferencia) : ""}
             </td>
-            <td className="comparativa-acciones">
+            <td className="recibir-acciones">
                 {onAgregar && <QBoton onClick={onAgregar}>+</QBoton>}
                 {onBorrar && <QBoton onClick={onBorrar}>-</QBoton>}
             </td>
@@ -130,8 +130,8 @@ const FilaCaja = ({
             <td>{esPrimera ? linea.sku : ""}</td>
             <td>{esPrimera ? linea.descripcion : ""}</td>
             <td>{lineaEditada.lote_id || "—"}</td>
-            <td className="comparativa-cantidad">{lineaEditada.cantidad}</td>
-            <td className="comparativa-input">
+            <td className="recibir-cantidad">{lineaEditada.cantidad}</td>
+            <td className="recibir-input">
                 <TipoCajaProv
                     label=""
                     nombre="tipo_caja_id"
@@ -142,10 +142,10 @@ const FilaCaja = ({
                     onSeleccionar={handleSeleccionarTipoCaja}
                 />
             </td>
-            <td className="comparativa-cantidad comparativa-input">
+            <td className="recibir-cantidad recibir-input">
                 <QInput label="" {...uiProps("cantidad_caja")} />
             </td>
-            <td className="comparativa-cantidad comparativa-input">
+            <td className="recibir-cantidad recibir-input">
                 <QInput label="" {...uiProps("num_cajas")} />
             </td>
         </tr>
@@ -156,7 +156,7 @@ const FilaCaja = ({
 // Wizard principal
 // ---------------------------------------------------------------------------
 
-export const ComparativaAlbaran = ({
+export const RecibirAlbaran = ({
     publicar,
     pedidoCompraId,
     proveedorId,
@@ -262,14 +262,14 @@ export const ComparativaAlbaran = ({
     return (
         <QModal
             abierto={true}
-            nombre="comparativaAlbaran"
-            titulo={paso === 1 ? "Comparativa de albarán (1/2)" : "Cajas destino (2/2)"}
+            nombre="recibirAlbaran"
+            titulo={paso === 1 ? "Recibir albarán (1/2)" : "Cajas destino (2/2)"}
             onCerrar={cancelar}
         >
-            <div className="comparativa-albaran">
+            <div className="recibir-albaran">
 
                 {paso === 1 && (
-                    <table className="comparativa-tabla">
+                    <table className="recibir-tabla">
                         <thead>
                             <tr>
                                 <th>SKU</th>
@@ -309,7 +309,7 @@ export const ComparativaAlbaran = ({
 
                 {paso === 2 && (
                     <>
-                        <table className="comparativa-tabla">
+                        <table className="recibir-tabla">
                             <thead>
                                 <tr>
                                     <th>SKU</th>

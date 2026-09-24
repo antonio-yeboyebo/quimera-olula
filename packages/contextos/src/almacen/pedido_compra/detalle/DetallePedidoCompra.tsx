@@ -1,17 +1,17 @@
+import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useEffect } from "react";
 import { ItemPedidoCompra } from "../diseño.ts";
+import { EntradaCreada } from "../vistas/entrada_creada/EntradaCreada.tsx";
+import { LeerAlbaran } from "../vistas/recibir_albaran/LeerAlbaran.tsx";
+import { RecibirAlbaran } from "../vistas/recibir_albaran/RecibirAlbaran.tsx";
 import { contextoDetallePedidoCompraInicial } from "./detalle.ts";
 import "./DetallePedidoCompra.css";
 import { getMaquina } from "./maquina.ts";
 import { TabLineas } from "./TabLineas.tsx";
-import { EntradaCreada } from "../vistas/entrada_creada/EntradaCreada.tsx";
-import { ComparativaAlbaran } from "../vistas/leer_albaran/ComparativaAlbaran.tsx";
-import { LeerAlbaran } from "../vistas/leer_albaran/LeerAlbaran.tsx";
 
 /**
  * Componente detalle de solo lectura para pedidos de compra.
@@ -60,7 +60,7 @@ export const DetallePedidoCompra = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={() => emitir("crear_entrada_solicitado")}>
-                        Crear entrada
+                        Recibir albarán
                     </QBoton>
                     <QBoton onClick={() => emitir("leer_albaran_solicitado")}>
                         Leer albarán
@@ -85,7 +85,7 @@ export const DetallePedidoCompra = ({
                 />
             )}
             {ctx.estado === "COMPARANDO_ALBARAN" && (
-                <ComparativaAlbaran
+                <RecibirAlbaran
                     publicar={emitir}
                     pedidoCompraId={ctx.pedido.id}
                     proveedorId={ctx.pedido.proveedorId}

@@ -14,6 +14,7 @@ interface QModalConfirmacionProps {
   labelCancelar?: string;
   mostrarCancelar?: boolean;
   pantallaCompletaMovil?: boolean;
+  destructivo?: boolean;
 }
 
 export const QModalConfirmacion = ({
@@ -27,6 +28,7 @@ export const QModalConfirmacion = ({
   labelCancelar = "Cancelar",
   mostrarCancelar = true,
   pantallaCompletaMovil = false,
+  destructivo = false,
 }: QModalConfirmacionProps) => {
   const { intentar } = useContext(ContextoError);
   const [guardando, setGuardando] = useState(false);
@@ -75,7 +77,7 @@ export const QModalConfirmacion = ({
             {labelCancelar}
           </QBoton>
         )}
-        <QBoton onClick={aceptar} deshabilitado={guardando}>
+        <QBoton onClick={aceptar} deshabilitado={guardando} destructivo={destructivo}>
           {guardando ? "Procesando..." : labelAceptar}
         </QBoton>
       </div>
