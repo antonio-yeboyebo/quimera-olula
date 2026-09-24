@@ -88,6 +88,7 @@ export const DetallePedidoCompra = ({
                 <ComparativaAlbaran
                     publicar={emitir}
                     pedidoCompraId={ctx.pedido.id}
+                    proveedorId={ctx.pedido.proveedorId}
                     lineasPedido={ctx.pedido.lineas}
                     lineasDetectadas={ctx.lineasDetectadas}
                 />

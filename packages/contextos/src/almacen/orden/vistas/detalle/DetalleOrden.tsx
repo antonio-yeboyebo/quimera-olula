@@ -6,19 +6,22 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { QInput } from "@olula/componentes/index.js";
+import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.js";
+import { imprimir_blob } from "@olula/lib/impresion.ts";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
 import { desbloquearTTS, useSintesisVoz } from "@olula/lib/voz/useSintesisVoz.ts";
 import { plugin } from "@olula/lib/dominio.js";
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { metaOrden, ordenVacia } from "../../dominio.ts";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
 import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
+import { getReportEtiquetasOrden } from "../../infraestructura.ts";
 import { guardarOrden } from "./detalle.ts";
 import "./DetalleOrden.css";
 import { LecturaOrden } from "./lectura/LecturaLineaOrden.tsx";
@@ -47,8 +50,16 @@ export const DetalleOrden = ({
     };
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoInicial, publicar);
+    const { intentar } = useContext(ContextoError);
     const [modoVoz, setModoVoz] = usePreferencia("sga.modo-voz", false);
     const tts = useSintesisVoz();
+
+    const imprimirEtiquetas = useCallback(async () => {
+        await intentar(async () => {
+            const blob = await getReportEtiquetasOrden(ctx.orden.id);
+            imprimir_blob(blob);
+        });
+    }, [ctx.orden.id, intentar]);
 
     const autoGuardar = useCallback(
         async (orden: OrdenAlmacen) => {
@@ -86,6 +97,7 @@ export const DetalleOrden = ({
                 {modelo.estado !== "TERMINADA" && (
                     <QBoton onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
                 )}
+                <QBoton onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
             </div>
             <div className="DetalleOrden">
                 <quimera-formulario>

@@ -148,3 +148,4 @@ export type PatchLineaOrden = (id: string, lineaId: string, cambios: CambiosLine
 export type DeleteLineasOrden = (id: string, lineaIds: string[]) => Promise<void>;
 export type PostEntradaDesdePedido = (nueva: NuevaEntradaDesdePedido) => Promise<string>;
 export type TerminarOrden = (id: string) => Promise<void>;
+export type GetReportEtiquetasOrden = (id: string) => Promise<Blob>;

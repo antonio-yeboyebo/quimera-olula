@@ -6,11 +6,13 @@ export interface ItemPedidoCompra extends Entidad {
     id: string;
     fecha: Date;
     proveedor: string;
+    proveedorId: string;
     codigo: string;
 }
 
 export interface LineaPedidoCompra extends Entidad {
     id: string;
+    articuloId: string;
     sku: string;
     descripcion: string;
     cantidad: number;

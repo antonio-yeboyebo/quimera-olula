@@ -3,7 +3,7 @@ import { MetaModelo } from "@olula/lib/dominio.ts";
 import { LineaNuevaEntradaDesdePedido } from "../../diseño.ts";
 
 // ---------------------------------------------------------------------------
-// Tipo editable de línea en la comparativa
+// Paso 1 — cantidades y lotes detectados
 // ---------------------------------------------------------------------------
 
 export interface LineaEditableEntrada extends Modelo {
@@ -12,10 +12,6 @@ export interface LineaEditableEntrada extends Modelo {
     cantidad: number;
     lote_id: string;
 }
-
-// ---------------------------------------------------------------------------
-// MetaModelo
-// ---------------------------------------------------------------------------
 
 export const metaLineaEditableEntrada: MetaModelo<LineaEditableEntrada> = {
     campos: {
@@ -28,10 +24,6 @@ export const metaLineaEditableEntrada: MetaModelo<LineaEditableEntrada> = {
         lote_id: {},
     },
 };
-
-// ---------------------------------------------------------------------------
-// Conversión desde/hacia LineaNuevaEntradaDesdePedido
-// ---------------------------------------------------------------------------
 
 export const lineaEditableDesdeDetectada = (
     l: LineaNuevaEntradaDesdePedido
@@ -49,12 +41,60 @@ export const crearLineaEditableVacia = (linea_pedido_id: string): LineaEditableE
     lote_id: "",
 });
 
-export const lineaEditableADetectada = (
-    l: LineaEditableEntrada
-): LineaNuevaEntradaDesdePedido => ({
-    linea_pedido_id: l.linea_pedido_id,
-    cantidad: l.cantidad,
-    lote_id: l.lote_id !== "" ? l.lote_id : null,
-    tipo_caja_id: null,
+// ---------------------------------------------------------------------------
+// Paso 2 — cajas destino
+// ---------------------------------------------------------------------------
+
+export interface LineaCajaEntrada extends Modelo {
+    rowId: string;           // mismo rowId que LineaEditableEntrada
+    tipo_caja_id: string;    // "" → null en API (Sin Caja)
+    cantidad_caja: number | null;
+    num_cajas: number | null;
+}
+
+export const metaLineaCajaEntrada: MetaModelo<LineaCajaEntrada> = {
+    campos: {
+        tipo_caja_id: {},
+        cantidad_caja: {
+            tipo: "numero",
+            validacion: (m) =>
+                m.tipo_caja_id === "" || (m.cantidad_caja != null && m.cantidad_caja > 0)
+                    ? true
+                    : "La cantidad por caja debe ser mayor que 0",
+        },
+        num_cajas: {
+            tipo: "numero",
+            validacion: (m) =>
+                m.tipo_caja_id === "" || (m.num_cajas != null && m.num_cajas > 0)
+                    ? true
+                    : "El número de cajas debe ser mayor que 0",
+        },
+    },
+};
+
+export const inicializarLineaCaja = (linea: LineaEditableEntrada): LineaCajaEntrada => ({
+    rowId: linea.rowId,
+    tipo_caja_id: "",
+    cantidad_caja: null,
     num_cajas: null,
 });
+
+/**
+ * Convierte una LineaEditableEntrada y su configuración de caja en una única
+ * LineaNuevaEntradaDesdePedido con la cantidad total y num_cajas agregado.
+ */
+export const expandirLineaEnCajas = (
+    linea: LineaEditableEntrada,
+    caja: LineaCajaEntrada
+): LineaNuevaEntradaDesdePedido[] => {
+    const lote_id = linea.lote_id !== "" ? linea.lote_id : null;
+    const tipo_caja_id = caja.tipo_caja_id !== "" ? caja.tipo_caja_id : null;
+
+    return [{
+        linea_pedido_id: linea.linea_pedido_id,
+        cantidad: linea.cantidad,
+        lote_id,
+        tipo_caja_id,
+        num_cajas: caja.num_cajas,
+    }];
+};

@@ -8,10 +8,12 @@ interface ItemPedidoCompraApi {
     fecha: string;
     codigo: string;
     remitente: string;
+    proveedor_id: string;
 }
 
 interface LineaPedidoCompraApi {
     id: string;
+    articulo_id: string;
     sku: string;
     descripcion: string;
     cantidad: number;
@@ -31,10 +33,12 @@ const itemPedidoCompraDesdeApi = (api: ItemPedidoCompraApi): ItemPedidoCompra =>
     fecha: new Date(Date.parse(api.fecha)),
     codigo: api.codigo,
     proveedor: api.remitente,
+    proveedorId: api.proveedor_id,
 });
 
 const lineaPedidoCompraDesdeApi = (api: LineaPedidoCompraApi): LineaPedidoCompra => ({
     id: api.id,
+    articuloId: api.articulo_id,
     sku: api.sku,
     descripcion: api.descripcion,
     cantidad: api.cantidad,
