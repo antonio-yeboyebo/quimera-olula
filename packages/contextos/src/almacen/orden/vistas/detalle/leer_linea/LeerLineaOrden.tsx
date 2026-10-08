@@ -4,7 +4,7 @@ import { Ubicacion } from "#/almacen/comun/componentes/Ubicacion.tsx";
 import { buscarCajaCompletaPorTexto, buscarCajaPorTexto, buscarUbicacionPorTexto } from "#/almacen/comun/voz_resolvers.ts";
 
 import { LineaOrdenAlmacen, OrdenAlmacen } from "#/almacen/orden/diseño.ts";
-import { getSkuLote, registrarLecturaOrden } from "#/almacen/orden/infraestructura.ts";
+import { confirmarSubcajaPalet, getSkuLote, registrarLecturaOrden } from "#/almacen/orden/infraestructura.ts";
 import { IndicadorVoz } from "@olula/componentes/atomos/indicador_voz.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
@@ -18,7 +18,7 @@ import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 
 import { LecturaSkuLote } from "../lectura/LecturaSkuLote.tsx";
 import "./LeerLineaOrden.css";
 
-type PasoGuion = "sku-lote" | "cantidad" | "caja-destino" | "caja-destino-capacidad" | "ubi-destino" | "ubi-origen" | "caja-origen" | "caja-origen-completa" | "caja-destino-completa";
+type PasoGuion = "sku-lote" | "cantidad" | "caja-destino" | "caja-destino-capacidad" | "ubi-destino" | "ubi-origen" | "caja-origen" | "caja-origen-completa" | "caja-destino-completa" | "lote-subcaja-palet";
 
 const instrucciones: Record<PasoGuion, string> = {
     "sku-lote": "Lee el código de barras",
@@ -30,6 +30,7 @@ const instrucciones: Record<PasoGuion, string> = {
     "caja-origen": "Dime la caja de origen",
     "caja-origen-completa": "Dime la caja de origen",
     "caja-destino-completa": "Dime la caja de destino",
+    "lote-subcaja-palet": "Introduce el lote de la caja",
 };
 
 // Guion por tipo de operación (referencia para futura activación en getPaso):
@@ -55,12 +56,10 @@ const instrucciones: Record<PasoGuion, string> = {
 // };
 
 const getPaso = (linea: LineaOrdenAlmacen): PasoGuion[] => {
-    // Ver si en función de los datos que la línea tenga (lote, caja, etc) se puede inferir el paso
-    if (linea.sku === "ejemplo")
-        return ["caja-destino-capacidad"]
-    return ["caja-destino-capacidad"]
-    // const guionLinea = guion[linea.sku];
-    // return guionLinea ?? ["sku-lote", "cantidad", "caja-destino", "caja-destino-capacidad", "ubi-destino", "ubi-origen", "caja-origen", "caja-origen-completa"];
+    switch (linea.pasos) {
+        case "SUBCAJA_PALET": return ["lote-subcaja-palet"];
+        default: return ["caja-destino-capacidad"];
+    }
 }
 
 const PasoWrapper = ({ instruccion, children }: { instruccion: string; children: ReactNode }) => (
@@ -325,6 +324,12 @@ const getPreguntaVozParaPaso = (paso: PasoGuion, linea: LineaOrdenAlmacen): Preg
                 },
                 confirmacion: (v) => `Artículo ${v.descripcion}, ¿correcto?`,
             };
+        case "lote-subcaja-palet":
+            return {
+                instruccion: instrucciones[paso],
+                tipo: "texto",
+                confirmacion: (v) => `Lote ${v}, ¿correcto?`,
+            };
     }
 };
 
@@ -451,10 +456,19 @@ export const LeerLineaOrden = ({
                 const r = valor as { sku: string; descripcion: string; loteId: string | null };
                 return { sku: r.sku, articulo: r.descripcion, loteId: r.loteId };
             }
+            case "lote-subcaja-palet":
+                return { loteId: valor as string };
         }
     };
 
     const registrarConValores = useCallback(async (vals: ValoresAcumulados) => {
+        if (pasoGuion.includes("lote-subcaja-palet")) {
+            const loteId = (vals.loteId ?? linea.loteId) as string;
+            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId));
+            publicar("lectura_registrada");
+            return;
+        }
+
         const sku = vals.sku ?? linea.sku;
         const articulo = vals.articulo ?? linea.articulo;
         const idLote = vals.loteId !== undefined ? vals.loteId : linea.loteId;
@@ -556,6 +570,13 @@ export const LeerLineaOrden = ({
     const avanzar = useCallback(async () => {
         if (!esUltimoPaso) {
             setPasoActual((p) => p + 1);
+            return;
+        }
+
+        if (pasoGuion.includes("lote-subcaja-palet")) {
+            const loteId = (valores.loteId ?? linea.loteId) as string;
+            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId));
+            publicar("lectura_registrada");
             return;
         }
 
@@ -766,6 +787,18 @@ export const LeerLineaOrden = ({
                                     cantidad: opcion?.cantidad ?? undefined,
                                 }))
                             }
+                        />
+                    </PasoWrapper>
+                )}
+
+                {paso === "lote-subcaja-palet" && (
+                    <PasoWrapper instruccion={instrucciones["lote-subcaja-palet"]}>
+                        <QInput
+                            label="Lote"
+                            nombre="lote"
+                            tipo="texto"
+                            valor={typeof valores.loteId === "string" ? valores.loteId : ""}
+                            onChange={(valor) => setValores((v) => ({ ...v, loteId: valor || null }))}
                         />
                     </PasoWrapper>
                 )}

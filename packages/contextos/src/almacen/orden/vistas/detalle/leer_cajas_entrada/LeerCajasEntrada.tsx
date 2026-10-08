@@ -1,7 +1,7 @@
 import { Caja } from "#/almacen/comun/componentes/Caja.tsx";
 import { pitidoError } from "#/almacen/comun/audio.ts";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "#/almacen/orden/diseño.ts";
-import { registrarLecturaOrden } from "#/almacen/orden/infraestructura.ts";
+import { registrarLecturaCajaOrden, registrarLecturaOrden } from "#/almacen/orden/infraestructura.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
@@ -48,6 +48,25 @@ export const LeerCajasEntrada = ({
 
     const procesarCaja = useCallback(
         async (opcion: OpcionCaja) => {
+            if (!opcion.sku) {
+                // PALET: el servidor genera movimientos recursivamente por sub-cajas
+                let registrado = false;
+                await intentar(async () => {
+                    await registrarLecturaCajaOrden(orden.id, {
+                        cajaId: opcion.id,
+                        cajaCompleta: true,
+                        idUbicacionDestino: null,
+                        idCajaDestino: null,
+                    });
+                    registrado = true;
+                    setResultado({ exito: true, mensaje: `Palé ${opcion.lpn} registrado` });
+                    await publicar("lectura_registrada");
+                });
+                if (!registrado) pitidoError();
+                setClaveCaja((k) => k + 1);
+                return;
+            }
+
             const linea = encontrarLineaParaCaja(opcion, orden.lineas);
             if (!linea) {
                 pitidoError();
@@ -59,7 +78,7 @@ export const LeerCajasEntrada = ({
                 return;
             }
 
-            const cantidad = opcion.capacidad ?? linea.cantidadPrevista;
+            const cantidad = opcion.capacidad || linea.cantidadPrevista;
             let registrado = false;
             await intentar(async () => {
                 await registrarLecturaOrden(orden.id, {

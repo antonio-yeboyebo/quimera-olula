@@ -50,6 +50,9 @@ export interface LineaCajaEntrada extends Modelo {
     tipo_caja_id: string;    // "" → null en API (Sin Caja)
     cantidad_caja: number | null;
     num_cajas: number | null;
+    // Modo palet
+    palet_num: number | null;
+    subcaja_compra_id: string | null;
 }
 
 export const metaLineaCajaEntrada: MetaModelo<LineaCajaEntrada> = {
@@ -77,6 +80,8 @@ export const inicializarLineaCaja = (linea: LineaEditableEntrada): LineaCajaEntr
     tipo_caja_id: "",
     cantidad_caja: null,
     num_cajas: null,
+    palet_num: null,
+    subcaja_compra_id: null,
 });
 
 /**
@@ -96,5 +101,25 @@ export const expandirLineaEnCajas = (
         lote_id,
         tipo_caja_id,
         num_cajas: caja.num_cajas,
+        subcaja_compra_id: caja.subcaja_compra_id ?? null,
+        palet_num: caja.palet_num ?? null,
     }];
 };
+
+// ---------------------------------------------------------------------------
+// Paso 2 — configuración de palets por SKU
+// ---------------------------------------------------------------------------
+
+export interface ConfigPaletSku {
+    linea_pedido_id: string;
+    es_palet: boolean;
+    num_palets: number;
+    subcaja_compra_id: string | null;
+}
+
+export const configPaletSkuVacia = (linea_pedido_id: string): ConfigPaletSku => ({
+    linea_pedido_id,
+    es_palet: false,
+    num_palets: 1,
+    subcaja_compra_id: null,
+});

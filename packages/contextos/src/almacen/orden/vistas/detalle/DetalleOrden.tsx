@@ -14,7 +14,7 @@ import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
 import { desbloquearTTS, useSintesisVoz } from "@olula/lib/voz/useSintesisVoz.ts";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
@@ -30,6 +30,7 @@ import { LecturasCajaOrden } from "./lecturas_caja/LecturasCajaOrden.tsx";
 import { LecturaCajaOrden } from "./leer_caja/LecturaCajaOrden.tsx";
 import { LeerCajasColocacion } from "./leer_cajas_colocacion/LeerCajasColocacion.tsx";
 import { iniciarAudioLectura, LeerCajasEntrada } from "./leer_cajas_entrada/LeerCajasEntrada.tsx";
+import { LeerPaletEntrada } from "./leer_palet_entrada/LeerPaletEntrada.tsx";
 import { LecturaUbicacionOrden } from "./leer_ubicacion/LecturaUbicacionOrden.tsx";
 import { LineasOrden } from "./lineas/LineasOrden.tsx";
 import { ContextoOrdenAlmacen, getMaquina } from "./maquina.ts";
@@ -56,6 +57,7 @@ export const DetalleOrden = ({
     const { intentar } = useContext(ContextoError);
     const [modoVoz, setModoVoz] = usePreferencia("sga.modo-voz", false);
     const tts = useSintesisVoz();
+    const [etiquetasImpresas, setEtiquetasImpresas] = useState(false);
 
     const imprimirEtiquetas = useCallback(async () => {
         await intentar(async () => {
@@ -84,7 +86,34 @@ export const DetalleOrden = ({
         if (ordenId) {
             emitir("orden_id_cambiada", ordenId, true);
         }
+        setEtiquetasImpresas(false);
     }, [ordenId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const accionPrincipal: { label: string; instruccion: string; onClick: () => void } | null = (() => {
+        if (!sgaActivo || modelo.tipo !== "ENTRADA" || ctx.estado !== "ABIERTA") return null;
+
+        if (modelo.estado === "TERMINADA") {
+            return {
+                label: "Colocar",
+                instruccion: "Recepción terminada, usa el botón Colocar para crear la orden de colocación",
+                onClick: () => emitir("colocacion_solicitada"),
+            };
+        }
+
+        if (modelo.estado !== "PENDIENTE" || etiquetasImpresas) {
+            return {
+                label: "Leer Cajas",
+                instruccion: "Usa el botón leer cajas para leer los QR de las etiquetas pegadas a las cajas",
+                onClick: () => { iniciarAudioLectura(); emitir("lectura_cajas_entrada_solicitada"); },
+            };
+        }
+
+        return {
+            label: "Imprimir etiquetas",
+            instruccion: "Imprime las etiquetas a pegar en las cajas y palets recibidos",
+            onClick: async () => { await imprimirEtiquetas(); setEtiquetasImpresas(true); },
+        };
+    })();
 
     if (!ctx.orden.id) return null;
 
@@ -97,20 +126,29 @@ export const DetalleOrden = ({
             cerrarDetalle={() => publicar("cancelar_seleccion")}
         >
             <div className="maestro-botones">
-                <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                <QBoton variante="borde" onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
                 {modelo.estado !== "TERMINADA" && (
-                    <QBoton onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
                 )}
                 {modelo.tipo === "ENTRADA" && (
                     <QBoton
+                        variante="borde"
                         deshabilitado={modelo.estado !== "TERMINADA"}
                         onClick={() => emitir("colocacion_solicitada")}
                     >
                         Colocar
                     </QBoton>
                 )}
-                <QBoton onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
+                <QBoton variante="borde" onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
             </div>
+            {accionPrincipal && (
+                <div className="accion-principal">
+                    <QBoton tamaño="xl" onClick={accionPrincipal.onClick}>
+                        {accionPrincipal.label}
+                    </QBoton>
+                    <p className="accion-principal__instruccion">{accionPrincipal.instruccion}</p>
+                </div>
+            )}
             <div className="DetalleOrden">
                 <quimera-formulario>
                     <QInput label="Descripción" {...orden.uiProps("descripcion")}/>
@@ -140,7 +178,7 @@ export const DetalleOrden = ({
                         />
                     )}
                     {sgaActivo && mostrarDestino && (
-                        <QBoton texto='Nueva caja' onClick={() => emitir("creacion_de_caja_solicitada")} />
+                        <QBoton variante="borde" texto='Nueva caja' onClick={() => emitir("creacion_de_caja_solicitada")} />
                     )}
                     {sgaActivo && mostrarDestino && (
                         <Ubicacion
@@ -153,23 +191,26 @@ export const DetalleOrden = ({
             </div>
             <div className="maestro-botones">
                 {ocultarTemporalDemos && (
-                <QBoton onClick={() => emitir("lectura_solicitada")}>Lectura</
+                <QBoton variante="borde" onClick={() => emitir("lectura_solicitada")}>Lectura</
                 QBoton>
                 )}
                 {ocultarTemporalDemos && sgaActivo && ["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
                 )}
                 {ocultarTemporalDemos && sgaActivo && ["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura bandeja</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura bandeja</QBoton>
                 )}
                 {sgaActivo && modelo.tipo === "ENTRADA" && (
-                    <QBoton onClick={() => { iniciarAudioLectura(); emitir("lectura_cajas_entrada_solicitada"); }}>Leer cajas</QBoton>
+                    <QBoton variante="borde" onClick={() => { iniciarAudioLectura(); emitir("lectura_cajas_entrada_solicitada"); }}>Leer cajas</QBoton>
+                )}
+                {sgaActivo && modelo.tipo === "ENTRADA" && (
+                    <QBoton variante="borde" onClick={() => emitir("lectura_palet_entrada_solicitada")}>Leer palé</QBoton>
                 )}
                 {sgaActivo && modelo.tipo === "TRASPASO" && (
-                    <QBoton onClick={() => { iniciarAudioLectura(); emitir("lectura_cajas_colocacion_solicitada"); }}>Leer colocación</QBoton>
+                    <QBoton variante="borde" onClick={() => { iniciarAudioLectura(); emitir("lectura_cajas_colocacion_solicitada"); }}>Leer colocación</QBoton>
                 )}
                 {sgaActivo && (
-                    <QBoton onClick={() => {
+                    <QBoton variante="borde" onClick={() => {
                         const nuevoValor = !modoVoz;
                         if (nuevoValor) desbloquearTTS();
                         setModoVoz(nuevoValor);
@@ -217,6 +258,9 @@ export const DetalleOrden = ({
             )}
             {ctx.estado === "LEYENDO_CAJAS_ENTRADA" && (
                 <LeerCajasEntrada publicar={emitir} orden={ctx.orden} />
+            )}
+            {ctx.estado === "LEYENDO_PALET_ENTRADA" && (
+                <LeerPaletEntrada publicar={emitir} orden={ctx.orden} />
             )}
             {ctx.estado === "LEYENDO_CAJAS_COLOCACION" && (
                 <LeerCajasColocacion publicar={emitir} orden={ctx.orden} />

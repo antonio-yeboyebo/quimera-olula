@@ -96,6 +96,7 @@ export interface LineaOrdenAlmacenApi {
     caja_destino_id: string | null;
     caja_destino: string | null;
     linea_pick_id: string | null;
+    pasos: string | null;
     lecturas: LecturaLineaOrdenApi[];
 }
 
@@ -192,6 +193,7 @@ export const lineaOrdenDesdeApi = (api: LineaOrdenAlmacenApi): LineaOrdenAlmacen
     idCajaDestino: api.caja_destino_id,
     cajaDestino: api.caja_destino,
     idLineaPick: api.linea_pick_id,
+    pasos: api.pasos,
     lecturas: api.lecturas.map(lecturaLineaOrdenDesdeApi),
 });
 
@@ -425,4 +427,32 @@ export const getReportEtiquetasOrden: GetReportEtiquetasOrden = async (id) =>
 export const postColocacion: PostColocacion = async (id) => {
     const respuesta = await RestAPI.post(`${baseUrl}/${id}/colocacion`, {}, "Error al crear la orden de colocación");
     return respuesta.id as string;
+};
+
+export const crearLineaSubcajaPalet = async (
+    ordenId: string,
+    datos: { sku: string; cantidad: number; idCajaOrigen: string; idUbicacionDestino: string },
+): Promise<void> => {
+    await RestAPI.post(
+        `${baseUrl}/${ordenId}/linea_subcaja_palet`,
+        {
+            sku: datos.sku,
+            cantidad: datos.cantidad,
+            caja_origen_id: datos.idCajaOrigen,
+            ubicacion_destino_id: datos.idUbicacionDestino,
+        },
+        "Error al crear línea de subcaja de palé"
+    );
+};
+
+export const confirmarSubcajaPalet = async (
+    ordenId: string,
+    lineaId: string,
+    loteId: string,
+): Promise<void> => {
+    await RestAPI.post(
+        `${baseUrl}/${ordenId}/linea/${lineaId}/confirmar_subcaja`,
+        { lote_id: loteId },
+        "Error al confirmar subcaja de palé"
+    );
 };

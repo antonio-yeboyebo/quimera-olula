@@ -8,6 +8,7 @@ import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useForm } from "@olula/lib/useForm.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useState } from "react";
+import { ValorControl } from "@olula/lib/useModelo.ts";
 import { LineaNuevaEntradaDesdePedido, LineaPedidoCompra } from "../../diseño.ts";
 import { postEntradaDesdePedido } from "../../infraestructura.ts";
 import {
@@ -15,8 +16,10 @@ import {
     metaFormEntrada,
 } from "../crear_entrada_desde_pedido/crear_entrada_desde_pedido.ts";
 import {
+    ConfigPaletSku,
     LineaCajaEntrada,
     LineaEditableEntrada,
+    configPaletSkuVacia,
     crearLineaEditableVacia,
     expandirLineaEnCajas,
     inicializarLineaCaja,
@@ -80,7 +83,82 @@ const FilaDeteccion = ({
 };
 
 // ---------------------------------------------------------------------------
-// Paso 2 — fila de cajas
+// Paso 2 — fila de cabecera de SKU (modo palet)
+// ---------------------------------------------------------------------------
+
+const FilaConfigPalet = ({
+    linea,
+    config,
+    idProveedor,
+    onCambio,
+}: {
+    linea: LineaPedidoCompra;
+    config: ConfigPaletSku;
+    idProveedor: string;
+    onCambio: (actualizada: ConfigPaletSku) => void;
+}) => {
+    const togglePalet = useCallback(() => {
+        onCambio({ ...config, es_palet: !config.es_palet });
+    }, [config, onCambio]);
+
+    const cambiarNumPalets = useCallback(
+        (valor: string) => {
+            const n = parseInt(valor, 10);
+            onCambio({ ...config, num_palets: isNaN(n) || n < 1 ? 1 : n });
+        },
+        [config, onCambio]
+    );
+
+    const cambiarSubcaja = useCallback(
+        (val: ValorControl) => {
+            const id = typeof val === "string" ? val : null;
+            onCambio({ ...config, subcaja_compra_id: id || null });
+        },
+        [config, onCambio]
+    );
+
+    return (
+        <tr className="recibir-fila-sku">
+            <td><strong>{linea.sku}</strong></td>
+            <td><strong>{linea.descripcion}</strong></td>
+            <td colSpan={2}>
+                <QBoton
+                    onClick={togglePalet}
+                    variante={config.es_palet ? "solido" : "borde"}
+                >
+                    {config.es_palet ? "Paletizado ✓" : "Paletizado"}
+                </QBoton>
+            </td>
+            {config.es_palet && (
+                <>
+                    <td className="recibir-input">
+                        <QInput
+                            label="Nº palets"
+                            nombre="num_palets"
+                            valor={String(config.num_palets)}
+                            tipo="numero"
+                            onChange={cambiarNumPalets}
+                        />
+                    </td>
+                    <td className="recibir-input" colSpan={2}>
+                        <TipoCajaProv
+                            label="Caja interior"
+                            nombre="subcaja_compra_id"
+                            valor={config.subcaja_compra_id ?? ""}
+                            idProveedor={idProveedor}
+                            idArticulo={linea.articuloId}
+                            onChange={cambiarSubcaja}
+                            onSeleccionar={(id) => onCambio({ ...config, subcaja_compra_id: id || null })}
+                        />
+                    </td>
+                </>
+            )}
+        </tr>
+    );
+};
+
+// ---------------------------------------------------------------------------
+// Paso 2 — fila de cajas (modo normal)
 // ---------------------------------------------------------------------------
 
 const FilaCaja = ({
@@ -153,6 +231,50 @@ const FilaCaja = ({
 };
 
 // ---------------------------------------------------------------------------
+// Paso 2 — fila de lote (modo palet)
+// ---------------------------------------------------------------------------
+
+const FilaLotePalet = ({
+    lineaEditada,
+    caja,
+    numPalets,
+    onCambio,
+}: {
+    lineaEditada: LineaEditableEntrada;
+    caja: LineaCajaEntrada;
+    numPalets: number;
+    onCambio: (actualizada: LineaCajaEntrada) => void;
+}) => {
+    const paletActual = caja.palet_num;
+
+    return (
+        <tr>
+            <td></td>
+            <td></td>
+            <td>{lineaEditada.lote_id || "—"}</td>
+            <td className="recibir-cantidad">{lineaEditada.cantidad}</td>
+            <td colSpan={3} className="recibir-asignar-palet">
+                {numPalets === 1 ? (
+                    <span className="recibir-palet-auto">Palet 1 (auto)</span>
+                ) : (
+                    <div className="recibir-botones-palet">
+                        {Array.from({ length: numPalets }, (_, i) => i + 1).map((n) => (
+                            <QBoton
+                                key={n}
+                                onClick={() => onCambio({ ...caja, palet_num: n })}
+                                variante={paletActual === n ? "solido" : "borde"}
+                            >
+                                {n}
+                            </QBoton>
+                        ))}
+                    </div>
+                )}
+            </td>
+        </tr>
+    );
+};
+
+// ---------------------------------------------------------------------------
 // Wizard principal
 // ---------------------------------------------------------------------------
 
@@ -209,6 +331,9 @@ export const RecibirAlbaran = ({
     // ── Estado paso 2 ────────────────────────────────────────────────────────
 
     const [lineasCajas, setLineasCajas] = useState<LineaCajaEntrada[]>([]);
+    const [configPalets, setConfigPalets] = useState<Map<string, ConfigPaletSku>>(
+        () => new Map(lineasPedido.map((l) => [l.id, configPaletSkuVacia(l.id)]))
+    );
 
     const actualizarCaja = useCallback(
         (actualizada: LineaCajaEntrada) =>
@@ -218,9 +343,52 @@ export const RecibirAlbaran = ({
         []
     );
 
-    const todasCajasValidas = lineasCajas.every(
-        (c) => c.tipo_caja_id === "" || (c.cantidad_caja != null && c.cantidad_caja > 0 && c.num_cajas != null && c.num_cajas > 0)
+    // Propagación de config palet a cajas cuando cambia es_palet, num_palets o subcaja_compra_id
+    const aplicarConfigPaletAsCajas = useCallback(
+        (config: ConfigPaletSku, rowIdsDelSku: string[]) => {
+            setLineasCajas((prev) =>
+                prev.map((c) => {
+                    if (!rowIdsDelSku.includes(c.rowId)) return c;
+                    if (!config.es_palet) {
+                        return {
+                            ...c,
+                            tipo_caja_id: "",
+                            cantidad_caja: null,
+                            num_cajas: null,
+                            palet_num: null,
+                            subcaja_compra_id: null,
+                        };
+                    }
+                    return {
+                        ...c,
+                        tipo_caja_id: PALET_ID,
+                        cantidad_caja: null,
+                        num_cajas: null,
+                        // Si solo hay 1 palet, auto-asignar; si hay más, resetear para que el usuario elija
+                        palet_num: config.num_palets === 1 ? 1 : null,
+                        subcaja_compra_id: config.subcaja_compra_id,
+                    };
+                })
+            );
+        },
+        []
     );
+
+    const cambiarConfigPalet = useCallback(
+        (actualizada: ConfigPaletSku, rowIdsDelSku: string[]) => {
+            setConfigPalets((prev) => new Map(prev).set(actualizada.linea_pedido_id, actualizada));
+            aplicarConfigPaletAsCajas(actualizada, rowIdsDelSku);
+        },
+        [aplicarConfigPaletAsCajas]
+    );
+
+    const todasCajasValidas = lineasCajas.every((c) => {
+        if (c.palet_num !== null) {
+            // Modo palet: necesita subcaja y palet_num asignado
+            return c.subcaja_compra_id !== null && c.palet_num >= 1;
+        }
+        return c.tipo_caja_id === "" || (c.cantidad_caja != null && c.cantidad_caja > 0 && c.num_cajas != null && c.num_cajas > 0);
+    });
 
     // ── Navegación wizard ────────────────────────────────────────────────────
 
@@ -323,20 +491,47 @@ export const RecibirAlbaran = ({
                                     <th>Cantidad</th>
                                     <th>Tipo caja</th>
                                     <th>Cant./caja</th>
-                                    <th>Nº cajas</th>
+                                    <th>Nº cajas / Palet</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {lineasPedido.flatMap((linea) => {
                                     const grupo = editablesPorLineaId.get(linea.id) ?? [];
-                                    return grupo.map((editada, idx) => {
+                                    if (grupo.length === 0) return [];
+                                    const config = configPalets.get(linea.id)!;
+                                    const rowIdsDelSku = grupo.map((e) => e.rowId);
+
+                                    const filaConfig = (
+                                        <FilaConfigPalet
+                                            key={`config-${linea.id}`}
+                                            linea={linea}
+                                            config={config}
+                                            idProveedor={proveedorId}
+                                            onCambio={(c) => cambiarConfigPalet(c, rowIdsDelSku)}
+                                        />
+                                    );
+
+                                    const filasCaja = grupo.map((editada) => {
                                         const caja = cajasPorRowId.get(editada.rowId);
                                         if (!caja) return null;
+
+                                        if (config.es_palet) {
+                                            return (
+                                                <FilaLotePalet
+                                                    key={editada.rowId}
+                                                    lineaEditada={editada}
+                                                    caja={caja}
+                                                    numPalets={config.num_palets}
+                                                    onCambio={actualizarCaja}
+                                                />
+                                            );
+                                        }
+
                                         return (
                                             <FilaCaja
                                                 key={editada.rowId}
                                                 linea={linea}
-                                                esPrimera={idx === 0}
+                                                esPrimera={false}
                                                 lineaEditada={editada}
                                                 caja={caja}
                                                 idProveedor={proveedorId}
@@ -344,6 +539,8 @@ export const RecibirAlbaran = ({
                                             />
                                         );
                                     });
+
+                                    return [filaConfig, ...filasCaja];
                                 })}
                             </tbody>
                         </table>

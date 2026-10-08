@@ -31,6 +31,8 @@ export interface LineaNuevaEntradaDesdePedido {
     lote_id: string | null;
     tipo_caja_id: string | null;
     num_cajas: number | null;
+    subcaja_compra_id: string | null;
+    palet_num: number | null;
 }
 
 export interface NuevaEntradaDesdePedido extends Modelo {

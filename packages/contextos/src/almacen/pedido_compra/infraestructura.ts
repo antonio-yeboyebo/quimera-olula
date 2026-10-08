@@ -73,6 +73,8 @@ export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: Nuev
         lote_id: linea.lote_id,
         tipo_caja_id: linea.tipo_caja_id,
         num_cajas: linea.num_cajas,
+        subcaja_compra_id: linea.subcaja_compra_id ?? null,
+        palet_num: linea.palet_num ?? null,
     });
 
     const respuesta = await RestAPI.post(

@@ -38,6 +38,7 @@ export interface LineaOrdenAlmacen extends Entidad {
     idCajaDestino: string | null;
     cajaDestino: string | null;
     idLineaPick: string | null;
+    pasos: string | null;
     lecturas: LecturaLineaOrden[];
 }
 

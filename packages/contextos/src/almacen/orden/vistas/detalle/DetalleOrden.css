@@ -5,6 +5,24 @@
  *   Fila 1: tipoOrden (4) + almacenId (4) + fecha (2) + abierta (2) = 12
  */
 
+.accion-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espaciado-m);
+    padding: var(--espaciado-l);
+    background-color: var(--color-primario-claro);
+    border-radius: var(--redondeo-borde-m);
+    margin-block: var(--espaciado-m);
+
+    .accion-principal__instruccion {
+        margin: 0;
+        text-align: center;
+        font-size: var(--tamaño-letra-s);
+        color: var(--color-primario-oscuro);
+    }
+}
+
 .DetalleOrden {
 
     quimera-select[nombre="tipo"] {

@@ -28,6 +28,7 @@ export type EstadoOrdenAlmacen =
     | 'CREANDO_CAJA'
     | 'LEYENDO_CAJAS_ENTRADA'
     | 'LEYENDO_CAJAS_COLOCACION'
+    | 'LEYENDO_PALET_ENTRADA'
     | 'COLOCANDO';
 
 export type ContextoOrdenAlmacen = {
@@ -60,6 +61,7 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
             creacion_de_caja_solicitada: "CREANDO_CAJA",
             lectura_cajas_entrada_solicitada: "LEYENDO_CAJAS_ENTRADA",
             lectura_cajas_colocacion_solicitada: "LEYENDO_CAJAS_COLOCACION",
+            lectura_palet_entrada_solicitada: "LEYENDO_PALET_ENTRADA",
             colocacion_solicitada: "COLOCANDO",
         },
 
@@ -124,6 +126,11 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
         LEYENDO_CAJAS_COLOCACION: {
             lectura_registrada: [refrescarOrden],
             lectura_cajas_colocacion_cancelada: [refrescarOrden, "ABIERTA"],
+        },
+
+        LEYENDO_PALET_ENTRADA: {
+            lectura_registrada: [refrescarOrden, "ABIERTA"],
+            lectura_palet_entrada_cancelada: "ABIERTA",
         },
 
         COLOCANDO: {
