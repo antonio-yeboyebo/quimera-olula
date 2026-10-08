@@ -449,10 +449,11 @@ export const confirmarSubcajaPalet = async (
     ordenId: string,
     lineaId: string,
     loteId: string,
+    idCajaDestino: string,
 ): Promise<void> => {
     await RestAPI.post(
         `${baseUrl}/${ordenId}/linea/${lineaId}/confirmar_subcaja`,
-        { lote_id: loteId },
+        { lote_id: loteId, caja_destino_id: idCajaDestino },
         "Error al confirmar subcaja de palé"
     );
 };

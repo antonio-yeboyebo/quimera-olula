@@ -18,7 +18,7 @@ import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 
 import { LecturaSkuLote } from "../lectura/LecturaSkuLote.tsx";
 import "./LeerLineaOrden.css";
 
-type PasoGuion = "sku-lote" | "cantidad" | "caja-destino" | "caja-destino-capacidad" | "ubi-destino" | "ubi-origen" | "caja-origen" | "caja-origen-completa" | "caja-destino-completa" | "lote-subcaja-palet";
+type PasoGuion = "sku-lote" | "cantidad" | "caja-destino" | "caja-destino-capacidad" | "ubi-destino" | "ubi-origen" | "caja-origen" | "caja-origen-completa" | "caja-destino-completa" | "lote-subcaja-palet" | "caja-destino-subcaja-palet";
 
 const instrucciones: Record<PasoGuion, string> = {
     "sku-lote": "Lee el código de barras",
@@ -31,6 +31,7 @@ const instrucciones: Record<PasoGuion, string> = {
     "caja-origen-completa": "Dime la caja de origen",
     "caja-destino-completa": "Dime la caja de destino",
     "lote-subcaja-palet": "Introduce el lote de la caja",
+    "caja-destino-subcaja-palet": "Escanea la etiqueta de la nueva caja",
 };
 
 // Guion por tipo de operación (referencia para futura activación en getPaso):
@@ -57,7 +58,7 @@ const instrucciones: Record<PasoGuion, string> = {
 
 const getPaso = (linea: LineaOrdenAlmacen): PasoGuion[] => {
     switch (linea.pasos) {
-        case "SUBCAJA_PALET": return ["lote-subcaja-palet"];
+        case "SUBCAJA_PALET": return ["lote-subcaja-palet", "caja-destino-subcaja-palet"];
         default: return ["caja-destino-capacidad"];
     }
 }
@@ -330,6 +331,16 @@ const getPreguntaVozParaPaso = (paso: PasoGuion, linea: LineaOrdenAlmacen): Preg
                 tipo: "texto",
                 confirmacion: (v) => `Lote ${v}, ¿correcto?`,
             };
+        case "caja-destino-subcaja-palet":
+            return {
+                instruccion: instrucciones[paso],
+                tipo: "texto",
+                resolver: async (texto) => {
+                    const caja = await buscarCajaPorTexto(texto);
+                    return caja ? { id: caja.id, lpn: caja.lpn } : null;
+                },
+                confirmacion: (v) => `Caja ${v.lpn}, ¿correcto?`,
+            };
     }
 };
 
@@ -458,13 +469,17 @@ export const LeerLineaOrden = ({
             }
             case "lote-subcaja-palet":
                 return { loteId: valor as string };
+            case "caja-destino-subcaja-palet": {
+                const caja = valor as { id: string; lpn: string };
+                return { idCajaDestino: caja.id, cajaDestino: caja.lpn };
+            }
         }
     };
 
     const registrarConValores = useCallback(async (vals: ValoresAcumulados) => {
         if (pasoGuion.includes("lote-subcaja-palet")) {
             const loteId = (vals.loteId ?? linea.loteId) as string;
-            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId));
+            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId, vals.idCajaDestino!));
             publicar("lectura_registrada");
             return;
         }
@@ -575,7 +590,7 @@ export const LeerLineaOrden = ({
 
         if (pasoGuion.includes("lote-subcaja-palet")) {
             const loteId = (valores.loteId ?? linea.loteId) as string;
-            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId));
+            await intentar(() => confirmarSubcajaPalet(orden.id, linea.id, loteId, valores.idCajaDestino!));
             publicar("lectura_registrada");
             return;
         }
@@ -799,6 +814,23 @@ export const LeerLineaOrden = ({
                             tipo="texto"
                             valor={typeof valores.loteId === "string" ? valores.loteId : ""}
                             onChange={(valor) => setValores((v) => ({ ...v, loteId: valor || null }))}
+                        />
+                    </PasoWrapper>
+                )}
+
+                {paso === "caja-destino-subcaja-palet" && (
+                    <PasoWrapper instruccion={instrucciones["caja-destino-subcaja-palet"]}>
+                        <Caja
+                            label="Nueva caja"
+                            nombre="idCajaDestino"
+                            valor={valores.idCajaDestino ?? ""}
+                            onChange={(opcion) =>
+                                setValores((v) => ({
+                                    ...v,
+                                    idCajaDestino: opcion?.valor ?? "",
+                                    cajaDestino: opcion?.descripcion ?? "",
+                                }))
+                            }
                         />
                     </PasoWrapper>
                 )}

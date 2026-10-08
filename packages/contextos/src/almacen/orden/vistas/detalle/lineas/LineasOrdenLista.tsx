@@ -73,23 +73,19 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): Meta
             { id: "sku", cabecera: "SKU" },
             { id: "articulo", cabecera: "Descripción", tipo: "texto" },
             { id: "loteId", cabecera: "Lote" },
-            ...(orden.abierta
-                ? [{ id: "cantidadReal" as const, cabecera: "Cantidad real" }]
-                : [{
-                    id: "cantidadPrevista" as const,
-                    cabecera: "Cantidad",
-                    tipo: 'numero' as const,
-                    render: (linea: LineaOrdenAlmacen) => {
-                        const real = linea.cantidadReal ?? 0;
-                        const prevista = linea.cantidadPrevista;
-                        const variante = real === 0 ? "error" : real < prevista ? "advertencia" : "exito";
-                        return (
-                            <QEtiqueta variante={variante}>{real} / {prevista}</QEtiqueta>
-                        );
-                    },
-
-                }]
-            ),
+            {
+                id: "cantidadPrevista" as const,
+                cabecera: "Cantidad",
+                tipo: 'numero' as const,
+                render: (linea: LineaOrdenAlmacen) => {
+                    const real = linea.cantidadReal ?? 0;
+                    const prevista = linea.cantidadPrevista;
+                    const variante = real === 0 ? "error" : real < prevista ? "advertencia" : "exito";
+                    return (
+                        <QEtiqueta variante={variante}>{real} / {prevista}</QEtiqueta>
+                    );
+                },
+            },
             ...(sgaActivo && orden.tipo !== "ENTRADA" ? [{ id: "ubicacionOrigen" as const, cabecera: "Ubi.Origen" }] : []),
             ...(sgaActivo && orden.tipo !== "ENTRADA" ? [{ id: "cajaOrigen" as const, cabecera: "LPN Origen" }] : []),
             ...(sgaActivo && orden.tipo !== "SALIDA" ? [{ id: "ubicacionDestino" as const, cabecera: "Ubi.Destino" }] : []),
