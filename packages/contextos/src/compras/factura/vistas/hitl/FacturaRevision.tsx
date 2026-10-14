@@ -2,7 +2,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { ResolvedorHitlTareaProps } from "#/comun/ia/hitl_cola/diseño.ts";
-import { resolverHitlTarea } from "#/comun/ia/hitl_cola/infraestructura.ts";
+import { importarDeHitl } from "#/compras/factura/infraestructura.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
@@ -41,7 +41,7 @@ const metaTablaLineas: MetaTabla<LineaFactura> = [
  * Modal de confirmación para facturas con datos completos (ui_hint='factura_revision').
  *
  * El usuario revisa los datos extraídos por el LLM y confirma la importación.
- * Los datos se envían sin modificaciones a la cola HITL → que auto-crea la Factura.
+ * Llama directamente al caso de uso de creación de factura y marca la tarea como resuelta.
  */
 export const FacturaRevision = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
     const factura = tarea.datos_payload as unknown as FacturaLeida;
@@ -52,7 +52,7 @@ export const FacturaRevision = ({ tarea, publicar }: ResolvedorHitlTareaProps) =
     const confirmar = async () => {
         setConfirmando(true);
         try {
-            await resolverHitlTarea(tarea.id, tarea.datos_payload);
+            await importarDeHitl(tarea.id, tarea.datos_payload);
             publicar('tarea_resuelta', tarea.id);
         } finally {
             setConfirmando(false);

@@ -420,3 +420,13 @@ export const getRecibosFactura: GetRecibosFactura = async (facturaId) => {
 };
 
 export const getTrazaFactura = (id: string): Promise<unknown> => getTraza(`${baseUrl}/${id}`);
+
+export const importarDeHitl = (
+    tareaId: string,
+    datos: Record<string, unknown>
+): Promise<void> =>
+    RestAPI.post(
+        `${baseUrl}/importar-de-hitl/${tareaId}`,
+        datos,
+        'Error al importar la factura desde HITL'
+    ).then(() => undefined);
