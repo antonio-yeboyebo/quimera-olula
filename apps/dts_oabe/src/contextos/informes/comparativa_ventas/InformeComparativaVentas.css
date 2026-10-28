@@ -1,0 +1,46 @@
+.InformeComparativaVentas {
+
+    /* Línea 1: años y objetivo */
+    quimera-input[nombre="anio_desde"],
+    quimera-input[nombre="anio_hasta"],
+    quimera-checkbox[nombre="mostrar_objetivo"] {
+        grid-column: span 2;
+    }
+
+    /* Línea 2: periodo y fechas */
+    quimera-select[nombre="periodo"],
+    quimera-date[nombre="fecha_desde"],
+    quimera-date[nombre="fecha_hasta"] {
+        grid-column: span 2;
+    }
+
+    /* Línea 3: agente y dónde buscarlo */
+    quimera-autocompletar[nombre="agente_id"] {
+        grid-column: 1 / span 4;
+    }
+
+    quimera-select[nombre="tipo_agente"] {
+        grid-column: span 2;
+    }
+
+    /* Línea 4: cliente y provincia */
+    quimera-autocompletar[nombre="cliente_id"] {
+        grid-column: 1 / span 4;
+    }
+
+    quimera-autocompletar[nombre="provincia_id"] {
+        grid-column: span 2;
+    }
+
+    quimera-formulario>quimera-boton {
+        display: none;
+    }
+
+    .aviso-validacion {
+        color: var(--color-error, #b00020);
+    }
+
+    .botones {
+        justify-content: flex-start;
+    }
+}
