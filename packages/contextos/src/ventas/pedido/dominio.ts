@@ -43,6 +43,14 @@ export const pedidoEsEditable = (pedido: { servido?: string }): boolean => {
     return servido !== 'TOTAL' && servido !== 'SERVIDO';
 };
 
+/** Sin nada servido todavía. El servidor solo admite cambiar o borrar líneas,
+ * cambiar el cliente o el grupo de IVA, o borrar el pedido en este estado.
+ * El detalle devuelve PENDIENTE/PARCIAL/TOTAL y el listado No/Parcial/Sí. */
+export const pedidoPendiente = (pedido: { servido?: string }): boolean => {
+    const servido = pedido.servido?.toUpperCase() ?? '';
+    return servido === '' || servido === 'PENDIENTE' || servido === 'NO';
+};
+
 /** Widgets por defecto del maestro de pedidos (totales según el filtro activo). */
 export const widgetsPedido = widgetsDocumentoVenta("ventas.pedido", {
     plural: "Pedidos",

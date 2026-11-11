@@ -1,3 +1,4 @@
+import { plugin } from "@olula/lib/dominio.js";
 import { CompetidorLinea, DisponibilidadPedido, EstadoLinea, ItemPedidoVenta, LineaPedidoVenta, PedidoVenta, PosicionCompetidor } from "./diseño.ts";
 
 export const itemPedidoVentaVacio: ItemPedidoVenta = {
@@ -16,6 +17,7 @@ export const lineaPedidoVentaVacia: LineaPedidoVenta = {
     pvpTotal: 0,
     servida: 0,
     cerrada: false,
+    prioritaria: false,
 };
 
 export const pedidoVentaVacio: PedidoVenta = {
@@ -65,6 +67,7 @@ export const filasCompetencia = (pedido: ItemPedidoVenta, estado: EstadoLinea): 
         lineaId: estado.lineaId,
         pendiente: estado.pendiente,
         asignado: estado.asignado,
+        prioritaria: estado.prioritaria,
         posicion: 'propia',
     };
     const competidores: FilaCompetencia[] = estado.competidores.map((c) => ({ ...c, id: c.lineaId }));
@@ -73,3 +76,9 @@ export const filasCompetencia = (pedido: ItemPedidoVenta, estado: EstadoLinea): 
         (a, b) => ORDEN_POSICION[a.posicion] - ORDEN_POSICION[b.posicion]
     );
 };
+
+/** La prioridad de líneas solo existe con el plugin SGA activo. */
+export const prioridadDisponible = (): boolean => plugin("sga") === "activo";
+
+export const hayLineasPrioritarias = (pedido: PedidoVenta): boolean =>
+    pedido.lineas.some((l) => l.prioritaria);

@@ -33,3 +33,10 @@ En la ubicación, el usuario puede leer un SKU, un código de lote o una caja
 + Albaranar (`PATCH /almacen/orden/<id>/albaranar`) genera un albarán por pedido y deja la orden TERMINADA. El modal enlaza los albaranes generados.
 + Al borrar uno de esos albaranes la orden vuelve a PREPARADA y se puede albaranar de nuevo.
 + El maestro muestra por defecto las órdenes PENDIENTE, EN_CURSO y PREPARADA.
+
+## Envío por agencia
+
++ Una SALIDA **TERMINADA** (ya albaranada) muestra el botón **Generar envío** si la app tiene alguna agencia de transporte activa (plugins `transporte_dachser`, `transporte_correose`) y le queda algún albarán sin envío (`ordenPermiteEnvio`).
++ El modal (`vistas/generar_envio/GenerarEnvioOrden.tsx`) carga las agencias activas (`GET /almacen/envio_agencia/agencias`) y pide albarán, agencia, servicio, bultos, kilos, fecha de recogida y observaciones. Si solo hay un albarán sin envío o una sola agencia, vienen elegidos; al cambiar de agencia se vacía el servicio.
++ Al generar (`POST /almacen/orden/<id>/envio_agencia`) se imprime la etiqueta (`GET /almacen/envio_agencia/<albaran_id>/etiqueta`) y se refresca la orden.
++ En la cabecera, cada albarán con envío muestra la agencia, el nº de envío y un botón **Etiqueta** para reimprimirla.

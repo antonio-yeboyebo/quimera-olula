@@ -7,6 +7,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Pedido } from "../../diseño.ts";
 import { EstadoPedido } from "../diseño.ts";
+import { pedidoPendiente } from "../../dominio.ts";
 import { editable } from "../detalle.ts";
 import "./TabCliente.css";
 
@@ -22,7 +23,7 @@ export const TabCliente = ({
   publicar = async () => {},
 }: TabClienteProps) => {
   const { modelo } = pedido;
-  const clienteEditable = editable(modelo);
+  const clienteEditable = editable(modelo) && pedidoPendiente(modelo);
 
   const onGuardarCambioCliente = async (cambios: CambioCliente) => {
     publicar("cambio_cliente_listo", cambios);

@@ -1,9 +1,11 @@
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useEffect } from "react";
 import { ItemPedidoVenta } from "../diseño.ts";
+import { hayLineasPrioritarias, prioridadDisponible } from "../dominio.ts";
 import { contextoDetallePedidoVentaInicial } from "./detalle.ts";
 import "./DetallePedidoVenta.css";
 import { getMaquina } from "./maquina.ts";
@@ -36,6 +38,18 @@ export const DetallePedidoVenta = ({
 
     const titulo = (p: ItemPedidoVenta) => `${p.codigo} — ${p.cliente}`;
 
+    const conPrioridad = prioridadDisponible();
+    const acciones = conPrioridad
+        ? [
+            { texto: "Priorizar pedido", onClick: () => emitir("prioridad_pedido_solicitada", true) },
+            {
+                texto: "Quitar prioridad al pedido",
+                onClick: () => emitir("prioridad_pedido_solicitada", false),
+                deshabilitado: !hayLineasPrioritarias(ctx.pedido),
+            },
+        ]
+        : [];
+
     return (
         <Detalle
             id={id}
@@ -45,6 +59,7 @@ export const DetallePedidoVenta = ({
             cerrarDetalle={() => emitir("pedido_deseleccionado", null, true)}
         >
             <div className="DetallePedidoVenta">
+                {acciones.length > 0 && <QuimeraAcciones acciones={acciones} vertical />}
                 <dl>
                     <dt>Código</dt>
                     <dd>{ctx.pedido.codigo}</dd>
@@ -76,6 +91,11 @@ export const DetallePedidoVenta = ({
                                     estados={ctx.estadoLineas}
                                     lineaActiva={lineaActiva}
                                     onSeleccion={(linea) => emitir("linea_seleccionada", linea.id)}
+                                    onCambiarPrioridad={
+                                        conPrioridad
+                                            ? (linea) => emitir("prioridad_linea_solicitada", linea.id)
+                                            : undefined
+                                    }
                                 />
                                 {lineaActiva && estadoLineaActiva && (
                                     <CompetidoresLinea
