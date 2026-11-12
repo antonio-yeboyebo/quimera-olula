@@ -78,7 +78,13 @@ export const ListadoSemiControlado = <T extends Entidad>({
       ? "tarjetas"
       : (modo ?? modoInicial ?? (esMovil ? "tarjetas" : "tabla"))
   );
-  const modoInterno = modo ?? modoEstado;
+  // `modo` es el modo con el que se muestra, pero el selector puede cambiarlo
+  // aunque la pantalla no escuche `onModoChanged`. Si la pantalla cambia `modo`
+  // (p. ej. su propio conmutador de layout), manda el nuevo valor.
+  useEffect(() => {
+    if (modo !== undefined) setModoEstado(modo);
+  }, [modo]);
+  const modoInterno = modoEstado;
 
   const puedeTabla = metaTabla !== undefined;
   const puedeTarjetas = true;
@@ -115,7 +121,7 @@ export const ListadoSemiControlado = <T extends Entidad>({
       : undefined;
 
   const cambiarModo = (nuevoModo: Modo) => {
-    if (modo === undefined) setModoEstado(nuevoModo);
+    setModoEstado(nuevoModo);
     onModoChanged?.(nuevoModo);
   };
 

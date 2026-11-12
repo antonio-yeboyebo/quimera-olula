@@ -32,9 +32,9 @@ describe("categorías de proveedor", () => {
         ]);
     });
 
-    it("Telegram/Google Drive/Google Calendar/Correo son 'conector'", () => {
+    it("Telegram/Google Drive/Google Calendar/Correo/Stripe son 'conector'", () => {
         const conectores = proveedoresPorCategoria("conector").map((p) => p.valor);
-        expect(conectores).toEqual(["Telegram", "Google Drive", "Google Calendar", "Correo (IMAP/SMTP)"]);
+        expect(conectores).toEqual(["Telegram", "Google Drive", "Google Calendar", "Correo (IMAP/SMTP)", "Stripe"]);
     });
 
     it("'Otro' solo aparece como opción para conectores, nunca para LLM", () => {
@@ -88,6 +88,24 @@ describe("secretoCompleto", () => {
     it("Google Drive/Calendar exigen client_id y client_secret (el token lo obtiene el flujo OAuth)", () => {
         expect(secretoCompleto("Google Drive", "oauth2", { client_id: "a" })).toBe(false);
         expect(secretoCompleto("Google Drive", "oauth2", { client_id: "a", client_secret: "b" })).toBe(true);
+    });
+
+    it("Stripe exige el modo, la cuenta de cobros y la clave secreta de test; las de live son opcionales", () => {
+        const completo = { modo: "test", cuenta_banco_id: "0099", secret_key_test: "sk_test_x" };
+        expect(secretoCompleto("Stripe", "api_key", completo)).toBe(true);
+        expect(secretoCompleto("Stripe", "api_key", { ...completo, modo: "" })).toBe(false);
+        expect(secretoCompleto("Stripe", "api_key", { ...completo, cuenta_banco_id: "" })).toBe(false);
+        expect(secretoCompleto("Stripe", "api_key", { ...completo, secret_key_test: "" })).toBe(false);
+    });
+
+    it("la cuenta de cobros de Stripe es un desplegable de cuentas bancarias", () => {
+        const cuenta = buscarProveedorConocido("Stripe")?.campos.find((c) => c.clave === "cuenta_banco_id");
+        expect(cuenta?.tipo).toBe("cuenta_bancaria");
+    });
+
+    it("el modo de Stripe es un desplegable test/live", () => {
+        const modo = buscarProveedorConocido("Stripe")?.campos.find((c) => c.clave === "modo");
+        expect(modo?.opciones?.map((o) => o.valor)).toEqual(["test", "live"]);
         expect(secretoCompleto("Google Calendar", "oauth2", { client_id: "a", client_secret: "b" })).toBe(true);
     });
 

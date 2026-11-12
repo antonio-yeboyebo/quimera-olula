@@ -1,0 +1,10 @@
+.CrearTenant {
+    quimera-input[nombre="id"] { grid-column: span 4; }
+    quimera-input[nombre="nombre"] { grid-column: span 8; }
+    quimera-input[nombre="nif"] { grid-column: span 4; }
+    quimera-input[nombre="emailContacto"] { grid-column: span 8; }
+    h4 { grid-column: span 12; margin: 8px 0 0; }
+    quimera-input[nombre="adminNombre"] { grid-column: span 6; }
+    quimera-input[nombre="adminEmail"] { grid-column: span 6; }
+    quimera-input[nombre="adminContrasena"] { grid-column: span 6; }
+}

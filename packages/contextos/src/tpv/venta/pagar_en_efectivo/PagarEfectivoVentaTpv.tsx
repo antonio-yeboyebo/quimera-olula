@@ -7,7 +7,7 @@ import { FactoryObj } from "@olula/lib/factory_ctx.tsx";
 import { formatearMoneda, redondeaMoneda } from "@olula/lib/dominio.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { VentaTpv } from "../diseño.ts";
 import { postPago } from "../infraestructura.ts";
 import {
@@ -15,6 +15,7 @@ import {
   nuevoPagoEfectivoInicial,
 } from "./pagar_en_efectivo.ts";
 import { EuroDenominacion } from "#/tpv/comun/componentes/EuroDenominacion.tsx";
+import { publicarEnVisor } from "#/tpv/visor/canal.ts";
 import "./PagarEfectivoVentaTpv.css";
 
 export const PagarEfectivoVentaTpv = ({
@@ -41,6 +42,12 @@ export const PagarEfectivoVentaTpv = ({
   );
 
   const { intentar } = useContext(ContextoError);
+
+  // El cliente ve en el visor lo que ha entregado y su cambio.
+  const entregado = Number(modelo.importe) || 0;
+  useEffect(() => {
+    publicarEnVisor({ tipo: "entregado", importe: entregado });
+  }, [entregado]);
 
   const pagar = useCallback(
     async () => {

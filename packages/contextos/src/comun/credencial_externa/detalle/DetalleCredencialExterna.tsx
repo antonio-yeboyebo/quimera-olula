@@ -1,16 +1,17 @@
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { QAviso } from "@olula/componentes/atomos/qaviso.tsx";
 import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { puede } from "@olula/lib/dominio.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { BorrarCredencialExterna } from "../borrar/BorrarCredencialExterna.js";
 import { CredencialExterna } from "../diseño.js";
 import { metaCredencialExterna } from "../dominio.js";
-import { iniciarOauthGoogle, reconectarTelegram } from "../infraestructura.js";
+import { ConexionStripe, iniciarOauthGoogle, probarStripe, reconectarTelegram } from "../infraestructura.js";
 import { RotarCredencialExterna } from "../rotar/RotarCredencialExterna.js";
 import { contextoDetalleCredencialExternaInicial, guardarCredencialExterna } from "./detalle.js";
 import "./DetalleCredencialExterna.css";
@@ -53,8 +54,13 @@ export const DetalleCredencialExterna = ({
 
     const { estado, credencial } = ctx;
 
+    // Resultado del último «Probar conexión» de Stripe: solo informa, no forma parte
+    // de la credencial, así que vive aquí y no en la máquina.
+    const [conexionStripe, setConexionStripe] = useState<ConexionStripe | null>(null);
+
     useEffect(() => {
         emitir("id_cambiado", id, true);
+        setConexionStripe(null);
     }, [id]);
 
     if (!ctx.credencial.id) return null;
@@ -67,7 +73,15 @@ export const DetalleCredencialExterna = ({
         && credencial.categoria === "conector"
     );
 
+    const esConectorStripe = credencial.proveedor === "Stripe" && credencial.categoria === "conector";
+
     const reconectar = () => intentar(() => reconectarTelegram(credencial.id));
+
+    const probarConexionStripe = async () => {
+        setConexionStripe(null);
+        const resultado = await intentar(() => probarStripe(credencial.id));
+        if (resultado) setConexionStripe(resultado);
+    };
 
     // Redirección de página completa a la pantalla de consentimiento de Google — no
     // hay precedente de popup/postMessage en este módulo, y el navegador vuelve solo
@@ -98,6 +112,14 @@ export const DetalleCredencialExterna = ({
             onClick: reconectar,
             deshabilitado: !puede("comun.credencial_externa"),
         }] : []),
+        // "Probar conexión" comprueba la cuenta con la clave del modo con el que se
+        // cobra y da de alta el webhook si falta (al guardar se intenta solo, pero
+        // puede fallar sin que lo veas: OLULA_URL sin configurar, Stripe caído...).
+        ...(esConectorStripe ? [{
+            texto: "Probar conexión",
+            onClick: probarConexionStripe,
+            deshabilitado: !puede("comun.credencial_externa"),
+        }] : []),
         // "Conectar con Google": inicia el flujo OAuth2 real (ver comandos/comun/
         // credencial_externa/google_oauth.py) — sin tokens todavía tras el alta
         // normal (solo client_id/client_secret), hace falta este paso para que la
@@ -125,6 +147,9 @@ export const DetalleCredencialExterna = ({
         >
             <div className="DetalleCredencialExterna">
                 <QuimeraAcciones acciones={acciones} />
+                {esConectorStripe && conexionStripe && (
+                    <ResultadoConexionStripe conexion={conexionStripe} />
+                )}
                 <Tabs children={[
                     <Tab label="General"
                         key="tab-general"
@@ -151,5 +176,30 @@ export const DetalleCredencialExterna = ({
                 />
             )}
         </Detalle>
+    );
+};
+
+const ResultadoConexionStripe = ({ conexion }: { conexion: ConexionStripe }) => {
+    const conWebhook = conexion.webhooks[conexion.modo];
+    const avisos = [
+        ...(conexion.modoForzado
+            ? ["Este entorno no es de producción: cobra siempre en modo test."]
+            : []),
+        ...(conWebhook
+            ? []
+            : ["No hay webhook dado de alta: Olula no podrá apuntar los cobros."]),
+        ...(conexion.cuenta.cobrosActivos
+            ? []
+            : ["La cuenta todavía no tiene los cobros activados en Stripe."]),
+        ...(conexion.cuentaCobros
+            ? []
+            : ["Falta la cuenta donde se apuntan los cobros: los recibos pagados no se marcarán solos. Elígela en «Editar credencial»."]),
+    ];
+    return (
+        <QAviso variante={avisos.length ? "advertencia" : "info"}>
+            Conectado a <strong>{conexion.cuenta.nombre}</strong> ({conexion.cuenta.id}) en
+            modo {conexion.modo}.{conWebhook ? " Webhook dado de alta." : ""}
+            {avisos.map((aviso) => <div key={aviso}>{aviso}</div>)}
+        </QAviso>
     );
 };

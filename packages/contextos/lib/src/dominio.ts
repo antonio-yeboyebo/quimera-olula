@@ -846,8 +846,46 @@ export const calcularPaginacionSimplificada = (
 export const puedeAlguna = (regla: string | string[]): boolean =>
     Array.isArray(regla) ? regla.some(puede) : puede(regla);
 
+/**
+ * SaaS: prefijos de regla de los módulos que la empresa no tiene contratados
+ * (`whoami.saas.modulos_bloqueados`, ver olula_servidor/apps/olula_saas). Fuera del
+ * SaaS whoami no trae `saas` y no se bloquea nada.
+ */
+export const moduloBloqueado = (regla: string): boolean => {
+    const raw = localStorage.getItem("whoami");
+    if (!raw) return false;
+    try {
+        const whoAmI = JSON.parse(raw) as { saas?: { modulos_bloqueados?: string[] } | null };
+        const bloqueados = whoAmI.saas?.modulos_bloqueados ?? [];
+        return bloqueados.some((prefijo) => regla === prefijo || regla.startsWith(`${prefijo}.`));
+    } catch {
+        return false;
+    }
+};
+
+/**
+ * SaaS: la URL de una pantalla pertenece a un módulo no contratado. Se mira cada
+ * tramo de la ruta (`/crm/contacto`, `/dashboard/crm`) frente a los prefijos de
+ * regla bloqueados de un solo nivel (`crm`, `tpv`...). Sirve para las entradas
+ * de menú sin regla, como los resúmenes de cada área.
+ */
+export const moduloBloqueadoEnUrl = (url: string): boolean => {
+    const raw = localStorage.getItem("whoami");
+    if (!raw) return false;
+    try {
+        const whoAmI = JSON.parse(raw) as { saas?: { modulos_bloqueados?: string[] } | null };
+        const bloqueados = (whoAmI.saas?.modulos_bloqueados ?? []).filter((p) => !p.includes("."));
+        if (!bloqueados.length) return false;
+        const tramos = url.split("?")[0].split("/").filter(Boolean);
+        return tramos.some((tramo) => bloqueados.includes(tramo));
+    } catch {
+        return false;
+    }
+};
+
 export const puede = (regla: string): boolean => {
     if (regla === "Dashboard:visit" || regla === 'Home:visit') return true;
+    if (moduloBloqueado(regla)) return false;
 
     // if (!regla) return true;
     // Busca el permiso exacto

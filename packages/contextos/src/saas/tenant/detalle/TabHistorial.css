@@ -1,0 +1,22 @@
+.TabHistorial {
+    details {
+        border-bottom: 1px solid var(--color-borde, #e0e0e0);
+        padding: 8px 0;
+    }
+    summary { cursor: pointer; display: flex; gap: 12px; align-items: center; }
+    pre.provision-log {
+        white-space: pre-wrap;
+        font-size: 0.85em;
+        margin: 8px 0 0;
+        max-height: 300px;
+        overflow: auto;
+    }
+    .provision-error {
+        color: #b00020;
+        background: #fdecea;
+        padding: 8px;
+        border-radius: 4px;
+        margin-top: 8px;
+        white-space: pre-wrap;
+    }
+}

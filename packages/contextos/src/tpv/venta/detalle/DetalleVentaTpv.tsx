@@ -15,9 +15,12 @@ import { LineaFactura, PagoVentaTpv, VentaTpv } from "../diseño.ts";
 import { ventaTpvVacia } from "../dominio.ts";
 import { EmitirVentaTpv } from "../emitir/EmitirVentaTpv.tsx";
 import { PagarTarjetaVentaTpv } from "../pagar_con_tarjeta/PagarTarjetaVentaTpv.tsx";
+import { PagarQrVentaTpv } from "../pagar_con_qr/PagarQrVentaTpv.tsx";
 import { PagoValeVentaTpv } from "../pagar_con_vale/PagoValeVentaTpv.tsx";
 import { PagarEfectivoVentaTpv } from "../pagar_en_efectivo/PagarEfectivoVentaTpv.tsx";
 import { TiqueRegaloVentaTpv } from "../tique_regalo/TiqueRegaloVentaTpv.tsx";
+import { publicarEnVisor } from "#/tpv/visor/canal.ts";
+import { metodoCobroDeEstado, ventaVisorDesdeVenta } from "#/tpv/visor/dominio.ts";
 import { PendienteVenta } from "./comps/PendienteVenta.tsx";
 import { ContextoVentaTpv, guardarVenta, imprimirTicketOFactura, imprimirVale, metaVentaTpv } from "./detalle.ts";
 import { Lineas } from "./lineas/Lineas.tsx";
@@ -59,12 +62,26 @@ export const DetalleVentaTpv = ({
 
     const estadoAnterior = useRef(ctx.estado); // Referencia para saber cuándo imprimir el tique
     useEffect(() => {
-        const estadosPago = ["PAGANDO_EN_EFECTIVO", "PAGANDO_CON_TARJETA", "PAGANDO_CON_VALE"];
-        if (ctx.estado === 'EMITIDA' && estadosPago.includes(estadoAnterior.current) && ctx.venta.pendiente === 0) {
+        const veniaDePagar = metodoCobroDeEstado(estadoAnterior.current) !== null;
+        if (ctx.estado === 'EMITIDA' && veniaDePagar && ctx.venta.pendiente === 0) {
+            // Antes que la foto de la venta, para que el visor calcule el cambio.
+            publicarEnVisor({ tipo: "pagado", ventaId: ctx.venta.id, importe: ctx.venta.total, divisaId: ctx.venta.divisa_id });
             imprimirTicketOFactura(ctx.venta, ctx.pagos.lista, valesAntesQueTique);
         }
         estadoAnterior.current = ctx.estado;
     }, [ctx.estado, ctx.venta]);
+
+    // Visor de cliente: artículos, totales y método de cobro en curso.
+    useEffect(() => {
+        if (!ctx.venta.id) return;
+        publicarEnVisor({
+            tipo: "venta",
+            venta: ventaVisorDesdeVenta(ctx.venta, ctx.lineas.lista),
+            metodo: metodoCobroDeEstado(ctx.estado),
+        });
+    }, [ctx.venta, ctx.lineas.lista, ctx.estado]);
+
+    useEffect(() => () => publicarEnVisor({ tipo: "limpiar" }), []);
 
     if (!ctx.venta.id) return;
 
@@ -175,6 +192,9 @@ export const DetalleVentaTpv = ({
             )}
             {estado === "PAGANDO_CON_TARJETA" && (
                 <PagarTarjetaVentaTpv publicar={emitir} venta={venta} />
+            )}
+            {estado === "PAGANDO_CON_QR" && (
+                <PagarQrVentaTpv publicar={emitir} venta={venta} />
             )}
             {estado === "PAGANDO_CON_VALE" && (
                 <PagoValeVentaTpv publicar={emitir} venta={venta} />

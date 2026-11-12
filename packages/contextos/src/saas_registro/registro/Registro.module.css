@@ -1,0 +1,51 @@
+.login {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+
+    section {
+        display: grid;
+    }
+
+    quimera-formulario {
+        form {
+            grid-column: span 12;
+        }
+
+        quimera-boton {
+            grid-column: span 12;
+            width: 100%;
+
+            button {
+                margin: var(--espaciado-m) auto;
+                display: block;
+            }
+        }
+    }
+
+    h1 {
+        background: var(--color-texto-primario);
+        padding: var(--espaciado-m);
+        color: var(--blanco);
+        text-align: center;
+    }
+}
+
+.loginForm {
+    background: var(--color-superficie);
+    padding: var(--espaciado-m);
+
+    & p {
+        margin-bottom: var(--espaciado-m);
+    }
+}
+
+.forgetPassword {
+    margin: var(--espaciado-m) auto;
+    display: block;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: var(--color-texto-primario);
+}

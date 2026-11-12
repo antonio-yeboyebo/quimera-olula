@@ -26,3 +26,5 @@ _tmp/
 *.tmp
 *.env*
 .claude/settings.json
+doc/
+docs/*

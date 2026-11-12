@@ -95,7 +95,7 @@ export const CrearCliente = ({
           <QBoton
             variante="texto"
             onClick={() => {
-              const { direccion, ...clienteSinDireccion } = nuevoCliente.modelo;
+              const { direccion: _direccion, ...clienteSinDireccion } = nuevoCliente.modelo;
               nuevoCliente.set(clienteSinDireccion);
               setMostrarDireccion(false);
             }}

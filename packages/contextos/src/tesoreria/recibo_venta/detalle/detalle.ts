@@ -89,6 +89,7 @@ export const devolverRecibo: ProcesarDetalle = async (contexto, payload) => {
         cuentaPagoId: devolucion.cuenta_pago_id,
         fecha: devolucion.fecha.toISOString().slice(0, 10),
         ...(enDivisaExtranjera(contexto.recibo) && { tasaConversion: devolucion.tasa_conversion }),
+        reembolsarEnPasarela: devolucion.reembolsar_en_pasarela ?? false,
     });
     const recibo = await getReciboVenta(contexto.recibo.id);
 

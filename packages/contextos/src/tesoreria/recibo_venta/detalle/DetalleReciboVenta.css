@@ -1,4 +1,6 @@
 .DetalleReciboVenta {
+    /* Lo último (la tabla de pagos) no queda pegado al borde inferior. */
+    padding-block-end: var(--espaciado-xl);
 
     /* Sin tabs, el formulario queda pegado a la fila de acciones. */
     quimera-formulario {
@@ -38,5 +40,24 @@
 
     .PagosReciboVenta {
         margin-block-start: var(--espaciado-l);
+
+        .pasarela {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.125rem;
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                white-space: nowrap;
+            }
+
+            .incidencia {
+                color: var(--color-advertencia, inherit);
+                font-size: 0.875rem;
+                white-space: normal;
+            }
+        }
     }
 }

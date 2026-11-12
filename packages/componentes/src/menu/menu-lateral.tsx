@@ -1,4 +1,4 @@
-import { ElementoMenu, ElementoMenuHijo, pluginsActivos } from "@olula/lib/menu.ts";
+import { disponibleEnSaas, ElementoMenu, ElementoMenuHijo, pluginsActivos } from "@olula/lib/menu.ts";
 import { puedeAlguna } from "@olula/lib/dominio.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
 import { useEffect, useRef, useState } from "react";
@@ -72,7 +72,7 @@ export const MenuLateral = () => {
   }, [flyout]);
 
   const visible = (e: ElementoMenu) =>
-    (!e.regla || puedeAlguna(e.regla)) && pluginsActivos(e);
+    (!e.regla || puedeAlguna(e.regla)) && pluginsActivos(e) && disponibleEnSaas(e);
   const grupos: Grupo[] = menu.filter(visible).flatMap((e): Grupo[] => {
     if (!esPadre(e)) {
       const hoja = e as ElementoMenuHijo;

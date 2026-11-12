@@ -48,6 +48,8 @@ export const getMaquina: () => Maquina<EstadoVentaTpv, ContextoVentaTpv> = () =>
 
             pago_tarjeta_solicitado: "PAGANDO_CON_TARJETA",
 
+            pago_qr_solicitado: "PAGANDO_CON_QR",
+
             borrar_pago_solicitado: "BORRANDO_PAGO",
 
             venta_cargada: [abiertaOEmitidaContexto],
@@ -97,6 +99,8 @@ export const getMaquina: () => Maquina<EstadoVentaTpv, ContextoVentaTpv> = () =>
 
             pago_tarjeta_solicitado: "PAGANDO_CON_TARJETA",
 
+            pago_qr_solicitado: "PAGANDO_CON_QR",
+
             borrar_pago_solicitado: "BORRANDO_PAGO",
         },
 
@@ -142,6 +146,18 @@ export const getMaquina: () => Maquina<EstadoVentaTpv, ContextoVentaTpv> = () =>
 
             // pago_con_tarjeta_listo: pagarConTarjeta,
             pago_con_tarjeta_hecho: [
+                refrescarCabecera,
+                refrescarPagos,
+                abiertaOEmitidaContexto,
+            ],
+
+            pago_cancelado: [abiertaOEmitidaContexto],
+        },
+
+        PAGANDO_CON_QR: {
+
+            // El pago lo crea el servidor al recibir el aviso de Stripe.
+            pago_con_qr_hecho: [
                 refrescarCabecera,
                 refrescarPagos,
                 abiertaOEmitidaContexto,

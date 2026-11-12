@@ -41,6 +41,8 @@ export const getMaquina: () => Maquina<EstadoFactura, ContextoFactura> = () => {
 
             traza_solicitada: "VIENDO_TRAZA",
 
+            enlace_tarjeta_solicitado: "ENLACE_TARJETA",
+
             linea_creada: [refrescarFactura, refrescarLineas],
 
             alta_linea_solicitada: "CREANDO_LINEA",
@@ -145,6 +147,11 @@ export const getMaquina: () => Maquina<EstadoFactura, ContextoFactura> = () => {
         VIENDO_TRAZA: {
 
             traza_cerrada: "ABIERTO",
+        },
+
+        ENLACE_TARJETA: {
+
+            enlace_tarjeta_cerrado: "ABIERTO",
         },
     }
 }

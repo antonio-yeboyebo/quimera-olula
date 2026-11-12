@@ -1,0 +1,23 @@
+@import "@olula/componentes/tema/tema.css";
+
+:root {
+    /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+    /* --tamaño-letra-xxs: 0.48rem;
+    --tamaño-letra-xs: 0.71rem;
+    --tamaño-letra-s: 0.83rem;
+    --tamaño-letra-m: 0.95rem;
+    --tamaño-letra-l: 1.19rem;
+    --tamaño-letra-xl: 1.43rem;
+    --tamaño-letra-xxl: 1.9rem; */
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    scroll-behavior: smooth;
+    scrollbar-width: auto;
+    scrollbar-color: #bdbdbd #e0e0e0;
+}

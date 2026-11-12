@@ -1,0 +1,8 @@
+.DevolverReciboVenta {
+    .reembolso-pasarela {
+        display: flex;
+        flex-direction: column;
+        gap: var(--espaciado-s);
+        margin-block-start: var(--espaciado-m);
+    }
+}

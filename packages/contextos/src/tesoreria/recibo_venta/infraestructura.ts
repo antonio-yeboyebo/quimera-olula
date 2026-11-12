@@ -11,6 +11,10 @@ export interface MovimientoReciboApi {
     estado: boolean;
     cuenta_pago_id?: string | null;
     nombre_cuenta_pago?: string | null;
+    pasarela?: string | null;
+    modo_pasarela?: "test" | "live" | null;
+    url_panel?: string | null;
+    incidencia_pasarela?: string | null;
 }
 
 export interface ReciboVentaApi {
@@ -40,6 +44,10 @@ const movimientoReciboDesdeApi = (api: MovimientoReciboApi): MovimientoRecibo =>
     estado: api.estado,
     cuentaPagoId: api.cuenta_pago_id ?? "",
     nombreCuentaPago: api.nombre_cuenta_pago ?? "",
+    pasarela: api.pasarela ?? null,
+    modoPasarela: api.modo_pasarela ?? null,
+    urlPanel: api.url_panel ?? null,
+    incidenciaPasarela: api.incidencia_pasarela ?? null,
 });
 
 export const reciboVentaDesdeApi = (api: ReciboVentaApi): ReciboVenta => ({
@@ -118,6 +126,7 @@ export const patchDevolverReciboVenta: PatchDevolverReciboVenta = async (id, dev
             ...(devolucion.tasaConversion !== undefined && {
                 tasa_conversion: String(devolucion.tasaConversion),
             }),
+            ...(devolucion.reembolsarEnPasarela && { reembolsar_en_pasarela: true }),
         },
         "Error al devolver el recibo de cobro"
     );

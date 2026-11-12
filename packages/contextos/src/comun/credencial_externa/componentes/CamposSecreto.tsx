@@ -1,4 +1,6 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
+import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
+import { CuentaBancariaSelect } from "#/tesoreria/comun/componentes/cuenta_bancaria_select.tsx";
 import { SecretoCredencialExterna, TipoAuthCredencialExterna } from "../diseño.js";
 import { buscarProveedorConocido } from "../dominio.js";
 
@@ -25,7 +27,24 @@ export const CamposSecreto = ({ proveedor, tipoAuth, valor, onChange }: CamposSe
     if (proveedorConocido) {
         return (
             <>
-                {proveedorConocido.campos.map((campo) => (
+                {proveedorConocido.campos.map((campo) => campo.tipo === "cuenta_bancaria" ? (
+                    <CuentaBancariaSelect
+                        key={campo.clave}
+                        label={campo.etiqueta}
+                        nombre={campo.clave}
+                        valor={valor[campo.clave] ?? ""}
+                        onChange={(opcion) => set(campo.clave)(opcion?.valor ?? "")}
+                    />
+                ) : campo.opciones ? (
+                    <QSelect
+                        key={campo.clave}
+                        label={campo.etiqueta}
+                        nombre={campo.clave}
+                        opciones={campo.opciones}
+                        valor={valor[campo.clave] ?? ""}
+                        onChange={(opcion) => set(campo.clave)(opcion?.valor ?? "")}
+                    />
+                ) : (
                     <QInput
                         key={campo.clave}
                         label={campo.etiqueta}
