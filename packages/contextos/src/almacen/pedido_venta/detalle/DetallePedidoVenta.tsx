@@ -1,7 +1,9 @@
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QuimeraAcciones } from "@olula/componentes/index.js";
+import { formatearFechaDate } from "@olula/lib/dominio.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useEffect } from "react";
 import { ItemPedidoVenta } from "../diseño.ts";
@@ -60,20 +62,14 @@ export const DetallePedidoVenta = ({
         >
             <div className="DetallePedidoVenta">
                 {acciones.length > 0 && <QuimeraAcciones acciones={acciones} vertical />}
-                <dl>
-                    <dt>Código</dt>
-                    <dd>{ctx.pedido.codigo}</dd>
-                    <dt>Cliente</dt>
-                    <dd>{ctx.pedido.cliente}</dd>
-                    <dt>Fecha</dt>
-                    <dd>{ctx.pedido.fecha.toLocaleDateString()}</dd>
+                <quimera-formulario>
+                    <QInput label="Código" nombre="codigo" valor={ctx.pedido.codigo} soloLectura />
+                    <QInput label="Fecha" nombre="fecha" valor={formatearFechaDate(ctx.pedido.fecha)} soloLectura />
+                    <QInput label="Cliente" nombre="cliente" valor={ctx.pedido.cliente} soloLectura />
                     {ctx.pedido.observaciones && (
-                        <>
-                            <dt>Observaciones</dt>
-                            <dd>{ctx.pedido.observaciones}</dd>
-                        </>
+                        <QInput label="Observaciones" nombre="observaciones" valor={ctx.pedido.observaciones} soloLectura />
                     )}
-                </dl>
+                </quimera-formulario>
 
                 <Tabs children={[
                     <Tab

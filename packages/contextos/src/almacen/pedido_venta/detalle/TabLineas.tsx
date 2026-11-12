@@ -58,6 +58,17 @@ const metaTablaLineas = (
             render: (l) => (l.cerrada ? "" : String(Math.max(l.cantidad - l.servida, 0))),
         },
         {
+            // Lo que el reparto de "Comprobar disponibilidad" asigna a la línea
+            // (en salida: lo ya comprometido en la orden). Vacío si no se ha comprobado.
+            id: "disponible",
+            cabecera: "Disponible",
+            tipo: "numero",
+            render: (l) => {
+                const estado = estados[l.id];
+                return estado ? String(estado.asignado) : "";
+            },
+        },
+        {
             id: "stock",
             cabecera: "Stock",
             render: (l) => {
