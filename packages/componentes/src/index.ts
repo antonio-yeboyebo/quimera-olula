@@ -12,6 +12,7 @@ export * from "./atomos/qkanban.tsx";
 export * from "./atomos/qradio.tsx";
 export * from "./atomos/qselect.tsx";
 export * from "./atomos/qtabla.tsx";
+export * from "./atomos/qtablamultinivel.tsx";
 export * from "./atomos/qtarjeta_resumen.tsx";
 export * from "./atomos/qtarjetas.tsx";
 export * from "./atomos/qtextarea.tsx";

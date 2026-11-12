@@ -11,6 +11,8 @@ type QModalProps = {
   onCerrar?: () => void;
   bloquearCierre?: boolean;
   pantallaCompletaMovil?: boolean;
+  /** Ocupa toda la ventana también en escritorio (p. ej. vistas a dos columnas). */
+  pantallaCompleta?: boolean;
   anchoEstable?: boolean;
   mostrarCabecera?: boolean;
   mostrarBotonCerrar?: boolean;
@@ -23,6 +25,7 @@ export const QModal = ({
   onCerrar = () => {},
   bloquearCierre = false,
   pantallaCompletaMovil = true,
+  pantallaCompleta = false,
   anchoEstable = false,
   mostrarCabecera = true,
   mostrarBotonCerrar = true,
@@ -46,6 +49,10 @@ export const QModal = ({
 
   if (pantallaCompletaMovil) {
     attrs["data-pantalla-completa-movil"] = "";
+  }
+
+  if (pantallaCompleta) {
+    attrs["data-pantalla-completa"] = "";
   }
 
   if (anchoEstable) {

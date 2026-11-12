@@ -1,0 +1,144 @@
+.FichaCliente h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+}
+
+.FichaCliente .cabecera-ficha {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+}
+
+.FichaCliente .cabecera-ficha .subtitulo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+}
+
+.FichaCliente .acciones-contacto {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.FichaCliente .accion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--color-texto-primario);
+    text-decoration: none;
+}
+
+.FichaCliente .accion > :first-child {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: var(--color-primario);
+    background: var(--color-primario-selected);
+}
+
+.FichaCliente .accion.deshabilitada {
+    opacity: 0.4;
+}
+
+.FichaCliente .casillas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .FichaCliente .casillas {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.FichaCliente .casilla {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background: var(--color-superficie);
+    box-shadow: var(--sombra-xs);
+}
+
+.FichaCliente .casilla strong {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.FichaCliente .casilla span {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+}
+
+.FichaCliente .sin-proxima-accion {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--color-primario);
+    background: var(--color-primario-selected);
+    box-shadow: inset 0 0 0 1px var(--color-primario-claro);
+}
+
+.FichaCliente .sin-proxima-accion > div {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    color: var(--color-texto-secundario);
+}
+
+.FichaCliente .sin-proxima-accion strong {
+    color: var(--color-primario);
+}
+
+.FichaCliente .sin-proxima-accion > quimera-boton {
+    grid-column: 2;
+    justify-self: start;
+}
+
+.FichaCliente .tarjeta.tareas {
+    padding-inline: 0;
+}
+
+.FichaCliente .tarjeta.tareas > .vacio {
+    padding-inline: 0;
+}
+
+.FichaCliente .lista.tarjeta {
+    padding: 0;
+}
+
+.FichaCliente .lista.tarjeta > li:last-child > a,
+.FichaCliente .lista > li:last-child.documento {
+    border-bottom: none;
+}
+
+.FichaCliente .oportunidades {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.FichaCliente .oportunidades li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-borde-sutil);
+}

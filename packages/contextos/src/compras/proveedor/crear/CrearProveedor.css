@@ -1,13 +1,57 @@
+quimera-modal[nombre="crearProveedor"] dialog {
+    width: 420px;
+}
+
 .CrearProveedor {
-    quimera-input[nombre="nombre"] {
+    quimera-formulario quimera-input[nombre="nombre"] {
         grid-column: span 12;
     }
 
-    quimera-select[nombre="tipoIdFiscal"] {
+    quimera-formulario quimera-select[nombre="tipoIdFiscal"] {
         grid-column: span 6;
     }
 
-    quimera-input[nombre="idFiscal"] {
+    quimera-formulario quimera-input[nombre="idFiscal"] {
+        grid-column: span 6;
+    }
+
+    quimera-formulario quimera-select[nombre="tipoVia"] {
+        grid-column: span 4;
+    }
+
+    quimera-formulario quimera-input[nombre="nombreVia"] {
+        grid-column: span 8;
+    }
+
+    quimera-formulario quimera-input[nombre="numero"] {
+        grid-column: span 3;
+    }
+
+    quimera-formulario quimera-input[nombre="otros"] {
+        grid-column: span 9;
+    }
+
+    quimera-formulario quimera-input[nombre="codPostal"] {
+        grid-column: span 4;
+    }
+
+    quimera-formulario quimera-input[nombre="ciudad"] {
+        grid-column: span 8;
+    }
+
+    quimera-formulario quimera-input[nombre="provincia"] {
+        grid-column: span 6;
+    }
+
+    quimera-formulario quimera-input[nombre="pais"] {
+        grid-column: span 6;
+    }
+
+    quimera-formulario quimera-input[nombre="apartado"] {
+        grid-column: span 6;
+    }
+
+    quimera-formulario quimera-input[nombre="telefono"] {
         grid-column: span 6;
     }
 }

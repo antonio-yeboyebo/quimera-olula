@@ -1,0 +1,179 @@
+.LayoutSmartsales {
+    --rojo-sanhigia: #c8202f;
+    --color-primario: var(--rojo-sanhigia);
+    --color-primario-oscuro: var(--rojo-sanhigia);
+    --color-primario-claro: color-mix(in srgb, var(--rojo-sanhigia) 45%, white);
+    --color-primario-hover: color-mix(in srgb, var(--rojo-sanhigia) 85%, black);
+    --color-primario-selected: color-mix(in srgb, var(--rojo-sanhigia) 12%, white);
+    --alto-barra: 4.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: calc(100dvh - var(--alto-header, 0px));
+    max-width: 48rem;
+    margin: 0 auto;
+    background: var(--color-fondo);
+}
+
+.LayoutSmartsales .contenido {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1rem calc(var(--alto-barra) + 1rem);
+}
+
+.LayoutSmartsales .tarjeta {
+    padding: 0 0 1rem;
+    border-bottom: 1px solid var(--color-borde-sutil);
+}
+
+.LayoutSmartsales .pestañas {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: var(--color-superficie-sunken);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.LayoutSmartsales .pestañas::-webkit-scrollbar {
+    display: none;
+}
+
+.LayoutSmartsales .pestañas button {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 999px;
+    background: none;
+    color: var(--color-texto-secundario);
+    font: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.LayoutSmartsales .pestañas button[aria-selected="true"] {
+    background: var(--color-primario);
+    color: var(--blanco, #fff);
+    font-weight: 600;
+}
+
+.LayoutSmartsales .barra-inferior {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    box-sizing: border-box;
+    height: calc(var(--alto-barra) + env(safe-area-inset-bottom));
+    padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-deshabilitado);
+    background: var(--color-fondo);
+    z-index: 2;
+}
+
+.LayoutSmartsales .destino {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-texto-secundario);
+    text-decoration: none;
+}
+
+.LayoutSmartsales .destino.active {
+    color: var(--color-primario-oscuro);
+    font-weight: 600;
+}
+
+.LayoutSmartsales .boton-mas {
+    justify-self: center;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    align-self: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    color: var(--blanco, #fff);
+    background: var(--color-primario-oscuro);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 25%);
+    cursor: pointer;
+}
+
+.LayoutSmartsales .fondo-acciones {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-bottom: calc(var(--alto-barra) + 1rem);
+    background: rgb(0 0 0 / 30%);
+    z-index: 1;
+}
+
+.LayoutSmartsales .acciones-rapidas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 16rem;
+    margin: 0;
+    padding: 0.5rem;
+    list-style: none;
+    border-radius: 0.75rem;
+    background: var(--color-fondo);
+}
+
+.LayoutSmartsales .acciones-rapidas a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: var(--color-texto-primario);
+    text-decoration: none;
+}
+
+.LayoutSmartsales .acciones-rapidas a:hover {
+    background: var(--color-primario-selected);
+}
+
+.LayoutSmartsales .acciones-rapidas a > :first-child {
+    color: var(--color-primario);
+}
+
+.LayoutSmartsales .boton-mas quimera-icono {
+    display: block;
+    line-height: 0;
+}
+
+.LayoutSmartsales h1,
+.LayoutSmartsales h2 {
+    font-weight: 700;
+    color: var(--color-texto-primario);
+}
+
+.LayoutSmartsales .volver {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: -0.5rem;
+    padding: 0.25rem 0.5rem 0.25rem 0;
+    border: none;
+    background: none;
+    color: var(--color-primario);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}

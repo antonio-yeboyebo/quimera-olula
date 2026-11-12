@@ -41,22 +41,6 @@
     "vite": "^6.4.3",
     "vite-plugin-pwa": "^0.21.2",
     "vitest": "^3.2.7"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "core-js",
-      "es5-ext",
-      "esbuild"
-    ],
-    "allowBuilds": [
-      "@parcel/watcher",
-      "core-js",
-      "es5-ext",
-      "esbuild"
-    ],
-    "overrides": {
-      "esbuild": "0.25.12"
-    }
   }
+  
 }

@@ -12,7 +12,7 @@ export const ExtraLogoSanhigia = () => {
 
   return (
     <Link to="/ss/dashboard" className="extra-logo-sanhigia">
-      <img width="200px" src="/smartsales-logo.png" alt="SmartSales logo" />
+      SmartSales
     </Link>
   );
 };

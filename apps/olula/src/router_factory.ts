@@ -1,4 +1,5 @@
 import { RouterFactoryAlmacenOlula } from '#/almacen/router_factory.ts';
+import { RouterFactoryAnalisisOlula } from '#/analisis/router_factory.ts';
 import { RouterFactoryAuthOlula } from '#/auth/router_factory.ts';
 import { RouterFactoryComprasOlula } from '#/compras/router_factory.ts';
 import { RouterFactoryContabilidadOlula } from '#/contabilidad/router_factory.ts';
@@ -29,6 +30,7 @@ export class RouterFactoryOlula {
     Empresa = RouterFactoryEmpresaOlula;
     Tpv = RouterFactoryTpvOlula;
     Predicciones = RouterFactoryPrediccionesOlula;
+    Analisis = RouterFactoryAnalisisOlula;
     Comun = RouterFactoryComunOlula;
     Rrhh = RouterFactoryRrhh;
     Proyectos = RouterFactoryProyectosOlula;

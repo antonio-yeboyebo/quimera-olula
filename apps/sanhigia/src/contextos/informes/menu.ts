@@ -1,5 +1,5 @@
 export const menuInformes = {
-    "Informes": { icono: "fichero" },
+    "Informes": { icono: "grafico_barras" },
     "Informes/Repeticiones": { url: "/InformeRepeticiones", regla: "crm.informe" },
     "Informes/Pedidos": { url: "/InformePedidosXAgente", regla: "crm.informe" },
     "Informes/Clientes por artículo": { url: "/informe-clientes-venta-art", regla: "crm.informe" },

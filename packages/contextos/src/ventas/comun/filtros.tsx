@@ -1,4 +1,5 @@
 import { Almacen } from "#/almacen/comun/componentes/Almacen.tsx";
+import { ProvinciaSelector } from "#/comun/componentes/provincia/provincia.tsx";
 import {
   filtroFechas,
   MetaCampoFiltro,
@@ -35,6 +36,19 @@ export const filtroAgente: MetaCampoFiltro = {
       valor={(valor as string) ?? ""}
       opcional
       enlace=""
+      onChange={(opcion) => onChange(opcion?.valor ?? "")}
+    />
+  ),
+};
+
+export const filtroProvincia: MetaCampoFiltro = {
+  id: "provincia_id",
+  label: "Provincia",
+  filtro: (v) => (v ? ["provincia_id", "=", v as string] : null),
+  render: (valor, onChange) => (
+    <ProvinciaSelector
+      valor={(valor as string) ?? ""}
+      opcional
       onChange={(opcion) => onChange(opcion?.valor ?? "")}
     />
   ),

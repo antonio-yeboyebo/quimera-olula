@@ -1,0 +1,68 @@
+.IndicadorProgreso {
+    --progreso-tiempo: var(--color-primario-claro);
+    --progreso-conseguido: var(--color-primario-oscuro);
+    --progreso-fondo: var(--color-deshabilitado);
+}
+
+.IndicadorProgreso.barra {
+    position: relative;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--progreso-fondo);
+    overflow: hidden;
+}
+
+.IndicadorProgreso.barra > div {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+}
+
+.IndicadorProgreso.barra .tiempo {
+    background: var(--progreso-tiempo);
+    opacity: 0.45;
+}
+
+.IndicadorProgreso.barra .conseguido {
+    background: var(--progreso-conseguido);
+}
+
+.IndicadorProgreso.circulo {
+    position: relative;
+    width: 4.5rem;
+    aspect-ratio: 1;
+}
+
+.IndicadorProgreso.circulo svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.IndicadorProgreso.circulo circle {
+    fill: none;
+    stroke-width: 10;
+}
+
+.IndicadorProgreso.circulo .fondo {
+    stroke: var(--progreso-fondo);
+}
+
+.IndicadorProgreso.circulo .tiempo {
+    stroke: var(--progreso-tiempo);
+    opacity: 0.45;
+}
+
+.IndicadorProgreso.circulo .conseguido {
+    stroke: var(--progreso-conseguido);
+}
+
+.IndicadorProgreso.circulo .valor {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}

@@ -8,7 +8,7 @@ export default parent => ({
         rule: "crm.trato",
         icons: ["dashboard"],
         color: "info",
-        url: "/ss/dashboard",
+        url: "/ss/dashboard-legacy",
       },
       tiposTrato: {
         title: "Tipos de trato",

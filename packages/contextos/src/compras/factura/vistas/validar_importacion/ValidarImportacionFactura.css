@@ -1,0 +1,256 @@
+/* A pantalla completa: datos a la izquierda, con su propio scroll y los
+   botones siempre visibles abajo; el fichero original a la derecha. */
+.ValidarImportacionFactura {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1rem;
+    height: 100%;
+
+    .panel-datos {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        gap: 0.5rem;
+    }
+
+    .datos {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding-right: 0.5rem;
+    }
+
+    .VisorFichero {
+        min-height: 0;
+        display: flex;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #f5f5f5;
+
+        iframe {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+            object-fit: contain;
+        }
+
+        .visor-mensaje {
+            margin: auto;
+            color: #666;
+        }
+    }
+
+    /* Pantallas estrechas: el visor pasa debajo y todo hace scroll junto. */
+    @media (max-width: 1024px) {
+        grid-template-columns: minmax(0, 1fr);
+        height: auto;
+
+        .datos {
+            overflow-y: visible;
+        }
+
+        .VisorFichero {
+            height: 80vh;
+        }
+    }
+
+    quimera-autocompletar[nombre="proveedorImportacion"] {
+        grid-column: span 12;
+    }
+
+    quimera-input[nombre="numeroProveedor"],
+    quimera-input[nombre="fecha"] {
+        grid-column: span 6;
+    }
+
+    .totales {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: baseline;
+
+        .total-ok {
+            color: var(--color-exito);
+        }
+
+        .total-error {
+            color: var(--color-error);
+        }
+
+        .icono-total {
+            font-weight: 700;
+        }
+    }
+
+    .aviso {
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        background: #fff4e0;
+        border: 1px solid #e0a030;
+    }
+
+    .tabla-lineas {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9em;
+
+        th, td {
+            padding: 4px 6px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #ddd;
+        }
+
+        col.col-articulo { width: 32%; }
+        col.col-datos { width: 68%; }
+
+        /* Las dos filas de una línea van juntas: la separación, entre líneas. */
+        .fila-superior td {
+            border-bottom: none;
+        }
+
+        .fila-inferior td {
+            padding-bottom: 8px;
+        }
+
+        .articulo-linea {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            align-items: flex-start;
+
+            quimera-autocompletar {
+                width: 100%;
+            }
+        }
+
+        .datos-linea {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.25rem;
+            align-items: flex-start;
+
+            .dato.subcuenta .valor {
+                text-align: left;
+                white-space: normal;
+            }
+
+            .alertas-linea {
+                align-self: center;
+            }
+        }
+
+        /* Seis campos en una fila: estrechos para no saltar de línea en la
+           columna de datos (≈ 2/3 del modal). */
+        .importes-linea {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            align-items: flex-end;
+
+            quimera-input {
+                width: 6.5rem;
+                min-width: 0;
+            }
+        }
+
+        .dato {
+            display: flex;
+            flex-direction: column;
+            min-width: 7rem;
+
+            .etiqueta {
+                font-size: 0.8em;
+                color: #666;
+            }
+
+            .valor {
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            &.destacado .valor {
+                color: #a05000;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .insignia {
+        display: inline-block;
+        margin: 0 4px 2px 0;
+        padding: 1px 6px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        background: #fde8e8;
+        border: 1px solid #d66;
+    }
+
+    .albaranes {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .albaran-resumen {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+    }
+
+    .motivos {
+        margin: 0;
+        padding-left: 1.2rem;
+        color: #a05000;
+        font-size: 0.9em;
+    }
+}
+
+/* Confirmación final: es un modal aparte, fuera del árbol de .ValidarImportacionFactura. */
+.ResumenImportacion {
+    margin-bottom: 1rem;
+    min-width: min(90vw, 28rem);
+
+    dl {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 0.35rem 1rem;
+        margin: 0;
+    }
+
+    dt {
+        color: #666;
+    }
+
+    dd {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .total-ok {
+        color: var(--color-exito);
+    }
+
+    .total-error {
+        color: var(--color-error);
+    }
+
+    .avisos-resumen {
+        margin: 0.75rem 0 0;
+        padding: 0.5rem 0.75rem;
+        list-style: none;
+        border-radius: 4px;
+        background: #fff4e0;
+        border: 1px solid #e0a030;
+    }
+}

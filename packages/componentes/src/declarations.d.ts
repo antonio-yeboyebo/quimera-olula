@@ -26,6 +26,7 @@ declare namespace React {
             'quimera-tabla': NodoComun;
             'quimera-lista': NodoComun;
             'quimera-tabla-paginacion': NodoComun;
+            'quimera-tabla-multinivel': NodoComun;
             'quimera-textarea': NodoComun;
             'quimera-icono': NodoComun;
             'box-icon': BoxIcon;

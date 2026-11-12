@@ -183,7 +183,7 @@ export default {
   routes: {
     "/": { type: "view", view: "Home" },
     "/ss": { type: "view", view: "Dashboard" },
-    "/ss/dashboard": { type: "view", view: "Dashboard" },
+    "/ss/dashboard-legacy": { type: "view", view: "Dashboard" },
     "/ss/contacto/nuevo": { type: "view", view: "NuevoContacto" },
     "/ss/trato/nuevo": { type: "view", view: "NuevoTrato" },
     "/ss/tarea/nueva": { type: "view", view: "NuevaTarea" },

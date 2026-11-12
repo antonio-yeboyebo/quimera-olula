@@ -1,0 +1,9 @@
+.DetalleMotivoTarea {
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-checkbox[nombre="activo"] {
+        grid-column: span 4;
+    }
+}

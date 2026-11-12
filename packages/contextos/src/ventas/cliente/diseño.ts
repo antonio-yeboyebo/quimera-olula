@@ -43,6 +43,7 @@ export type NuevoCliente = {
   empresa_id: string;
   tipo_id_fiscal: string;
   agente_id: string;
+  direccion?: NuevaDireccion;
 };
 
 export interface DirCliente extends Direccion {

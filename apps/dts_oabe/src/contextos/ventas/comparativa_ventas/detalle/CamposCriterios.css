@@ -1,0 +1,42 @@
+.CamposCriterios {
+    quimera-input[nombre="anioDesde"] {
+        grid-column: 1 / span 3;
+    }
+
+    quimera-input[nombre="anioHasta"] {
+        grid-column: span 3;
+    }
+
+    quimera-checkbox[nombre="mostrarObjetivo"] {
+        grid-column: span 6;
+        align-self: end;
+    }
+
+    quimera-select[nombre="intervaloId"] {
+        grid-column: 1 / span 4;
+    }
+
+    quimera-date[nombre="fechaDesde"] {
+        grid-column: span 3;
+    }
+
+    quimera-date[nombre="fechaHasta"] {
+        grid-column: span 3;
+    }
+
+    quimera-autocompletar[nombre="clienteId"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-autocompletar[nombre="agenteId"] {
+        grid-column: 1 / span 8;
+    }
+
+    quimera-select[nombre="busquedaAgente"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="provinciaId"] {
+        grid-column: 1 / span 4;
+    }
+}

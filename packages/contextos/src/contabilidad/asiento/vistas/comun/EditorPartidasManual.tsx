@@ -1,5 +1,6 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
+import { useEffect, useRef } from "react";
 import {
     OpcionSubcuenta,
     SubcuentaSelector,
@@ -53,7 +54,26 @@ export const EditorPartidasManual = ({
         onChange(copia);
     };
 
-    const anadir = () => onChange([...partidas, partidaManualVacia()]);
+    // Al añadir una partida el cursor va a su subcuenta: es lo primero que se
+    // rellena y así se encadenan partidas sin tocar el ratón.
+    const contenedor = useRef<HTMLDivElement>(null);
+    const partidaAEnfocar = useRef<number | null>(null);
+
+    useEffect(() => {
+        const indice = partidaAEnfocar.current;
+        if (indice === null) return;
+        partidaAEnfocar.current = null;
+        contenedor.current
+            ?.querySelector<HTMLInputElement>(
+                `quimera-autocompletar[nombre="subcuenta-${indice}"] input:not([type="hidden"])`
+            )
+            ?.focus();
+    }, [partidas.length]);
+
+    const anadir = () => {
+        partidaAEnfocar.current = partidas.length;
+        onChange([...partidas, partidaManualVacia()]);
+    };
     const quitar = (index: number) => {
         if (partidas.length <= 2) return;
         onChange(partidas.filter((_, i) => i !== index));
@@ -63,7 +83,7 @@ export const EditorPartidasManual = ({
     const descuadre = descuadrePartidas(partidas);
 
     return (
-        <div className="EditorPartidasManual">
+        <div className="EditorPartidasManual" ref={contenedor}>
             <table>
                 {/* Anchos fijos: si no, cada celda se auto-dimensiona y las
                     columnas no cuadran de una partida a otra. */}

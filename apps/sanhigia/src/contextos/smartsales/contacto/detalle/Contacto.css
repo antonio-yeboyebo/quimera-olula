@@ -1,0 +1,137 @@
+.Contacto {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.Contacto header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.Contacto h1 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.Contacto h2 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.Contacto .acciones-contacto {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.Contacto .accion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-primario-oscuro);
+    background: var(--color-fondo);
+    border: 1px solid var(--color-deshabilitado);
+    text-decoration: none;
+}
+
+.Contacto .accion.deshabilitada {
+    opacity: 0.4;
+}
+
+.Contacto .tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.Contacto .tarjeta.tareas {
+    padding-inline: 0;
+}
+
+.Contacto .tarjeta.tareas > header,
+.Contacto .tarjeta.tareas > .vacio {
+    padding-inline: 0;
+}
+
+.Contacto .dato {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.Contacto .secundario,
+.Contacto .vacio {
+    font-size: 0.85rem;
+    color: var(--color-texto-secundario);
+}
+
+.Contacto .vacio {
+    margin: 0;
+}
+
+.Contacto .lista,
+.Contacto .lista-notas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.Contacto .lista li,
+.Contacto .lista a {
+    display: flex;
+    flex-direction: column;
+}
+
+.Contacto .lista a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.Contacto .lista-notas li {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-deshabilitado);
+}
+
+.Contacto .lista-notas p {
+    margin: 0.25rem 0 0;
+    white-space: pre-wrap;
+}
+
+.Contacto .aviso {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-advertencia);
+}
+
+.Contacto .acciones {
+    display: flex;
+    justify-content: end;
+    gap: 0.5rem;
+}
+
+.Contacto .borrar {
+    display: flex;
+    justify-content: center;
+}
+
+.Contacto .dialogo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.Contacto .errores {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--color-error);
+}

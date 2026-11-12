@@ -43,6 +43,10 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    gap: theme.spacing(1),
+    padding: theme.spacing(2),
+    overflow: "hidden",
+    flexShrink: 0,
   },
   card: {
     "&:hover": {

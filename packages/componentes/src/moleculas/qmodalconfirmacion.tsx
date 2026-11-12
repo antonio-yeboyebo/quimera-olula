@@ -1,5 +1,5 @@
 import { ContextoError } from "@olula/lib/contexto.js";
-import { useContext, useRef, useState } from "react";
+import { PropsWithChildren, useContext, useRef, useState } from "react";
 import { iconoAccionBoton } from "../atomos/icono_accion.ts";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QModal } from "./qmodal.tsx";
@@ -30,7 +30,8 @@ export const QModalConfirmacion = ({
   mostrarCancelar = true,
   pantallaCompletaMovil = false,
   destructivo,
-}: QModalConfirmacionProps) => {
+  children,
+}: PropsWithChildren<QModalConfirmacionProps>) => {
   // «Borrar línea», «Eliminar asociación»…: el botón que confirma va en rojo y
   // dice lo que hace («Borrar»), salvo que la pantalla indique otra cosa.
   const esBorrado = iconoAccionBoton(titulo) === "eliminar";
@@ -73,6 +74,8 @@ export const QModalConfirmacion = ({
       <div className="mensaje" style={{ whiteSpace: "pre-line" }}>
         {mensaje}
       </div>
+      {/* Contenido adicional bajo el mensaje (p. ej. un resumen de lo que se va a hacer). */}
+      {children}
       <div className="botones">
         {mostrarCancelar && (
           <QBoton

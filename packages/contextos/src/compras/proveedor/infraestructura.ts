@@ -66,6 +66,7 @@ interface NuevoProveedorApi {
     id_fiscal: string;
     tipo_id_fiscal: string;
     empresa_id: string;
+    direccion?: Omit<DireccionApi, "pais">;
 }
 
 interface CambiosProveedorApi {
@@ -161,6 +162,7 @@ const nuevoProveedorAApi = (p: NuevoProveedor): NuevoProveedorApi => ({
     id_fiscal: p.idFiscal,
     tipo_id_fiscal: p.tipoIdFiscal,
     empresa_id: empresaActual(),
+    ...(p.direccion ? { direccion: direccionAApi(p.direccion) } : {}),
 });
 
 const cambiosProveedorAApi = (p: CambiosProveedor): CambiosProveedorApi => {

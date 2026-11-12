@@ -33,6 +33,7 @@ export interface NuevoProveedor extends Modelo {
     nombre: string;
     idFiscal: string;
     tipoIdFiscal: TipoIdFiscal;
+    direccion?: NuevaDireccionProveedor;
 }
 
 export type CambiosProveedor = Partial<Proveedor>;

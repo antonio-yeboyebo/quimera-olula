@@ -183,6 +183,12 @@ quimera-autocompletar {
         label textarea {
             display: none;
         }
+
+        /* Con estado de validación, el mismo subrayado que el input editable
+           (mismo grosor y color de --color-borde). */
+        &:is([erroneo], [advertido], [valido]) .valor-solo-lectura {
+            border-bottom: var(--tamaño-borde-s) solid var(--color-borde);
+        }
     }
 
     /* ============================================================

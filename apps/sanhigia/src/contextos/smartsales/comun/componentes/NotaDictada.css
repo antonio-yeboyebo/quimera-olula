@@ -1,0 +1,29 @@
+.NotaDictada .pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.NotaDictada .contador {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+}
+
+.NotaDictada .contador.limite {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+.NotaDictada .interino {
+    margin: 0.25rem 0 0;
+    font-style: italic;
+    color: var(--color-texto-secundario);
+}
+
+.NotaDictada .error {
+    margin: 0.25rem 0 0;
+    color: var(--color-error);
+}

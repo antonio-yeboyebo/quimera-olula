@@ -1,6 +1,7 @@
 export const menuSmartsales = {
-    "SmartSales": { icono: "fichero" },
-    "SmartSales/Dashboard": { url: "/ss/dashboard", regla: "crm.trato" },
+    "SmartSales": { icono: "menu_crm" },
+    "SmartSales/Hoy": { url: "/ss/dashboard", regla: "crm.trato" },
+    "SmartSales/Dashboard": { url: "/ss/dashboard-legacy", regla: "crm.trato" },
     "SmartSales/Tipos de trato": { url: "/ss/tipostrato", regla: "crm.campana.leer" },
     "SmartSales/Business Intelligence": { url: "/ss/bi", regla: "crm.informe.bi" },
     "SmartSales/Campañas": { url: "/ss/campanias", regla: "crm.campana.leer" },
@@ -14,4 +15,5 @@ export const menuSmartsales = {
     "SmartSales/Clientes": { url: "/ss/clientes", regla: "crm.cliente.acceso_clientes" },
     // "SmartSales/Incidencias": { url: "/ss/incidencias" },
     "SmartSales/Incidencias": { url: "/crm/incidencia", regla: "crm.incidencia" },
+    "SmartSales/Motivos de tarea": { url: "/crm/motivo_tarea", regla: "crm.motivo_tarea" },
 };

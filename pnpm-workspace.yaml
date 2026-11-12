@@ -22,3 +22,6 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - core-js
   - es5-ext
+
+overrides:
+  nombre-del-paquete: "0.25.12"

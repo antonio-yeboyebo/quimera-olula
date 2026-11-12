@@ -62,7 +62,7 @@ Each business domain in `packages/contextos/src/` follows a strict 4-file conven
 | `diseño.ts` | TypeScript interfaces and function type signatures |
 | `dominio.ts` | Business logic, pure functions, empty/default entities |
 | `infraestructura.ts` | API calls using `RestAPI` — maps between API snake_case and domain camelCase |
-| `vistas/` | React components (views) |
+| `maestro/`, `detalle/`, `crear/`, `borrar/`… | One folder per screen or operation, with its React components (see `_plantilla/modulo/`). No `vistas/` folder |
 
 **Domains:** `almacen`, `ventas`, `tpv`, `compras`, `crm`, `auth`, `valores`, `comun`
 
@@ -115,10 +115,10 @@ Proceso:
 
 ### Organización de vistas de sub-recursos (líneas, pagos, etc.)
 
-Los componentes de operación sobre un sub-recurso (crear, cambiar, borrar) NO deben vivir en una subcarpeta genérica `lineas/` dentro de `vistas/`. Deben organizarse así:
+Los componentes de operación sobre un sub-recurso (crear, cambiar, borrar) NO deben vivir en una subcarpeta genérica `lineas/`. Deben organizarse así, en la raíz del módulo:
 
 ```
-vistas/
+modulo/
 ├── crear_linea/          # Modal de alta: CrearLineaXxx.tsx
 ├── cambiar_linea/        # Modal de edición: CambiarLineaXxx.tsx
 ├── borrar_linea/         # Modal de borrado: BorrarLineaXxx.tsx
@@ -126,11 +126,11 @@ vistas/
     └── lineas/           # Lista del sub-recurso + orquestación de modales: LineasXxx.tsx
 ```
 
-Referencia canónica: `packages/contextos/src/tpv/venta/` y `packages/contextos/src/almacen/orden/`.
+Referencia canónica: `packages/contextos/src/_plantilla/modulo/_con_lineas/` y `packages/contextos/src/tpv/venta/`.
 
 Reglas:
 
-1. **Una carpeta por operación** — `crear_linea/`, `cambiar_linea/`, `borrar_linea/` en el nivel `vistas/`.
+1. **Una carpeta por operación** — `crear_linea/`, `cambiar_linea/`, `borrar_linea/` en la raíz del módulo.
 2. **El orquestador** (lista con botones + renderizado condicional de modales) vive en `detalle/lineas/NombreXxx.tsx`.
 3. **Modales sin prop `activo`** — el padre controla la visibilidad con `{estado === "X" && <Modal />}`.
 4. **`BorrarXxxLinea` usa `useForm`** — no llama directamente a la API ni usa `ContextoError` directamente.

@@ -1,14 +1,14 @@
-interface SpeechRecognitionEvent {
+export interface SpeechRecognitionEvent {
     results: SpeechRecognitionResultList;
     resultIndex: number;
 }
 
-interface SpeechRecognitionErrorEvent {
+export interface SpeechRecognitionErrorEvent {
     error: string;
     message: string;
 }
 
-interface SpeechRecognitionInstance {
+export interface SpeechRecognitionInstance {
     lang: string;
     continuous: boolean;
     interimResults: boolean;
@@ -21,7 +21,9 @@ interface SpeechRecognitionInstance {
     abort: () => void;
 }
 
-interface Window {
-    SpeechRecognition: new () => SpeechRecognitionInstance;
-    webkitSpeechRecognition: new () => SpeechRecognitionInstance;
+declare global {
+    interface Window {
+        SpeechRecognition: new () => SpeechRecognitionInstance;
+        webkitSpeechRecognition: new () => SpeechRecognitionInstance;
+    }
 }
