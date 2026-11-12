@@ -19,10 +19,19 @@ import { useCallback, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
-import { etiquetaEstadoOrden, metaOrden, ordenAlbaranable, ordenVacia, pedidoUnicoDeOrden } from "../../dominio.ts";
-import { crearCajasOrden, getReportEtiquetasOrden } from "../../infraestructura.ts";
+import {
+    etiquetaEstadoOrden,
+    hayAgenciasEnvio,
+    metaOrden,
+    ordenAlbaranable,
+    ordenPermiteEnvio,
+    ordenVacia,
+    pedidoUnicoDeOrden,
+} from "../../dominio.ts";
+import { crearCajasOrden, getEtiquetaEnvio, getReportEtiquetasOrden } from "../../infraestructura.ts";
 import { AlbaranarOrden } from "../albaranar/AlbaranarOrden.tsx";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
+import { GenerarEnvioOrden } from "../generar_envio/GenerarEnvioOrden.tsx";
 import { ColocacionOrden } from "../colocar/ColocacionOrden.tsx";
 import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
 import { calcularAccionPrincipal } from "./accion_principal.ts";
@@ -66,6 +75,12 @@ export const DetalleOrden = ({
             imprimir_blob(blob);
         });
     }, [ctx.orden.id, intentar]);
+
+    const reimprimirEtiquetaEnvio = useCallback(async (albaranId: string) => {
+        await intentar(async () => {
+            imprimir_blob(await getEtiquetaEnvio(albaranId));
+        });
+    }, [intentar]);
 
     const generarCajas = useCallback(async () => {
         await intentar(async () => {
@@ -144,6 +159,9 @@ export const DetalleOrden = ({
                         Colocar
                     </QBoton>
                 )}
+                {ordenPermiteEnvio(modelo, hayAgenciasEnvio()) && (
+                    <QBoton variante="borde" onClick={() => emitir("envio_solicitado")}>Generar envío</QBoton>
+                )}
                 <QBoton variante="borde" onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
                 {sgaActivo && (
                     <QBoton variante="borde" onClick={generarCajas}>Crear cajas</QBoton>
@@ -173,8 +191,22 @@ export const DetalleOrden = ({
                     {modelo.albaranes.length > 0 && (
                         <div className="DetalleOrden__albaranes">
                             <span>{modelo.albaranes.length === 1 ? "Albarán" : "Albaranes"}</span>
-                            {modelo.albaranes.map(({ id, codigo }) => (
-                                <Link key={id} to={`/ventas/albaran?id=${id}`}>{codigo}</Link>
+                            {modelo.albaranes.map(({ id, codigo, agenciaEnvio, numeroTracking }) => (
+                                <span key={id} className="DetalleOrden__albaran">
+                                    <Link to={`/ventas/albaran?id=${id}`}>{codigo}</Link>
+                                    {numeroTracking && (
+                                        <>
+                                            <span>{agenciaEnvio} {numeroTracking}</span>
+                                            <QBoton
+                                                variante="texto"
+                                                tamaño="pequeño"
+                                                onClick={() => reimprimirEtiquetaEnvio(id)}
+                                            >
+                                                Etiqueta
+                                            </QBoton>
+                                        </>
+                                    )}
+                                </span>
                             ))}
                         </div>
                     )}
@@ -286,6 +318,9 @@ export const DetalleOrden = ({
             )}
             {ctx.estado === "ALBARANANDO" && (
                 <AlbaranarOrden publicar={emitir} orden={ctx.orden} />
+            )}
+            {ctx.estado === "GENERANDO_ENVIO" && (
+                <GenerarEnvioOrden publicar={emitir} orden={ctx.orden} />
             )}
         </Detalle>
     );

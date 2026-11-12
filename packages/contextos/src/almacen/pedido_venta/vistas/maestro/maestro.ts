@@ -1,7 +1,7 @@
 import { Criteria, ProcesarContexto } from "@olula/lib/diseño.ts";
 import { accionesListaActivaEntidades, ProcesarListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { DisponibilidadPedido, ItemPedidoVenta } from "../../diseño.ts";
-import { getPedidosVenta } from "../../infraestructura.ts";
+import { comprobarReservas, getPedidosVenta } from "../../infraestructura.ts";
 import { ContextoMaestroPedidoVenta, EstadoMaestroPedidoVenta } from "./diseño.ts";
 
 type ProcesarMaestro = ProcesarContexto<EstadoMaestroPedidoVenta, ContextoMaestroPedidoVenta>;
@@ -50,4 +50,12 @@ export const actualizarDisponibilidades: ProcesarMaestro = async (ctx, payload) 
         zonas,
         pedidos: { ...ctx.pedidos, lista: nuevaLista },
     };
+};
+
+/** Tras cambiar la prioridad de un pedido, el reparto de stock cambia para
+ * todos: se vuelve a comprobar con las mismas zonas, si ya se había hecho. */
+export const recomprobarDisponibilidades: ProcesarMaestro = async (ctx) => {
+    if (ctx.zonas.length === 0) return ctx;
+    const resultados = await comprobarReservas(ctx.zonas);
+    return actualizarDisponibilidades(ctx, { zonas: ctx.zonas, resultados });
 };

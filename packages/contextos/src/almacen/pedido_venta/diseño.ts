@@ -15,6 +15,7 @@ export interface CompetidorLinea {
     pendiente: number;
     asignado: number;
     posicion: PosicionCompetidor;
+    prioritaria: boolean;
 }
 
 export interface EstadoLinea {
@@ -22,6 +23,7 @@ export interface EstadoLinea {
     pendiente: number;
     asignado: number;
     estado: DisponibilidadLinea;
+    prioritaria: boolean;
     competidores: CompetidorLinea[];
 }
 
@@ -42,6 +44,7 @@ export interface LineaPedidoVenta extends Entidad {
     pvpTotal: number;
     servida: number;
     cerrada: boolean;
+    prioritaria: boolean;
 }
 
 export interface PedidoVenta extends ItemPedidoVenta {
@@ -56,6 +59,10 @@ export type GetPedidoVenta = (id: string) => Promise<PedidoVenta>;
 export type GenerarSalidaDesdePedidos = (pedidoIds: number[], ubicacionDestinoId: number) => Promise<void>;
 
 export type GenerarSalidaVentaDesdePedidos = (pedidoIds: number[], zonas: number[]) => Promise<string>;
+
+export type CambiarPrioridadLinea = (pedidoId: string, lineaId: string, prioritaria: boolean) => Promise<void>;
+
+export type CambiarPrioridadPedido = (pedidoId: string, prioritaria: boolean) => Promise<void>;
 
 export type ComprobarReservas = (
     zonas: number[],

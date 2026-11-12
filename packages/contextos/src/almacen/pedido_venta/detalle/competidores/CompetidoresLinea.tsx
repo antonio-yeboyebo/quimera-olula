@@ -13,7 +13,10 @@ const metaTablaCompetencia = (
         {
             id: "posicion",
             cabecera: "Prioridad",
-            render: (f) => (f.posicion === "propia" ? "Esta línea" : ETIQUETA_POSICION[f.posicion]),
+            render: (f) => {
+                const posicion = f.posicion === "propia" ? "Esta línea" : ETIQUETA_POSICION[f.posicion];
+                return f.prioritaria ? `★ ${posicion}` : posicion;
+            },
         },
         {
             id: "codigo",

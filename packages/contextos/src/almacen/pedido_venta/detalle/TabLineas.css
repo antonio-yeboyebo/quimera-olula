@@ -1,1 +1,19 @@
-.TabLineasPedidoVenta {}
+.TabLineasPedidoVenta .accion-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.3rem;
+  cursor: pointer;
+}
+
+.TabLineasPedidoVenta .accion-icono:hover {
+  background: var(--color-superficie, #f0f0f0);
+}
+
+.TabLineasPedidoVenta .accion-icono:focus-visible {
+  outline: 2px solid var(--color-primario, #1570ef);
+  outline-offset: 2px;
+}

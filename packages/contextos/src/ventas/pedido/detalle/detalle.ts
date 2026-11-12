@@ -8,6 +8,7 @@ import {
     LineaPedido,
     Pedido
 } from "../diseño.ts";
+import { pedidoEsEditable, pedidoPendiente } from "../dominio.ts";
 import {
     getLineas,
     getPedido,
@@ -48,24 +49,25 @@ const camposPedido: Record<string, MetaCampo<Pedido>> = {
     por_comision: { tipo: "decimal", requerido: false, decimales: 2, positivo: true, maximo: 100, bloqueado: true },
 };
 
+/** Campos que el servidor solo deja cambiar si no se ha servido nada. */
+const CAMPOS_SOLO_PENDIENTE = ['grupo_iva_negocio_id'];
+
+const campoPedidoEditable = (pedido: Pedido, campo?: string): boolean => {
+    if (!pedidoEsEditable(pedido)) return false;
+    if (campo && CAMPOS_SOLO_PENDIENTE.includes(campo) && !pedidoPendiente(pedido)) return false;
+    return campo === 'almacen_id' ? puedeCambiarAlmacen(pedido) : true;
+};
+
 export const metaPedido: MetaModelo<Pedido> = {
     campos: camposPedido,
-    editable: (pedido: Pedido, campo?: string) => {
-        const servido = pedido.servido?.toUpperCase();
-        if (servido === 'TOTAL' || servido === 'SERVIDO') return false;
-        return campo === 'almacen_id' ? puedeCambiarAlmacen(pedido) : true;
-    },
+    editable: campoPedidoEditable,
 };
 
 export const getMetaPedido = <T extends Pedido>() => <MetaModelo<T>>({
     campos: {
         ...camposPedido,
     },
-    editable: (pedido: T, campo?: string) => {
-        const servido = pedido.servido?.toUpperCase();
-        if (servido === 'TOTAL' || servido === 'SERVIDO') return false;
-        return campo === 'almacen_id' ? puedeCambiarAlmacen(pedido) : true;
-    },
+    editable: campoPedidoEditable,
 });
 
 export const editable = modeloEsEditable<Pedido>(metaPedido);
@@ -111,7 +113,7 @@ export const cancelarCambioPedido: ProcesarPedido = async (contexto) => {
 
 export const abiertoOServido: ProcesarPedido = async (contexto) => {
     const servido = contexto.pedido.servido?.toUpperCase();
-    const esServido = servido === 'SI' || servido === 'SERVIDO';
+    const esServido = servido === 'SI' || servido === 'SERVIDO' || servido === 'TOTAL';
     return {
         ...contexto,
         estado: esServido ? "SERVIDO" : "ABIERTO"
