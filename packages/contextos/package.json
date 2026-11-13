@@ -22,8 +22,12 @@
         "@simplewebauthn/browser": "^13.3.0",
         "@tabler/icons-react": "^3.44.0",
         "maplibre-gl": "6.14.0",
+        "qrcode": "1.5.4",
         "react-plaid-link": "^5.0.0",
         "recharts": "^3.8.0",
         "zod": "^3.25.76"
+    },
+    "devDependencies": {
+        "@types/qrcode": "1.5.5"
     }
 }

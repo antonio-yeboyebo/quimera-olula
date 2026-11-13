@@ -1,0 +1,14 @@
+.EnlacePagoTarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-s, 0.75rem);
+
+    quimera-input[nombre="url"],
+    quimera-input[nombre="email"] {
+        grid-column: span 12;
+    }
+
+    .enviado {
+        color: var(--color-exito, inherit);
+    }
+}

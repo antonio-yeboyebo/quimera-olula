@@ -1,6 +1,6 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
-import { CompetidorLinea, ComprobarReservas, ComprobarReservasLineas, DisponibilidadLinea, DisponibilidadPedido, EstadoLinea, GenerarSalidaDesdePedidos, GenerarSalidaVentaDesdePedidos, GetPedidoVenta, GetPedidosVenta, ItemPedidoVenta, LineaPedidoVenta, PedidoVenta } from "./diseño.ts";
+import { CambiarPrioridadLinea, CambiarPrioridadPedido, CompetidorLinea, ComprobarReservas, ComprobarReservasLineas, DisponibilidadLinea, DisponibilidadPedido, EstadoLinea, GenerarSalidaDesdePedidos, GenerarSalidaVentaDesdePedidos, GetPedidoVenta, GetPedidosVenta, ItemPedidoVenta, LineaPedidoVenta, PedidoVenta } from "./diseño.ts";
 
 
 interface ItemPedidoVentaApi {
@@ -24,6 +24,7 @@ interface LineaPedidoVentaApi {
     pvp_total: number;
     servida: number;
     cerrada: boolean;
+    prioritaria?: boolean;
 }
 
 interface OrdenDesdePedidosVentaApi {
@@ -49,6 +50,7 @@ const lineaPedidoVentaDesdeApi = (api: LineaPedidoVentaApi): LineaPedidoVenta =>
     pvpTotal: api.pvp_total,
     servida: api.servida,
     cerrada: api.cerrada,
+    prioritaria: !!api.prioritaria,
 });
 
 const pedidoVentaDesdeApi = (pedido: PedidoVentaApi, lineas: LineaPedidoVentaApi[]): PedidoVenta => ({
@@ -122,6 +124,7 @@ interface CompetidorLineaApi {
     pendiente: number;
     asignado: number;
     posicion: CompetidorLinea['posicion'];
+    prioritaria?: boolean;
 }
 
 export interface EstadoLineaApi {
@@ -130,6 +133,7 @@ export interface EstadoLineaApi {
     pendiente: number;
     asignado: number;
     estado: DisponibilidadLinea;
+    prioritaria?: boolean;
     competidores: CompetidorLineaApi[];
 }
 
@@ -142,6 +146,7 @@ const competidorLineaDesdeApi = (api: CompetidorLineaApi): CompetidorLinea => ({
     pendiente: api.pendiente,
     asignado: api.asignado,
     posicion: api.posicion,
+    prioritaria: !!api.prioritaria,
 });
 
 export const estadoLineaDesdeApi = (api: EstadoLineaApi): EstadoLinea => ({
@@ -149,6 +154,7 @@ export const estadoLineaDesdeApi = (api: EstadoLineaApi): EstadoLinea => ({
     pendiente: api.pendiente,
     asignado: api.asignado,
     estado: api.estado,
+    prioritaria: !!api.prioritaria,
     competidores: api.competidores.map(competidorLineaDesdeApi),
 });
 
@@ -159,4 +165,20 @@ export const comprobarReservasLineas: ComprobarReservasLineas = async (pedidoId,
         'Error al comprobar la disponibilidad de las líneas'
     );
     return respuesta.map(estadoLineaDesdeApi);
+};
+
+export const cambiarPrioridadLinea: CambiarPrioridadLinea = async (pedidoId, lineaId, prioritaria) => {
+    await RestAPI.patch(
+        `/ventas/pedido/${pedidoId}/linea/${lineaId}/prioridad`,
+        { prioritaria },
+        'Error al cambiar la prioridad de la línea'
+    );
+};
+
+export const cambiarPrioridadPedido: CambiarPrioridadPedido = async (pedidoId, prioritaria) => {
+    await RestAPI.patch(
+        `/ventas/pedido/${pedidoId}/prioridad`,
+        { prioritaria },
+        'Error al cambiar la prioridad del pedido'
+    );
 };

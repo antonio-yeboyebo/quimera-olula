@@ -115,6 +115,7 @@ export type EstadoFactura = (
     | 'CAMBIANDO_LINEA'
     | 'BORRANDO_LINEA'
     | 'EMITIENDO_FACTURA'
+    | 'ENLACE_TARJETA'
 );
 
 export type EstadoMaestroFactura = (

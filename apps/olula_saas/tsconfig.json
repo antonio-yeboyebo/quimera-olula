@@ -1,0 +1,21 @@
+{
+    "extends": "../../tsconfig.app.json",
+    "compilerOptions": {
+        "paths": {
+            "#/*": [
+                "./node_modules/@olula/ctx/src/*"
+            ],
+        }
+    },
+    "include": [
+        ".",
+        "../olula/src",
+        "../../eslint.config.js",
+        "../../vite.config.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "dev-dist"
+    ]
+}

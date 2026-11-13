@@ -1,0 +1,12 @@
+.TabModulos {
+    .modulo-fila {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--color-borde, #e0e0e0);
+    }
+    .modulo-info { flex: 1; }
+    .modulo-nombre { font-weight: 600; }
+    .modulo-descripcion, .modulo-dependencias { font-size: 0.85em; opacity: 0.75; }
+}

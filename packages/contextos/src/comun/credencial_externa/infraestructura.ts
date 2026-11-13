@@ -132,6 +132,44 @@ export const reconectarTelegram = async (id: string): Promise<void> => {
     );
 };
 
+/** Resultado de «Probar conexión» de una credencial Stripe. */
+export interface ConexionStripe {
+    modo: "test" | "live";
+    /** El entorno no es producción y cobra en test aunque la credencial diga live. */
+    modoForzado: boolean;
+    cuenta: { id: string; nombre: string; email: string | null; cobrosActivos: boolean };
+    webhooks: Record<string, boolean>;
+    /** Cuenta bancaria donde se apuntan los cobros; null si no está elegida. */
+    cuentaCobros: string | null;
+}
+
+/** Comprueba la cuenta de Stripe y da de alta los webhooks que falten. */
+export const probarStripe = async (id: string): Promise<ConexionStripe> => {
+    const r = (await RestAPI.post(
+        `${baseUrl}/${id}/probar-stripe`,
+        {},
+        "Error al conectar con Stripe",
+    )) as unknown as {
+        modo: "test" | "live";
+        modo_forzado: boolean;
+        cuenta: { id: string; nombre: string; email: string | null; cobros_activos: boolean };
+        webhooks: Record<string, boolean>;
+        cuenta_cobros: string | null;
+    };
+    return {
+        modo: r.modo,
+        modoForzado: r.modo_forzado,
+        cuenta: {
+            id: r.cuenta.id,
+            nombre: r.cuenta.nombre,
+            email: r.cuenta.email,
+            cobrosActivos: r.cuenta.cobros_activos,
+        },
+        webhooks: r.webhooks,
+        cuentaCobros: r.cuenta_cobros ?? null,
+    };
+};
+
 /**
  * Busca archivos en el conector de Google Drive de una credencial — usado por
  * el buscador del alta "Importar de un conector" de ia_memoria (ver D5 en el

@@ -1,5 +1,5 @@
 import { EstadoLinea } from "../diseño.ts";
-import { estadosPorLinea, filasCompetencia, itemPedidoVentaVacio } from "../dominio.ts";
+import { estadosPorLinea, filasCompetencia, hayLineasPrioritarias, itemPedidoVentaVacio, lineaPedidoVentaVacia, pedidoVentaVacio } from "../dominio.ts";
 import { estadoLineaDesdeApi, EstadoLineaApi } from "../infraestructura.ts";
 
 const api: EstadoLineaApi = {
@@ -10,7 +10,7 @@ const api: EstadoLineaApi = {
     estado: "parcial",
     competidores: [
         { pedido_id: 3, codigo: "P3", fecha: "2026-01-03", cliente: "C3", linea_id: 30, pendiente: 4, asignado: 0, posicion: "detras" },
-        { pedido_id: 1, codigo: "P1", fecha: "2026-01-01", cliente: "C1", linea_id: 10, pendiente: 6, asignado: 6, posicion: "delante" },
+        { pedido_id: 1, codigo: "P1", fecha: "2026-01-01", cliente: "C1", linea_id: 10, pendiente: 6, asignado: 6, posicion: "delante", prioritaria: true },
         { pedido_id: 9, codigo: "P9", fecha: "2025-12-01", cliente: "C9", linea_id: 90, pendiente: 1, asignado: 1, posicion: "en_salida" },
     ],
 };
@@ -38,5 +38,26 @@ describe("disponibilidad por línea", () => {
 
         expect(filas.map((f) => f.posicion)).toEqual(["en_salida", "delante", "propia", "detras"]);
         expect(filas[2]).toMatchObject({ id: "20", codigo: "P2", pendiente: 6, asignado: 2 });
+    });
+
+    test("mapea la prioridad de competidores; si la API no la envía, es false", () => {
+        const estado = estadoLineaDesdeApi(api);
+
+        expect(estado.prioritaria).toBe(false);
+        expect(estado.competidores.map((c) => c.prioritaria)).toEqual([false, true, false]);
+        expect(estadoLineaDesdeApi({ ...api, prioritaria: true }).prioritaria).toBe(true);
+    });
+
+    test("la propia línea conserva su prioridad entre las filas de competencia", () => {
+        const filas = filasCompetencia(pedido, estadoLineaDesdeApi({ ...api, prioritaria: true }));
+
+        expect(filas.find((f) => f.posicion === "propia")?.prioritaria).toBe(true);
+    });
+
+    test("detecta si el pedido tiene alguna línea prioritaria", () => {
+        const linea = { ...lineaPedidoVentaVacia, id: "1" };
+
+        expect(hayLineasPrioritarias({ ...pedidoVentaVacio, lineas: [linea] })).toBe(false);
+        expect(hayLineasPrioritarias({ ...pedidoVentaVacio, lineas: [linea, { ...linea, id: "2", prioritaria: true }] })).toBe(true);
     });
 });

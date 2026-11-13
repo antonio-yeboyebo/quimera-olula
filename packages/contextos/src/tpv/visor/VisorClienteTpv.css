@@ -1,0 +1,248 @@
+/*
+ * Visor de cliente. Pensado para cualquier pantalla: monitor apaisado junto a la
+ * caja, tablet en vertical o un móvil. Apaisado: artículos a la izquierda y
+ * resumen a la derecha. Vertical o estrecho: artículos arriba y resumen abajo,
+ * siempre visible.
+ */
+.VisorClienteTpv {
+    --visor-espacio: clamp(0.75rem, 2vmin, 1.5rem);
+    --visor-texto: clamp(1rem, 2.2vmin, 1.5rem);
+
+    /* Ocupa la ventana entera, por encima del menú y la cabecera de la app. */
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: var(--visor-espacio);
+    background: var(--color-fondo, #fff);
+    color: var(--color-texto-primario, inherit);
+    font-size: var(--visor-texto);
+    overflow: hidden;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    h1,
+    h2,
+    p,
+    dl,
+    dd,
+    ul {
+        margin: 0;
+    }
+
+    /* --- Espera y pagado: un mensaje centrado --- */
+    .espera,
+    .pagado {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--visor-espacio);
+        text-align: center;
+    }
+
+    .espera h1 {
+        font-size: clamp(2rem, 7vmin, 4.5rem);
+        opacity: 0.6;
+    }
+
+    .pagado h1 {
+        font-size: clamp(1.75rem, 6vmin, 4rem);
+    }
+
+    .pagado .cambio {
+        font-size: clamp(1.25rem, 4.5vmin, 2.75rem);
+        font-weight: 600;
+    }
+
+    .total {
+        font-size: clamp(2.25rem, 9vmin, 6rem);
+        font-weight: 700;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    /* --- Venta en curso --- */
+    .venta {
+        height: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        gap: var(--visor-espacio);
+    }
+
+    .lineas {
+        min-height: 0;
+        overflow-y: auto;
+        border: 1px solid var(--color-borde, #d4d4d8);
+        background: var(--color-superficie, transparent);
+        border-radius: 8px;
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            column-gap: var(--visor-espacio);
+            padding: calc(var(--visor-espacio) * 0.75) var(--visor-espacio);
+            border-bottom: 1px solid var(--color-borde-sutil, #e4e4e7);
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .descripcion {
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .importe-linea {
+            font-weight: 600;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .detalle-linea {
+            grid-column: 1 / -1;
+            font-size: 0.85em;
+            color: var(--color-texto-secundario, inherit);
+            font-variant-numeric: tabular-nums;
+        }
+
+        &.vacia {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+        }
+    }
+
+    .resumen {
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--visor-espacio);
+        overflow-y: auto;
+    }
+
+    .totales,
+    .cobro {
+        padding: var(--visor-espacio);
+        border-radius: 8px;
+        background: var(--color-superficie-sunken, rgba(127, 127, 127, 0.08));
+    }
+
+    .totales .etiqueta {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--visor-espacio);
+        flex-wrap: wrap;
+        font-weight: 600;
+    }
+
+    .num-articulos {
+        font-weight: 400;
+        color: var(--color-texto-secundario, inherit);
+    }
+
+    .parciales {
+        margin-top: calc(var(--visor-espacio) * 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+
+        div {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--visor-espacio);
+        }
+
+        dd {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+        }
+
+        .pendiente,
+        .cambio {
+            font-size: 1.25em;
+        }
+    }
+
+    .cobro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: calc(var(--visor-espacio) * 0.75);
+        text-align: center;
+
+        h2 {
+            font-size: 1.4em;
+        }
+
+        .parciales {
+            align-self: stretch;
+            text-align: left;
+        }
+    }
+
+    /* El QR ocupa lo que haya, sin desbordar ni en ancho ni en alto. */
+    .qr {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        img {
+            width: min(100%, 52vh);
+            height: auto;
+            aspect-ratio: 1;
+            background: #fff;
+            border-radius: 8px;
+        }
+    }
+
+    .test {
+        color: var(--color-advertencia, #b45309);
+    }
+
+    /* Vertical o estrecho: artículos arriba, resumen fijo abajo. */
+    @media (orientation: portrait), (max-width: 720px) {
+        .venta {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr) auto;
+        }
+
+        .resumen {
+            max-height: 70dvh;
+        }
+
+        .qr img {
+            width: min(100%, 38vh);
+        }
+
+        /* Cobrando con QR, el código manda: los artículos ceden sitio. */
+        .venta:has(.cobro-qr) {
+            grid-template-rows: minmax(4rem, 1fr) auto;
+        }
+    }
+
+    /* Pantallas muy bajas (visor de línea o móvil apaisado): todo más compacto. */
+    @media (max-height: 480px) and (orientation: landscape) {
+        .qr img {
+            width: min(100%, 70vh);
+        }
+
+        .resumen {
+            gap: calc(var(--visor-espacio) * 0.5);
+        }
+    }
+}

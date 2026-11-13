@@ -1,0 +1,43 @@
+.CobrosOnline {
+    margin-top: var(--espaciado-m, 1rem);
+
+    h3 {
+        margin: 0 0 var(--espaciado-s, 0.5rem);
+        font-size: 1rem;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--espaciado-s, 0.5rem);
+    }
+
+    .fila {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--espaciado-s, 0.5rem);
+    }
+
+    .importe {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .panel {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .fecha {
+        color: var(--color-texto-secundario, inherit);
+        font-size: 0.875rem;
+    }
+}

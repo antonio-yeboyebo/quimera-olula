@@ -1,0 +1,8 @@
+.DetalleTenant {
+    .estado-tenant {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+}

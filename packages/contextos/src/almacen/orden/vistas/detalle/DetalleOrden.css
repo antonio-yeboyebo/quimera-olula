@@ -49,6 +49,12 @@
         span {
             color: var(--color-texto-secundario);
         }
+
+        .DetalleOrden__albaran {
+            display: inline-flex;
+            align-items: baseline;
+            gap: var(--espaciado-s);
+        }
     }
 
     quimera-autocompletar[nombre="idCajaOrigen"] {

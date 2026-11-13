@@ -19,6 +19,8 @@ export const getMaquina: () => Maquina<EstadoMaestroPedidoVenta, ContextoMaestro
             generar_salida_solicitada: "GENERANDO_SALIDA",
 
             comprobar_reservas_solicitado: "COMPROBANDO_RESERVAS",
+
+            prioridad_cambiada: [maestro.recomprobarDisponibilidades],
         },
 
         GENERANDO_SALIDA: {

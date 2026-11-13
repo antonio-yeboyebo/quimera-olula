@@ -94,7 +94,7 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
             <QBoton
               variante="texto"
               onClick={() => {
-                const { direccion, ...proveedorSinDireccion } = proveedor;
+                const { direccion: _direccion, ...proveedorSinDireccion } = proveedor;
                 nuevoProveedor.set(proveedorSinDireccion);
                 setMostrarDireccion(false);
               }}

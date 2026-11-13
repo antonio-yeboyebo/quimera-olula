@@ -17,6 +17,12 @@ export interface CampoSecreto {
     /** Si es true, no lo exige `secretoCompleto` (p.ej. "modelo" de Gemini, que
      * tiene un valor por defecto razonable en el backend si se deja vacío). */
     opcional?: boolean;
+    /** Si se informa, el campo es un desplegable con estos valores en vez de texto
+     * libre (p.ej. el modo test/live de Stripe). */
+    opciones?: { valor: string; descripcion: string }[];
+    /** "cuenta_bancaria": desplegable con las cuentas bancarias de la empresa
+     * (p.ej. la cuenta en la que se apuntan los cobros de Stripe). */
+    tipo?: "cuenta_bancaria";
 }
 
 export interface ProveedorConocido {
@@ -163,6 +169,43 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
             { clave: "imap_puerto", etiqueta: "Puerto IMAP" },
             { clave: "smtp_host", etiqueta: "Servidor SMTP (salida)" },
             { clave: "smtp_puerto", etiqueta: "Puerto SMTP" },
+        ],
+    },
+    {
+        // Cobros con tarjeta (plugin stripe): enlaces de pago de recibos y
+        // facturas y QR del TPV. Al guardar, el backend da de alta el webhook en
+        // Stripe y guarda su secreto junto a las claves (ver comandos/comun/
+        // credencial_externa/stripe_conector.py); el usuario no configura nada en
+        // el panel de Stripe. Fuera de producción se cobra siempre en test.
+        valor: "Stripe",
+        categoria: "conector",
+        tipoAuth: "api_key",
+        icono: "tarjeta",
+        campos: [
+            {
+                clave: "modo",
+                etiqueta: "Modo de cobro",
+                opciones: [
+                    { valor: "test", descripcion: "Test (pruebas, sin cobros reales)" },
+                    { valor: "live", descripcion: "Live (cobros reales)" },
+                ],
+            },
+            {
+                // La cuenta propia de la pasarela: el webhook paga ahí los recibos y
+                // luego se concilia con las transferencias de Stripe al banco.
+                clave: "cuenta_banco_id",
+                etiqueta: "Cuenta donde se apuntan los cobros",
+                tipo: "cuenta_bancaria",
+            },
+            { clave: "secret_key_test", etiqueta: "Clave secreta de test (sk_test_… o rk_test_…)", contraseña: true },
+            { clave: "publishable_key_test", etiqueta: "Clave publicable de test (pk_test_…)", opcional: true },
+            {
+                clave: "secret_key_live",
+                etiqueta: "Clave secreta de live (sk_live_… o rk_live_…)",
+                contraseña: true,
+                opcional: true,
+            },
+            { clave: "publishable_key_live", etiqueta: "Clave publicable de live (pk_live_…)", opcional: true },
         ],
     },
 ];

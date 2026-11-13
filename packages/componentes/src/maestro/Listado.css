@@ -2,9 +2,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Evita que el listado quede a altura 0 cuando hay bloques altos encima
-       (tarjetas, resúmenes…): el .Maestro hace scroll y el listado sigue visible. */
-    min-height: min(50vh, 22rem);
+    min-height: 0;
 
     .listado-cabecera {
         position: relative;
@@ -127,6 +125,14 @@
             outline-offset: 2px;
         }
     }
+}
+
+/* Solo en el maestro: evita que el listado quede a altura 0 cuando hay bloques
+   altos encima (tarjetas de saldo, resúmenes…); el .Maestro hace scroll y el
+   listado sigue visible. En los detalles (líneas, pagos…) mide lo que su
+   contenido, para no reservar hueco vacío bajo listas de pocas filas. */
+.Maestro .Listado {
+    min-height: min(50vh, 22rem);
 }
 
 /* Maestro contraído junto al detalle: la cabecera baja a dos líneas si no cabe */

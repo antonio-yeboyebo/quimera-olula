@@ -58,6 +58,10 @@ const movimiento = (
     estado,
     cuentaPagoId,
     nombreCuentaPago: `Cuenta ${cuentaPagoId}`,
+    pasarela: null,
+    modoPasarela: null,
+    urlPanel: null,
+    incidenciaPasarela: null,
 });
 
 const conPagos = (pagos: MovimientoRecibo[]): ReciboVenta => ({

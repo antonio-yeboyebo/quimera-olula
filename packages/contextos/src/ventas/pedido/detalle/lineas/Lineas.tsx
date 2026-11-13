@@ -2,6 +2,7 @@ import { BorrarLinea } from "../../borrar_linea/BorrarLinea.tsx";
 import { CambiarLinea } from "../../cambiar_linea/CambiarLinea.tsx";
 import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
 import { LineaPedido, Pedido } from "../../diseño.ts";
+import { pedidoEsEditable, pedidoPendiente } from "../../dominio.ts";
 import { LineasLista } from "./LineasLista.tsx";
 
 export const Lineas = ({
@@ -15,6 +16,10 @@ export const Lineas = ({
   estadoPedido: string;
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
+  // Con algo servido el servidor solo admite añadir líneas, no cambiarlas ni borrarlas.
+  const lineasModificables = pedidoPendiente(pedido);
+  const editable = estadoPedido === "ABIERTO" && pedidoEsEditable(pedido);
+
   const acciones = [
     {
       texto: "Nueva",
@@ -23,14 +28,14 @@ export const Lineas = ({
     {
       texto: "Editar",
       onClick: () => publicar("cambio_linea_solicitado"),
-      deshabilitado: !lineaActiva,
+      deshabilitado: !lineaActiva || !lineasModificables,
     },
     {
       icono: "eliminar",
       texto: "Borrar",
       advertencia: true,
       onClick: () => publicar("baja_linea_solicitada"),
-      deshabilitado: !lineaActiva,
+      deshabilitado: !lineaActiva || !lineasModificables,
     },
   ];
 
@@ -49,12 +54,8 @@ export const Lineas = ({
         seleccionada={lineaActiva?.id}
         onCambioCantidad={handleCambioCantidad}
         divisa={pedido.divisa_id}
-        pedidoEditable={estadoPedido === "ABIERTO" && pedido.servido != "TOTAL"}
-        acciones={
-          estadoPedido === "ABIERTO" && pedido.servido != "TOTAL"
-            ? acciones
-            : undefined
-        }
+        pedidoEditable={editable}
+        acciones={editable ? acciones : undefined}
         publicar={publicar}
       />
 

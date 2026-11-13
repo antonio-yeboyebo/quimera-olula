@@ -5,6 +5,7 @@ export type EstadoDetalleReciboVenta =
     | 'ABIERTO' | 'VIENDO_TRAZA'
     | 'PAGANDO'
     | 'ENLACE_COBRO'
+    | 'ENLACE_TARJETA'
     | 'DESAGRUPANDO'
     | 'DEVOLVIENDO';
 

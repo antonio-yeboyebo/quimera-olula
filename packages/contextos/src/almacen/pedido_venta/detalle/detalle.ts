@@ -1,6 +1,6 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { estadosPorLinea, pedidoVentaVacio } from "../dominio.ts";
-import { comprobarReservasLineas, getPedidoVenta } from "../infraestructura.ts";
+import { cambiarPrioridadLinea, cambiarPrioridadPedido, comprobarReservasLineas, getPedidoVenta } from "../infraestructura.ts";
 import {
     CargaDetallePedidoVenta,
     ContextoDetallePedidoVenta,
@@ -60,3 +60,20 @@ export const cerrarPedidoCompetidor: ProcesarDetalle = async (contexto) => ({
     estado: "ABIERTO",
     pedidoCompetidor: null,
 });
+
+const recargarTrasCambioPrioridad = async (contexto: ContextoDetallePedidoVenta): Promise<ContextoDetallePedidoVenta> => ({
+    ...contexto,
+    ...(await cargarPedidoConEstadoLineas(contexto.pedido.id, contexto.zonas)),
+});
+
+export const cambiarPrioridadDeLinea: ProcesarDetalle = async (contexto, payload) => {
+    const linea = contexto.pedido.lineas.find((l) => l.id === payload);
+    if (!linea) return contexto;
+    await cambiarPrioridadLinea(contexto.pedido.id, linea.id, !linea.prioritaria);
+    return recargarTrasCambioPrioridad(contexto);
+};
+
+export const cambiarPrioridadDePedido: ProcesarDetalle = async (contexto, payload) => {
+    await cambiarPrioridadPedido(contexto.pedido.id, payload as boolean);
+    return recargarTrasCambioPrioridad(contexto);
+};

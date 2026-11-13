@@ -1,0 +1,10 @@
+.TabGeneral {
+    quimera-input[nombre="id"] { grid-column: span 4; }
+    quimera-input[nombre="nombre"] { grid-column: span 8; }
+    quimera-input[nombre="nif"] { grid-column: span 4; }
+    quimera-input[nombre="emailContacto"] { grid-column: span 8; }
+    quimera-input[nombre="estado"] { grid-column: span 4; }
+    quimera-input[nombre="nombreBd"] { grid-column: span 4; }
+    quimera-input[nombre="versionEsquema"] { grid-column: span 4; }
+    quimera-input[nombre="fechaAlta"] { grid-column: span 4; }
+}
