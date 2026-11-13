@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { Fragment, useState } from "react";
-import { createMemoryRouter, Outlet, RouterProvider } from "react-router";
+import { MemoryRouter, NavigateFunction, NavigateOptions, Outlet, Route, Routes, useLocation, useNavigate } from "react-router";
 import { describe, expect, test } from "vitest";
 import { estadoRecargaVista, useClaveRecargaVista } from "./recarga_vista.ts";
 
@@ -8,10 +8,10 @@ let montajes = 0;
 
 /** Como un maestro: lee el id de la URL solo al montarse. */
 const Maestro = () => {
+    const { search } = useLocation();
     const [idInicial] = useState(() => {
         montajes++;
-        return new URLSearchParams(window.location.search).get("id")
-            ?? new URLSearchParams(router.state.location.search).get("id");
+        return new URLSearchParams(search).get("id");
     });
     return <p>activo: {idInicial ?? "ninguno"}</p>;
 };
@@ -22,15 +22,34 @@ const Layout = () => {
     return <Fragment key={clave}><Outlet /></Fragment>;
 };
 
-let router: ReturnType<typeof createMemoryRouter>;
+/**
+ * Se usa `MemoryRouter` y no `createMemoryRouter`: el data router crea un `Request` con un
+ * `AbortSignal` en cada navegación, y en jsdom ese `AbortSignal` no es el que espera el
+ * `Request` de Node, lo que rompe el test según la versión de Node.
+ */
+let navegar: NavigateFunction;
+
+const CapturarNavegar = () => {
+    navegar = useNavigate();
+    return null;
+};
+
+const router = {
+    navigate: async (to: string, opciones?: NavigateOptions) => { await navegar(to, opciones); },
+};
 
 const montar = () => {
     montajes = 0;
-    router = createMemoryRouter(
-        [{ path: "/", Component: Layout, children: [{ path: "ventas/presupuesto", Component: Maestro }] }],
-        { initialEntries: ["/ventas/presupuesto?id=1"] },
+    render(
+        <MemoryRouter initialEntries={["/ventas/presupuesto?id=1"]}>
+            <CapturarNavegar />
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route path="ventas/presupuesto" element={<Maestro />} />
+                </Route>
+            </Routes>
+        </MemoryRouter>,
     );
-    render(<RouterProvider router={router} />);
 };
 
 describe("recarga_vista", () => {
