@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
+import { estadoRecargaVista } from "@olula/componentes/vista/recarga_vista.ts";
 import { construirUrlNavegacion } from "#/asistente/dominio.ts";
 import type { AccionNavegacion } from "#/asistente/diseño.ts";
 import { AsistenteRuntimeProvider } from "#/asistente/vistas/AsistenteRuntimeProvider.tsx";
@@ -19,7 +20,8 @@ export const PaginaAsistente = () => {
     const sesionActiva = useSesionActiva();
 
     const onAccionNavegacion = useCallback(
-        (accion: AccionNavegacion) => navigate(construirUrlNavegacion(accion)),
+        (accion: AccionNavegacion) =>
+            navigate(construirUrlNavegacion(accion), { state: estadoRecargaVista() }),
         [navigate]
     );
 
