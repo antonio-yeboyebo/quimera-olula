@@ -1,4 +1,5 @@
-import { agenteActivo, puntoVentaLocal } from "#/tpv/comun/infraestructura.ts";
+import { AgenteTpvActual } from "#/tpv/agente/agente_actual/AgenteTpvActual.tsx";
+import { PuntoVentaTpvActual } from "#/tpv/punto_de_venta/punto_actual/PuntoVentaTpvActual.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
@@ -13,9 +14,6 @@ import { metaTablaArqueo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
 
 export const MaestroConDetalleArqueoTpv = () => {
-  const puntoVentaActivo = puntoVentaLocal.obtenerSeguro();
-  const miAgenteActivo = agenteActivo.obtenerSeguro();
-
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -36,8 +34,13 @@ export const MaestroConDetalleArqueoTpv = () => {
         Maestro={
           <>
             <h2>Arqueos TPV</h2>
-            <h2>Punto de arqueo {puntoVentaActivo?.nombre} </h2>
-            <h2>Agente {miAgenteActivo?.nombre} </h2>
+            <div className="tpv-puesto">
+              {/* Los arqueos listados son los del punto de venta del puesto. */}
+              <PuntoVentaTpvActual
+                onChange={() => emitir("recarga_de_arqueos_solicitada", ctx.arqueos.criteria)}
+              />
+              <AgenteTpvActual />
+            </div>
             <Listado<CabeceraArqueoTpv>
               metaTabla={metaTablaArqueo}
               criteria={ctx.arqueos.criteria}
