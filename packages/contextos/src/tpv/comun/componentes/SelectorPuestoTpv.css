@@ -1,0 +1,27 @@
+/* Punto de venta y agente de este puesto, uno junto al otro si caben. */
+.tpv-puesto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaciado-xs) var(--gap-formulario);
+    padding-bottom: var(--espaciado-m);
+}
+
+.tpv-selector-puesto {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--espaciado-xs);
+
+    /* Ancho para nombres de hasta unas cuatro palabras: no ocupa toda la fila. */
+    quimera-select {
+        width: 28ch;
+        max-width: 100%;
+    }
+
+    .tpv-selector-puesto-botones {
+        display: flex;
+        flex-shrink: 0;
+        gap: var(--espaciado-xxs);
+        padding-bottom: var(--espaciado-xxs);
+    }
+}

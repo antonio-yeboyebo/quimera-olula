@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback, useState } from "react";
+import { Fragment, PropsWithChildren, useCallback, useState } from "react";
 // import { Contexto, ContextoSet } from "@olula/lib/contexto.ts";
 import { ContextoError, Intentar, QError } from "@olula/lib/contexto.ts";
 import { Outlet } from "react-router";
@@ -7,6 +7,7 @@ import { Outlet } from "react-router";
 import { QModal } from "../moleculas/qmodal.tsx";
 import { Plantilla } from "../plantilla/Plantilla.tsx";
 import { Slot } from "../slot/Slot.tsx";
+import { useClaveRecargaVista } from "./recarga_vista.ts";
 
 export const Vista = ({ children }: PropsWithChildren<object>) => {
   const slots = { hijos: children };
@@ -35,7 +36,10 @@ export const Vista = ({ children }: PropsWithChildren<object>) => {
     [setError]
   );
 
-  const contenido = children ?? <Outlet />;
+  // Remonta solo el contenido de la ruta (no la plantilla) al navegar con
+  // estadoRecargaVista(), aunque la ruta sea la actual: ver recarga_vista.ts.
+  const claveRecarga = useClaveRecargaVista();
+  const contenido = <Fragment key={claveRecarga}>{children ?? <Outlet />}</Fragment>;
 
   return (
     <ContextoError.Provider value={{ error, setError, intentar }}>

@@ -1,4 +1,5 @@
 import { PanelAsistenteBase } from "#/asistente/vistas/PanelAsistente.tsx";
+import { estadoRecargaVista } from "@olula/componentes/vista/recarga_vista.ts";
 import { useNavigate } from "react-router";
 
 /**
@@ -9,5 +10,12 @@ import { useNavigate } from "react-router";
  */
 export const AsistenteLateralOlula = () => {
     const navigate = useNavigate();
-    return <PanelAsistenteBase modo="lateral" navigate={url => navigate(url)} />;
+    // Con estadoRecargaVista() la pantalla de destino se recarga aunque ya sea la actual:
+    // "Ver presupuesto" estando en Presupuestos muestra el creado o cambiado.
+    return (
+        <PanelAsistenteBase
+            modo="lateral"
+            navigate={url => navigate(url, { state: estadoRecargaVista() })}
+        />
+    );
 };

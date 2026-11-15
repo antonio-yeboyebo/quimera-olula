@@ -69,8 +69,10 @@ export const MaestroConDetalleVentaTpv = () => {
                 onClick={cambiarLayout}
               />
             </div>
-            <PuntoVentaTpvActual onChange={handle_punto_venta_cambiado} />
-            <AgenteTpvActual />
+            <div className="tpv-puesto">
+              <PuntoVentaTpvActual onChange={handle_punto_venta_cambiado} />
+              <AgenteTpvActual />
+            </div>
             <Listado<VentaTpv>
               metaTabla={metaTablaFactura}
               criteria={ctx.ventas.criteria}
