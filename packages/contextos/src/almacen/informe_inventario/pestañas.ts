@@ -3,6 +3,7 @@ import { aBooleano } from "#/comun/informe_documentos/dominio.ts";
 import { ControlAlmacen, ControlFamilia } from "./controles.tsx";
 import { ResultadoInventario } from "./resultado/ResultadoInventario.tsx";
 import { tAlmacen } from "../i18n/index.ts";
+import { descripcionOpcionInventario } from "./dominio.ts";
 
 /**
  * Criterios de `i_inventario` de Eneboo, en filas como su formulario. Las dos
@@ -10,20 +11,8 @@ import { tAlmacen } from "../i18n/index.ts";
  * enseña la valoración. Los nombres son los de la API.
  */
 
-/** Las opciones guardan el valor de Eneboo (en español) y enseñan su traducción. */
-const TEXTO_OPCION: Record<string, () => string> = {
-    "No ordenar": () => tAlmacen("informe_inventario.noOrdenar"),
-    "Código": () => tAlmacen("informe_inventario.codigo"),
-    "Nombre": () => tAlmacen("informe_inventario.nombre"),
-    "Ascendente": () => tAlmacen("informe_inventario.ascendente"),
-    "Descendente": () => tAlmacen("informe_inventario.descendente"),
-    "Coste medio": () => tAlmacen("informe_inventario.costeMedio"),
-    "PVP": () => tAlmacen("informe_inventario.pvp"),
-    "Coste Prov.": () => tAlmacen("informe_inventario.costeProv"),
-};
-
 const opciones = (valores: string[]) =>
-    valores.map((valor) => ({ valor, get descripcion() { return TEXTO_OPCION[valor]?.() ?? valor; } }));
+    valores.map((valor) => ({ valor, get descripcion() { return descripcionOpcionInventario(valor); } }));
 
 export const ORDENES_ALMACEN = opciones(["No ordenar", "Código", "Nombre"]);
 // «Descripcion» sin tilde: es el valor que guarda Eneboo.
