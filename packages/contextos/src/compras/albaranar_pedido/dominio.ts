@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { LineaPedido } from "#/compras/pedido/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { AlbaranarPedido, LineaAlbaranar, LoteAlbaranar } from "./diseño.ts";
@@ -30,7 +31,7 @@ export const metaAlbaranarPedido: MetaModelo<AlbaranarPedido> = {
     },
     validacion: (modelo: AlbaranarPedido) => {
         const hayAlgunaRecibiendo = modelo.lineas.some((l) => calcularRecibiendo(l) > 0);
-        return hayAlgunaRecibiendo ? true : "Al menos una línea debe tener cantidad a recibir";
+        return hayAlgunaRecibiendo ? true : tCompras("albaranarPedido.sinCantidad");
     },
 };
 

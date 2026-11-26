@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.js";
 import ApiUrls from "#/compras/comun/urls.ts";
 import { calcularRecibiendo } from "./dominio.ts";
@@ -24,7 +25,7 @@ export const patchAlbaranarPedido = async (
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/${modelo.id}/albaranar`,
         payload,
-        "Error al albaranar el pedido"
+        tCompras("albaranarPedido.errores.albaranar")
     )) as unknown as
         | { datos: { albaran_id: string; codigo?: string } }
         | { albaran_id: string; codigo?: string };

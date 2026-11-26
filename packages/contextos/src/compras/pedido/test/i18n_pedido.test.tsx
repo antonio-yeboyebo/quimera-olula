@@ -5,6 +5,7 @@ import { BorrarPedido } from "../borrar/BorrarPedido.tsx";
 import { metaTablaLineaPedido } from "../detalle/lineas/metatabla_linea_pedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { AlbaranarPedidos } from "../maestro/AlbaranarPedidos.tsx";
+import { metaAlbaranarPedido } from "../../albaranar_pedido/dominio.ts";
 
 afterEach(async () => {
     await act(() => cambiarIdioma("es"));
@@ -31,5 +32,12 @@ describe("Pedidos de compra en español e inglés", () => {
         render(<BorrarPedido pedido={{ id: "1", codigo: "P001" } as Pedido} publicar={async () => {}} />);
         expect(screen.getByText("Are you sure you want to delete the order P001?")).toBeInTheDocument();
         expect(metaTablaLineaPedido().map((c) => c.cabecera)).toContain("Received");
+    });
+
+    test("albarán parcial: sin cantidad a recibir", async () => {
+        await cambiarIdioma("en");
+        expect(metaAlbaranarPedido.validacion?.({ lineas: [] } as never)).toBe(
+            "At least one line must have a quantity to receive"
+        );
     });
 });
