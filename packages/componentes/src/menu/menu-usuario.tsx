@@ -8,6 +8,7 @@ import { Link } from "react-router";
 import { QIcono } from "../atomos/qicono.tsx";
 import { estaAutentificado } from "../plantilla/autenticacion";
 import { useMenuControl } from "../plantilla/useMenuControl";
+import { elementoMiCuenta } from "./mi_cuenta.ts";
 
 // Tipo exportado para que las apps puedan usarlo en sus factories
 export type MenuUsuarioElementos = ElementoMenu[];
@@ -32,6 +33,7 @@ const elementosDelMenuDefault: MenuUsuarioElementos = [
   {
     nombre: "Sesión",
     subelementos: [
+      elementoMiCuenta,
       {
         nombre: "Cerrar sesión",
         url: "/logout",

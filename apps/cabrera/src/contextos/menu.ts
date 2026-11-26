@@ -1,4 +1,5 @@
 import { MenuUsuarioElementos } from "@olula/componentes/menu/menu-usuario.tsx";
+import { elementoMiCuenta } from "@olula/componentes/menu/mi_cuenta.ts";
 
 /**
  * Elementos del menú de usuario personalizados para Cabrera
@@ -15,6 +16,7 @@ export const MenuUsuarioElementosCabrera: MenuUsuarioElementos = [
                 color: "success",
                 variant: "main",
             },
+            { ...elementoMiCuenta, icono: "usuario" },
         ],
     },
     {
