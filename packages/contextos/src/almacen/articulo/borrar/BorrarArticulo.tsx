@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useContext } from "react";
 import { deleteArticulo } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 interface BorrarArticuloProps {
   articuloId: string;
@@ -15,6 +16,7 @@ export const BorrarArticulo = ({
   publicar = async () => {},
   onCancelar = () => {},
 }: BorrarArticuloProps) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const borrar = async () => {
@@ -27,8 +29,8 @@ export const BorrarArticulo = ({
     <QModalConfirmacion
       nombre="borrarArticulo"
       abierto={true}
-      titulo="Confirmar borrado"
-      mensaje="¿Está seguro de que desea borrar este artículo?"
+      titulo={t("articulo.confirmarBorrado")}
+      mensaje={t("articulo.estaSeguroDeQueDeseaBorrar")}
       onCerrar={onCancelar}
       onAceptar={borrar}
     />

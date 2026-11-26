@@ -1,14 +1,15 @@
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { Articulo } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const UsoArticulo = (articulo: Articulo) => (
   <>
     <QEtiqueta variante={articulo.seVende ? "exito" : "advertencia"}>
-      Venta
+      {tAlmacen("articulo.venta")}
     </QEtiqueta>{" "}
     <QEtiqueta variante={articulo.seCompra ? "exito" : "advertencia"}>
-      Compra
+      {tAlmacen("articulo.compra")}
     </QEtiqueta>{" "}
-    {articulo.noStock && <QEtiqueta variante="error">Sin stock</QEtiqueta>}
+    {articulo.noStock && <QEtiqueta variante="error">{tAlmacen("articulo.sinStock")}</QEtiqueta>}
   </>
 );

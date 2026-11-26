@@ -4,6 +4,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useState } from "react";
 import { Articulo, CajaProveedorArticulo, ProveedorArticulo } from "../../diseño.ts";
 import "./ProveedoresArticulo.css";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const FilaCaja = ({
     caja,
@@ -22,7 +23,7 @@ const FilaCaja = ({
                 <QBoton
                     variante="texto"
                     tamaño="pequeño"
-                    props={{ title: "Editar" }}
+                    props={{ title: tAlmacen("articulo.editar") }}
                     onClick={() =>
                         publicar("cambio_caja_proveedor_solicitado", {
                             proveedorId: proveedor.id,
@@ -36,7 +37,7 @@ const FilaCaja = ({
                     variante="texto"
                     tamaño="pequeño"
                     destructivo
-                    props={{ title: "Borrar" }}
+                    props={{ title: tAlmacen("articulo.borrar") }}
                     onClick={() =>
                         publicar("baja_caja_proveedor_solicitada", {
                             proveedorId: proveedor.id,
@@ -49,7 +50,7 @@ const FilaCaja = ({
                 <QBoton
                     variante="texto"
                     tamaño="pequeño"
-                    props={{ title: "Marcar como defecto" }}
+                    props={{ title: tAlmacen("articulo.marcarComoDefecto") }}
                     onClick={() =>
                         publicar("caja_proveedor_defecto_solicitada", {
                             proveedorId: proveedor.id,
@@ -85,17 +86,17 @@ const SeccionProveedor = ({
                     publicar("alta_caja_proveedor_solicitada", proveedor.id)
                 }
             >
-                Nueva caja
+                {tAlmacen("articulo.nuevaCaja")}
             </QBoton>
         </div>
         {proveedor.embalajes.length === 0 ? (
-            <p>Sin embalajes</p>
+            <p>{tAlmacen("articulo.sinEmbalajes")}</p>
         ) : (
             <table>
                 <thead>
                     <tr>
-                        <th>Tipo de caja</th>
-                        <th>Cantidad</th>
+                        <th>{tAlmacen("articulo.tipoDeCaja")}</th>
+                        <th>{tAlmacen("articulo.cantidad")}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -117,7 +118,7 @@ const SeccionProveedor = ({
 const ResumenProveedor = ({ proveedor }: { proveedor: ProveedorArticulo }) => {
     const texto =
         proveedor.embalajes.length === 0
-            ? "Sin embalajes definidos"
+            ? tAlmacen("articulo.sinEmbalajesDefinidos")
             : proveedor.embalajes
                   .map((e) => `${e.tipoCaja} ×${e.cantidad}${e.esDefecto ? " ★" : ""}`)
                   .join(", ");
@@ -135,21 +136,22 @@ export const ProveedoresArticulo = ({
     articulo: Articulo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const [activo, setActivo] = useState(false);
 
     if (articulo.proveedores.length === 0) {
-        return <p>Sin proveedores asociados</p>;
+        return <p>{t("articulo.sinProveedoresAsociados")}</p>;
     }
 
     return (
         <div className="ProveedoresArticulo">
             <div className="ProveedoresArticulo__cabecera">
-                <h4>Embalajes por proveedor</h4>
+                <h4>{t("articulo.embalajesPorProveedor")}</h4>
                 {activo ? (
                     <QBoton
                         variante="texto"
                         tamaño="pequeño"
-                        props={{ title: "Cerrar" }}
+                        props={{ title: t("articulo.cerrar") }}
                         onClick={() => setActivo(false)}
                     >
                         <QIcono nombre="arriba" tamaño="sm" />
@@ -158,7 +160,7 @@ export const ProveedoresArticulo = ({
                     <QBoton
                         variante="texto"
                         tamaño="pequeño"
-                        props={{ title: "Editar proveedores" }}
+                        props={{ title: t("articulo.editarProveedores") }}
                         onClick={() => setActivo(true)}
                     >
                         <QIcono nombre="editar_2" tamaño="sm" />

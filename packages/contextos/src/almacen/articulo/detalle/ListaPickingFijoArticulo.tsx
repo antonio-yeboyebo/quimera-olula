@@ -4,9 +4,11 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { PickingFijo } from "../../picking_fijo/diseño.ts";
 import { getPickingsFijos } from "../../picking_fijo/infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /** Huecos de picking fijo de un artículo. */
 export const ListaPickingFijoArticulo = ({ articuloId }: { articuloId: string }) => {
+  const t = useTAlmacen();
   const [huecos, setHuecos] = useState<PickingFijo[]>([]);
 
   useEffect(() => {
@@ -24,25 +26,25 @@ export const ListaPickingFijoArticulo = ({ articuloId }: { articuloId: string })
   return (
     <div className="ListaPickingFijoArticulo">
       <h4>
-        <ValorConEnlace href={urlListado.pickingFijoDeArticulo(articuloId)} etiqueta={`Ver el picking fijo de ${articuloId}`}>
-          Picking fijo
+        <ValorConEnlace href={urlListado.pickingFijoDeArticulo(articuloId)} etiqueta={t("articulo.verElPickingFijoDeArticuloid", { articuloId })}>
+          {t("articulo.pickingFijo")}
         </ValorConEnlace>
       </h4>
       <table>
         <thead>
           <tr>
-            <th>Ubicación</th>
-            <th>Mín.</th>
-            <th>Máx.</th>
-            <th>Unidad</th>
-            <th>Stock</th>
+            <th>{t("articulo.ubicacion")}</th>
+            <th>{t("articulo.min")}</th>
+            <th>{t("articulo.max")}</th>
+            <th>{t("articulo.unidad")}</th>
+            <th>{t("articulo.stock")}</th>
           </tr>
         </thead>
         <tbody>
           {huecos.map((h) => (
             <tr key={h.id}>
               <td>
-                <ValorConEnlace href={urlFicha.ubicacion(h.ubicacionId)} etiqueta={`Abrir ubicación ${h.ubicacion}`}>
+                <ValorConEnlace href={urlFicha.ubicacion(h.ubicacionId)} etiqueta={t("articulo.abrirUbicacionUbicacion", { ubicacion: h.ubicacion })}>
                   {h.ubicacion}
                 </ValorConEnlace>
               </td>
@@ -50,7 +52,7 @@ export const ListaPickingFijoArticulo = ({ articuloId }: { articuloId: string })
               <td>{h.maximo}</td>
               <td>{h.unidadReposicion}</td>
               <td>
-                <ValorConEnlace href={urlListado.stockDeArticulo(articuloId)} etiqueta={`Ver el stock de ${articuloId}`}>
+                <ValorConEnlace href={urlListado.stockDeArticulo(articuloId)} etiqueta={t("articulo.verElStockDeArticuloid", { articuloId })}>
                   {h.stock}
                 </ValorConEnlace>
               </td>

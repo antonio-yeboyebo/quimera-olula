@@ -16,16 +16,17 @@ import { Articulo } from "../diseño.ts";
 import { UsoArticulo } from "../UsoArticulo.tsx";
 import { ContextoMaestroArticulo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaArticulo: MetaTabla<Articulo> = [
-  { id: "id", cabecera: "Referencia" },
-  { id: "descripcion", cabecera: "Descripción" },
+  { id: "id", get cabecera() { return tAlmacen("articulo.referencia"); } },
+  { id: "descripcion", get cabecera() { return tAlmacen("articulo.descripcion"); } },
   {
     id: "descripcion_familia",
-    cabecera: "Familia",
+    get cabecera() { return tAlmacen("articulo.familia"); },
     render: (a) => a.descripcionFamilia,
   },
-  { id: "uso", cabecera: "Uso", render: UsoArticulo },
+  { id: "uso", get cabecera() { return tAlmacen("articulo.uso"); }, render: UsoArticulo },
 ];
 
 const filtroBooleano =
@@ -38,35 +39,35 @@ const filtroBooleano =
 const metaFiltroArticulo: MetaFiltro = {
   id: {
     id: "id",
-    label: "Referencia",
+    get label() { return tAlmacen("articulo.referencia"); },
     filtro: (v) => (v ? ["id", "~", v as string] : null),
   },
   descripcion: {
     id: "descripcion",
-    label: "Descripción",
+    get label() { return tAlmacen("articulo.descripcion"); },
     filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
   },
   familia_id: filtroFamilia,
   barcode: {
     id: "barcode",
-    label: "Cód. barras",
+    get label() { return tAlmacen("articulo.codBarras"); },
     filtro: (v) => (v ? ["barcode", "~", v as string] : null),
   },
   se_vende: {
     id: "se_vende",
-    label: "Se vende",
+    get label() { return tAlmacen("articulo.seVende"); },
     tipo: "checkbox",
     filtro: filtroBooleano("se_vende"),
   },
   se_compra: {
     id: "se_compra",
-    label: "Se compra",
+    get label() { return tAlmacen("articulo.seCompra"); },
     tipo: "checkbox",
     filtro: filtroBooleano("se_compra"),
   },
   sin_stock: {
     id: "sin_stock",
-    label: "No controla stock",
+    get label() { return tAlmacen("articulo.noControlaStock"); },
     tipo: "checkbox",
     filtro: filtroBooleano("sin_stock"),
   },
@@ -79,6 +80,7 @@ const criteriaConStock = (): Criteria => ({
 });
 
 export const MaestroConDetalleArticulo = () => {
+  const t = useTAlmacen();
   const criteriaBase = useMemo(criteriaConStock, []);
 
   const { id, criteria } = getUrlParams();
@@ -102,7 +104,7 @@ export const MaestroConDetalleArticulo = () => {
         seleccionada={ctx.articulos.activo}
         Maestro={
           <>
-            <h2>Artículos</h2>
+            <h2>{t("articulo.articulos")}</h2>
             <Listado<Articulo>
               metaTabla={metaTablaArticulo}
               metaFiltro={metaFiltroArticulo}
@@ -114,7 +116,7 @@ export const MaestroConDetalleArticulo = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("creacion_solicitada")}>
-                    Nuevo Artículo
+                    {t("articulo.nuevoArticulo")}
                   </QBoton>
                 </div>
               )}

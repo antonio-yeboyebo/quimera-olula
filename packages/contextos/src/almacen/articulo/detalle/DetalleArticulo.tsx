@@ -25,6 +25,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabAlmacenaje } from "./TabAlmacenaje.tsx";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (articulo: Articulo) => articulo.descripcion;
 
@@ -35,6 +36,7 @@ export const DetalleArticulo = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTAlmacen();
   const params = useParams();
   const articuloId = id ?? params.id;
 
@@ -66,20 +68,20 @@ export const DetalleArticulo = ({
 
   const acciones = [
     {
-      texto: "Ver stock",
+      texto: t("articulo.verStock"),
       onClick: () => navigate(urlListado.stockDeArticulo(articulo.id)),
     },
     {
-      texto: articulo.seVende ? "Quitar de venta" : "Habilitar para venta",
+      texto: articulo.seVende ? t("articulo.quitarDeVenta") : t("articulo.habilitarParaVenta"),
       onClick: () => emitir("venta_alternada_solicitada"),
     },
     {
-      texto: articulo.seCompra ? "Quitar de compra" : "Habilitar para compra",
+      texto: articulo.seCompra ? t("articulo.quitarDeCompra") : t("articulo.habilitarParaCompra"),
       onClick: () => emitir("compra_alternada_solicitada"),
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("articulo.borrar"),
       onClick: () => emitir("borrado_solicitado"),
       advertencia: true,
     },
@@ -101,34 +103,34 @@ export const DetalleArticulo = ({
           children={[
             <Tab
               key="tab-general"
-              label="General"
+              label={t("articulo.general")}
               children={<TabGeneral form={form} articulo={articulo} publicar={emitir}/>}
             />,
             plugin("sga") === "activo" && (
               <Tab
                 key="tab-almacenaje"
-                label="Almacenaje"
+                label={t("articulo.almacenaje")}
                 children={<TabAlmacenaje form={form} articuloId={articulo.id} />}
               />
             ),
             puede("ventas.articulo") && articulo.seVende && (
               <Tab
                 key="tab-ventas"
-                label="Ventas"
+                label={t("articulo.ventas")}
                 children={<PanelVentasArticulo articuloId={articulo.id} />}
               />
             ),
             puede("compras.articulo") && articulo.seCompra && (
               <Tab
                 key="tab-compras"
-                label="Compras"
+                label={t("articulo.compras")}
                 children={<PanelComprasArticulo articuloId={articulo.id} />}
               />
             ),
             plugin("produccion") === "activo" && puede("produccion.articulo") && (
               <Tab
                 key="tab-fabricacion"
-                label="Fabricación"
+                label={t("articulo.fabricacion")}
                 children={<TabFabricacionArticulo articuloId={articulo.id} />}
               />
             ),
