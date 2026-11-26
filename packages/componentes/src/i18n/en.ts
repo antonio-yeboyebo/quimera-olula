@@ -83,6 +83,9 @@ export const en: Traduccion<typeof es> = {
     menu: {
         "Ventas": "Sales",
         "Clientes": "Customers",
+        "Presupuestos": "Quotes",
+        "Tarifas": "Rates",
+        "Agentes": "Sales agents",
         "Mi cuenta": "My account",
         "Cerrar sesión": "Log out",
         // Almacén

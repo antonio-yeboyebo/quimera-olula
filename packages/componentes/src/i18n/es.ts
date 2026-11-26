@@ -82,6 +82,9 @@ export const es = {
     menu: {
         "Ventas": "Ventas",
         "Clientes": "Clientes",
+        "Presupuestos": "Presupuestos",
+        "Tarifas": "Tarifas",
+        "Agentes": "Agentes",
         "Mi cuenta": "Mi cuenta",
         "Cerrar sesión": "Cerrar sesión",
         // Almacén
