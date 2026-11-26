@@ -10,6 +10,7 @@ import {
     PostTipoUbicacion,
     TipoUbicacion,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/tipo_ubicacion`;
 
@@ -76,7 +77,7 @@ export const postTipoUbicacion: PostTipoUbicacion = async (nuevo) => {
     const respuesta = await RestAPI.post<NuevoTipoUbicacionApi>(
         baseUrl,
         nuevoTipoUbicacionAApi(nuevo),
-        "Error al crear tipo de ubicación"
+        tAlmacen("tipo_ubicacion.errorAlCrearTipoDeUbicacion")
     );
     return respuesta.id;
 };
@@ -85,10 +86,10 @@ export const patchTipoUbicacion: PatchTipoUbicacion = async (id, cambios) => {
     await RestAPI.patch<CambiosTipoUbicacionApi>(
         `${baseUrl}/${id}`,
         cambiosTipoUbicacionAApi(cambios),
-        "Error al actualizar tipo de ubicación"
+        tAlmacen("tipo_ubicacion.errorAlActualizarTipoDeUbicacion")
     );
 };
 
 export const deleteTipoUbicacion: DeleteTipoUbicacion = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar tipo de ubicación");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("tipo_ubicacion.errorAlBorrarTipoDeUbicacion"));
 };

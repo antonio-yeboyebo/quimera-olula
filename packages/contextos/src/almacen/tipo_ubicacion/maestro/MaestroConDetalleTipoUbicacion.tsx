@@ -12,15 +12,17 @@ import { descripcionFormatoUbicacion } from "../dominio.ts";
 import { CrearTipoUbicacion } from "../crear/CrearTipoUbicacion.js";
 import { DetalleTipoUbicacion } from "../detalle/DetalleTipoUbicacion.js";
 import { getMaquina } from "./maquina.js";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaTipoUbicacion: MetaTabla<TipoUbicacion> = [
-    { id: "codigo", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "formato", cabecera: "Formato", render: (t) => descripcionFormatoUbicacion(t.formato) },
-    { id: "capacidadPalets", cabecera: "Palés" },
+    { id: "codigo", get cabecera() { return tAlmacen("tipo_ubicacion.codigo"); } },
+    { id: "descripcion", get cabecera() { return tAlmacen("tipo_ubicacion.descripcion"); } },
+    { id: "formato", get cabecera() { return tAlmacen("tipo_ubicacion.formato"); }, render: (t) => descripcionFormatoUbicacion(t.formato) },
+    { id: "capacidadPalets", get cabecera() { return tAlmacen("tipo_ubicacion.pales"); } },
 ];
 
 export const MaestroConDetalleTipoUbicacion = () => {
+    const tx = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -45,7 +47,7 @@ export const MaestroConDetalleTipoUbicacion = () => {
             <MaestroDetalle<TipoUbicacion>
                 Maestro={
                     <>
-                        <h2>Tipos de ubicación</h2>
+                        <h2>{tx("tipo_ubicacion.tiposDeUbicacion")}</h2>
                         <Listado<TipoUbicacion>
                             metaTabla={metaTablaTipoUbicacion}
                             criteria={tiposUbicacion.criteria}
@@ -57,7 +59,7 @@ export const MaestroConDetalleTipoUbicacion = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_tipo_ubicacion_solicitado")}>
-                                        Nuevo Tipo de Ubicación
+                                        {tx("tipo_ubicacion.nuevoTipoDeUbicacion")}
                                     </QBoton>
                                 </div>
                             )}

@@ -1,12 +1,13 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { FormatoUbicacion, NuevoTipoUbicacion, TipoUbicacion } from "./diseño.ts";
 import { sinTexto } from "#/almacen/comun/dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const formatosUbicacion: { valor: FormatoUbicacion; descripcion: string }[] = [
-    { valor: "HUECO_PALET", descripcion: "Hueco de palé" },
-    { valor: "ESTANTE", descripcion: "Estante" },
-    { valor: "SUELO", descripcion: "Suelo" },
-    { valor: "PLAYA", descripcion: "Playa" },
+    { valor: "HUECO_PALET", get descripcion() { return tAlmacen("tipo_ubicacion.huecoDePale"); } },
+    { valor: "ESTANTE", get descripcion() { return tAlmacen("tipo_ubicacion.estante"); } },
+    { valor: "SUELO", get descripcion() { return tAlmacen("tipo_ubicacion.suelo"); } },
+    { valor: "PLAYA", get descripcion() { return tAlmacen("tipo_ubicacion.playa"); } },
 ];
 
 export const descripcionFormatoUbicacion = (formato: string): string =>
@@ -27,13 +28,13 @@ type CamposTipoUbicacion = Pick<
 
 /** Devuelve `true` si es válido o el mensaje del primer error. */
 export const validarTipoUbicacion = (m: CamposTipoUbicacion): string | true => {
-    if (sinTexto(m.codigo)) return "El código es obligatorio";
-    if (m.codigo.length > 10) return "El código admite como máximo 10 caracteres";
-    if (sinTexto(m.descripcion)) return "La descripción es obligatoria";
-    if (sinTexto(m.formato)) return "El formato es obligatorio";
-    if (!enteroNoNegativoONulo(m.capacidadPalets)) return "La capacidad de palés debe ser un entero mayor o igual que 0";
-    if (!numeroNoNegativoONulo(m.pesoMax)) return "El peso máximo debe ser mayor o igual que 0";
-    if (!numeroNoNegativoONulo(m.alturaMax)) return "La altura máxima debe ser mayor o igual que 0";
+    if (sinTexto(m.codigo)) return tAlmacen("tipo_ubicacion.elCodigoEsObligatorio");
+    if (m.codigo.length > 10) return tAlmacen("tipo_ubicacion.elCodigoAdmiteComoMaximo10");
+    if (sinTexto(m.descripcion)) return tAlmacen("tipo_ubicacion.laDescripcionEsObligatoria");
+    if (sinTexto(m.formato)) return tAlmacen("tipo_ubicacion.elFormatoEsObligatorio");
+    if (!enteroNoNegativoONulo(m.capacidadPalets)) return tAlmacen("tipo_ubicacion.laCapacidadDePalesDebeSer");
+    if (!numeroNoNegativoONulo(m.pesoMax)) return tAlmacen("tipo_ubicacion.elPesoMaximoDebeSerMayor");
+    if (!numeroNoNegativoONulo(m.alturaMax)) return tAlmacen("tipo_ubicacion.laAlturaMaximaDebeSerMayor");
     return true;
 };
 

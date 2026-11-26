@@ -11,8 +11,10 @@ import { useCallback } from "react";
 import { formatosUbicacion, metaNuevoTipoUbicacion, nuevoTipoUbicacionVacio } from "../dominio.ts";
 import { postTipoUbicacion } from "../infraestructura.ts";
 import "./CrearTipoUbicacion.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearTipoUbicacion = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaNuevoTipoUbicacion, nuevoTipoUbicacionVacio);
 
     const crear_ = useCallback(async () => {
@@ -33,24 +35,24 @@ export const CrearTipoUbicacion = ({ publicar }: { publicar: EmitirEvento }) => 
         <QModal
             abierto={true}
             nombre="crearTipoUbicacion"
-            titulo="Crear tipo de ubicación"
+            titulo={t("tipo_ubicacion.crearTipoDeUbicacion")}
             onCerrar={cancelar}
         >
             <div className="CrearTipoUbicacion">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("codigo")} maxLength={10} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
-                    <QSelect label="Formato" {...uiProps("formato")} opciones={formatosUbicacion} />
-                    <QInput label="Capacidad (palés)" {...uiProps("capacidadPalets")} />
-                    <QInput label="Peso máx. (kg)" {...uiProps("pesoMax")} />
-                    <QInput label="Altura máx. (m)" {...uiProps("alturaMax")} />
-                    <QCheckbox label="Multi-referencia" {...uiProps("multiReferencia")} />
-                    <QCheckbox label="Multi-lote" {...uiProps("multiLote")} />
+                    <QInput label={t("tipo_ubicacion.codigo")} {...uiProps("codigo")} maxLength={10} ref={focus} />
+                    <QInput label={t("tipo_ubicacion.descripcion")} {...uiProps("descripcion")} />
+                    <QSelect label={t("tipo_ubicacion.formato")} {...uiProps("formato")} opciones={formatosUbicacion} />
+                    <QInput label={t("tipo_ubicacion.capacidadPales")} {...uiProps("capacidadPalets")} />
+                    <QInput label={t("tipo_ubicacion.pesoMaxKg")} {...uiProps("pesoMax")} />
+                    <QInput label={t("tipo_ubicacion.alturaMaxM")} {...uiProps("alturaMax")} />
+                    <QCheckbox label={t("tipo_ubicacion.multiReferencia")} {...uiProps("multiReferencia")} />
+                    <QCheckbox label={t("tipo_ubicacion.multiLote")} {...uiProps("multiLote")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("tipo_ubicacion.crear")}
                     </QBoton>
                 </div>
             </div>
