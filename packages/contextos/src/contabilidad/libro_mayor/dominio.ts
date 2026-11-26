@@ -5,6 +5,7 @@ import { ASCENDENTE } from "#/contabilidad/libro_diario/dominio.ts";
 import { Modelo } from "@olula/lib/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { LibroMayor, NuevoLibroMayor } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export { ASCENDENTE, ejercicioActual };
 
@@ -13,7 +14,7 @@ export const etiquetaLibroMayor = (
 ): string =>
     informe.descripcion
         ? `${informe.descripcion} — ${informe.ejercicioId}`
-        : `Libro mayor ${informe.ejercicioId}`;
+        : tContabilidad("libro_mayor.libroMayorEjercicioid", { ejercicioId: informe.ejercicioId });
 
 export const libroMayorVacio = (): LibroMayor => ({
     id: "",
@@ -73,7 +74,7 @@ export const nuevoLibroMayorInicial = (
 export const nombreFicheroLibroMayor = (
     informe: Pick<LibroMayor, "descripcion" | "ejercicioId">
 ): string => {
-    const base = (informe.descripcion || `libro mayor ${informe.ejercicioId}`)
+    const base = (informe.descripcion || tContabilidad("libro_mayor.libroMayorEjercicioid2", { ejercicioId: informe.ejercicioId }))
         .toLowerCase()
         .normalize("NFD")
         .replace(/[̀-ͯ]/g, "")

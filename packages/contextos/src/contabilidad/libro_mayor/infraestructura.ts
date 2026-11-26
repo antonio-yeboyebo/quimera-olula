@@ -19,6 +19,7 @@ import {
     SentidoOrden,
 } from "./diseño.ts";
 import { ASCENDENTE } from "./dominio.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.LIBRO_MAYOR;
@@ -224,14 +225,14 @@ export const getResultadoLibroMayor: GetResultadoLibroMayor = async (id) =>
     RestAPI.getItem<ResultadoLibroMayor, ResultadoLibroMayorApi>(
         urls.LIBRO_MAYOR_DATOS(id),
         resultadoDesdeApi,
-        "Error al calcular el libro mayor"
+        tContabilidad("libro_mayor.errorAlCalcularElLibroMayor")
     );
 
 export const postLibroMayor: PostLibroMayor = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoLibroMayorAApi(nuevo),
-        "Error al crear el libro mayor"
+        tContabilidad("libro_mayor.errorAlCrearElLibroMayor")
     );
     return String(respuesta.id);
 };
@@ -240,16 +241,16 @@ export const patchLibroMayor: PatchLibroMayor = async (informe, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${informe.id}`,
         cambiosLibroMayorAApi(cambios, informe),
-        "Error al guardar el libro mayor"
+        tContabilidad("libro_mayor.errorAlGuardarElLibroMayor")
     );
 };
 
 export const deleteLibroMayor: DeleteLibroMayor = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el libro mayor");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("libro_mayor.errorAlBorrarElLibroMayor"));
 };
 
 export const getReportLibroMayor: GetReportLibroMayor = async (id) =>
     RestAPI.blob(
         urls.LIBRO_MAYOR_REPORT(id),
-        "Error al descargar el PDF del libro mayor"
+        tContabilidad("libro_mayor.errorAlDescargarElPdfDel")
     );

@@ -15,10 +15,12 @@ import {
     metaTablaLibroMayor,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Libros mayores guardados: cada ficha son los criterios de un informe. Se
  * comparten con el ERP de escritorio, que usa la misma tabla. */
 export const MaestroConDetalleLibroMayor = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaLibroMayorDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -40,7 +42,7 @@ export const MaestroConDetalleLibroMayor = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el libro mayor.</p>;
+        return <p>{t("libro_mayor.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
@@ -63,7 +65,7 @@ export const MaestroConDetalleLibroMayor = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("libro_mayor.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}
