@@ -59,7 +59,7 @@ const metaAlbaranes = () => sinCliente([
     cabecera: tVentas("documento.maestro.estado"),
     render: (albaran: Albaran) => <EtiquetaEstado {...etiquetaEstadoAlbaran(albaran)} />,
   },
-  ...metaTablaAlbaran,
+  ...metaTablaAlbaran(),
 ] as MetaTabla<Albaran>);
 const metaFacturas = () => sinCliente([
   {

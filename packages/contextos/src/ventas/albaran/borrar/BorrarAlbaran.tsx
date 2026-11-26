@@ -3,6 +3,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Albaran } from "../diseño.ts";
 import { borrarAlbaran } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarAlbaran = ({
   publicar,
@@ -11,6 +12,7 @@ export const BorrarAlbaran = ({
   publicar: (evento: string, payload?: unknown) => void;
   albaran: Albaran;
 }) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     if (albaran.id) {
       await borrarAlbaran(albaran.id);
@@ -29,8 +31,8 @@ export const BorrarAlbaran = ({
     <QModalConfirmacion
       nombre="confirmarBorrarAlbaran"
       abierto={true}
-      titulo="Confirmar borrar"
-      mensaje="¿Está seguro de que desea borrar este albarán?"
+      titulo={t("documento.detalle.confirmarBorrar")}
+      mensaje={t("albaran.borrar.mensaje")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

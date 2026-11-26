@@ -3,6 +3,7 @@
  * `comun` y `cliente` están aquí; cada otro módulo tiene su fichero en `es/` (y su
  * traducción, con las mismas claves, en `en/`).
  */
+import { albaran } from "./es/albaran.ts";
 import { documento } from "./es/documento.ts";
 import { pedido } from "./es/pedido.ts";
 import { presupuesto } from "./es/presupuesto.ts";
@@ -11,6 +12,7 @@ export const es = {
     documento,
     presupuesto,
     pedido,
+    albaran,
     comun: {
         agente: "Agente",
         seleccionarContacto: "Seleccionar contacto",

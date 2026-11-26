@@ -18,53 +18,54 @@ import {
     LineaAlbaran,
     NuevoAlbaran,
 } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 // La columna de estado la añade delante MaestroConDetalleAlbaran.
-export const metaTablaAlbaran: MetaTabla<Albaran> = [
+export const metaTablaAlbaran = (): MetaTabla<Albaran> => [
     {
         id: "codigo",
         estilo: "secundario",
-        cabecera: "Código",
+        cabecera: tVentas("documento.maestro.codigo"),
         prioridad: "alta",
     },
     {
         id: "nombre_cliente",
         estilo: "destacado",
-        cabecera: "Cliente",
+        cabecera: tVentas("documento.maestro.cliente"),
         prioridad: "alta",
         render: (a) => a.cliente.nombre_cliente,
     },
     {
         id: "fecha",
-        cabecera: "Fecha",
+        cabecera: tVentas("documento.maestro.fecha"),
         tipo: "fecha",
         prioridad: "alta",
     },
     {
         id: "total",
         estilo: "destacado",
-        cabecera: "Total",
+        cabecera: tVentas("documento.maestro.total"),
         tipo: "moneda",
         prioridad: "alta",
         divisa: (albaran) => albaran.divisa_id,
     },
     {
         id: "nombre_agente",
-        cabecera: "Agente",
+        cabecera: tVentas("documento.maestro.agente"),
         prioridad: "baja",
     },
     {
         id: "almacen_id",
-        cabecera: "Almacén",
+        cabecera: tVentas("documento.maestro.almacen"),
         prioridad: "baja",
         render: (a) => a.nombre_almacen || a.almacen_id,
     },
     {
         id: "de_abono",
-        cabecera: "Abono",
+        cabecera: tVentas("albaran.maestro.abono"),
         tipo: "booleano",
         prioridad: "baja",
-        render: (a) => (a.de_abono ? "Sí" : ""),
+        render: (a) => (a.de_abono ? tVentas("albaran.si") : ""),
     },
 ];
 
@@ -81,8 +82,8 @@ export const albaranVacio = (): Albaran => ({
 })
 
 export const tituloAlbaran = (albaran: Albaran): string => {
-    const titulo = tituloDocumentoVenta(albaran, "Nuevo Albarán");
-    return albaran.de_abono ? `${titulo} · Abono` : titulo;
+    const titulo = tituloDocumentoVenta(albaran, tVentas("albaran.maestro.nuevo"));
+    return albaran.de_abono ? tVentas("albaran.tituloAbono", { titulo }) : titulo;
 }
 
 export const nuevoAlbaranVacio: NuevoAlbaran = nuevaVentaVacia;
@@ -128,12 +129,12 @@ export const cambioCliente = (albaran: Albaran): CambioClienteAlbaran => ({
 
 export const etiquetaEstadoAlbaran = (albaran: Pick<Albaran, "facturado">): EstadoEtiqueta =>
     albaran.facturado
-        ? { texto: "Facturado", tono: "completado" }
-        : { texto: "Pendiente", tono: "pendiente" };
+        ? { texto: tVentas("albaran.estado.facturado"), tono: "completado" }
+        : { texto: tVentas("albaran.estado.pendiente"), tono: "pendiente" };
 
 /** Widgets por defecto del maestro de albaranes (totales según el filtro activo). */
-export const widgetsAlbaran = widgetsDocumentoVenta("ventas.albaran", {
-    plural: "Albaranes",
-    total: "Importe total",
-    medio: "Albarán medio",
+export const widgetsAlbaran = () => widgetsDocumentoVenta("ventas.albaran", {
+    plural: tVentas("albaran.widgets.plural"),
+    total: tVentas("albaran.widgets.total"),
+    medio: tVentas("albaran.widgets.medio"),
 });
