@@ -114,7 +114,7 @@ export const ArticuloFactura = ({
       opciones={opciones}
       onChange={handleChange}
       deshabilitado={deshabilitado || !hayFactura}
-      placeholder={hayFactura ? undefined : "Selecciona antes la factura"}
+      placeholder={hayFactura ? undefined : t("comun.factura.seleccionaAntes")}
       {...props}
     />
   );

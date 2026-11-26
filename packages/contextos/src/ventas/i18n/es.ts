@@ -74,6 +74,7 @@ export const es = {
             buscarConCliente: "Código, cliente o fecha (dd/mm/aaaa)",
             buscarSinCliente: "Código o fecha (dd/mm/aaaa)",
             clienteObligatorio: "El campo cliente debe estar informado",
+            seleccionaAntes: "Selecciona antes la factura",
         },
         cambiarCliente: "Cambiar cliente",
         linea: {

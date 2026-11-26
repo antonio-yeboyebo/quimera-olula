@@ -71,6 +71,7 @@ export const en: Traduccion<typeof es> = {
             buscarConCliente: "Code, customer or date (dd/mm/yyyy)",
             buscarSinCliente: "Code or date (dd/mm/yyyy)",
             clienteObligatorio: "The customer field is required",
+            seleccionaAntes: "Select the invoice first",
         },
         cambiarCliente: "Change customer",
         linea: {
