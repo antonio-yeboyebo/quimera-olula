@@ -9,6 +9,7 @@ import { Inventario, LineaInventario } from "../../diseño.ts";
 import { EstadoDetalleInventario } from "../diseño.ts";
 import { totalesLineas } from "../dominio.ts";
 import { LineasLista } from "./LineasLista.tsx";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 /** Orquestador de las líneas: botones, tabla y modales de alta, cambio, borrado y carga. */
 export const LineasInventario = ({
@@ -29,19 +30,18 @@ export const LineasInventario = ({
         <div className="LineasInventario">
             <div className="cabecera-lineas">
                 <h4>
-                    Líneas ({formatearNumero(totales.lineas)}) · contado {formatearNumero(totales.contado)} ·
-                    diferencia {totales.diferencia > 0 ? "+" : ""}{formatearNumero(totales.diferencia)}
+                    {tAlmacen("inventario.lineas")}{formatearNumero(totales.lineas)}{tAlmacen("inventario.contado")}{" "}{formatearNumero(totales.contado)}{" "}{tAlmacen("inventario.diferencia")}{" "}{totales.diferencia > 0 ? "+" : ""}{formatearNumero(totales.diferencia)}
                 </h4>
                 <div className="botones maestro-botones">
-                    <QBoton onClick={() => publicar("crear_linea_solicitado")}>Nueva línea</QBoton>
+                    <QBoton onClick={() => publicar("crear_linea_solicitado")}>{tAlmacen("inventario.nuevaLinea")}</QBoton>
                     <QBoton onClick={() => publicar("cambio_linea_solicitado")} deshabilitado={!lineaActiva}>
-                        Editar
+                        {tAlmacen("inventario.editar")}
                     </QBoton>
                     <QBoton onClick={() => publicar("borrar_linea_solicitado")} deshabilitado={!lineaActiva}>
-                        Borrar línea
+                        {tAlmacen("inventario.borrarLinea")}
                     </QBoton>
                     <QBoton variante="borde" onClick={() => publicar("cargar_fichero_solicitado")}>
-                        Cargar fichero
+                        {tAlmacen("inventario.cargarFichero")}
                     </QBoton>
                 </div>
             </div>

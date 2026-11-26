@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Inventario } from "../diseño.ts";
 import { patchRegularizarRestoInventario } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Regulariza a 0 los artículos con stock en el almacén que no tienen línea
@@ -16,6 +17,7 @@ export const RegularizarRestoInventario = ({
     inventario: Inventario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const regularizar_ = useCallback(async () => {
         const lineas = await patchRegularizarRestoInventario(inventario.id);
         publicar("resto_regularizado", lineas);
@@ -32,8 +34,8 @@ export const RegularizarRestoInventario = ({
         <QModalConfirmacion
             nombre="regularizarRestoInventario"
             abierto={true}
-            titulo="Regularizar resto a 0"
-            mensaje={`Los artículos del almacén ${inventario.almacenId} sin línea en este inventario se regularizarán con cantidad 0 a la fecha del inventario. ¿Continuar?`}
+            titulo={t("inventario.regularizarRestoA0")}
+            mensaje={t("inventario.losArticulosDelAlmacenAlmacenidSin", { almacenId: inventario.almacenId })}
             onCerrar={cancelar}
             onAceptar={regularizar}
         />

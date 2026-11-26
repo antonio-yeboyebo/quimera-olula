@@ -21,6 +21,7 @@ import {
     separadorAOpcion,
     separadorDesdeOpcion,
 } from "./cargar_fichero.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 type Accion = "simular" | "cargar" | "cargar_validas";
 
@@ -45,6 +46,7 @@ export const CargarFicheroInventario = ({
     inventario: Inventario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [fichero, setFichero] = useState<File | null>(null);
     const [texto, setTexto] = useState("");
@@ -96,17 +98,15 @@ export const CargarFicheroInventario = ({
         <QModal
             abierto={true}
             nombre="cargarFicheroInventario"
-            titulo={`Cargar lecturas en el inventario ${inventario.id}`}
+            titulo={t("inventario.cargarLecturasEnElInventarioId", { id: inventario.id })}
             onCerrar={cerrar}
         >
             <div className="CargarFicheroInventario">
                 <p>
-                    Fichero CSV, TXT, XLSX u ODS. Con cabecera, las columnas se toman por nombre
-                    (referencia, cantidad, ubicación, lote); sin ella, por posición:
-                    referencia, cantidad y ubicación.
+                    {t("inventario.ficheroCsvTxtXlsxUOds")}
                 </p>
                 <label className="selector-fichero">
-                    <span>Fichero</span>
+                    <span>{t("inventario.fichero")}</span>
                     <input
                         type="file"
                         name="fichero"
@@ -115,11 +115,11 @@ export const CargarFicheroInventario = ({
                     />
                 </label>
                 {formatoNoValido && (
-                    <p className="error-fichero">Formato no admitido: use CSV, TXT, XLSX u ODS.</p>
+                    <p className="error-fichero">{t("inventario.formatoNoAdmitidoUseCsvTxt")}</p>
                 )}
                 {!fichero && (
                     <QTextArea
-                        label="O pegue las lecturas (referencia|cantidad|ubicación, una por línea)"
+                        label={t("inventario.oPegueLasLecturasReferenciaCantidad")}
                         nombre="texto"
                         rows={4}
                         valor={texto}
@@ -131,7 +131,7 @@ export const CargarFicheroInventario = ({
                 )}
                 <quimera-formulario>
                     <QSelect
-                        label="Separador (CSV/TXT)"
+                        label={t("inventario.separadorCsvTxt")}
                         nombre="separador"
                         valor={separadorAOpcion(opciones.separador)}
                         opciones={opcionesSeparador}
@@ -141,7 +141,7 @@ export const CargarFicheroInventario = ({
                         }
                     />
                     <QCheckbox
-                        label="Ignorar primera línea (sin cabecera)"
+                        label={t("inventario.ignorarPrimeraLineaSinCabecera")}
                         nombre="ignorarPrimeraLinea"
                         valor={opciones.ignorarPrimeraLinea}
                         onChange={(valor) => setOpciones({ ...opciones, ignorarPrimeraLinea: valor === "true" })}
@@ -150,22 +150,22 @@ export const CargarFicheroInventario = ({
 
                 <div className="botones maestro-botones">
                     <QBoton variante="borde" onClick={() => enviar("simular")} deshabilitado={!puedeEnviar}>
-                        Simular
+                        {t("inventario.simular")}
                     </QBoton>
                     <QBoton onClick={() => enviar("cargar")} deshabilitado={!puedeEnviar}>
-                        Cargar
+                        {t("inventario.cargar")}
                     </QBoton>
                     {hayRechazadas && !resultado?.cargado && (resultado?.lecturas ?? 0) > 0 && (
                         <QBoton advertencia onClick={() => enviar("cargar_validas")} deshabilitado={!puedeEnviar}>
-                            Cargar solo las válidas
+                            {t("inventario.cargarSoloLasValidas")}
                         </QBoton>
                     )}
-                    {cargado && <QBoton variante="texto" onClick={cerrar}>Cerrar</QBoton>}
+                    {cargado && <QBoton variante="texto" onClick={cerrar}>{t("inventario.cerrar")}</QBoton>}
                 </div>
 
                 {resultado && <ResultadoCarga resultado={resultado} simulado={simulado} />}
             </div>
-            <QCargando visible={enviando} mensaje="Procesando fichero..." />
+            <QCargando visible={enviando} mensaje={t("inventario.procesandoFichero")} />
         </QModal>
     );
 };
@@ -183,14 +183,14 @@ const ResultadoCarga = ({
         </p>
         {resultado.rechazadas.length > 0 && (
             <>
-                <h5>Filas rechazadas</h5>
+                <h5>{tAlmacen("inventario.filasRechazadas")}</h5>
                 <table className="tabla-rechazadas">
                     <thead>
                         <tr>
-                            <th className="numero">Fila</th>
-                            <th>Referencia</th>
-                            <th>Cantidad</th>
-                            <th>Motivo</th>
+                            <th className="numero">{tAlmacen("inventario.fila")}</th>
+                            <th>{tAlmacen("inventario.referencia")}</th>
+                            <th>{tAlmacen("inventario.cantidad")}</th>
+                            <th>{tAlmacen("inventario.motivo")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,15 +208,15 @@ const ResultadoCarga = ({
         )}
         {resultado.articulos.length > 0 && (
             <>
-                <h5>{resultado.cargado ? "Artículos cargados" : "Artículos válidos"}</h5>
+                <h5>{resultado.cargado ? tAlmacen("inventario.articulosCargados") : tAlmacen("inventario.articulosValidos")}</h5>
                 <table className="tabla-articulos">
                     <thead>
                         <tr>
-                            <th>Referencia</th>
-                            <th>Descripción</th>
-                            <th className="numero">Lecturas</th>
-                            <th className="numero">Cantidad</th>
-                            <th className="numero">Stock actual</th>
+                            <th>{tAlmacen("inventario.referencia")}</th>
+                            <th>{tAlmacen("inventario.descripcion")}</th>
+                            <th className="numero">{tAlmacen("inventario.lecturas")}</th>
+                            <th className="numero">{tAlmacen("inventario.cantidad")}</th>
+                            <th className="numero">{tAlmacen("inventario.stockActual")}</th>
                         </tr>
                     </thead>
                     <tbody>

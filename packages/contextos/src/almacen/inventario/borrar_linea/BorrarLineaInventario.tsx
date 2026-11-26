@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Inventario, LineaInventario } from "../diseño.ts";
 import { deleteLineaInventario } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarLineaInventario = ({
     inventario,
@@ -14,6 +15,7 @@ export const BorrarLineaInventario = ({
     linea: LineaInventario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteLineaInventario(inventario.id, linea.id);
         publicar("linea_borrada", linea);
@@ -30,8 +32,8 @@ export const BorrarLineaInventario = ({
         <QModalConfirmacion
             nombre="borrarLineaInventario"
             abierto={true}
-            titulo="Borrar línea de inventario"
-            mensaje={`¿Borrar la línea de ${linea.articuloId}? El stock se recalculará.`}
+            titulo={t("inventario.borrarLineaDeInventario")}
+            mensaje={t("inventario.borrarLaLineaDeArticuloidEl", { articuloId: linea.articuloId })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -1,5 +1,6 @@
 import { formatearNumero } from "@olula/lib/dominio.ts";
 import { OpcionesCargaFichero, ResultadoCargaFichero, SeparadorFichero } from "../diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 /** Ficheros que lee el servidor: texto con separador, Excel y OpenDocument. */
 export const EXTENSIONES_FICHERO = [".csv", ".txt", ".xlsx", ".ods"];
@@ -18,11 +19,11 @@ export const formatoFichero = (nombre: string): FormatoFichero | null => {
 const SEPARADOR_DETECTAR = "auto";
 
 export const opcionesSeparador: { valor: string; descripcion: string }[] = [
-    { valor: SEPARADOR_DETECTAR, descripcion: "Detectar" },
-    { valor: "|", descripcion: "Barra vertical |" },
-    { valor: ";", descripcion: "Punto y coma ;" },
-    { valor: ",", descripcion: "Coma ," },
-    { valor: "\t", descripcion: "Tabulador" },
+    { valor: SEPARADOR_DETECTAR, get descripcion() { return tAlmacen("inventario.detectar"); } },
+    { valor: "|", get descripcion() { return tAlmacen("inventario.barraVertical"); } },
+    { valor: ";", get descripcion() { return tAlmacen("inventario.puntoYComa"); } },
+    { valor: ",", get descripcion() { return tAlmacen("inventario.coma"); } },
+    { valor: "\t", get descripcion() { return tAlmacen("inventario.tabulador"); } },
 ];
 
 export const separadorAOpcion = (separador: SeparadorFichero): string =>
@@ -48,19 +49,19 @@ const plural = (n: number, singular: string, plural: string) =>
     `${formatearNumero(n)} ${n === 1 ? singular : plural}`;
 
 export const resumenCarga = (resultado: ResultadoCargaFichero, simulado: boolean): string => {
-    const lecturas = plural(resultado.lecturas, "lectura válida", "lecturas válidas");
-    const articulos = plural(resultado.articulos.length, "artículo", "artículos");
-    const rechazadas = plural(resultado.rechazadas.length, "fila rechazada", "filas rechazadas");
+    const lecturas = plural(resultado.lecturas, tAlmacen("inventario.lecturaValida"), tAlmacen("inventario.lecturasValidas"));
+    const articulos = plural(resultado.articulos.length, tAlmacen("inventario.articulo2"), tAlmacen("inventario.articulos"));
+    const rechazadas = plural(resultado.rechazadas.length, tAlmacen("inventario.filaRechazada"), tAlmacen("inventario.filasRechazadas2"));
     if (resultado.cargado) {
-        const lineas = plural(resultado.lineas, "línea regularizada", "líneas regularizadas");
+        const lineas = plural(resultado.lineas, tAlmacen("inventario.lineaRegularizada"), tAlmacen("inventario.lineasRegularizadas"));
         return resultado.rechazadas.length
-            ? `Cargado: ${lecturas} de ${articulos}, ${lineas}. Omitidas: ${rechazadas}.`
-            : `Cargado: ${lecturas} de ${articulos}, ${lineas}.`;
+            ? tAlmacen("inventario.cargadoLecturasDeArticulosLineasOmitidas", { lecturas, articulos, lineas, rechazadas })
+            : tAlmacen("inventario.cargadoLecturasDeArticulosLineas", { lecturas, articulos, lineas });
     }
     if (simulado) {
-        return `Simulación (no se ha grabado nada): ${lecturas} de ${articulos}, ${rechazadas}.`;
+        return tAlmacen("inventario.simulacionNoSeHaGrabadoNada", { lecturas, articulos, rechazadas });
     }
     return resultado.rechazadas.length
-        ? `No se ha cargado nada: ${rechazadas}. Corrija el fichero o cargue solo las válidas.`
-        : "No se ha cargado nada: el fichero no tiene lecturas.";
+        ? tAlmacen("inventario.noSeHaCargadoNadaRechazadas", { rechazadas })
+        : tAlmacen("inventario.noSeHaCargadoNadaEl");
 };

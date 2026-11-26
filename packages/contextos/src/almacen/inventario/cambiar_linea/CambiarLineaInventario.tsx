@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { Inventario, LineaInventario } from "../diseño.ts";
 import { patchLineaInventario } from "../infraestructura.ts";
 import { avisoLecturas, lineaACambios, metaCambiosLineaInventario } from "./cambiar_linea.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Cambia la cantidad contada, el motivo y la ubicación de una línea con un
@@ -23,6 +24,7 @@ export const CambiarLineaInventario = ({
     linea: LineaInventario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const inicial = useMemo(() => lineaACambios(linea), [linea]);
 
     const { modelo, uiProps, valido } = useModelo(metaCambiosLineaInventario, inicial);
@@ -43,15 +45,15 @@ export const CambiarLineaInventario = ({
         <QModal
             abierto={true}
             nombre="cambiarLineaInventario"
-            titulo={`Cambiar línea de ${linea.articuloId}`}
+            titulo={t("inventario.cambiarLineaDeArticuloid", { articuloId: linea.articuloId })}
             onCerrar={cancelar}
         >
             <div className="CambiarLineaInventario">
                 <quimera-formulario>
-                    <QInput label="Artículo" nombre="articulo" valor={`${linea.articuloId} ${linea.descripcion ?? ""}`.trim()} soloLectura />
-                    <QInput label="Cantidad contada" {...uiProps("cantidad")} />
-                    <QInput label="Motivo" {...uiProps("motivo")} />
-                    <QInput label="Ubicación" {...uiProps("ubicacion")} />
+                    <QInput label={t("inventario.articulo")} nombre="articulo" valor={`${linea.articuloId} ${linea.descripcion ?? ""}`.trim()} soloLectura />
+                    <QInput label={t("inventario.cantidadContada")} {...uiProps("cantidad")} />
+                    <QInput label={t("inventario.motivo")} {...uiProps("motivo")} />
+                    <QInput label={t("inventario.ubicacion")} {...uiProps("ubicacion")} />
                 </quimera-formulario>
                 {linea.lecturas > 0 && (
                     <p className="aviso-inventario">
@@ -60,7 +62,7 @@ export const CambiarLineaInventario = ({
                 )}
                 <div className="botones maestro-botones">
                     <QBoton onClick={cambiar} deshabilitado={!valido}>
-                        Cambiar
+                        {t("inventario.cambiar")}
                     </QBoton>
                 </div>
             </div>

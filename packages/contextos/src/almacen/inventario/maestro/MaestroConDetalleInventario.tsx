@@ -11,16 +11,18 @@ import { Inventario } from "../diseño.ts";
 import { CrearInventario } from "../crear/CrearInventario.tsx";
 import { DetalleInventario } from "../detalle/DetalleInventario.tsx";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaInventario: MetaTabla<Inventario> = [
-    { id: "id", cabecera: "Código", estilo: "secundario" },
-    { id: "almacen", cabecera: "Almacén", esTitulo: true, render: (i: Inventario) => i.almacen ?? i.almacenId },
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "hora", cabecera: "Hora", prioridad: "baja", render: (i: Inventario) => i.hora?.slice(0, 8) ?? "" },
-    { id: "observaciones", cabecera: "Descripción", prioridad: "media", render: (i: Inventario) => i.observaciones ?? "" },
+    { id: "id", get cabecera() { return tAlmacen("inventario.codigo"); }, estilo: "secundario" },
+    { id: "almacen", get cabecera() { return tAlmacen("inventario.almacen"); }, esTitulo: true, render: (i: Inventario) => i.almacen ?? i.almacenId },
+    { id: "fecha", get cabecera() { return tAlmacen("inventario.fecha"); }, tipo: "fecha" },
+    { id: "hora", get cabecera() { return tAlmacen("inventario.hora"); }, prioridad: "baja", render: (i: Inventario) => i.hora?.slice(0, 8) ?? "" },
+    { id: "observaciones", get cabecera() { return tAlmacen("inventario.descripcion"); }, prioridad: "media", render: (i: Inventario) => i.observaciones ?? "" },
 ];
 
 export const MaestroConDetalleInventario = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -45,7 +47,7 @@ export const MaestroConDetalleInventario = () => {
             <MaestroDetalle<Inventario>
                 Maestro={
                     <>
-                        <h2>Inventarios</h2>
+                        <h2>{t("inventario.inventarios")}</h2>
                         <Listado<Inventario>
                             metaTabla={metaTablaInventario}
                             criteria={inventarios.criteria}
@@ -57,7 +59,7 @@ export const MaestroConDetalleInventario = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_inventario_solicitado")}>
-                                        Nuevo inventario
+                                        {t("inventario.nuevoInventario")}
                                     </QBoton>
                                 </div>
                             )}

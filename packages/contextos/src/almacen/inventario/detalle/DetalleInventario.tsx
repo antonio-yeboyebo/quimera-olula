@@ -15,8 +15,9 @@ import "./DetalleInventario.css";
 import { contextoDetalleInventarioInicial, metaInventario } from "./dominio.ts";
 import { LineasInventario } from "./lineas/LineasInventario.tsx";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
-const titulo = (inventario: Inventario) => `Inventario ${inventario.id}`;
+const titulo = (inventario: Inventario) => tAlmacen("inventario.inventarioId", { id: inventario.id });
 
 const almacen = (inventario: Inventario) =>
     inventario.almacen ? `${inventario.almacenId} · ${inventario.almacen}` : inventario.almacenId;
@@ -28,6 +29,7 @@ export const DetalleInventario = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleInventarioInicial, publicar);
@@ -63,15 +65,15 @@ export const DetalleInventario = ({
         >
             <div className="DetalleInventario">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("regularizar_resto_solicitado")}>Resto a 0</QBoton>
-                    <QBoton destructivo onClick={() => emitir("borrado_solicitado")}>Borrar inventario</QBoton>
+                    <QBoton onClick={() => emitir("regularizar_resto_solicitado")}>{t("inventario.restoA0")}</QBoton>
+                    <QBoton destructivo onClick={() => emitir("borrado_solicitado")}>{t("inventario.borrarInventario")}</QBoton>
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={inventario.id} soloLectura />
-                    <QInput label="Almacén" nombre="almacen" valor={almacen(inventario)} soloLectura />
-                    <QInput label="Fecha" nombre="fecha" valor={formatearFechaString(inventario.fecha)} soloLectura />
-                    <QInput label="Hora" nombre="hora" valor={inventario.hora?.slice(0, 8) ?? ""} soloLectura />
-                    <QInput label="Descripción / observaciones" {...modelo.uiProps("observaciones")} />
+                    <QInput label={t("inventario.codigo")} nombre="id" valor={inventario.id} soloLectura />
+                    <QInput label={t("inventario.almacen")} nombre="almacen" valor={almacen(inventario)} soloLectura />
+                    <QInput label={t("inventario.fecha")} nombre="fecha" valor={formatearFechaString(inventario.fecha)} soloLectura />
+                    <QInput label={t("inventario.hora")} nombre="hora" valor={inventario.hora?.slice(0, 8) ?? ""} soloLectura />
+                    <QInput label={t("inventario.descripcionObservaciones")} {...modelo.uiProps("observaciones")} />
                 </quimera-formulario>
                 <LineasInventario
                     inventario={inventario}
