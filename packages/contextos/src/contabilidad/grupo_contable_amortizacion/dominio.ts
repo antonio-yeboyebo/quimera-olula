@@ -5,6 +5,7 @@ import {
     NuevoGrupoContableAmortizacion,
     RolSubcuentaGrupo,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 /** Longitudes de `co_gruposcontablesamo.mtd`. */
 export const LONGITUD_CODIGO = 10;
@@ -16,11 +17,11 @@ export const ROLES_SUBCUENTA: {
     campo: keyof DatosGrupoContableAmortizacion;
     etiqueta: string;
 }[] = [
-    { rol: "elemento", campo: "subcuentaElemento", etiqueta: "Subcuenta de elemento" },
-    { rol: "amortizacion", campo: "subcuentaAmortizacion", etiqueta: "Subcuenta de amortización acumulada" },
-    { rol: "gasto", campo: "subcuentaGasto", etiqueta: "Subcuenta de gasto (dotación)" },
-    { rol: "perdidas", campo: "subcuentaPerdidas", etiqueta: "Subcuenta de pérdidas" },
-    { rol: "ganancias", campo: "subcuentaGanancias", etiqueta: "Subcuenta de ganancias" },
+    { rol: "elemento", campo: "subcuentaElemento", get etiqueta() { return tContabilidad("grupo_contable_amortizacion.subcuentaDeElemento"); } },
+    { rol: "amortizacion", campo: "subcuentaAmortizacion", get etiqueta() { return tContabilidad("grupo_contable_amortizacion.subcuentaDeAmortizacionAcumulada"); } },
+    { rol: "gasto", campo: "subcuentaGasto", get etiqueta() { return tContabilidad("grupo_contable_amortizacion.subcuentaDeGastoDotacion"); } },
+    { rol: "perdidas", campo: "subcuentaPerdidas", get etiqueta() { return tContabilidad("grupo_contable_amortizacion.subcuentaDePerdidas"); } },
+    { rol: "ganancias", campo: "subcuentaGanancias", get etiqueta() { return tContabilidad("grupo_contable_amortizacion.subcuentaDeGanancias"); } },
 ];
 
 export const descripcionesVacias = (): Record<RolSubcuentaGrupo, string> => ({

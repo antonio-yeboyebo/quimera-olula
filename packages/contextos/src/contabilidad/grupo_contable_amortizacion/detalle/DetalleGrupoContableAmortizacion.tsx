@@ -12,6 +12,7 @@ import { etiquetaGrupoContableAmortizacion, metaGrupoContableAmortizacion } from
 import { CamposGrupo } from "./CamposGrupo.tsx";
 import { contextoDetalleGrupoInicial, guardarGrupo } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `co_gruposcontablesamo.ui`. */
 export const DetalleGrupoContableAmortizacion = ({
@@ -21,6 +22,7 @@ export const DetalleGrupoContableAmortizacion = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleGrupoInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -44,7 +46,7 @@ export const DetalleGrupoContableAmortizacion = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("grupo_contable_amortizacion.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -64,7 +66,7 @@ export const DetalleGrupoContableAmortizacion = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={grupo.id} soloLectura />
+                    <QInput label={t("grupo_contable_amortizacion.codigo")} nombre="id" valor={grupo.id} soloLectura />
                     <CamposGrupo
                         uiProps={formModelo.uiProps}
                         descripciones={grupo.descripcionesSubcuentas}

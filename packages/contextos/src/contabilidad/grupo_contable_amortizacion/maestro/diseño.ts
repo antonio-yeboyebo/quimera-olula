@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { GrupoContableAmortizacion } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroGrupoContableAmortizacion = "INICIAL" | "CREANDO";
 
@@ -13,13 +14,13 @@ export type ContextoMaestroGrupoContableAmortizacion = {
 };
 
 export const metaTablaGrupoContableAmortizacion: MetaTabla<GrupoContableAmortizacion> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "subcuentaElemento", cabecera: "S. Elemento" },
-    { id: "subcuentaAmortizacion", cabecera: "S. Amortización" },
-    { id: "subcuentaGasto", cabecera: "S. Gastos" },
-    { id: "subcuentaPerdidas", cabecera: "S. Pérdidas" },
-    { id: "subcuentaGanancias", cabecera: "S. Ganancias" },
+    { id: "id", get cabecera() { return tContabilidad("grupo_contable_amortizacion.codigo"); } },
+    { id: "descripcion", get cabecera() { return tContabilidad("grupo_contable_amortizacion.descripcion"); } },
+    { id: "subcuentaElemento", get cabecera() { return tContabilidad("grupo_contable_amortizacion.sElemento"); } },
+    { id: "subcuentaAmortizacion", get cabecera() { return tContabilidad("grupo_contable_amortizacion.sAmortizacion"); } },
+    { id: "subcuentaGasto", get cabecera() { return tContabilidad("grupo_contable_amortizacion.sGastos"); } },
+    { id: "subcuentaPerdidas", get cabecera() { return tContabilidad("grupo_contable_amortizacion.sPerdidas"); } },
+    { id: "subcuentaGanancias", get cabecera() { return tContabilidad("grupo_contable_amortizacion.sGanancias"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -33,8 +34,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroGrupoContableAmortizacion: MetaFiltro = {
-    id: filtroTexto("id", "Código"),
-    descripcion: filtroTexto("descripcion", "Descripción"),
+    get id() { return filtroTexto("id", tContabilidad("grupo_contable_amortizacion.codigo")); },
+    get descripcion() { return filtroTexto("descripcion", tContabilidad("grupo_contable_amortizacion.descripcion")); },
 };
 
 export const criteriaGruposDefecto = (): Criteria => ({
