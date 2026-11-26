@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { AlcanceRegeneracion, CodigoBalance } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroCodigoBalance = "INICIAL" | "CREANDO" | "REGENERANDO";
 
@@ -14,12 +15,12 @@ export type ContextoMaestroCodigoBalance = {
 };
 
 export const metaTablaCodigoBalance: MetaTabla<CodigoBalance> = [
-    { id: "id", cabecera: "Código" },
-    { id: "naturaleza", cabecera: "Nat." },
-    { id: "descripcion1", cabecera: "Nivel 1" },
-    { id: "descripcion2", cabecera: "Nivel 2" },
-    { id: "descripcion3", cabecera: "Nivel 3" },
-    { id: "descripcion4", cabecera: "Nivel 4" },
+    { id: "id", get cabecera() { return tContabilidad("codigo_balance.codigo"); } },
+    { id: "naturaleza", get cabecera() { return tContabilidad("codigo_balance.nat"); } },
+    { id: "descripcion1", get cabecera() { return tContabilidad("codigo_balance.nivel1"); } },
+    { id: "descripcion2", get cabecera() { return tContabilidad("codigo_balance.nivel2"); } },
+    { id: "descripcion3", get cabecera() { return tContabilidad("codigo_balance.nivel3"); } },
+    { id: "descripcion4", get cabecera() { return tContabilidad("codigo_balance.nivel4"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -34,18 +35,18 @@ const filtroTexto = (campo: string, label: string) => ({
 
 /** Filtro explícito con los nombres de campo de la API. */
 export const metaFiltroCodigoBalance: MetaFiltro = {
-    id: filtroTexto("id", "Código"),
+    get id() { return filtroTexto("id", tContabilidad("codigo_balance.codigo")); },
     naturaleza: {
         id: "naturaleza",
         campo: "naturaleza",
-        label: "Naturaleza (A, P, PG, IG)",
+        get label() { return tContabilidad("codigo_balance.naturalezaAPPgIg"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["naturaleza", "=", (valor as string).toUpperCase()];
         },
     },
-    descripcion3: filtroTexto("descripcion3", "Nivel 3"),
-    descripcion4: filtroTexto("descripcion4", "Nivel 4"),
+    get descripcion3() { return filtroTexto("descripcion3", tContabilidad("codigo_balance.nivel3")); },
+    get descripcion4() { return filtroTexto("descripcion4", tContabilidad("codigo_balance.nivel4")); },
 };
 
 /** Por código, como el maestro de Eneboo. */

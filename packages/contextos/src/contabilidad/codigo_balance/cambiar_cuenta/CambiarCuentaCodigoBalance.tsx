@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { CuentaCodigoBalance, NuevaCuentaCodigoBalance } from "../diseño.ts";
 import { ETIQUETA_FORMATO, metaCuentaCodigoBalance, SIGNOS } from "../dominio.ts";
 import { patchCuentaCodigoBalance } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CambiarCuentaCodigoBalance = ({
     cuenta,
@@ -17,6 +18,7 @@ export const CambiarCuentaCodigoBalance = ({
     cuenta: CuentaCodigoBalance;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo<NuevaCuentaCodigoBalance>(() => ({
         codigoCuenta: cuenta.codigoCuenta,
         descripcionCuenta: cuenta.descripcionCuenta,
@@ -38,16 +40,16 @@ export const CambiarCuentaCodigoBalance = ({
         <QModal
             abierto={true}
             nombre="cambiarCuentaCodigoBalance"
-            titulo={`${ETIQUETA_FORMATO[cuenta.formato]}: cuenta ${cuenta.codigoCuenta}`}
+            titulo={t("codigo_balance.valorCuentaCodigocuenta", { valor: ETIQUETA_FORMATO[cuenta.formato], codigoCuenta: cuenta.codigoCuenta })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Cuenta (prefijo)" {...uiProps("codigoCuenta")} />
-                <QInput label="Descripción" {...uiProps("descripcionCuenta")} />
-                <QSelect label="Signo" opciones={SIGNOS} {...uiProps("signo")} />
+                <QInput label={t("codigo_balance.cuentaPrefijo")} {...uiProps("codigoCuenta")} />
+                <QInput label={t("codigo_balance.descripcion")} {...uiProps("descripcionCuenta")} />
+                <QSelect label={t("codigo_balance.signo")} opciones={SIGNOS} {...uiProps("signo")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={cambiar} deshabilitado={!valido}>Guardar</QBoton>
+                <QBoton onClick={cambiar} deshabilitado={!valido}>{t("codigo_balance.guardar")}</QBoton>
             </div>
         </QModal>
     );

@@ -3,11 +3,12 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { CuentaCodigoBalance } from "../../diseño.ts";
+import { tContabilidad } from "../../../i18n/index.ts";
 
 const metaTablaCuentas: MetaTabla<CuentaCodigoBalance> = [
-    { id: "codigoCuenta", cabecera: "Cuenta" },
-    { id: "descripcionCuenta", cabecera: "Descripción" },
-    { id: "signo", cabecera: "Signo" },
+    { id: "codigoCuenta", get cabecera() { return tContabilidad("codigo_balance.cuenta"); } },
+    { id: "descripcionCuenta", get cabecera() { return tContabilidad("codigo_balance.descripcion"); } },
+    { id: "signo", get cabecera() { return tContabilidad("codigo_balance.signo"); } },
 ];
 
 export const CuentasLista = ({

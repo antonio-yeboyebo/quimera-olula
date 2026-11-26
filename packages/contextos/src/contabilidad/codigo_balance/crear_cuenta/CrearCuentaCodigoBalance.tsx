@@ -15,6 +15,7 @@ import {
     SIGNOS,
 } from "../dominio.ts";
 import { postCuentaCodigoBalance } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearCuentaCodigoBalance = ({
     formato,
@@ -25,6 +26,7 @@ export const CrearCuentaCodigoBalance = ({
     codigoBalance: CodigoBalance;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(cuentaCodigoBalanceVacia, []);
 
     const { modelo, uiProps, valido } = useModelo(metaCuentaCodigoBalance, inicial);
@@ -44,16 +46,16 @@ export const CrearCuentaCodigoBalance = ({
         <QModal
             abierto={true}
             nombre="crearCuentaCodigoBalance"
-            titulo={`${ETIQUETA_FORMATO[formato]}: nueva cuenta en ${codigoBalance.id}`}
+            titulo={t("codigo_balance.valorNuevaCuentaEnId", { valor: ETIQUETA_FORMATO[formato], id: codigoBalance.id })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Cuenta (prefijo)" {...uiProps("codigoCuenta")} ref={focus} />
-                <QInput label="Descripción" {...uiProps("descripcionCuenta")} />
-                <QSelect label="Signo" opciones={SIGNOS} {...uiProps("signo")} />
+                <QInput label={t("codigo_balance.cuentaPrefijo")} {...uiProps("codigoCuenta")} ref={focus} />
+                <QInput label={t("codigo_balance.descripcion")} {...uiProps("descripcionCuenta")} />
+                <QSelect label={t("codigo_balance.signo")} opciones={SIGNOS} {...uiProps("signo")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={crear} deshabilitado={!valido}>Crear</QBoton>
+                <QBoton onClick={crear} deshabilitado={!valido}>{t("codigo_balance.crear")}</QBoton>
             </div>
         </QModal>
     );
