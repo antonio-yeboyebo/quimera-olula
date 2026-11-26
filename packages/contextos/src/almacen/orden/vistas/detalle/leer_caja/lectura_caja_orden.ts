@@ -1,6 +1,7 @@
 import { OrdenAlmacen, TipoOrden } from "#/almacen/orden/diseño.ts";
 import { Modelo } from "@olula/lib/diseño.js";
 import { MetaModelo } from "@olula/lib/dominio.js";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 export interface ModeloLecturaCajaOrden extends Modelo {
     cajaId: string;
@@ -13,7 +14,7 @@ export const getMetaLecturaCajaOrden = (tipo: TipoOrden): MetaModelo<ModeloLectu
     campos: {
         cajaId: {
             validacion: (lectura) => {
-                if (!lectura.cajaId) return "La caja es requerida";
+                if (!lectura.cajaId) return tAlmacen("orden.laCajaEsRequerida");
                 return true;
             },
         },

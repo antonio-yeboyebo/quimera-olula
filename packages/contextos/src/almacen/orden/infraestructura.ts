@@ -41,6 +41,7 @@ import {
     NuevoEnvioAgencia,
     PostEnvioAgencia,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 
 // Tipos API (snake_case)
@@ -357,28 +358,28 @@ export const getOrden: GetOrden = async (id) => {
 };
 
 export const postOrden: PostOrden = async (nuevaOrden) => {
-    const respuesta = await RestAPI.post(baseUrl, nuevaOrdenAApi(nuevaOrden), "Error al crear la orden");
+    const respuesta = await RestAPI.post(baseUrl, nuevaOrdenAApi(nuevaOrden), tAlmacen("orden.errorAlCrearLaOrden"));
     return respuesta.id as string;
 };
 
 export const patchOrden: PatchOrden = async (id, cambios) => {
-    await RestAPI.patch(`${baseUrl}/${id}`, cambiosOrdenAApi(cambios), "Error al actualizar la orden");
+    await RestAPI.patch(`${baseUrl}/${id}`, cambiosOrdenAApi(cambios), tAlmacen("orden.errorAlActualizarLaOrden"));
 };
 
 export const deleteOrden: DeleteOrden = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la orden");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("orden.errorAlBorrarLaOrden"));
 };
 
 export const postLineasOrden: PostLineasOrden = async (id, lineas) => {
     const payload = lineas.map(nuevaLineaOrdenAApi);
-    await RestAPI.post(`${baseUrl}/${id}/linea`, payload, "Error al crear líneas de la orden");
+    await RestAPI.post(`${baseUrl}/${id}/linea`, payload, tAlmacen("orden.errorAlCrearLineasDeLa"));
 };
 
 export const patchLineaOrden: PatchLineaOrden = async (id, lineaId, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${lineaId}`,
         cambiosLineaOrdenAApi(cambios),
-        "Error al actualizar la línea"
+        tAlmacen("orden.errorAlActualizarLaLinea")
     );
 };
 
@@ -386,7 +387,7 @@ export const deleteLineasOrden: DeleteLineasOrden = async (id, lineaIds) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/borrar`,
         { linea_ids: lineaIds },
-        "Error al borrar líneas de la orden"
+        tAlmacen("orden.errorAlBorrarLineasDeLa")
     );
 };
 
@@ -427,7 +428,7 @@ export const registrarLecturasOrden = async (
                 fase: lectura.fase ?? null,
             })),
         },
-        "Error al registrar lecturas de la orden"
+        tAlmacen("orden.errorAlRegistrarLecturasDeLa")
     );
 };
 
@@ -443,13 +444,13 @@ export const registrarLecturaCajaOrden = async (
             ubicacion_destino_id: lectura.idUbicacionDestino,
             caja_destino_id: lectura.idCajaDestino,
         },
-        "Error al registrar lectura de caja de la orden"
+        tAlmacen("orden.errorAlRegistrarLecturaDeCaja")
     );
 };
 
 
 export const deleteLecturaOrden = async (id: string, lecturaId: string): Promise<void> => {
-    await RestAPI.delete(`${baseUrl}/${id}/lectura/${lecturaId}`, "Error al borrar la lectura");
+    await RestAPI.delete(`${baseUrl}/${id}/lectura/${lecturaId}`, tAlmacen("orden.errorAlBorrarLaLectura"));
 };
 
 export const registrarLecturaUbicacionOrden = async (
@@ -463,7 +464,7 @@ export const registrarLecturaUbicacionOrden = async (
             ubicacion_destino_id: lectura.idUbicacionDestino,
             caja_destino_id: lectura.idCajaDestino,
         },
-        "Error al registrar lectura de ubicación de la orden"
+        tAlmacen("orden.errorAlRegistrarLecturaDeUbicacion")
     );
 };
 
@@ -471,13 +472,13 @@ export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: Nuev
     const respuesta = await RestAPI.post(
         `${baseUrl}/desde_pedido_compra`,
         { ubicacion_id: nueva.ubicacionId, pedido_id: nueva.pedidoCompraId },
-        "Error al crear entrada desde pedido de compra"
+        tAlmacen("orden.errorAlCrearEntradaDesdePedido")
     );
     return respuesta.id as string;
 };
 
 export const adquirirOrden: AdquirirOrden = async (id) => {
-    await RestAPI.patch(`${baseUrl}/${id}/adquirir`, {}, "Error al adquirir la orden");
+    await RestAPI.patch(`${baseUrl}/${id}/adquirir`, {}, tAlmacen("orden.errorAlAdquirirLaOrden"));
 };
 
 export interface DevolucionSobrante {
@@ -499,17 +500,17 @@ export const devolverSobrante = async (id: string, devolucion: DevolucionSobrant
             ubicacion_destino_id: devolucion.idUbicacionDestino,
             caja_destino_id: devolucion.idCajaDestino,
         },
-        "Error al devolver el sobrante"
+        tAlmacen("orden.errorAlDevolverElSobrante")
     );
 };
 
 export const terminarOrden: TerminarOrden = async (id) => {
-    await RestAPI.patch(`${baseUrl}/${id}/terminar`, {}, "Error al terminar la orden");
+    await RestAPI.patch(`${baseUrl}/${id}/terminar`, {}, tAlmacen("orden.errorAlTerminarLaOrden"));
 };
 
 export const albaranarOrden: AlbaranarOrden = async (id) => {
     const respuesta = await RestAPI.patch(
-        `${baseUrl}/${id}/albaranar`, {}, "Error al albaranar la orden",
+        `${baseUrl}/${id}/albaranar`, {}, tAlmacen("orden.errorAlAlbaranarLaOrden"),
     ) as unknown as { albaranes?: { id: string | number; codigo: string }[] } | undefined;
     return (respuesta?.albaranes ?? []).map((a) => ({ id: String(a.id), codigo: a.codigo }));
 };
@@ -548,10 +549,10 @@ export const getDiferenciasPedidoOrden: GetDiferenciasPedidoOrden = async (id) =
 };
 
 export const getReportEtiquetasOrden: GetReportEtiquetasOrden = async (id) =>
-    RestAPI.blob(`/almacen/caja/report-por-orden-origen/${id}`, "Error al obtener el report de etiquetas");
+    RestAPI.blob(`/almacen/caja/report-por-orden-origen/${id}`, tAlmacen("orden.errorAlObtenerElReportDe"));
 
 export const postColocacion: PostColocacion = async (id) => {
-    const respuesta = await RestAPI.post(`${baseUrl}/${id}/colocacion`, {}, "Error al crear la orden de colocación");
+    const respuesta = await RestAPI.post(`${baseUrl}/${id}/colocacion`, {}, tAlmacen("orden.errorAlCrearLaOrdenDe"));
     return respuesta.id as string;
 };
 
@@ -567,13 +568,13 @@ export const crearLineaSubcajaPalet = async (
             caja_origen_id: datos.idCajaOrigen,
             ubicacion_destino_id: datos.idUbicacionDestino,
         },
-        "Error al crear línea de subcaja de palé"
+        tAlmacen("orden.errorAlCrearLineaDeSubcaja")
     );
 };
 
 
 export const crearCajasOrden = async (ordenId: string): Promise<void> => {
-    await RestAPI.post(`${baseUrl}/${ordenId}/cajas`, {}, "Error al crear cajas de la orden");
+    await RestAPI.post(`${baseUrl}/${ordenId}/cajas`, {}, tAlmacen("orden.errorAlCrearCajasDeLa"));
 };
 
 
@@ -676,7 +677,7 @@ export const postEnvioAgencia: PostEnvioAgencia = async (ordenId, envio) => {
     const respuesta = await RestAPI.post(
         `${baseUrl}/${ordenId}/envio_agencia`,
         envioAgenciaAApi(envio),
-        "Error al generar el envío por agencia",
+        tAlmacen("orden.errorAlGenerarElEnvioPor"),
     ) as unknown as { albaran_id: string; agencia_id: string; numero_tracking: string };
     return {
         albaranId: String(respuesta.albaran_id),
@@ -686,7 +687,7 @@ export const postEnvioAgencia: PostEnvioAgencia = async (ordenId, envio) => {
 };
 
 export const getEtiquetaEnvio: GetEtiquetaEnvio = async (albaranId) =>
-    RestAPI.blob(`${urlEnvioAgencia}/${albaranId}/etiqueta`, "Error al obtener la etiqueta del envío");
+    RestAPI.blob(`${urlEnvioAgencia}/${albaranId}/etiqueta`, tAlmacen("orden.errorAlObtenerLaEtiquetaDel"));
 
 export interface RecorridoOrdenApi {
     orden_id: string;

@@ -12,12 +12,14 @@ import { SelectorFlujo } from "../selector_flujo/SelectorFlujo.tsx";
 import "./CrearOrden.css";
 import { nuevaOrdenAlmacenVacia } from "./crear.ts";
 import { metaNuevaOrden } from "./diseño.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CrearOrden = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(
         metaNuevaOrden,
         nuevaOrdenAlmacenVacia
@@ -51,27 +53,27 @@ export const CrearOrden = ({
         <QModal
             abierto={true}
             nombre="crearOrden"
-            titulo="Nueva Orden"
+            titulo={t("orden.nuevaOrden")}
             onCerrar={cancelar}
         >
             <div className="CrearOrden">
                 <quimera-formulario>
                     <TipoOrden {...uiProps("tipoOrden")} />
                     <Almacen {...uiProps("almacenId")} />
-                    <QInput label="Abierta" {...uiProps("abierta")} />
+                    <QInput label={t("orden.abierta")} {...uiProps("abierta")} />
                     {flujo && (
                         <SelectorFlujo
                             tipo={modelo.tipoOrden}
                             valor={flujo.codigo}
                             onChange={(f) => setCodigoFlujo(f?.codigo ?? null)}
-                            label="Flujo por defecto de las líneas"
+                            label={t("orden.flujoPorDefectoDeLasLineas")}
                         />
                     )}
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("orden.crear")}
                     </QBoton>
                 </div>
             </div>

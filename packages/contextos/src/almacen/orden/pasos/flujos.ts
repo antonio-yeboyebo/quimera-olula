@@ -2,6 +2,7 @@
 // ofrecen al crear una orden o una línea a mano, con la explicación de lo que
 // hará el operario.
 import { LineaOrdenAlmacen, OrdenAlmacen, TipoOrden } from "../diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 export type CampoFlujo = "ubicacionOrigen" | "cajaOrigen" | "paletOrigen" | "ubicacionDestino" | "cajaDestino";
 export type UsoCampo = "requerido" | "opcional";
@@ -24,10 +25,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "TRASPASO_SIN_PICK",
         tipo: "TRASPASO",
-        nombre: "Sin pick (directo)",
-        explicacion:
-            "Un solo paso en destino: lee el SKU o el lote, indica la cantidad y lee la ubicación (queda suelto) " +
-            "o la caja donde lo dejas. El material sale suelto de la ubicación origen de la línea.",
+        get nombre() { return tAlmacen("orden.sinPickDirecto"); },
+        get explicacion() { return tAlmacen("orden.unSoloPasoEnDestinoLee"); },
         pasosPick: null,
         pasosDrop: "SKU-CANTIDAD",
         campos: { ubicacionOrigen: "requerido", ubicacionDestino: "requerido", cajaDestino: "opcional" },
@@ -35,10 +34,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "TRASPASO_CAJAS",
         tipo: "TRASPASO",
-        nombre: "Cajas completas",
-        explicacion:
-            "Pick: en origen lee cada caja; se recoge entera. Drop: en destino lee las cajas (una o varias) " +
-            "y la ubicación donde quedan; se mueven con su contenido.",
+        get nombre() { return tAlmacen("orden.cajasCompletas"); },
+        get explicacion() { return tAlmacen("orden.pickEnOrigenLeeCadaCaja"); },
         pasosPick: "CAJAS",
         pasosDrop: "CAJAS-UBICACION",
         campos: { ubicacionOrigen: "opcional", cajaOrigen: "opcional", ubicacionDestino: "requerido" },
@@ -46,10 +43,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "TRASPASO_MATERIAL",
         tipo: "TRASPASO",
-        nombre: "Material de caja o suelto",
-        explicacion:
-            "Pick: lee la caja de la que sacas material o, si está suelto, el SKU o lote (se coge lo pendiente, " +
-            "hasta el stock suelto). Drop: en destino lee el SKU o lote, la cantidad y la ubicación o caja.",
+        get nombre() { return tAlmacen("orden.materialDeCajaOSuelto"); },
+        get explicacion() { return tAlmacen("orden.pickLeeLaCajaDeLa"); },
         pasosPick: "SKU_CAJA",
         pasosDrop: "SKU-CANTIDAD",
         campos: {
@@ -60,11 +55,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "TRASPASO_PALET",
         tipo: "TRASPASO",
-        nombre: "Palé → cajas etiqueta",
-        explicacion:
-            "Se crean las cajas etiqueta del palé para la cantidad. Pick: lee el lote (si el artículo va por " +
-            "lotes) o el palé, y después cada caja etiqueta que llenas. Drop: lee las cajas etiqueta y la " +
-            "ubicación destino.",
+        get nombre() { return tAlmacen("orden.paleCajasEtiqueta"); },
+        get explicacion() { return tAlmacen("orden.seCreanLasCajasEtiquetaDel"); },
         pasosPick: "LOTE-CAJAS",
         pasosPickAlternativos: ["CAJA-CAJAS"],
         pasosDrop: "CAJAS-UBICACION",
@@ -74,9 +66,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "ENTRADA_SUELTO",
         tipo: "ENTRADA",
-        nombre: "Material suelto",
-        explicacion:
-            "Lee el SKU o el lote, la cantidad y la ubicación (queda suelto) o la caja donde lo dejas.",
+        get nombre() { return tAlmacen("orden.materialSuelto"); },
+        get explicacion() { return tAlmacen("orden.leeElSkuOElLote"); },
         pasosPick: null,
         pasosDrop: "SKU-CANTIDAD",
         campos: { ubicacionDestino: "requerido", cajaDestino: "opcional" },
@@ -84,9 +75,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "ENTRADA_CAJAS",
         tipo: "ENTRADA",
-        nombre: "Cajas",
-        explicacion:
-            "Lee cada caja de destino ya creada; se registra su capacidad. También admite leer un palé entero.",
+        get nombre() { return tAlmacen("orden.cajas"); },
+        get explicacion() { return tAlmacen("orden.leeCadaCajaDeDestinoYa"); },
         pasosPick: null,
         pasosDrop: "CAJAS",
         campos: { ubicacionDestino: "requerido", cajaDestino: "opcional" },
@@ -94,8 +84,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "ENTRADA_PALET",
         tipo: "ENTRADA",
-        nombre: "Palé",
-        explicacion: "Lee el palé y se registra todo su contenido.",
+        get nombre() { return tAlmacen("orden.pale"); },
+        get explicacion() { return tAlmacen("orden.leeElPaleYSeRegistra"); },
         pasosPick: null,
         pasosDrop: "PALET",
         campos: { ubicacionDestino: "requerido", cajaDestino: "opcional" },
@@ -103,9 +93,8 @@ export const FLUJOS: Flujo[] = [
     {
         codigo: "SALIDA_MATERIAL",
         tipo: "SALIDA",
-        nombre: "Material de caja o suelto",
-        explicacion:
-            "Lee la caja de la que sacas material o el SKU/lote si está suelto; lo leído sale de la ubicación.",
+        get nombre() { return tAlmacen("orden.materialDeCajaOSuelto"); },
+        get explicacion() { return tAlmacen("orden.leeLaCajaDeLaQue"); },
         pasosPick: "SKU_CAJA",
         pasosDrop: null,
         campos: { ubicacionOrigen: "requerido", cajaOrigen: "opcional" },
@@ -148,11 +137,11 @@ export interface DatosLineaFlujo {
 }
 
 const NOMBRE_CAMPO: Record<CampoFlujo, string> = {
-    ubicacionOrigen: "ubicación origen",
-    cajaOrigen: "caja origen",
-    paletOrigen: "palé origen",
-    ubicacionDestino: "ubicación destino",
-    cajaDestino: "caja destino",
+    get ubicacionOrigen() { return tAlmacen("orden.ubicacionOrigen"); },
+    get cajaOrigen() { return tAlmacen("orden.cajaOrigen"); },
+    get paletOrigen() { return tAlmacen("orden.paleOrigen"); },
+    get ubicacionDestino() { return tAlmacen("orden.ubicacionDestino"); },
+    get cajaDestino() { return tAlmacen("orden.cajaDestino"); },
 };
 
 /** Campos requeridos por el flujo que faltan en la línea. */

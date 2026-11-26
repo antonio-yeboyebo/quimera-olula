@@ -9,6 +9,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AgenciaEnvio, OrdenAlmacen } from "../../diseño.ts";
 import { albaranesSinEnvio, metaNuevoEnvioAgencia, nuevoEnvioAgenciaInicial } from "../../dominio.ts";
 import { getAgenciasEnvio, getEtiquetaEnvio, postEnvioAgencia } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Modal para pedir a una agencia de transporte el envío de un albarán de una
@@ -24,6 +25,7 @@ export const GenerarEnvioOrden = ({
     publicar: EmitirEvento;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [agencias, setAgencias] = useState<AgenciaEnvio[] | null>(null);
 
@@ -40,8 +42,8 @@ export const GenerarEnvioOrden = ({
 
     if (agencias === null) {
         return (
-            <QModal abierto={true} nombre="generarEnvio" titulo="Generar envío" onCerrar={cancelar_}>
-                <p>Cargando agencias…</p>
+            <QModal abierto={true} nombre="generarEnvio" titulo={t("orden.generarEnvio")} onCerrar={cancelar_}>
+                <p>{t("orden.cargandoAgencias")}</p>
             </QModal>
         );
     }
@@ -60,6 +62,7 @@ const FormularioEnvio = ({
     publicar: EmitirEvento;
     cancelar_: () => void;
 }) => {
+    const t = useTAlmacen();
     const inicial = useMemo(() => nuevoEnvioAgenciaInicial(orden, agencias), [orden, agencias]);
     const { modelo: envio, uiProps, valido } = useModelo(metaNuevoEnvioAgencia, inicial);
 
@@ -77,23 +80,23 @@ const FormularioEnvio = ({
     const [generar, cancelar] = useForm(generar_, cancelar_);
 
     return (
-        <QModal abierto={true} nombre="generarEnvio" titulo="Generar envío por agencia" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="generarEnvio" titulo={t("orden.generarEnvioPorAgencia")} onCerrar={cancelar}>
             {agencias.length === 0 ? (
-                <p>No hay ninguna agencia de transporte activa.</p>
+                <p>{t("orden.noHayNingunaAgenciaDeTransporte")}</p>
             ) : (
                 <>
                     <quimera-formulario>
-                        <QSelect label="Albarán" {...uiProps("albaranId")} opciones={opcionesAlbaran} />
-                        <QSelect label="Agencia" {...uiProps("agenciaId")} opciones={opcionesAgencia} />
-                        <QSelect label="Servicio" {...uiProps("servicio")} opciones={opcionesServicio} />
-                        <QInput label="Bultos" {...uiProps("bultos")} />
-                        <QInput label="Kilos" {...uiProps("kilos")} />
-                        <QInput label="Fecha de recogida" {...uiProps("fechaRecogida")} />
-                        <QInput label="Observaciones" {...uiProps("observaciones")} />
+                        <QSelect label={t("orden.albaran")} {...uiProps("albaranId")} opciones={opcionesAlbaran} />
+                        <QSelect label={t("orden.agencia")} {...uiProps("agenciaId")} opciones={opcionesAgencia} />
+                        <QSelect label={t("orden.servicio")} {...uiProps("servicio")} opciones={opcionesServicio} />
+                        <QInput label={t("orden.bultos")} {...uiProps("bultos")} />
+                        <QInput label={t("orden.kilos")} {...uiProps("kilos")} />
+                        <QInput label={t("orden.fechaDeRecogida")} {...uiProps("fechaRecogida")} />
+                        <QInput label={t("orden.observaciones")} {...uiProps("observaciones")} />
                     </quimera-formulario>
                     <div className="botones maestro-botones">
                         <QBoton onClick={generar} deshabilitado={!valido}>
-                            Generar envío
+                            {t("orden.generarEnvio")}
                         </QBoton>
                     </div>
                 </>

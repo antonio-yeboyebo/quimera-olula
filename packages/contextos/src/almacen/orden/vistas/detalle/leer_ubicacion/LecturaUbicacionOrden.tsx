@@ -13,6 +13,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { registrarLecturaUbicacionOrden } from "../../../infraestructura.ts";
 import { getLecturaUbicacionOrdenVacia, getMetaLecturaUbicacionOrden } from "./lectura_ubicacion_orden.ts";
 import "./LecturaUbicacionOrden.css";
+import { useTAlmacen } from "../../../../i18n/index.ts";
 
 export const LecturaUbicacionOrden = ({
     publicar,
@@ -25,6 +26,7 @@ export const LecturaUbicacionOrden = ({
     tipo: TipoOrden;
     modoVoz?: boolean;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const flujoVoz = useFlujoVoz();
 
@@ -72,13 +74,13 @@ export const LecturaUbicacionOrden = ({
             try {
                 // 1. Ubicación principal
                 const ubi = await flujoVoz.preguntar({
-                    instruccion: "Dime la ubicación",
+                    instruccion: t("orden.dimeLaUbicacion"),
                     tipo: "texto",
                     resolver: async (texto) => {
                         const u = await buscarUbicacionPorTexto(texto);
                         return u ? { id: u.id, codigo: u.codigo } : null;
                     },
-                    confirmacion: (v) => `Ubicación ${v.codigo}, ¿correcto?`,
+                    confirmacion: (v) => t("orden.ubicacionCodigoCorrecto", { codigo: v.codigo }),
                 });
                 if (cancelado) return;
 
@@ -87,25 +89,25 @@ export const LecturaUbicacionOrden = ({
                 // 2. Destino (solo traspaso)
                 if (esTraspaso) {
                     const ubiDestino = await flujoVoz.preguntar({
-                        instruccion: "Dime la ubicación de destino",
+                        instruccion: t("orden.dimeLaUbicacionDeDestino"),
                         tipo: "texto",
                         resolver: async (texto) => {
                             const u = await buscarUbicacionPorTexto(texto);
                             return u ? { id: u.id, codigo: u.codigo } : null;
                         },
-                        confirmacion: (v) => `Ubicación ${v.codigo}, ¿correcto?`,
+                        confirmacion: (v) => t("orden.ubicacionCodigoCorrecto", { codigo: v.codigo }),
                     });
                     if (cancelado) return;
                     parcial.idUbicacionDestino = ubiDestino.id;
 
                     const cajaDestino = await flujoVoz.preguntar({
-                        instruccion: "Dime la caja de destino",
+                        instruccion: t("orden.dimeLaCajaDeDestino"),
                         tipo: "texto",
                         resolver: async (texto) => {
                             const c = await buscarCajaPorTexto(texto);
                             return c ? { id: c.id, lpn: c.lpn } : null;
                         },
-                        confirmacion: (v) => `Caja ${v.lpn}, ¿correcto?`,
+                        confirmacion: (v) => t("orden.cajaLpnCorrecto", { lpn: v.lpn }),
                     });
                     if (cancelado) return;
                     parcial.idCajaDestino = cajaDestino.id;
@@ -128,7 +130,7 @@ export const LecturaUbicacionOrden = ({
     }, [modoVoz]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <QModal abierto={true} nombre="lecturaUbicacionOrden" titulo={modoVoz ? "Lectura de ubicación (voz)" : "Lectura de ubicación"} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_ubicacion_cancelada"); }}>
+        <QModal abierto={true} nombre="lecturaUbicacionOrden" titulo={modoVoz ? t("orden.lecturaDeUbicacionVoz") : t("orden.lecturaDeUbicacion")} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_ubicacion_cancelada"); }}>
             <div className="LecturaUbicacionOrden">
                 {modoVoz && (
                     <IndicadorVoz
@@ -140,19 +142,19 @@ export const LecturaUbicacionOrden = ({
                 <quimera-formulario>
                     <Ubicacion
                         {...uiProps("idUbicacion")}
-                        label="Ubicación"
+                        label={t("orden.ubicacion")}
                         nombre="idUbicacion"
                     />
                     {esTraspaso && (
                         <>
                             <Ubicacion
                                 {...uiProps("idUbicacionDestino")}
-                                label="Ubicación destino"
+                                label={t("orden.ubicacionDestino2")}
                                 nombre="idUbicacionDestino"
                             />
                             <Caja
                                 {...uiProps("idCajaDestino")}
-                                label="Caja destino"
+                                label={t("orden.cajaDestino2")}
                                 nombre="idCajaDestino"
                             />
                         </>
@@ -160,10 +162,10 @@ export const LecturaUbicacionOrden = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={registrar} deshabilitado={!valido}>
-                        Registrar
+                        {t("orden.registrar")}
                     </QBoton>
                     <QBoton onClick={() => { flujoVoz.cancelar(); publicar("lectura_ubicacion_cancelada"); }}>
-                        Cerrar
+                        {t("orden.cerrar")}
                     </QBoton>
                 </div>
             </div>

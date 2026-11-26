@@ -8,6 +8,7 @@ import { Link } from "react-router";
 import { AlbaranGenerado, DiferenciaPedidoOrden, OrdenAlmacen } from "../../diseño.ts";
 import { textoDiferenciaPedido } from "../../dominio.ts";
 import { albaranarOrden, getDiferenciasPedidoOrden } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const AlbaranarOrden = ({
     publicar,
@@ -16,6 +17,7 @@ export const AlbaranarOrden = ({
     publicar: EmitirEvento;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [albaranes, setAlbaranes] = useState<AlbaranGenerado[] | null>(null);
     // null mientras se comprueba si la orden cuadra con el estado actual de sus pedidos.
@@ -43,23 +45,23 @@ export const AlbaranarOrden = ({
             <QModal
                 abierto={true}
                 nombre="ordenAlbaranada"
-                titulo="Orden albaranada"
+                titulo={t("orden.ordenAlbaranada")}
                 onCerrar={cerrar}
             >
                 {albaranes.length === 0 ? (
-                    <p>La orden se ha terminado. No tenía líneas de pedido pendientes de albaranar.</p>
+                    <p>{t("orden.laOrdenSeHaTerminadoNo")}</p>
                 ) : (
                     <>
                         <p>
                             {albaranes.length === 1
-                                ? "Se ha generado el albarán:"
-                                : `Se han generado ${albaranes.length} albaranes:`}
+                                ? t("orden.seHaGeneradoElAlbaran")
+                                : t("orden.seHanGeneradoLengthAlbaranes", { length: albaranes.length })}
                         </p>
                         <ul>
                             {albaranes.map(({ id, codigo }) => (
                                 <li key={id}>
                                     <Link to={`/ventas/albaran?id=${id}`} onClick={cerrar}>
-                                        Albarán {codigo}
+                                        {t("orden.albaranCodigo", { codigo })}
                                     </Link>
                                 </li>
                             ))}
@@ -67,7 +69,7 @@ export const AlbaranarOrden = ({
                     </>
                 )}
                 <div className="maestro-botones">
-                    <QBoton onClick={cerrar}>Cerrar</QBoton>
+                    <QBoton onClick={cerrar}>{t("orden.cerrar")}</QBoton>
                 </div>
             </QModal>
         );
@@ -77,16 +79,15 @@ export const AlbaranarOrden = ({
         <QModal
             abierto={true}
             nombre="confirmarAlbaranar"
-            titulo="Albaranar orden de salida"
+            titulo={t("orden.albaranarOrdenDeSalida")}
             onCerrar={() => publicar("albaranado_cancelado")}
         >
             {diferencias === null ? (
-                <p>Comprobando la orden contra sus pedidos…</p>
+                <p>{t("orden.comprobandoLaOrdenContraSusPedidos")}</p>
             ) : diferencias.length > 0 && (
                 <QAviso variante="advertencia">
                     <p>
-                        La orden no cuadra con lo que piden ahora sus pedidos. Puede que haya
-                        cambios en el pedido que la orden no ha recogido:
+                        {t("orden.laOrdenNoCuadraConLo")}
                     </p>
                     <ul>
                         {diferencias.map((d) => (
@@ -94,19 +95,17 @@ export const AlbaranarOrden = ({
                         ))}
                     </ul>
                     <p>
-                        Si albarana ahora, el albarán llevará lo recogido en la orden, no lo que
-                        pide el pedido.
+                        {t("orden.siAlbaranaAhoraElAlbaranLlevara")}
                     </p>
                 </QAviso>
             )}
             <p>
-                Se generará un albarán por cada pedido de la orden "{orden.descripcion}" y la orden
-                quedará terminada. ¿Desea continuar?
+                {t("orden.seGeneraraUnAlbaranPorCada", { descripcion: orden.descripcion })}
             </p>
             <div className="maestro-botones">
-                <QBoton variante="borde" onClick={() => publicar("albaranado_cancelado")}>Cancelar</QBoton>
+                <QBoton variante="borde" onClick={() => publicar("albaranado_cancelado")}>{t("orden.cancelar")}</QBoton>
                 <QBoton onClick={albaranar} deshabilitado={diferencias === null}>
-                    {diferencias && diferencias.length > 0 ? "Albaranar igualmente" : "Albaranar"}
+                    {diferencias && diferencias.length > 0 ? t("orden.albaranarIgualmente") : t("orden.albaranar")}
                 </QBoton>
             </div>
         </QModal>

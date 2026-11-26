@@ -1,6 +1,7 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useFocus } from "@olula/lib/useFocus.js";
 import { getSkuLote } from "../../../infraestructura.ts";
+import { useTAlmacen } from "../../../../i18n/index.ts";
 
 interface SkuLoteResultado {
     sku: string;
@@ -15,6 +16,7 @@ export const LecturaSkuLote = ({
     onLectura: (resultado: SkuLoteResultado) => void;
     nombre?: string;
 }) => {
+    const t = useTAlmacen();
     const focus = useFocus();
 
     const leerCodigo = async (codigo: string) => {
@@ -25,7 +27,7 @@ export const LecturaSkuLote = ({
 
     return (
         <QInput
-            label="Código de barras"
+            label={t("orden.codigoDeBarras")}
             nombre={nombre || "codigo_barras"}
             valor=""
             onEnterKeyUp={leerCodigo}

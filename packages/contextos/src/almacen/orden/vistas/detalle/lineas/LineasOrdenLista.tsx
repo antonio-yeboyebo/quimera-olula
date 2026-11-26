@@ -15,6 +15,7 @@ import { pedidoUnicoDeOrden, sobranteLinea, textoCambioPedido } from "../../../d
 import { definicionDeLinea, tieneFaseDrop, tieneFasePick } from "../../../pasos/catalogo.ts";
 import { cantidadHecha, cantidadPendiente } from "../../../pasos/lector.ts";
 import "./LineasOrdenLista.css";
+import { tAlmacen, useTAlmacen } from "../../../../i18n/index.ts";
 
 const formatearFechaHoraLectura = (fechaHora: Date | string): string => {
     const d = fechaHora instanceof Date ? fechaHora : new Date(fechaHora);
@@ -23,21 +24,22 @@ const formatearFechaHoraLectura = (fechaHora: Date | string): string => {
 
 const ExpansionLecturas = (orden: OrdenAlmacen, publicar: EmitirEvento) => {
     const Componente = ({ entidad }: { entidad: LineaOrdenAlmacen }) => {
+        const t = useTAlmacen();
         const { intentar } = useContext(ContextoError);
         const sgaActivo = plugin("sga") === "activo";
         const lecturas: LecturaLineaOrden[] = entidad.lecturas ?? [];
-        if (!lecturas.length) return <p>Sin lecturas</p>;
+        if (!lecturas.length) return <p>{t("orden.sinLecturas")}</p>;
         return (
             <table>
                 <thead>
                     <tr>
-                        <th>Lote</th>
-                        <th>Cantidad</th>
-                        <th>Fecha/Hora</th>
-                        {sgaActivo && orden.tipo !== "ENTRADA" && <th>Ubi.Origen</th>}
-                        {sgaActivo && orden.tipo !== "ENTRADA" && <th>Caja Origen</th>}
-                        {sgaActivo && orden.tipo !== "SALIDA" && <th>Ubi.Destino</th>}
-                        {sgaActivo && orden.tipo !== "SALIDA" && <th>Caja Destino</th>}
+                        <th>{t("orden.lote")}</th>
+                        <th>{t("orden.cantidad")}</th>
+                        <th>{t("orden.fechaHora")}</th>
+                        {sgaActivo && orden.tipo !== "ENTRADA" && <th>{t("orden.ubiOrigen")}</th>}
+                        {sgaActivo && orden.tipo !== "ENTRADA" && <th>{t("orden.cajaOrigen3")}</th>}
+                        {sgaActivo && orden.tipo !== "SALIDA" && <th>{t("orden.ubiDestino")}</th>}
+                        {sgaActivo && orden.tipo !== "SALIDA" && <th>{t("orden.cajaDestino3")}</th>}
                         <th></th>
                     </tr>
                 </thead>
@@ -61,7 +63,7 @@ const ExpansionLecturas = (orden: OrdenAlmacen, publicar: EmitirEvento) => {
                                         });
                                     }}
                                 >
-                                    Borrar
+                                    {t("orden.borrar")}
                                 </QBoton>
                             </td>
                         </tr>
@@ -115,8 +117,8 @@ const CantidadLinea = ({ orden, linea }: PropsLinea) => {
         const drop = cantidadHecha(linea, orden, "DROP");
         return (
             <span style={{ display: "flex", gap: "4px" }}>
-                <QEtiqueta variante={varianteProgreso(pick, prevista)}>P {pick}/{prevista}</QEtiqueta>
-                <QEtiqueta variante={varianteProgreso(drop, prevista)}>D {drop}/{prevista}</QEtiqueta>
+                <QEtiqueta variante={varianteProgreso(pick, prevista)}>{tAlmacen("orden.pPickPrevista", { pick, prevista })}</QEtiqueta>
+                <QEtiqueta variante={varianteProgreso(drop, prevista)}>{tAlmacen("orden.dDropPrevista", { drop, prevista })}</QEtiqueta>
             </span>
         );
     }
@@ -135,7 +137,7 @@ const BotonPick = ({ orden, linea, publicar, tamaño }: PropsLinea & { publicar:
                 publicar("lectura_guion_pick_linea_solicitada", linea);
             }}
         >
-            Leer pick
+            {tAlmacen("orden.leerPick")}
         </QBoton>
     );
 };
@@ -153,7 +155,7 @@ const BotonDrop = ({ orden, linea, publicar, tamaño }: PropsLinea & { publicar:
                 publicar("lectura_guion_drop_linea_solicitada", linea);
             }}
         >
-            Leer drop
+            {tAlmacen("orden.leerDrop")}
         </QBoton>
     );
 };
@@ -165,7 +167,7 @@ const AvisoSobrante = ({ linea, publicar, tamaño }: { linea: LineaOrdenAlmacen;
     return (
         <>
             <QEtiqueta variante="advertencia">
-                Sobrante {sobrante}
+                {tAlmacen("orden.sobranteSobrante", { sobrante })}
             </QEtiqueta>
             <QBoton
                 tamaño={tamaño}
@@ -174,7 +176,7 @@ const AvisoSobrante = ({ linea, publicar, tamaño }: { linea: LineaOrdenAlmacen;
                     publicar("devolucion_sobrante_solicitada", linea);
                 }}
             >
-                Devolver
+                {tAlmacen("orden.devolver")}
             </QBoton>
         </>
     );
@@ -187,12 +189,12 @@ const tarjetaLineaOrden = (orden: OrdenAlmacen, publicar: EmitirEvento) => {
     const TarjetaLineaOrden = (linea: LineaOrdenAlmacen) => {
         const sgaActivo = plugin("sga") === "activo";
         const ubicaciones = [
-            sgaActivo && orden.tipo !== "ENTRADA" && linea.ubicacionOrigen ? `De ${linea.ubicacionOrigen}` : null,
+            sgaActivo && orden.tipo !== "ENTRADA" && linea.ubicacionOrigen ? tAlmacen("orden.deUbicacionorigen", { ubicacionOrigen: linea.ubicacionOrigen }) : null,
             sgaActivo && orden.tipo !== "SALIDA" && linea.ubicacionDestino ? `A ${linea.ubicacionDestino}` : null,
         ].filter(Boolean).join(" · ");
         const mostrarPedido = variosPedidos && !!linea.pedidoVentaId;
         const mostrarMarca = orden.tipo === "SALIDA" && !!linea.cambioPedido;
-        const detalles = [ubicaciones, linea.loteId ? `Lote ${linea.loteId}` : null].filter(Boolean).join(" · ");
+        const detalles = [ubicaciones, linea.loteId ? tAlmacen("orden.loteLoteid", { loteId: linea.loteId }) : null].filter(Boolean).join(" · ");
         return (
             <QTarjetaGenerica
                 key={linea.id}
@@ -203,7 +205,7 @@ const tarjetaLineaOrden = (orden: OrdenAlmacen, publicar: EmitirEvento) => {
                             <span className="TarjetaLineaOrden__info">
                                 {mostrarPedido && (
                                     <span>
-                                        Pedido <PedidoLinea linea={linea} />
+                                        {tAlmacen("orden.pedido")}{" "}<PedidoLinea linea={linea} />
                                         {linea.cliente ? ` · ${linea.cliente}` : ""}
                                     </span>
                                 )}
@@ -241,13 +243,13 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): Meta
     return {
         cols: [
             { id: "sku", cabecera: "SKU", enlace: (l: LineaOrdenAlmacen) => urlFicha.articulo(l.sku) },
-            { id: "articulo", cabecera: "Descripción", tipo: "texto" },
-            { id: "loteId", cabecera: "Lote" },
+            { id: "articulo", cabecera: tAlmacen("orden.descripcion"), tipo: "texto" },
+            { id: "loteId", cabecera: tAlmacen("orden.lote") },
             ...(conColumnaPedido(orden)
                 ? [
                     {
                         id: "pedidoVenta" as const,
-                        cabecera: "Pedido",
+                        cabecera: tAlmacen("orden.pedido"),
                         render: (linea: LineaOrdenAlmacen) => (
                             <span style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
                                 <PedidoLinea linea={linea} />
@@ -259,7 +261,7 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): Meta
                 : []),
             {
                 id: "cantidadPrevista" as const,
-                cabecera: "Cantidad",
+                cabecera: tAlmacen("orden.cantidad"),
                 tipo: 'numero' as const,
                 render: (linea: LineaOrdenAlmacen) => <CantidadLinea orden={orden} linea={linea} />,
             },
@@ -268,7 +270,7 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): Meta
                 enlace: (l: LineaOrdenAlmacen) => urlFicha.ubicacion(l.idUbicacionOrigen),
             }] : []),
             ...(sgaActivo && orden.tipo !== "ENTRADA" ? [{
-                id: "cajaOrigen" as const, cabecera: "LPN Origen",
+                id: "cajaOrigen" as const, cabecera: tAlmacen("orden.lpnOrigen"),
                 enlace: (l: LineaOrdenAlmacen) => urlFicha.caja(l.idCajaOrigen),
             }] : []),
             ...(sgaActivo && orden.tipo !== "SALIDA" ? [{
@@ -276,7 +278,7 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): Meta
                 enlace: (l: LineaOrdenAlmacen) => urlFicha.ubicacion(l.idUbicacionDestino),
             }] : []),
             ...(sgaActivo && orden.tipo !== "SALIDA" ? [{
-                id: "cajaDestino" as const, cabecera: "LPN Destino",
+                id: "cajaDestino" as const, cabecera: tAlmacen("orden.lpnDestino"),
                 enlace: (l: LineaOrdenAlmacen) => urlFicha.caja(l.idCajaDestino),
             }] : []),
             {

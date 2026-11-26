@@ -3,6 +3,7 @@ import { MetaTabla } from "@olula/componentes/atomos/qtablacontrolada.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { LecturaCajaOrden, LecturaLineaOrden, OrdenAlmacen } from "../../../diseño.ts";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 const formatearFechaHora = (fechaHora: Date | string): string => {
     const d = fechaHora instanceof Date ? fechaHora : new Date(fechaHora);
@@ -16,17 +17,17 @@ const getLecturasDeLinea = (orden: OrdenAlmacen, lecturaCajaId: string): Lectura
 
 const ExpansionLecturas = ({ entidad, orden }: { entidad: LecturaCajaOrden; orden: OrdenAlmacen }) => {
     const lecturas = getLecturasDeLinea(orden, entidad.id);
-    if (!lecturas.length) return <p>Sin lecturas</p>;
+    if (!lecturas.length) return <p>{tAlmacen("orden.sinLecturas")}</p>;
     return (
         <table>
             <thead>
                 <tr>
-                    <th>SKU</th>
-                    <th>Lote</th>
-                    <th>Cantidad</th>
-                    <th>Fecha/Hora</th>
-                    <th>Ubi.Origen</th>
-                    <th>Ubi.Destino</th>
+                    <th>{tAlmacen("orden.sku")}</th>
+                    <th>{tAlmacen("orden.lote")}</th>
+                    <th>{tAlmacen("orden.cantidad")}</th>
+                    <th>{tAlmacen("orden.fechaHora")}</th>
+                    <th>{tAlmacen("orden.ubiOrigen")}</th>
+                    <th>{tAlmacen("orden.ubiDestino")}</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,11 +50,11 @@ const metaTablaLecturasCaja: MetaTabla<LecturaCajaOrden> = {
     cols: [
         { id: "lpn", cabecera: "LPN", enlace: (l) => urlFicha.caja(l.idCaja) },
         { id: "ubicacionDestino", cabecera: "Ubi.Destino", enlace: (l) => urlFicha.ubicacion(l.idUbicacionDestino) },
-        { id: "cajaDestino", cabecera: "Caja destino", enlace: (l) => urlFicha.caja(l.idCajaDestino) },
-        { id: "cajaCompleta", cabecera: "Caja completa" },
+        { id: "cajaDestino", get cabecera() { return tAlmacen("orden.cajaDestino2"); }, enlace: (l) => urlFicha.caja(l.idCajaDestino) },
+        { id: "cajaCompleta", get cabecera() { return tAlmacen("orden.cajaCompleta"); } },
         {
             id: "fechaHora",
-            cabecera: "Fecha/Hora",
+            get cabecera() { return tAlmacen("orden.fechaHora"); },
             render: (lectura: LecturaCajaOrden) =>
                 formatearFechaHora(lectura.fechaHora),
         },
@@ -71,11 +72,11 @@ export const LecturasCajaOrden = ({
             <ExpansionLecturas entidad={entidad} orden={orden} />
         ),
     };
-    if (!orden.lecturasCaja.length) return <p><i>Sin lecturas de caja</i></p>;
+    if (!orden.lecturasCaja.length) return <p><i>{tAlmacen("orden.sinLecturasDeCaja")}</i></p>;
 
     return (
         <>
-            <h3>LECTURAS DE CAJA</h3>
+            <h3>{tAlmacen("orden.lecturasDeCaja")}</h3>
             <ListadoSemiControlado
                 metaTabla={metaTabla}
                 entidades={orden.lecturasCaja}
