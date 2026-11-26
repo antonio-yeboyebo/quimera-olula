@@ -7,6 +7,7 @@ import { CrearDireccionProveedor } from "../../crear_direccion/CrearDireccionPro
 import { DireccionProveedor, Proveedor } from "../../diseño.ts";
 import { EstadoDetalleProveedor } from "../diseño.ts";
 import { DireccionesLista } from "./DireccionesLista.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const DireccionesProveedor = ({
     proveedor,
@@ -19,31 +20,32 @@ export const DireccionesProveedor = ({
     estado: EstadoDetalleProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const activa = direcciones.activo;
 
     return (
         <>
             <div className="botones maestro-botones">
                 <QBoton onClick={() => publicar("alta_direccion_solicitada")}>
-                    Nueva dirección
+                    {t("proveedor.direcciones.nueva")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("cambio_direccion_solicitado")}
                     deshabilitado={!activa}
                 >
-                    Editar
+                    {t("comun.botones.editar")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("baja_direccion_solicitada")}
                     deshabilitado={!activa}
                 >
-                    Borrar
+                    {t("comun.botones.borrar")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("principal_solicitada")}
                     deshabilitado={!activa || activa.principal}
                 >
-                    Marcar principal
+                    {t("proveedor.direcciones.marcarPrincipal")}
                 </QBoton>
             </div>
             <DireccionesLista

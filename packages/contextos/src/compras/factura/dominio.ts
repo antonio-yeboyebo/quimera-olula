@@ -1,5 +1,6 @@
 import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
     EstadoExpedicion,
@@ -28,18 +29,22 @@ export const estadoExpedicionDesdeApi = (
     return ESTADOS_EXPEDICION[clave] ?? "";
 };
 
-export const descripcionEstadoExpedicion: Record<EstadoExpedicion, string> = {
-    "": "Sin cargar",
-    BORRADOR: "Borrador",
-    REGISTRADA: "Registrada",
-};
+const CLAVE_ESTADO_EXPEDICION = {
+    "": "sinCargar",
+    BORRADOR: "borrador",
+    REGISTRADA: "registrada",
+} as const satisfies Record<EstadoExpedicion, string>;
+
+/** Descripción del estado de expedición en el idioma activo. */
+export const descripcionEstadoExpedicion = (estado: EstadoExpedicion): string =>
+    tCompras(`comun.documento.estados.${CLAVE_ESTADO_EXPEDICION[estado]}`);
 
 /** Solo se registra el borrador: registrar es irreversible. */
 export const facturaRegistrable = (factura: Factura): boolean =>
     factura.estadoExpedicion === "BORRADOR";
 
 export const descripcionOrigenFactura = (factura: Factura): string =>
-    factura.automatica ? "Desde albaranes" : "Manual";
+    tCompras(factura.automatica ? "comun.documento.estados.desdeAlbaranes" : "comun.documento.estados.manual");
 
 export const etiquetaLinea = (linea: LineaFactura): string =>
     linea.referencia ? `${linea.referencia}: ${linea.descripcion}` : linea.descripcion;
@@ -116,6 +121,6 @@ export const camposConCambiosServidor = [
 ] as const satisfies readonly (keyof NuevaLineaFactura)[];
 
 export const etiquetaEstadoFactura = (factura: Factura): EstadoEtiqueta => ({
-    texto: descripcionEstadoExpedicion[factura.estadoExpedicion],
+    texto: descripcionEstadoExpedicion(factura.estadoExpedicion),
     tono: factura.estadoExpedicion === "REGISTRADA" ? "completado" : "borrador",
 });

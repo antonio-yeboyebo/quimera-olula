@@ -5,8 +5,10 @@ import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFil
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.ts";
 import { ArticuloProveedor } from "../../../articulo_proveedor/diseño.ts";
+import { useMemo } from "react";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 
-const metaTablaArticulos: MetaTabla<ArticuloProveedor> = [
+const metaTablaArticulos = (t = tCompras): MetaTabla<ArticuloProveedor> => [
   {
     id: "por_defecto",
     cabecera: "",
@@ -23,34 +25,34 @@ const metaTablaArticulos: MetaTabla<ArticuloProveedor> = [
         ""
       ),
   },
-  { id: "articulo_id", cabecera: "Referencia", render: (p) => p.articuloId },
-  { id: "articulo", cabecera: "Artículo", ancho: "20rem" },
+  { id: "articulo_id", cabecera: t("comun.campos.referencia"), render: (p) => p.articuloId },
+  { id: "articulo", cabecera: t("comun.campos.articulo"), ancho: "20rem" },
   {
     id: "ref_proveedor",
-    cabecera: "Ref. proveedor",
+    cabecera: t("proveedor.articulos.refProveedor"),
     render: (p) => p.refProveedor,
   },
   {
     id: "coste",
-    cabecera: "Coste",
+    cabecera: t("proveedor.articulos.coste"),
     tipo: "moneda",
     divisa: (p) => p.divisaId,
   },
-  { id: "dto", cabecera: "% Dto.", tipo: "numero" },
+  { id: "dto", cabecera: t("proveedor.articulos.dto"), tipo: "numero" },
 ];
 
-const metaFiltroArticulos: MetaFiltro = {
+const metaFiltroArticulos = (t = tCompras): MetaFiltro => ({
   articulo_id: {
     id: "articulo_id",
-    label: "Referencia",
+    label: t("comun.campos.referencia"),
     filtro: (v) => (v ? ["articulo_id", "~", v as string] : null),
   },
   articulo: {
     id: "articulo",
-    label: "Artículo",
+    label: t("comun.campos.articulo"),
     filtro: (v) => (v ? ["articulo", "~", v as string] : null),
   },
-};
+});
 
 export const ArticulosProveedor = ({
   articulos,
@@ -58,10 +60,14 @@ export const ArticulosProveedor = ({
 }: {
   articulos: ListaActivaEntidades<ArticuloProveedor>;
   publicar: EmitirEvento;
-}) => (
+}) => {
+  const t = useTCompras();
+  const metaTabla = useMemo(() => metaTablaArticulos(t), [t]);
+  const metaFiltro = useMemo(() => metaFiltroArticulos(t), [t]);
+  return (
   <Listado<ArticuloProveedor>
-    metaTabla={metaTablaArticulos}
-    metaFiltro={metaFiltroArticulos}
+    metaTabla={metaTabla}
+    metaFiltro={metaFiltro}
     criteria={articulos.criteria}
     modo="tabla"
     entidades={articulos.lista}
@@ -75,4 +81,5 @@ export const ArticulosProveedor = ({
       publicar("siguiente_pagina_de_articulos_prov", payload)
     }
   />
-);
+  );
+};

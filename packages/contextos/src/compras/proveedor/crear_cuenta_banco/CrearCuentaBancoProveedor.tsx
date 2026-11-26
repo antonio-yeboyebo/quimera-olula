@@ -13,6 +13,7 @@ import {
 } from "../dominio.ts";
 import { postCuentaBancoProveedor } from "../infraestructura.ts";
 import "./CrearCuentaBancoProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearCuentaBancoProveedor = ({
   proveedor,
@@ -21,6 +22,7 @@ export const CrearCuentaBancoProveedor = ({
   proveedor: Proveedor;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const inicial = useMemo(nuevaCuentaBancoProveedorVacia, []);
 
   const { modelo, uiProps, valido } = useModelo(
@@ -45,18 +47,18 @@ export const CrearCuentaBancoProveedor = ({
     <QModal
       abierto={true}
       nombre="crearCuentaBancoProveedor"
-      titulo="Crear cuenta bancaria"
+      titulo={t("proveedor.cuentas.crear")}
       onCerrar={cancelar}
     >
       <div className="CrearCuentaBancoProveedor">
         <quimera-formulario>
-          <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
-          <QInput label="IBAN" {...uiProps("iban")} />
+          <QInput label={t("comun.campos.descripcion")} {...uiProps("descripcion")} ref={focus} />
+          <QInput label={t("proveedor.cuentas.iban")} {...uiProps("iban")} />
         </quimera-formulario>
       </div>
       <div className="botones maestro-botones">
         <QBoton onClick={crear} deshabilitado={!valido}>
-          Crear
+          {t("comun.botones.crear")}
         </QBoton>
       </div>
     </QModal>

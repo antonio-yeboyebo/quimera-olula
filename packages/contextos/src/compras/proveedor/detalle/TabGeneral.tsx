@@ -6,6 +6,7 @@ import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Proveedor } from "../diseño.ts";
 import "./TabGeneral.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const TabGeneral = ({
     form,
@@ -14,26 +15,27 @@ export const TabGeneral = ({
     form: HookModelo<Proveedor>;
     proveedor: Proveedor;
 }) => {
+    const t = useTCompras();
     const { uiProps } = form;
 
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Nombre" {...uiProps("nombre")} />
-                <QInput label="Nombre Comercial" {...uiProps("nombreComercial")} />
+                <QInput label={t("comun.campos.nombre")} {...uiProps("nombre")} />
+                <QInput label={t("comun.campos.nombreComercial")} {...uiProps("nombreComercial")} />
                 <TipoIdFiscal
                     {...uiProps("tipoIdFiscal")}
-                    opciones={opcionesTipoIdFiscalCompras}
+                    opciones={opcionesTipoIdFiscalCompras(t)}
                 />
-                <QInput label="Id Fiscal" {...uiProps("idFiscal")} />
-                <QInput label="Teléfono 1" {...uiProps("telefono1")} />
-                <QInput label="Teléfono 2" {...uiProps("telefono2")} />
-                <QInput label="Email" {...uiProps("email")} />
-                <QInput label="Web" {...uiProps("web")} />
+                <QInput label={t("comun.campos.idFiscal")} {...uiProps("idFiscal")} />
+                <QInput label={t("comun.campos.telefono1")} {...uiProps("telefono1")} />
+                <QInput label={t("comun.campos.telefono2")} {...uiProps("telefono2")} />
+                <QInput label={t("comun.campos.email")} {...uiProps("email")} />
+                <QInput label={t("comun.campos.web")} {...uiProps("web")} />
                 {proveedor.deBaja && (
-                    <QDate label="Fecha Baja" {...uiProps("fechaBaja")} />
+                    <QDate label={t("comun.campos.fechaBaja")} {...uiProps("fechaBaja")} />
                 )}
-                <QTextArea label="Observaciones" {...uiProps("observaciones")} />
+                <QTextArea label={t("comun.campos.observaciones")} {...uiProps("observaciones")} />
             </quimera-formulario>
         </div>
     );

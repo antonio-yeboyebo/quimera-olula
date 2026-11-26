@@ -9,6 +9,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.ts";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.ts";
 import { useEffect, useMemo } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { CrearPedido } from "../crear/CrearPedido.tsx";
 import { DetallePedido } from "../detalle/DetallePedido.tsx";
 import { Pedido } from "../diseño.ts";
@@ -20,14 +21,6 @@ import { getMaquina } from "./maquina.ts";
 import { metaTablaPedido } from "./metatabla_pedido.tsx";
 import { TarjetaPedido } from "./TarjetaPedido.tsx";
 
-const widgetsPedidoCompra = widgetsDocumentoCompra("compras.pedido", {
-  plural: "Pedidos de compra",
-  total: "Importe total",
-  medio: "Pedido medio",
-});
-
-// Filtros con el nombre de campo de la API (snake_case): el modelo va en camelCase.
-const metaFiltroPedido = getMetaFiltroDefecto(metaTablaPedido, { campoApi: camelASnake });
 
 const criteriaPedidos = {
   ...criteriaDefecto,
@@ -35,6 +28,19 @@ const criteriaPedidos = {
 };
 
 export const MaestroConDetallePedido = () => {
+  const t = useTCompras();
+  // Columnas, filtros y widgets en el idioma activo: se rehacen al cambiarlo.
+  const metaTabla = useMemo(() => metaTablaPedido(t), [t]);
+  // Filtros con el nombre de campo de la API (snake_case): el modelo va en camelCase.
+  const metaFiltro = useMemo(() => getMetaFiltroDefecto(metaTabla, { campoApi: camelASnake }), [metaTabla]);
+  const widgets = useMemo(
+    () => widgetsDocumentoCompra("compras.pedido", {
+      plural: t("pedido.maestro.titulo"),
+      total: t("pedido.maestro.importeTotal"),
+      medio: t("pedido.maestro.medio"),
+    }, t),
+    [t]
+  );
   const criteriaBase = useMemo(() => criteriaPedidos, []);
 
   const { id, criteria } = getUrlParams();
@@ -61,11 +67,11 @@ export const MaestroConDetallePedido = () => {
       <MaestroDetalle<Pedido>
         Maestro={
           <>
-            <h2>Pedidos de compra</h2>
+            <h2>{t("pedido.maestro.titulo")}</h2>
             <Listado<Pedido>
-              metaTabla={metaTablaPedido}
-              metaFiltro={metaFiltroPedido}
-              widgets={widgetsPedidoCompra}
+              metaTabla={metaTabla}
+              metaFiltro={metaFiltro}
+              widgets={widgets}
               criteria={pedidos.criteria}
               tarjeta={TarjetaPedido}
               entidades={pedidos.lista}
@@ -76,11 +82,11 @@ export const MaestroConDetallePedido = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("crear_pedido_solicitado")}>
-                    Nuevo Pedido
+                    {t("pedido.maestro.nuevo")}
                   </QBoton>
                   {puedenAlbaranarse(seleccionados, pedidos.lista) && (
                     <QBoton onClick={() => emitir("albaranado_solicitado")}>
-                      {`Albaranar (${seleccionados.length})`}
+                      {t("pedido.maestro.albaranar", { cuantos: seleccionados.length })}
                     </QBoton>
                   )}
                 </div>

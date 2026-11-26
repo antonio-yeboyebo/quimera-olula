@@ -1,5 +1,6 @@
 import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
     LineaPedido,
@@ -88,7 +89,7 @@ export const camposConCambiosServidor = [
 ] as const satisfies readonly (keyof NuevaLineaPedido)[];
 
 export const etiquetaEstadoPedido = (pedido: Pedido): EstadoEtiqueta => {
-    if (pedido.recibido === "Sí") return { texto: "Recibido", tono: "completado" };
-    if (pedido.recibido === "Parcial") return { texto: "Parcial", tono: "parcial" };
-    return { texto: "Pendiente", tono: "pendiente" };
+    if (pedido.recibido === "Sí") return { texto: tCompras("comun.documento.estados.recibido"), tono: "completado" };
+    if (pedido.recibido === "Parcial") return { texto: tCompras("comun.documento.estados.parcial"), tono: "parcial" };
+    return { texto: tCompras("comun.documento.estados.pendiente"), tono: "pendiente" };
 };

@@ -2,6 +2,7 @@ import { getArticulo, getTagsArticulo } from "#/compras/articulo/infraestructura
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 interface ArticuloProps {
   descripcion?: string;
@@ -20,10 +21,11 @@ export const Articulo = ({
   descripcion = "",
   valor,
   nombre = "referencia",
-  label = "Artículo",
+  label,
   onChange,
   ...props
 }: ArticuloProps) => {
+  const t = useTCompras();
   const [descripcionResuelta, setDescripcionResuelta] = useState(descripcion);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export const Articulo = ({
 
   return (
     <QAutocompletar
-      label={`${label} ${valor}`}
+      label={`${label ?? t("comun.campos.articulo")} ${valor}`}
       nombre={nombre}
       onChange={onChange}
       valor={valor}

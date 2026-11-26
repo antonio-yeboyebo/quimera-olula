@@ -1,33 +1,35 @@
 import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { MetaTabla } from "@olula/componentes/index.js";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { Albaran } from "../diseño.ts";
 import { etiquetaEstadoAlbaran } from "../dominio.ts";
 
-export const metaTablaAlbaran: MetaTabla<Albaran> = [
+/** Columnas del maestro en el idioma activo (se piden al pintar, con el `t` de useTCompras). */
+export const metaTablaAlbaran = (t = tCompras): MetaTabla<Albaran> => [
   {
     id: "facturaId",
-    cabecera: "Estado",
+    cabecera: t("comun.campos.estado"),
     render: (albaran: Albaran) => (
       <EtiquetaEstado {...etiquetaEstadoAlbaran(albaran)} />
     ),
   },
-  { id: "codigo", cabecera: "Código", prioridad: "alta", estilo: "secundario" },
-  { id: "nombreProveedor", cabecera: "Proveedor", prioridad: "alta", estilo: "destacado" },
-  { id: "fecha", cabecera: "Fecha", tipo: "fecha", prioridad: "alta" },
+  { id: "codigo", cabecera: t("comun.campos.codigo"), prioridad: "alta", estilo: "secundario" },
+  { id: "nombreProveedor", cabecera: t("comun.campos.proveedor"), prioridad: "alta", estilo: "destacado" },
+  { id: "fecha", cabecera: t("comun.campos.fecha"), tipo: "fecha", prioridad: "alta" },
   {
     id: "total",
     estilo: "destacado",
-    cabecera: "Total",
+    cabecera: t("comun.campos.total"),
     tipo: "moneda",
     prioridad: "alta",
     divisa: (albaran) => albaran.divisaId,
   },
-  { id: "numeroProveedor", cabecera: "Nº proveedor", prioridad: "media" },
+  { id: "numeroProveedor", cabecera: t("comun.campos.numeroProveedor"), prioridad: "media" },
   {
     id: "almacenId",
-    cabecera: "Almacén",
+    cabecera: t("comun.campos.almacen"),
     prioridad: "baja",
     render: (albaran) => albaran.nombreAlmacen || albaran.almacenId || "",
   },
-  { id: "idFiscal", cabecera: "Id Fiscal", prioridad: "baja" },
+  { id: "idFiscal", cabecera: t("comun.campos.idFiscal"), prioridad: "baja" },
 ];

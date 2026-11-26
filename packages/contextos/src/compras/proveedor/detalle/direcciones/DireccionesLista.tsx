@@ -3,20 +3,22 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { DireccionProveedor } from "../../diseño.ts";
+import { useMemo } from "react";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 
-const metaTablaDirecciones: MetaTabla<DireccionProveedor> = [
+const metaTablaDirecciones = (t = tCompras): MetaTabla<DireccionProveedor> => [
     {
         id: "principal",
-        cabecera: "Principal",
-        render: (d: DireccionProveedor) => (d.principal ? "Sí" : ""),
+        cabecera: t("proveedor.direcciones.principal"),
+        render: (d: DireccionProveedor) => (d.principal ? t("comun.si") : ""),
     },
-    { id: "tipoVia", cabecera: "Tipo Vía" },
-    { id: "nombreVia", cabecera: "Nombre Vía" },
-    { id: "numero", cabecera: "Número" },
-    { id: "codPostal", cabecera: "C.P." },
-    { id: "ciudad", cabecera: "Ciudad" },
-    { id: "provincia", cabecera: "Provincia" },
-    { id: "telefono", cabecera: "Teléfono" },
+    { id: "tipoVia", cabecera: t("proveedor.direcciones.tipoVia") },
+    { id: "nombreVia", cabecera: t("proveedor.direcciones.nombreVia") },
+    { id: "numero", cabecera: t("comun.direccion.numero") },
+    { id: "codPostal", cabecera: t("proveedor.direcciones.cp") },
+    { id: "ciudad", cabecera: t("comun.direccion.ciudad") },
+    { id: "provincia", cabecera: t("comun.direccion.provincia") },
+    { id: "telefono", cabecera: t("comun.direccion.telefono") },
 ];
 
 export const DireccionesLista = ({
@@ -28,9 +30,11 @@ export const DireccionesLista = ({
     seleccionada?: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
+    const metaTabla = useMemo(() => metaTablaDirecciones(t), [t]);
     return (
         <ListadoSemiControlado
-            metaTabla={metaTablaDirecciones}
+            metaTabla={metaTabla}
             entidades={direcciones}
             totalEntidades={direcciones.length}
             cargando={false}

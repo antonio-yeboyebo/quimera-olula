@@ -5,6 +5,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { Proveedor } from "../diseño.ts";
 import { metaNuevaDireccionProveedor, nuevaDireccionProveedorVacia } from "../dominio.ts";
 import { postDireccionProveedor } from "../infraestructura.ts";
@@ -16,6 +17,7 @@ export const CrearDireccionProveedor = ({
     proveedor: Proveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const inicial = useMemo(nuevaDireccionProveedorVacia, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevaDireccionProveedor, inicial);
@@ -36,7 +38,7 @@ export const CrearDireccionProveedor = ({
         <QModal
             abierto={true}
             nombre="crearDireccionProveedor"
-            titulo="Crear dirección"
+            titulo={t("proveedor.direcciones.crear")}
             onCerrar={cancelar}
         >
             <div className="CrearDireccionProveedor campos-direccion-proveedor">
@@ -46,7 +48,7 @@ export const CrearDireccionProveedor = ({
             </div>
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Crear
+                    {t("comun.botones.crear")}
                 </QBoton>
             </div>
         </QModal>

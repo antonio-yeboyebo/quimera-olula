@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { crearApiAgenda } from "#/comun/agenda/infraestructura.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { normalizarIban } from "@olula/lib/iban.ts";
@@ -249,7 +250,7 @@ export const getProveedor: GetProveedor = async (id) =>
     await RestAPI.getItem<Proveedor, ProveedorApi>(
         `${baseUrl}/${id}`,
         proveedorDesdeApi,
-        "Error al obtener el proveedor"
+        tCompras("proveedor.errores.obtener")
     );
 
 export const getProveedores: GetProveedores = async (criteria) =>
@@ -257,14 +258,14 @@ export const getProveedores: GetProveedores = async (criteria) =>
         baseUrl,
         criteria,
         proveedorDesdeApi,
-        "Error al obtener los proveedores"
+        tCompras("proveedor.errores.obtenerLista")
     );
 
 export const postProveedor: PostProveedor = async (nuevoProveedor) => {
     const respuesta = await RestAPI.post<NuevoProveedorApi>(
         baseUrl,
         nuevoProveedorAApi(nuevoProveedor),
-        "Error al crear el proveedor"
+        tCompras("proveedor.errores.crear")
     );
     return respuesta.id;
 };
@@ -273,33 +274,33 @@ export const patchProveedor: PatchProveedor = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         { cambios: cambiosProveedorAApi(cambios) },
-        "Error al guardar el proveedor"
+        tCompras("proveedor.errores.guardar")
     );
 };
 
 export const deleteProveedor: DeleteProveedor = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el proveedor");
+    await RestAPI.delete(`${baseUrl}/${id}`, tCompras("proveedor.errores.borrar"));
 };
 
 export const getDireccionesProveedor: GetDireccionesProveedor = async (id) =>
     await RestAPI.getLista<DireccionProveedor, DireccionProveedorApi>(
         `${baseUrl}/${id}/direccion`,
         direccionProveedorDesdeApi,
-        "Error al obtener las direcciones del proveedor"
+        tCompras("proveedor.errores.obtenerDirecciones")
     );
 
 export const getDireccionProveedor: GetDireccionProveedor = async (id, direccionId) =>
     await RestAPI.getItem<DireccionProveedor, DireccionProveedorApi>(
         `${baseUrl}/${id}/direccion/${direccionId}`,
         direccionProveedorDesdeApi,
-        "Error al obtener la dirección"
+        tCompras("proveedor.errores.obtenerDireccion")
     );
 
 export const postDireccionProveedor: PostDireccionProveedor = async (id, direccion) => {
     const respuesta = await RestAPI.post(
         `${baseUrl}/${id}/direccion`,
         { direccion: direccionAApi(direccion) },
-        "Error al crear la dirección"
+        tCompras("proveedor.errores.crearDireccion")
     );
     return String(respuesta.id);
 };
@@ -308,7 +309,7 @@ export const patchDireccionProveedor: PatchDireccionProveedor = async (id, direc
     await RestAPI.patch(
         `${baseUrl}/${id}/direccion/${direccionId}`,
         { direccion: direccionAApi(cambios) },
-        "Error al actualizar la dirección"
+        tCompras("proveedor.errores.actualizarDireccion")
     );
 };
 
@@ -316,14 +317,14 @@ export const marcarDireccionPrincipal: MarcarDireccionPrincipal = async (id, dir
     await RestAPI.patch(
         `${baseUrl}/${id}/direccion/${direccionId}/principal`,
         {},
-        "Error al marcar la dirección como principal"
+        tCompras("proveedor.errores.direccionPrincipal")
     );
 };
 
 export const deleteDireccionProveedor: DeleteDireccionProveedor = async (id, direccionId) => {
     await RestAPI.delete(
         `${baseUrl}/${id}/direccion/${direccionId}`,
-        "Error al borrar la dirección"
+        tCompras("proveedor.errores.borrarDireccion")
     );
 };
 
@@ -331,21 +332,21 @@ export const getCuentasBancoProveedor: GetCuentasBancoProveedor = async (id) =>
     await RestAPI.getLista<CuentaBancoProveedor, CuentaBancoProveedorApi>(
         `${baseUrl}/${id}/cuenta_banco`,
         cuentaBancoProveedorDesdeApi,
-        "Error al obtener las cuentas bancarias del proveedor"
+        tCompras("proveedor.errores.obtenerCuentas")
     );
 
 export const getCuentaBancoProveedor: GetCuentaBancoProveedor = async (id, cuentaId) =>
     await RestAPI.getItem<CuentaBancoProveedor, CuentaBancoProveedorApi>(
         `${baseUrl}/${id}/cuenta_banco/${cuentaId}`,
         cuentaBancoProveedorDesdeApi,
-        "Error al obtener la cuenta bancaria"
+        tCompras("proveedor.errores.obtenerCuenta")
     );
 
 export const postCuentaBancoProveedor: PostCuentaBancoProveedor = async (id, cuenta) => {
     const respuesta = await RestAPI.post(
         `${baseUrl}/${id}/cuenta_banco`,
         cuentaBancoAApi(cuenta),
-        "Error al crear la cuenta bancaria"
+        tCompras("proveedor.errores.crearCuenta")
     );
     return respuesta.id;
 };
@@ -354,14 +355,14 @@ export const patchCuentaBancoProveedor: PatchCuentaBancoProveedor = async (id, c
     await RestAPI.patch(
         `${baseUrl}/${id}/cuenta_banco/${cuentaId}`,
         cuentaBancoAApi(cambios),
-        "Error al actualizar la cuenta bancaria"
+        tCompras("proveedor.errores.actualizarCuenta")
     );
 };
 
 export const deleteCuentaBancoProveedor: DeleteCuentaBancoProveedor = async (id, cuentaId) => {
     await RestAPI.delete(
         `${baseUrl}/${id}/cuenta_banco/${cuentaId}`,
-        "Error al borrar la cuenta bancaria"
+        tCompras("proveedor.errores.borrarCuenta")
     );
 };
 
@@ -369,7 +370,7 @@ export const asignarCuentaPago: AsignarCuentaPago = async (id, cuentaId) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/cuenta_pago`,
         { cuenta_id: cuentaId },
-        "Error al asignar la cuenta de pago"
+        tCompras("proveedor.errores.cuentaPago")
     );
 };
 

@@ -6,6 +6,7 @@ import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.ts";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.ts";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 import { useEffect, useMemo } from "react";
 import { CrearProveedor } from "../crear/CrearProveedor.tsx";
 import { DetalleProveedor } from "../detalle/DetalleProveedor.tsx";
@@ -14,16 +15,18 @@ import { getMaquina } from "./maquina.ts";
 import { TarjetaProveedor } from "./TarjetaProveedor.tsx";
 import "./MaestroConDetalleProveedor.css";
 
-const metaTablaProveedor: MetaTabla<Proveedor> = [
-    { id: 'id', cabecera: 'ID' },
-    { id: 'nombre', cabecera: 'Nombre' },
-    { id: 'idFiscal', cabecera: 'Id Fiscal' },
-    { id: 'telefono1', cabecera: 'Teléfono' },
-    { id: 'email', cabecera: 'Email' },
-    { id: 'deBaja', cabecera: 'Baja', render: (p: Proveedor) => (p.deBaja ? "Sí" : "") },
+const metaTablaProveedor = (t = tCompras): MetaTabla<Proveedor> => [
+    { id: 'id', cabecera: t("comun.campos.id") },
+    { id: 'nombre', cabecera: t("comun.campos.nombre") },
+    { id: 'idFiscal', cabecera: t("comun.campos.idFiscal") },
+    { id: 'telefono1', cabecera: t("comun.campos.telefono") },
+    { id: 'email', cabecera: t("comun.campos.email") },
+    { id: 'deBaja', cabecera: t("proveedor.maestro.baja"), render: (p: Proveedor) => (p.deBaja ? t("comun.si") : "") },
 ];
 
 export const MaestroConDetalleProveedor = () => {
+    const t = useTCompras();
+    const metaTabla = useMemo(() => metaTablaProveedor(t), [t]);
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -48,9 +51,9 @@ export const MaestroConDetalleProveedor = () => {
             <MaestroDetalle<Proveedor>
                 Maestro={
                     <>
-                        <h2>Proveedores</h2>
+                        <h2>{t("proveedor.maestro.titulo")}</h2>
                         <Listado<Proveedor>
-                            metaTabla={metaTablaProveedor}
+                            metaTabla={metaTabla}
                             criteria={proveedores.criteria}
                             modoInicial="tabla"
                             tarjeta={TarjetaProveedor}
@@ -60,7 +63,7 @@ export const MaestroConDetalleProveedor = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_proveedor_solicitado")}>
-                                        Nuevo Proveedor
+                                        {t("proveedor.maestro.nuevo")}
                                     </QBoton>
                                 </div>
                             )}

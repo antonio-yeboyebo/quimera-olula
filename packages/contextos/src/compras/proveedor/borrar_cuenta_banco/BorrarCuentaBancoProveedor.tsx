@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { CuentaBancoProveedor, Proveedor } from "../diseño.ts";
 import { deleteCuentaBancoProveedor } from "../infraestructura.ts";
 
@@ -14,6 +15,7 @@ export const BorrarCuentaBancoProveedor = ({
     cuenta: CuentaBancoProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const borrar_ = useCallback(async () => {
         await deleteCuentaBancoProveedor(proveedor.id, cuenta.id);
         publicar("cuenta_borrada", cuenta.id);
@@ -30,8 +32,8 @@ export const BorrarCuentaBancoProveedor = ({
         <QModalConfirmacion
             nombre="borrarCuentaBancoProveedor"
             abierto={true}
-            titulo="Borrar cuenta bancaria"
-            mensaje={`¿Está seguro de que desea borrar la cuenta ${cuenta.descripcion || cuenta.iban}?`}
+            titulo={t("proveedor.cuentas.borrarTitulo")}
+            mensaje={t("proveedor.cuentas.borrarMensaje", { cuenta: cuenta.descripcion || cuenta.iban })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

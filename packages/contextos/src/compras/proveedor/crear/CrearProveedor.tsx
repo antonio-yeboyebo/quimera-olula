@@ -12,9 +12,11 @@ import { useCallback, useMemo, useState } from "react";
 import { postProveedor } from "../infraestructura.ts";
 import { metaNuevoProveedor, nuevoProveedorInicial } from "./crear.ts";
 import "./CrearProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 
 export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTCompras();
     const inicial = useMemo(nuevoProveedorInicial, []);
 
     const nuevoProveedor = useModelo(metaNuevoProveedor, inicial);
@@ -39,34 +41,30 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
     const [crear, cancelar] = useForm(crear_, cancelar_);
     const focus = useFocus();
 
-    const opcionesTipoVia = [
-      { valor: "Calle", descripcion: "Calle" },
-      { valor: "Avenida", descripcion: "Avenida" },
-      { valor: "Plaza", descripcion: "Plaza" },
-      { valor: "Paseo", descripcion: "Paseo" },
-      { valor: "Camino", descripcion: "Camino" },
-      { valor: "Carretera", descripcion: "Carretera" },
-    ];
+    // El valor se guarda en BD en español; solo se traduce lo que se ve.
+    const opcionesTipoVia = (["Calle", "Avenida", "Plaza", "Paseo", "Camino", "Carretera"] as const).map(
+      (valor) => ({ valor, descripcion: t(`comun.direccion.tiposVia.${valor}`) })
+    );
 
     return (
       <QModal
         abierto={true}
         nombre="crearProveedor"
-        titulo="Crear proveedor"
+        titulo={t("proveedor.crear.titulo")}
         onCerrar={cancelar}
       >
         <div className="CrearProveedor">
           <quimera-formulario>
-            <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
+            <QInput label={t("comun.campos.nombre")} {...uiProps("nombre")} ref={focus} />
             <TipoIdFiscal
               {...uiProps("tipoIdFiscal")}
-              opciones={opcionesTipoIdFiscalCompras}
+              opciones={opcionesTipoIdFiscalCompras(t)}
             />
-            <QInput label="Id Fiscal" {...uiProps("idFiscal")} />
+            <QInput label={t("comun.campos.idFiscal")} {...uiProps("idFiscal")} />
           </quimera-formulario>
           {!proveedor.empresaId && (
             <QAviso>
-              Sin empresa activa. Selecciónala en la cabecera para poder guardar.
+              {t("proveedor.crear.sinEmpresa")}
             </QAviso>
           )}
 
@@ -94,7 +92,7 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
                 setMostrarDireccion(true);
               }}
             >
-              Añadir dirección
+              {t("proveedor.crear.anadirDireccion")}
             </QBoton>
           ) : (
             <QBoton
@@ -105,19 +103,19 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
                 setMostrarDireccion(false);
               }}
             >
-              Quitar dirección
+              {t("proveedor.crear.quitarDireccion")}
             </QBoton>
           )}
 
           {mostrarDireccion && (
             <quimera-formulario>
               <QSelect
-              label="Tipo de vía"
+              label={t("proveedor.crear.tipoVia")}
                 {...direccion.uiProps("tipoVia")}
                 opciones={opcionesTipoVia}
               />
               <QInput
-              label="Nombre de vía"
+              label={t("proveedor.crear.nombreVia")}
                 {...direccion.uiProps("nombreVia")}
                 textoValidacion={
                   mostrarErrorNombreVia
@@ -130,19 +128,19 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
                 }}
               />
               <QInput
-              label="Número"
+              label={t("comun.direccion.numero")}
               {...direccion.uiProps("numero")}
               />
               <QInput
-              label="Otros"
+              label={t("comun.direccion.otros")}
               {...direccion.uiProps("otros")}
               />
               <QInput
-              label="Código postal"
+              label={t("comun.direccion.codigoPostal")}
                 {...direccion.uiProps("codPostal")}
               />
               <QInput
-              label="Ciudad"
+              label={t("comun.direccion.ciudad")}
                 {...direccion.uiProps("ciudad")}
                 textoValidacion={
                   mostrarErrorCiudad
@@ -155,19 +153,19 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
                 }}
               />
               <QInput
-              label="Provincia"
+              label={t("comun.direccion.provincia")}
               {...direccion.uiProps("provincia")}
               />
               <QInput
-              label="País"
+              label={t("comun.direccion.pais")}
               {...direccion.uiProps("pais")}
               />
               <QInput
-              label="Apartado de correos"
+              label={t("comun.direccion.apartado")}
                 {...direccion.uiProps("apartado")}
               />
               <QInput
-              label="Teléfono"
+              label={t("comun.direccion.telefono")}
               {...direccion.uiProps("telefono")}
               />
             </quimera-formulario>
@@ -175,7 +173,7 @@ export const CrearProveedor = ({ publicar }: { publicar: EmitirEvento }) => {
 
           <div className="botones maestro-botones">
             <QBoton onClick={crear} deshabilitado={!valido}>
-              Crear
+              {t("comun.botones.crear")}
             </QBoton>
           </div>
         </div>

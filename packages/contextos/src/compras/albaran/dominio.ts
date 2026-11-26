@@ -1,5 +1,6 @@
 import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
     Albaran,
@@ -11,7 +12,9 @@ import {
 export const albaranFacturado = (albaran: Albaran): boolean => albaran.facturaId !== null;
 
 export const descripcionEstadoFactura = (albaran: Albaran): string =>
-    albaranFacturado(albaran) ? "Facturado" : "Pendiente de facturar";
+    albaranFacturado(albaran)
+        ? tCompras("comun.documento.estados.facturado")
+        : tCompras("comun.documento.estados.pendienteFacturar");
 
 export const etiquetaLinea = (linea: LineaAlbaran): string =>
     linea.referencia ? `${linea.referencia}: ${linea.descripcion}` : linea.descripcion;
@@ -88,5 +91,5 @@ export const camposConCambiosServidor = [
 
 export const etiquetaEstadoAlbaran = (albaran: Albaran): EstadoEtiqueta =>
     albaranFacturado(albaran)
-        ? { texto: "Facturado", tono: "completado" }
-        : { texto: "Pendiente", tono: "pendiente" };
+        ? { texto: tCompras("comun.documento.estados.facturado"), tono: "completado" }
+        : { texto: tCompras("comun.documento.estados.pendiente"), tono: "pendiente" };

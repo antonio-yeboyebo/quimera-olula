@@ -1,5 +1,5 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
-import { ERR_IBAN_NO_VALIDO, ERR_IBAN_REQUERIDO, ibanValido } from "@olula/lib/iban.ts";
+import { errorIbanNoValido, errorIbanRequerido, ibanValido } from "@olula/lib/iban.ts";
 import {
     CuentaBancoProveedor,
     DireccionProveedor,
@@ -44,8 +44,8 @@ export const nuevaDireccionProveedorVacia = (): NuevaDireccionProveedor => ({
 });
 
 const validacionIban = (modelo: { iban: string }): string | boolean => {
-    if (!modelo.iban) return ERR_IBAN_REQUERIDO;
-    return ibanValido(modelo.iban) || ERR_IBAN_NO_VALIDO;
+    if (!modelo.iban) return errorIbanRequerido();
+    return ibanValido(modelo.iban) || errorIbanNoValido();
 };
 
 export const metaCuentaBancoProveedor: MetaModelo<CuentaBancoProveedor> = {

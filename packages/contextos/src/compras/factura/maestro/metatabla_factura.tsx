@@ -1,39 +1,41 @@
 import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { MetaTabla } from "@olula/componentes/index.js";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { Factura } from "../diseño.ts";
 import { etiquetaEstadoFactura } from "../dominio.ts";
 
-export const metaTablaFactura: MetaTabla<Factura> = [
+/** Columnas del maestro en el idioma activo (se piden al pintar, con el `t` de useTCompras). */
+export const metaTablaFactura = (t = tCompras): MetaTabla<Factura> => [
   {
     id: "editable",
-    cabecera: "Estado",
+    cabecera: t("comun.campos.estado"),
     render: (factura: Factura) => (
       <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />
     ),
   },
-  { id: "codigo", cabecera: "Código", prioridad: "alta", estilo: "secundario" },
-  { id: "nombreProveedor", cabecera: "Proveedor", prioridad: "alta", estilo: "destacado" },
-  { id: "fecha", cabecera: "Fecha", tipo: "fecha", prioridad: "alta" },
+  { id: "codigo", cabecera: t("comun.campos.codigo"), prioridad: "alta", estilo: "secundario" },
+  { id: "nombreProveedor", cabecera: t("comun.campos.proveedor"), prioridad: "alta", estilo: "destacado" },
+  { id: "fecha", cabecera: t("comun.campos.fecha"), tipo: "fecha", prioridad: "alta" },
   {
     id: "total",
     estilo: "destacado",
-    cabecera: "Total",
+    cabecera: t("comun.campos.total"),
     tipo: "moneda",
     prioridad: "alta",
     divisa: (factura) => factura.divisaId,
   },
-  { id: "numeroProveedor", cabecera: "Nº factura proveedor", prioridad: "media" },
+  { id: "numeroProveedor", cabecera: t("comun.documento.numeroFacturaProveedor"), prioridad: "media" },
   {
     id: "deAbono",
-    cabecera: "Abono",
+    cabecera: t("comun.documento.abono"),
     prioridad: "media",
-    render: (factura) => (factura.deAbono ? "Sí" : ""),
+    render: (factura) => (factura.deAbono ? t("comun.si") : ""),
   },
   {
     id: "codigoRectificativa",
-    cabecera: "Rectifica a",
+    cabecera: t("comun.documento.rectificaA"),
     prioridad: "baja",
     render: (factura) => factura.codigoRectificativa ?? "",
   },
-  { id: "idFiscal", cabecera: "Id Fiscal", prioridad: "baja" },
+  { id: "idFiscal", cabecera: t("comun.campos.idFiscal"), prioridad: "baja" },
 ];
