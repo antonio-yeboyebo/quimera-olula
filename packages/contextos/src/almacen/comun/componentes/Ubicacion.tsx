@@ -3,6 +3,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { RestAPI } from "@olula/lib/api/rest_api.js";
 import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { tAlmacen } from "../../i18n/index.ts";
 
 
 interface UbicacionProps {
@@ -22,7 +23,7 @@ export const Ubicacion = ({
   descripcion = "",
   valor,
   nombre = "ubicacion_id2",
-  label = "Ubicación",
+  label = tAlmacen("comun.ubicacion"),
   onChange,
   ...props
 }: UbicacionProps) => {

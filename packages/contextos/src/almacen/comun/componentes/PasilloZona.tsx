@@ -2,6 +2,7 @@ import { QSelect } from "@olula/componentes/index.js";
 import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { useEffect, useState } from "react";
 import { getPasillosZona } from "../../pasillo/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type PasilloZonaProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> & {
     label?: string;
@@ -10,14 +11,14 @@ type PasilloZonaProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> &
 
 type OpcionPasillo = { valor: string; descripcion: string };
 
-const SIN_PASILLO: OpcionPasillo = { valor: "", descripcion: "(sin pasillo)" };
+const SIN_PASILLO: OpcionPasillo = { valor: "", get descripcion() { return tAlmacen("comun.sinPasillo"); } };
 
 /** Selector de pasillo restringido a los pasillos de una zona. */
 export const PasilloZona = ({
     zonaId,
     valor,
     nombre = "pasillo_id",
-    label = "Pasillo",
+    label = tAlmacen("comun.pasillo"),
     onChange,
     ...props
 }: PasilloZonaProps) => {

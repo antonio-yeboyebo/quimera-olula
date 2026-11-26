@@ -6,6 +6,7 @@ import {
 } from "#/almacen/comun/voz_resolvers.ts";
 import { QInput } from "@olula/componentes/index.js";
 import { useState } from "react";
+import { tAlmacen } from "../../i18n/index.ts";
 
 export type ResultadoCajaUbicacion =
     | ({ tipo: "caja" } & CajaCompletaResuelta)
@@ -19,7 +20,7 @@ interface CajaUbicacionProps {
 
 export const CajaUbicacion = ({
     onChange,
-    label = "Caja / Ubicación",
+    label = tAlmacen("comun.cajaUbicacion"),
     autoFocus,
 }: CajaUbicacionProps) => {
     const [valor, setValor] = useState("");

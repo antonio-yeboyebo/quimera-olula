@@ -4,18 +4,19 @@ import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { getTiposUbicacion } from "../../tipo_ubicacion/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type TipoUbicacionProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> & { label?: string };
 
 type OpcionTipo = { valor: string; descripcion: string };
 
-const SIN_TIPO: OpcionTipo = { valor: "", descripcion: "(sin tipo)" };
+const SIN_TIPO: OpcionTipo = { valor: "", get descripcion() { return tAlmacen("comun.sinTipo"); } };
 
 export const TipoUbicacion = ({
   enlace = PLANTILLA_FICHA.tipoUbicacion,
     valor,
     nombre = "tipo_ubicacion_id",
-    label = "Tipo de ubicación",
+    label = tAlmacen("comun.tipoDeUbicacion"),
     onChange,
     ...props
 }: TipoUbicacionProps) => {

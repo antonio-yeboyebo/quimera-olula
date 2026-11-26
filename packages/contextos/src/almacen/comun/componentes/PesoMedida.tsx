@@ -2,6 +2,7 @@ import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { useEffect, useState } from "react";
 import { getPesosMedidas } from "../../peso_medida/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type PesoMedidaProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
   label?: string;
@@ -19,7 +20,7 @@ const sinUnidad: OpcionPesoMedida = { valor: "", descripcion: "—" };
 export const PesoMedida = ({
   valor,
   nombre = "unidad_id",
-  label = "Unidad",
+  label = tAlmacen("comun.unidad"),
   onChange,
   ...props
 }: PesoMedidaProps) => {

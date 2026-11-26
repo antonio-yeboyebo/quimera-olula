@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Criteria } from "@olula/lib/diseño.js";
 import { obtenerArticulosAlmacen } from "../../articulo/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 interface CodBarrasProps {
   descripcion?: string;
@@ -14,7 +15,7 @@ export const CodBarras = ({
   descripcion = "",
   valor,
   nombre = "referencia",
-  label = "Artículo",
+  label = tAlmacen("comun.articulo"),
   onChange,
   ...props
 }: CodBarrasProps) => {

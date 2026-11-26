@@ -3,6 +3,7 @@ import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { getClasesAlmacenamiento } from "../../clase_almacenamiento/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type ClaseAlmacenamientoProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
     label?: string;
@@ -11,13 +12,13 @@ type ClaseAlmacenamientoProps = Omit<QSelectProps, "opciones" | "label" | "nombr
 
 type OpcionClase = { valor: string; descripcion: string };
 
-const SIN_CLASE: OpcionClase = { valor: "", descripcion: "(sin clase)" };
+const SIN_CLASE: OpcionClase = { valor: "", get descripcion() { return tAlmacen("comun.sinClase"); } };
 
 export const ClaseAlmacenamiento = ({
     enlace = PLANTILLA_FICHA.claseAlmacenamiento,
     valor,
     nombre = "clase_almacenamiento_id",
-    label = "Clase de almacenamiento",
+    label = tAlmacen("comun.claseDeAlmacenamiento"),
     onChange,
     ...props
 }: ClaseAlmacenamientoProps) => {

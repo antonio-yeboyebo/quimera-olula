@@ -2,6 +2,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { RestAPI } from "@olula/lib/api/rest_api.js";
 import { Criteria, Filtro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { tAlmacen } from "../../i18n/index.ts";
 
 
 interface TagLoteApi {
@@ -33,7 +34,7 @@ export const Lote = ({
   valor,
   sku,
   nombre = "lote_id",
-  label = "Lote",
+  label = tAlmacen("comun.lote"),
   permitirNuevo = false,
   onChange,
   ...props

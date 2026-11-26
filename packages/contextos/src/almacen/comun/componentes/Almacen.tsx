@@ -4,6 +4,7 @@ import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { obtenerAlmacenes } from "../../almacen/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type AlmacenProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> & { label?: string };
 
@@ -16,7 +17,7 @@ export const Almacen = ({
   enlace = PLANTILLA_FICHA.almacen,
   valor,
   nombre = "codalmacen",
-  label = "Almacén",
+  label = tAlmacen("comun.almacen"),
   onChange,
   ...props
 }: AlmacenProps) => {

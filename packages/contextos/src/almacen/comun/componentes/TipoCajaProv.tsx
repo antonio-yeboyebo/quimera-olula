@@ -3,6 +3,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { ValorControl } from "@olula/lib/useModelo.ts";
 import { useEffect, useState } from "react";
 import { PALET_ID } from "../dominio.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type TipoCajaProvProps = Omit<QSelectProps, "opciones" | "label" | "onChange"> & {
     label?: string;
@@ -27,14 +28,14 @@ interface TipoCajaProvApi {
 
 
 const OPCIONES_DEFECTO: OpcionTipoCajaProv[] = [
-    { valor: "", descripcion: "Sin Caja", capacidad: null },
-    { valor: PALET_ID, descripcion: "Palet", capacidad: null },
+    { valor: "", get descripcion() { return tAlmacen("comun.sinCaja2"); }, capacidad: null },
+    { valor: PALET_ID, get descripcion() { return tAlmacen("comun.palet"); }, capacidad: null },
 ];
 
 export const TipoCajaProv = ({
     valor,
     nombre = "tipo_caja_prov",
-    label = "Tipo de caja",
+    label = tAlmacen("comun.tipoDeCaja"),
     idProveedor,
     idArticulo,
     onChange,

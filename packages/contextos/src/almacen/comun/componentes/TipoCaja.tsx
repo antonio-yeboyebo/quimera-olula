@@ -2,6 +2,7 @@ import { QAutocompletar, QAutocompletarProps } from "@olula/componentes/molecula
 import { Criteria } from "@olula/lib/diseño.ts";
 import { useCallback, useEffect, useState } from "react";
 import { getTiposCaja } from "../../tipo_caja/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type TipoCajaProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> & { label?: string };
 
@@ -13,7 +14,7 @@ type OpcionTipoCaja = {
 export const TipoCaja = ({
   valor,
   nombre = "codtipocaja",
-  label = "Tipo de caja",
+  label = tAlmacen("comun.tipoDeCaja"),
   onChange,
   ...props
 }: TipoCajaProps) => {

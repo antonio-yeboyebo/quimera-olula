@@ -3,6 +3,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { RestAPI } from "@olula/lib/api/rest_api.js";
 import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { tAlmacen } from "../../i18n/index.ts";
 
 
 type TagCajaOpcion = { valor: string; descripcion: string } & TagCaja;
@@ -24,7 +25,7 @@ export const Caja = ({
   descripcion = "",
   valor,
   nombre = "cajaId",
-  label = "Caja",
+  label = tAlmacen("comun.caja"),
   onChange,
   ...props
 }: CajaProps) => {
