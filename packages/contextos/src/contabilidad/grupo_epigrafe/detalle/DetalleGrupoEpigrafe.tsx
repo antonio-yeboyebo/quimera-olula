@@ -16,6 +16,7 @@ import {
 } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleGrupoEpigrafe = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleGrupoEpigrafe = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleGrupoEpigrafeInicial,
@@ -52,7 +54,7 @@ export const DetalleGrupoEpigrafe = ({
 
     const accionesGrupo = [
         {
-            texto: "Borrar",
+            texto: t("grupo_epigrafe.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.grupo_epigrafe"),
             advertencia: true,
@@ -74,7 +76,7 @@ export const DetalleGrupoEpigrafe = ({
                     <QuimeraAcciones acciones={accionesGrupo} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("grupo_epigrafe.general")}
                         key="tab-general"
                         children={
                             <TabGeneral form={formModelo} grupo={grupo} />

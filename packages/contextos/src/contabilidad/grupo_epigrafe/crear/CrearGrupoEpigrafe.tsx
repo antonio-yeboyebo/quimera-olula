@@ -11,6 +11,7 @@ import {
     metaNuevoGrupoEpigrafe,
     nuevoGrupoEpigrafeInicial,
 } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearGrupoEpigrafe = ({
     publicar,
@@ -19,6 +20,7 @@ export const CrearGrupoEpigrafe = ({
     publicar: EmitirEvento;
     ejercicioId: string;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoGrupoEpigrafeInicial(ejercicioId),
         [ejercicioId]
@@ -47,24 +49,24 @@ export const CrearGrupoEpigrafe = ({
         <QModal
             abierto={true}
             nombre="crearGrupoEpigrafe"
-            titulo="Nuevo grupo"
+            titulo={t("grupo_epigrafe.nuevoGrupo")}
             onCerrar={cancelar}
         >
             <div className="CrearGrupoEpigrafe">
                 <quimera-formulario>
                     <QInput
-                        label="Ejercicio"
+                        label={t("grupo_epigrafe.ejercicio")}
                         nombre="ejercicioId"
                         valor={grupo.ejercicioId}
                         soloLectura
                     />
-                    <QInput label="Código" {...uiProps("codigo")} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("grupo_epigrafe.codigo")} {...uiProps("codigo")} ref={focus} />
+                    <QInput label={t("grupo_epigrafe.descripcion")} {...uiProps("descripcion")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("grupo_epigrafe.crear")}
                     </QBoton>
                 </div>
             </div>

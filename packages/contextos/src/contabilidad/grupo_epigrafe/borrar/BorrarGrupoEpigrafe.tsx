@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { GrupoEpigrafe } from "../diseño.ts";
 import { etiquetaGrupoEpigrafe } from "../dominio.ts";
 import { deleteGrupoEpigrafe } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarGrupoEpigrafe = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarGrupoEpigrafe = ({
     grupo: GrupoEpigrafe;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteGrupoEpigrafe(grupo.id);
         publicar("grupo_epigrafe_borrado", grupo);
@@ -29,8 +31,8 @@ export const BorrarGrupoEpigrafe = ({
         <QModalConfirmacion
             nombre="borrarGrupoEpigrafe"
             abierto={true}
-            titulo="Borrar grupo"
-            mensaje={`¿Confirma borrar ${etiquetaGrupoEpigrafe(grupo)}? Solo es posible si no tiene epígrafes asociados.`}
+            titulo={t("grupo_epigrafe.borrarGrupo")}
+            mensaje={t("grupo_epigrafe.confirmaBorrarGrupoSoloEsPosible", { grupo: etiquetaGrupoEpigrafe(grupo) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
