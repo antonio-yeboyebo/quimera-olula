@@ -5,6 +5,7 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { ElementoMenu, ElementoMenuPadre } from "@olula/lib/menu.ts";
 import { useContext } from "react";
 import { Link } from "react-router";
+import { QAvatar } from "../atomos/qavatar.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
 import { estaAutentificado } from "../plantilla/autenticacion";
 import { useMenuControl } from "../plantilla/useMenuControl";
@@ -18,30 +19,25 @@ export type ProcesoElementosFn = (
   elementos: MenuUsuarioElementos
 ) => MenuUsuarioElementos;
 
-// Elementos por defecto si la app no proporciona los suyos
+// Elementos por defecto si la app no proporciona los suyos: debajo del usuario
+// (avatar y nombre), «Mi cuenta» y «Cerrar sesión», sin secciones.
 const elementosDelMenuDefault: MenuUsuarioElementos = [
+  elementoMiCuenta,
   {
-    nombre: "Usuarios",
-    subelementos: [
-      {
-        nombre: "Grupos",
-        url: "/auth/grupo",
-        regla: "contexto.recibo_venta",
-      },
-    ],
-  },
-  // Al mismo nivel que «Usuarios» y «Sesión»: un enlace directo, sin sección.
-  { ...elementoMiCuenta, icono: "usuario" },
-  {
-    nombre: "Sesión",
-    subelementos: [
-      {
-        nombre: "Cerrar sesión",
-        url: "/logout",
-      },
-    ],
+    nombre: "Cerrar sesión",
+    url: "/logout",
   },
 ];
+
+/** Id del usuario conectado (el `usuario_id` del whoami guardado al entrar). */
+const usuarioConectado = (): string => {
+  try {
+    const whoami = JSON.parse(localStorage.getItem("whoami") ?? "{}");
+    return typeof whoami?.usuario_id === "string" ? whoami.usuario_id : "";
+  } catch {
+    return "";
+  }
+};
 
 export const MenuUsuarioBase = (props: {
   elementos?: MenuUsuarioElementos;
@@ -96,6 +92,8 @@ export const MenuUsuarioBase = (props: {
     );
   };
 
+  const usuario = usuarioConectado();
+
   const elementos = elementosDelMenu.map((elemento) =>
     renderizaElemento(elemento)
   );
@@ -103,6 +101,12 @@ export const MenuUsuarioBase = (props: {
   return (
     <menu-usuario className={menuAbierto.usuario ? "activo" : ""}>
       <aside id="menu-usuario">
+        {usuario && (
+          <div className="menu-usuario-cabecera">
+            <QAvatar nombre={usuario} tamaño="sm" />
+            <span>{usuario}</span>
+          </div>
+        )}
         <nav>
           <ul>{elementos}</ul>
         </nav>
