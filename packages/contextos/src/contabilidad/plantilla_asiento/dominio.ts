@@ -5,11 +5,35 @@ import {
     PartidaPlantilla,
     PlantillaAsiento,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
+/** Las opciones guardan el valor de Eneboo (en español) y enseñan su traducción. */
+const TEXTO_OPCION: Record<string, () => string> = {
+    Establecer: () => tContabilidad("plantilla_asiento.opEstablecer"),
+    Pedir: () => tContabilidad("plantilla_asiento.opPedir"),
+    Definida: () => tContabilidad("plantilla_asiento.opDefinida"),
+    Definido: () => tContabilidad("plantilla_asiento.opDefinido"),
+    Debe: () => tContabilidad("plantilla_asiento.opDebe"),
+    Haber: () => tContabilidad("plantilla_asiento.opHaber"),
+    Calcular: () => tContabilidad("plantilla_asiento.opCalcular"),
+    Cuadrar: () => tContabilidad("plantilla_asiento.opCuadrar"),
+    "Último": () => tContabilidad("plantilla_asiento.opUltimo"),
+    Recibo: () => tContabilidad("plantilla_asiento.opRecibo"),
+    "Factura de cliente": () => tContabilidad("plantilla_asiento.opFacturaCliente"),
+    "Factura de proveedor": () => tContabilidad("plantilla_asiento.opFacturaProveedor"),
+    "No pedir": () => tContabilidad("plantilla_asiento.opNoPedir"),
+    Auto: () => tContabilidad("plantilla_asiento.opAuto"),
+};
+
 const opciones = (...valores: string[]): Opcion[] =>
-    valores.map((valor) => ({ valor, descripcion: valor }));
+    valores.map((valor) => ({
+        valor,
+        get descripcion() {
+            return TEXTO_OPCION[valor]?.() ?? valor;
+        },
+    }));
 
 // Listas de opciones de `co_planpartidas.mtd`.
 export const OPCIONES_TIPO_SUBCUENTA = opciones("Establecer", "Pedir", "Definida");
@@ -58,7 +82,7 @@ const validarVariable = (campo: keyof CamposPartidaPlantilla) =>
     (modelo: CamposPartidaPlantilla) => {
         const valor = String(modelo[campo] ?? "");
         return valor.length > MAX_VARIABLE
-            ? `Máximo ${MAX_VARIABLE} caracteres`
+            ? tContabilidad("plantilla_asiento.maximoMaxVariableCaracteres", { MAX_VARIABLE })
             : true;
     };
 
@@ -76,7 +100,7 @@ const validarFormula = (campo: keyof CamposPartidaPlantilla) =>
     (modelo: CamposPartidaPlantilla) =>
         parentesisEquilibrados(String(modelo[campo] ?? ""))
             ? true
-            : "Revise los paréntesis de la fórmula";
+            : tContabilidad("plantilla_asiento.reviseLosParentesisDeLaFormula");
 
 export const metaPartidaPlantilla: MetaModelo<CamposPartidaPlantilla> = {
     campos: {
@@ -123,24 +147,24 @@ export const metaPartidaPlantilla: MetaModelo<CamposPartidaPlantilla> = {
 export const resumenSubcuenta = (p: CamposPartidaPlantilla): string => {
     if (p.tipoSubcuenta === "Definida") return `= ${p.variableSubcuenta}`;
     const codigo = p.codigoSubcuenta || "…";
-    return p.tipoSubcuenta === "Pedir" ? `${codigo} (pedir)` : codigo;
+    return p.tipoSubcuenta === "Pedir" ? tContabilidad("plantilla_asiento.codigoPedir", { codigo }) : codigo;
 };
 
 export const resumenImporte = (p: CamposPartidaPlantilla): string => {
     const variable = p.variableImporte ? ` → ${p.variableImporte}` : "";
     if (p.tipoImporte === "Calcular") return `= ${p.importe}${variable}`;
-    if (p.tipoImporte === "Cuadrar") return "Cuadrar";
-    return `Pedir${variable}`;
+    if (p.tipoImporte === "Cuadrar") return tContabilidad("plantilla_asiento.cuadrar");
+    return tContabilidad("plantilla_asiento.pedirVariable", { variable });
 };
 
 export const resumenConcepto = (p: CamposPartidaPlantilla): string => {
     switch (p.tipoConcepto) {
         case "Último":
-            return "(el anterior)";
+            return tContabilidad("plantilla_asiento.elAnterior");
         case "Definido":
             return `= ${p.variableConcepto}`;
         case "Pedir":
-            return `${p.concepto} (pedir)`.trim();
+            return tContabilidad("plantilla_asiento.conceptoPedir", { concepto: p.concepto }).trim();
         default:
             return p.concepto;
     }

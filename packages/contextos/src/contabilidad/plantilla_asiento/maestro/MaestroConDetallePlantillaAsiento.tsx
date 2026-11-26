@@ -12,11 +12,12 @@ import { CrearPlantillaAsiento } from "../crear/CrearPlantillaAsiento.tsx";
 import { DetallePlantillaAsiento } from "../detalle/DetallePlantillaAsiento.tsx";
 import { ItemPlantillaAsiento } from "../diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 const metaTablaPlantilla: MetaTabla<ItemPlantillaAsiento> = [
-    { id: "id", cabecera: "Código", prioridad: "alta" },
-    { id: "descripcion", cabecera: "Descripción", prioridad: "alta" },
-    { id: "concatenar", cabecera: "Concatenar con", prioridad: "baja" },
+    { id: "id", get cabecera() { return tContabilidad("plantilla_asiento.codigo"); }, prioridad: "alta" },
+    { id: "descripcion", get cabecera() { return tContabilidad("plantilla_asiento.descripcion"); }, prioridad: "alta" },
+    { id: "concatenar", get cabecera() { return tContabilidad("plantilla_asiento.concatenarCon"); }, prioridad: "baja" },
 ];
 
 const criteriaPlantillasDefecto = (): Criteria => ({
@@ -26,6 +27,7 @@ const criteriaPlantillasDefecto = (): Criteria => ({
 
 /** Plantillas de asiento / asientos predefinidos (Eneboo "Plantillas"). */
 export const MaestroConDetallePlantillaAsiento = () => {
+    const t = useTContabilidad();
     const criteriaBase = useMemo(criteriaPlantillasDefecto, []);
     const { id, criteria } = getUrlParams();
     const criteriaInicial = criteria.filtro.length > 0 ? criteria : criteriaBase;
@@ -48,7 +50,7 @@ export const MaestroConDetallePlantillaAsiento = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las plantillas de asiento.</p>;
+        return <p>{t("plantilla_asiento.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -56,7 +58,7 @@ export const MaestroConDetallePlantillaAsiento = () => {
             <MaestroDetalle<ItemPlantillaAsiento>
                 Maestro={
                     <>
-                        <h2>Plantillas de asiento</h2>
+                        <h2>{t("plantilla_asiento.plantillasDeAsiento")}</h2>
                         <Listado<ItemPlantillaAsiento>
                             metaTabla={metaTablaPlantilla}
                             criteria={plantillas.criteria}
@@ -67,7 +69,7 @@ export const MaestroConDetallePlantillaAsiento = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_plantilla_solicitada")}>
-                                        Nueva plantilla
+                                        {t("plantilla_asiento.nuevaPlantilla")}
                                     </QBoton>
                                 </div>
                             )}
