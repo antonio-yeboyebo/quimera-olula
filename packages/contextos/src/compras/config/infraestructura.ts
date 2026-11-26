@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
 import { ActualizarArticulosProveedor, ConfigCompras, GetConfigCompras, PatchConfigCompras } from "./diseño.ts";
@@ -30,5 +31,5 @@ export const getConfigCompras: GetConfigCompras = async () => {
 
 export const patchConfigCompras: PatchConfigCompras = async (config) => {
     await RestAPI.patch(
-        baseUrl, { cambios: configComprasAApi(config) }, "Error al guardar la configuración de compras");
+        baseUrl, { cambios: configComprasAApi(config) }, tCompras("config.errores.guardar"));
 };

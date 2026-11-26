@@ -12,12 +12,12 @@ describe("configuración de compras", () => {
     });
 
     test("las opciones son los valores exactos de la columna", () => {
-        expect(opcionesActualizarArticulosProveedor.map((o) => o.valor)).toEqual(
+        expect(opcionesActualizarArticulosProveedor().map((o) => o.valor)).toEqual(
             ["No Actualizar", "Albaranes de proveedor", "Facturas de proveedor"]);
     });
 
     test("ya se aplica en Olula: ninguna opción avisa de que solo se guarda", () => {
-        for (const { valor } of opcionesActualizarArticulosProveedor) {
+        for (const { valor } of opcionesActualizarArticulosProveedor()) {
             expect(explicacionActualizarArticulosProveedor(valor)).not.toContain("Pendiente en Olula");
         }
     });

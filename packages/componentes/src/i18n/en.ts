@@ -109,5 +109,12 @@ export const en: Traduccion<typeof es> = {
         "Picking fijo": "Fixed picking",
         "Slotting": "Slotting",
         "Configuración": "Settings",
+        // Compras (las que no estaban ya)
+        "Compras": "Purchasing",
+        "Pedidos": "Orders",
+        "Albaranes": "Delivery notes",
+        "Facturas": "Invoices",
+        "Proveedores": "Suppliers",
+        "Informes": "Reports",
     },
 };

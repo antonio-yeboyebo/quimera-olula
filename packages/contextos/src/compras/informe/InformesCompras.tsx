@@ -1,5 +1,11 @@
 import { InformesDocumentos } from "#/comun/informe_documentos/componentes/InformesDocumentos.tsx";
-import { PESTAÑAS_COMPRAS } from "./pestañas.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
+import { useMemo } from "react";
+import { pestañasCompras } from "./pestañas.tsx";
 
 /** Compras > Informes: Pedidos, Albaranes y Facturas. */
-export const InformesCompras = () => <InformesDocumentos titulo="Compras" pestañas={PESTAÑAS_COMPRAS} />;
+export const InformesCompras = () => {
+    const t = useTCompras();
+    const pestañas = useMemo(() => pestañasCompras(t), [t]);
+    return <InformesDocumentos titulo={t("informe.titulo")} pestañas={pestañas} />;
+};

@@ -108,5 +108,12 @@ export const es = {
         "Picking fijo": "Picking fijo",
         "Slotting": "Slotting",
         "Configuración": "Configuración",
+        // Compras (las que no estaban ya)
+        "Compras": "Compras",
+        "Pedidos": "Pedidos",
+        "Albaranes": "Albaranes",
+        "Facturas": "Facturas",
+        "Proveedores": "Proveedores",
+        "Informes": "Informes",
     },
 } as const;
