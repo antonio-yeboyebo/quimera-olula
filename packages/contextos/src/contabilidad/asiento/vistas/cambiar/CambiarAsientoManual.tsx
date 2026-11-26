@@ -15,6 +15,7 @@ import { metaNuevoAsientoManual } from "../../dominio.ts";
 import { patchAsientoManual } from "../../infraestructura.ts";
 import { EditorPartidasManual } from "../comun/EditorPartidasManual.tsx";
 import "../comun/camposAsiento.css";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 const partidasDesdeAsiento = (asiento: Asiento): PartidaManualInput[] =>
     asiento.partidas.map((p) => ({
@@ -56,6 +57,7 @@ export const CambiarAsientoManual = ({
 }) => {
     // useModelo reinicia el modelo cuando cambia la identidad del inicial: sin
     // este useMemo cualquier re-render descartaría lo que lleve escrito el usuario.
+    const t = useTContabilidad();
     const inicial = useMemo(() => modeloDesdeAsiento(asiento), [asiento]);
     const { modelo, set, valido } = useModelo(metaNuevoAsientoManual, inicial);
 
@@ -81,13 +83,13 @@ export const CambiarAsientoManual = ({
         <QModal
             abierto={true}
             nombre="cambiarAsientoManual"
-            titulo="Editar asiento manual"
+            titulo={t("asiento.editarAsientoManual")}
             onCerrar={cancelar}
         >
             <div className="CamposAsientoManual CamposAsientoManual--cambiar">
                 <quimera-formulario>
                     <QInput
-                        label="Fecha"
+                        label={t("asiento.fecha")}
                         nombre="fecha"
                         tipo="fecha"
                         valor={modelo.fecha.toISOString().slice(0, 10)}
@@ -105,14 +107,14 @@ export const CambiarAsientoManual = ({
                         }
                     />
                     <QInput
-                        label="Documento"
+                        label={t("asiento.documento")}
                         nombre="documento"
                         valor={modelo.documento}
                         onChange={(v) => set({ ...modelo, documento: v })}
                         opcional
                     />
                     <QInput
-                        label="Concepto"
+                        label={t("asiento.concepto")}
                         nombre="concepto"
                         valor={modelo.concepto}
                         onChange={(v) => set({ ...modelo, concepto: v })}
@@ -126,7 +128,7 @@ export const CambiarAsientoManual = ({
             />
             <div className="botones maestro-botones">
                 <QBoton onClick={guardar} deshabilitado={!valido || aceptando}>
-                    Guardar
+                    {t("asiento.guardar")}
                 </QBoton>
             </div>
         </QModal>

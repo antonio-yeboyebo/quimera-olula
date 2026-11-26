@@ -6,17 +6,18 @@ import { criteriaDefecto, formatearMoneda } from "@olula/lib/dominio.ts";
 import { PartidaAsiento } from "../../diseño.ts";
 import { descuadrePartidas, totalDebe, totalHaber } from "../../dominio.ts";
 import "./PartidasAsientoLista.css";
+import { tContabilidad, useTContabilidad } from "../../../i18n/index.ts";
 
 const metaTablaPartida: MetaTabla<PartidaAsiento> = [
     {
         id: "codigoSubcuenta",
-        cabecera: "Subcuenta",
+        get cabecera() { return tContabilidad("asiento.subcuenta"); },
         prioridad: "alta",
         render: (p) => p.codigoSubcuenta || String(p.subcuentaId),
     },
-    { id: "debe", cabecera: "Debe", tipo: "moneda", prioridad: "alta" },
-    { id: "haber", cabecera: "Haber", tipo: "moneda", prioridad: "alta" },
-    { id: "concepto", cabecera: "Concepto", prioridad: "baja" },
+    { id: "debe", get cabecera() { return tContabilidad("asiento.debe"); }, tipo: "moneda", prioridad: "alta" },
+    { id: "haber", get cabecera() { return tContabilidad("asiento.haber"); }, tipo: "moneda", prioridad: "alta" },
+    { id: "concepto", get cabecera() { return tContabilidad("asiento.concepto"); }, prioridad: "baja" },
     {
         id: "esIva",
         cabecera: "IVA",
@@ -39,12 +40,13 @@ export const PartidasAsientoLista = ({
     partidas: PartidaAsiento[];
     simple?: boolean;
 }) => {
+    const t = useTContabilidad();
     const esMovil = useEsMovil();
     const descuadre = descuadrePartidas(partidas);
 
     return (
         <div className="PartidasAsientoLista">
-            {!simple && <h3>Partidas</h3>}
+            {!simple && <h3>{t("asiento.partidas")}</h3>}
             <ListadoSemiControlado
                 metaTabla={metaTablaPartida}
                 entidades={partidas}
@@ -59,16 +61,16 @@ export const PartidasAsientoLista = ({
             {!simple && (
                 <div className="totales-asiento">
                     <div className="totales-asiento-item">
-                        <label>Debe:</label>
+                        <label>{t("asiento.debe2")}</label>
                         <span>{formatearMoneda(totalDebe(partidas), "EUR")}</span>
                     </div>
                     <div className="totales-asiento-item">
-                        <label>Haber:</label>
+                        <label>{t("asiento.haber3")}</label>
                         <span>{formatearMoneda(totalHaber(partidas), "EUR")}</span>
                     </div>
                     {Math.abs(descuadre) >= 0.005 && (
                         <div className="totales-asiento-item totales-asiento-item--descuadre">
-                            <label>Descuadre:</label>
+                            <label>{t("asiento.descuadre2")}</label>
                             <span>{formatearMoneda(descuadre, "EUR")}</span>
                         </div>
                     )}
