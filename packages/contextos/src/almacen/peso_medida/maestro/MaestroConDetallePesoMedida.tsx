@@ -10,16 +10,19 @@ import { useEffect, useMemo } from "react";
 import { CrearPesoMedida } from "../crear/CrearPesoMedida.js";
 import { DetallePesoMedida } from "../detalle/DetallePesoMedida.js";
 import { PesoMedida } from "../diseño.ts";
+import { descripcionMagnitud } from "../dominio.ts";
 import { getMaquina } from "./maquina.js";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaPesoMedida: MetaTabla<PesoMedida> = [
-    { id: "id", cabecera: "Abreviatura" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "magnitud", cabecera: "Magnitud" },
-    { id: "factorConversion", cabecera: "Factor de conversión", tipo: "numero" },
+    { id: "id", get cabecera() { return tAlmacen("peso_medida.abreviatura"); } },
+    { id: "descripcion", get cabecera() { return tAlmacen("peso_medida.descripcion"); } },
+    { id: "magnitud", get cabecera() { return tAlmacen("peso_medida.magnitud"); }, render: (p) => descripcionMagnitud(p.magnitud) },
+    { id: "factorConversion", get cabecera() { return tAlmacen("peso_medida.factorDeConversion"); }, tipo: "numero" },
 ];
 
 export const MaestroConDetallePesoMedida = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -44,7 +47,7 @@ export const MaestroConDetallePesoMedida = () => {
             <MaestroDetalle<PesoMedida>
                 Maestro={
                     <>
-                        <h2>Unidades de pesos y medidas</h2>
+                        <h2>{t("peso_medida.unidadesDePesosYMedidas")}</h2>
                         <Listado<PesoMedida>
                             metaTabla={metaTablaPesoMedida}
                             criteria={pesosMedidas.criteria}
@@ -56,7 +59,7 @@ export const MaestroConDetallePesoMedida = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_peso_medida_solicitado")}>
-                                        Nueva unidad
+                                        {t("peso_medida.nuevaUnidad")}
                                     </QBoton>
                                 </div>
                             )}

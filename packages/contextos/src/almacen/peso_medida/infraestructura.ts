@@ -11,6 +11,7 @@ import {
     PesoMedida,
     PostPesoMedida,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/peso_medida`;
 
@@ -52,14 +53,14 @@ export const getPesosMedidas: GetPesosMedidas = async (criteria: Criteria) =>
     RestAPI.getQuery<PesoMedida, PesoMedidaApi>(baseUrl, criteria, pesoMedidaDesdeApi);
 
 export const postPesoMedida: PostPesoMedida = async (nuevo) => {
-    const respuesta = await RestAPI.post<PesoMedidaApi>(baseUrl, nuevoPesoMedidaAApi(nuevo), "Error al crear la unidad");
+    const respuesta = await RestAPI.post<PesoMedidaApi>(baseUrl, nuevoPesoMedidaAApi(nuevo), tAlmacen("peso_medida.errorAlCrearLaUnidad"));
     return respuesta.id;
 };
 
 export const patchPesoMedida: PatchPesoMedida = async (id, cambios) => {
-    await RestAPI.patch<CambiosPesoMedidaApi>(`${baseUrl}/${id}`, cambiosPesoMedidaAApi(cambios), "Error al actualizar la unidad");
+    await RestAPI.patch<CambiosPesoMedidaApi>(`${baseUrl}/${id}`, cambiosPesoMedidaAApi(cambios), tAlmacen("peso_medida.errorAlActualizarLaUnidad"));
 };
 
 export const deletePesoMedida: DeletePesoMedida = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la unidad");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("peso_medida.errorAlBorrarLaUnidad"));
 };
