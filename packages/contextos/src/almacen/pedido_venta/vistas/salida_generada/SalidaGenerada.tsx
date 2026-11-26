@@ -1,6 +1,7 @@
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { Link } from "react-router";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 export const SalidaGenerada = ({
     publicar,
@@ -15,14 +16,14 @@ export const SalidaGenerada = ({
         <QModal
             nombre="salidaGenerada"
             abierto={true}
-            titulo="Salida generada"
+            titulo={tAlmacen("pedido_venta.salidaGenerada")}
             onCerrar={cerrar}
         >
             <div className="mensaje">
-                La salida se ha generado correctamente.
+                {tAlmacen("pedido_venta.laSalidaSeHaGeneradoCorrectamente")}
             </div>
             <Link to={`/almacen/ordenes?id=${idOrden}`}>
-                Ver orden de salida {idOrden}
+                {tAlmacen("pedido_venta.verOrdenDeSalidaIdorden", { idOrden })}
             </Link>
         </QModal>
     );

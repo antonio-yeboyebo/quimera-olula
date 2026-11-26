@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { CambiarPrioridadLinea, CambiarPrioridadPedido, CompetidorLinea, ComprobarReservas, ComprobarReservasLineas, DisponibilidadLinea, DisponibilidadPedido, EstadoLinea, GenerarSalidaDesdePedidos, GenerarSalidaVentaDesdePedidos, GetPedidoVenta, GetPedidosVenta, ItemPedidoVenta, LineaPedidoVenta, PedidoVenta } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 
 interface ItemPedidoVentaApi {
@@ -84,7 +85,7 @@ export const generarSalidaDesdePedidos: GenerarSalidaDesdePedidos = async (pedid
     await RestAPI.post(
         `/almacen/orden/desde_pedidos_venta`,
         payload,
-        "Error al generar salida desde pedidos de venta"
+        tAlmacen("pedido_venta.errorAlGenerarSalidaDesdePedidos")
     );
 };
 
@@ -101,7 +102,7 @@ export const generarSalidaVentaDesdePedidos: GenerarSalidaVentaDesdePedidos = as
     const respuesta = await RestAPI.post(
         `/almacen/orden/salida_desde_pedidos_venta`,
         payload,
-        "Error al generar salida de venta desde pedidos"
+        tAlmacen("pedido_venta.errorAlGenerarSalidaDeVenta")
     );
     return respuesta.id;
 };
@@ -110,7 +111,7 @@ export const comprobarReservas: ComprobarReservas = async (zonas) => {
     const respuesta = await RestAPI.query<{ zonas: number[] }, { pedido_id: number; estado: DisponibilidadPedido }[]>(
         `${baseUrl}/comprobar_reservas`,
         { zonas },
-        'Error al comprobar reservas de pedidos'
+        tAlmacen("pedido_venta.errorAlComprobarReservasDePedidos")
     );
     return respuesta;
 };
@@ -162,7 +163,7 @@ export const comprobarReservasLineas: ComprobarReservasLineas = async (pedidoId,
     const respuesta = await RestAPI.query<{ zonas: number[] }, EstadoLineaApi[]>(
         `${baseUrl}/${pedidoId}/comprobar_reservas_lineas`,
         { zonas },
-        'Error al comprobar la disponibilidad de las líneas'
+        tAlmacen("pedido_venta.errorAlComprobarLaDisponibilidadDe")
     );
     return respuesta.map(estadoLineaDesdeApi);
 };
@@ -171,7 +172,7 @@ export const cambiarPrioridadLinea: CambiarPrioridadLinea = async (pedidoId, lin
     await RestAPI.patch(
         `/ventas/pedido/${pedidoId}/linea/${lineaId}/prioridad`,
         { prioritaria },
-        'Error al cambiar la prioridad de la línea'
+        tAlmacen("pedido_venta.errorAlCambiarLaPrioridadDe")
     );
 };
 
@@ -179,6 +180,6 @@ export const cambiarPrioridadPedido: CambiarPrioridadPedido = async (pedidoId, p
     await RestAPI.patch(
         `/ventas/pedido/${pedidoId}/prioridad`,
         { prioritaria },
-        'Error al cambiar la prioridad del pedido'
+        tAlmacen("pedido_venta.errorAlCambiarLaPrioridadDel")
     );
 };

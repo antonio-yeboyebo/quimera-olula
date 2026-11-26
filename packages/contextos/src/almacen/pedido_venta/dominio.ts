@@ -1,5 +1,6 @@
 import { plugin } from "@olula/lib/dominio.js";
 import { CompetidorLinea, DisponibilidadPedido, EstadoLinea, ItemPedidoVenta, LineaPedidoVenta, PedidoVenta, PosicionCompetidor } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const itemPedidoVentaVacio: ItemPedidoVenta = {
     id: "",
@@ -27,17 +28,17 @@ export const pedidoVentaVacio: PedidoVenta = {
 };
 
 export const ESTILO_DISPONIBILIDAD: Record<DisponibilidadPedido, { label: string; color: string }> = {
-    total:          { label: '✓ Total',        color: '#22c55e' },
-    parcial:        { label: '~ Parcial',      color: '#f59e0b' },
-    sin_stock:      { label: '✗ Sin stock',    color: '#ef4444' },
-    en_salida:      { label: '↗ En salida',    color: '#3b82f6' },
-    parcial_salida: { label: '↗ Parc. salida', color: '#8b5cf6' },
+    total:          { get label() { return tAlmacen("pedido_venta.total"); },        color: '#22c55e' },
+    parcial:        { get label() { return tAlmacen("pedido_venta.parcial"); },      color: '#f59e0b' },
+    sin_stock:      { get label() { return tAlmacen("pedido_venta.sinStock"); },    color: '#ef4444' },
+    en_salida:      { get label() { return tAlmacen("pedido_venta.enSalida"); },    color: '#3b82f6' },
+    parcial_salida: { get label() { return tAlmacen("pedido_venta.parcSalida"); }, color: '#8b5cf6' },
 };
 
 export const ETIQUETA_POSICION: Record<PosicionCompetidor, string> = {
-    en_salida: 'En salida',
-    delante: 'Delante',
-    detras: 'Detrás',
+    get en_salida() { return tAlmacen("pedido_venta.enSalida2"); },
+    get delante() { return tAlmacen("pedido_venta.delante"); },
+    get detras() { return tAlmacen("pedido_venta.detras"); },
 };
 
 export const estadosPorLinea = (estados: EstadoLinea[]): Record<string, EstadoLinea> =>

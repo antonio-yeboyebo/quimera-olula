@@ -7,6 +7,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { generarSalidaVentaDesdePedidos } from "../../infraestructura.ts";
 import { generarSalidaVacia, metaGenerarSalida } from "./generar_salida.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const GenerarSalidaPedidoVenta = ({
     publicar,
@@ -15,6 +16,7 @@ export const GenerarSalidaPedidoVenta = ({
     publicar: EmitirEvento;
     pedidoIds: string[];
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaGenerarSalida, generarSalidaVacia);
 
     const generar_ = useCallback(async () => {
@@ -32,16 +34,16 @@ export const GenerarSalidaPedidoVenta = ({
         <QModal
             abierto={true}
             nombre="generarSalidaPedidoVenta"
-            titulo={`Generar salida (${pedidoIds.length} pedido${pedidoIds.length !== 1 ? "s" : ""})`}
+            titulo={t("pedido_venta.generarSalidaLengthPedidoValor", { length: pedidoIds.length, valor: pedidoIds.length !== 1 ? "s" : "" })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Zona label="Zona de preparación" {...uiProps("zonaId")} />
+                <Zona label={t("pedido_venta.zonaDePreparacion")} {...uiProps("zonaId")} />
             </quimera-formulario>
 
             <div className="botones maestro-botones">
                 <QBoton onClick={generar} deshabilitado={!valido}>
-                    Generar salida
+                    {t("pedido_venta.generarSalida")}
                 </QBoton>
             </div>
         </QModal>

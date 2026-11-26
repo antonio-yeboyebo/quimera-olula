@@ -19,14 +19,15 @@ import { SalidaGenerada } from "../salida_generada/SalidaGenerada.tsx";
 import { ComprobarReservasPedidoVenta } from "../comprobar_reservas/ComprobarReservasPedidoVenta.tsx";
 import { ContextoMaestroPedidoVenta } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const metaTablaPedidoVenta: MetaTabla<ItemPedidoVenta> = [
-    { id: "codigo", cabecera: "Código" },
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "cliente", cabecera: "Cliente" },
+    { id: "codigo", get cabecera() { return tAlmacen("pedido_venta.codigo"); } },
+    { id: "fecha", get cabecera() { return tAlmacen("pedido_venta.fecha"); }, tipo: "fecha" },
+    { id: "cliente", get cabecera() { return tAlmacen("pedido_venta.cliente"); } },
     {
         id: "disponibilidad",
-        cabecera: "Stock",
+        get cabecera() { return tAlmacen("pedido_venta.stock"); },
         render: (p: ItemPedidoVenta) => {
             if (!p.disponibilidad) return null;
             const { label, color } = ESTILO_DISPONIBILIDAD[p.disponibilidad];
@@ -42,7 +43,7 @@ const filtroPendientes: ClausulaFiltro[] = [
 const metaFiltroPedidoVenta: MetaFiltro = {
     solo_pendientes: {
         id: "solo_pendientes",
-        label: "Solo pendientes",
+        get label() { return tAlmacen("pedido_venta.soloPendientes"); },
         tipo: "checkbox",
         filtro: (v) => {
             const activo = v === true || v === "true" || v === "1";
@@ -56,6 +57,7 @@ const metaFiltroPedidoVenta: MetaFiltro = {
 };
 
 export const MaestroPedidoVenta = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(
         () => ({ ...criteriaDefecto, filtro: filtroPendientes }),
         []
@@ -88,7 +90,7 @@ export const MaestroPedidoVenta = () => {
             <MaestroDetalle<ItemPedidoVenta>
                 Maestro={
                     <>
-                        <h2>Pedidos de venta</h2>
+                        <h2>{t("pedido_venta.pedidosDeVenta")}</h2>
                         <div className="maestro-botones">
                             <span className="cambio-modo-icono" onClick={cambiarLayout}>
                                 <QIcono
@@ -97,7 +99,7 @@ export const MaestroPedidoVenta = () => {
                                 />
                             </span>
                             <QBoton onClick={() => emitir("comprobar_reservas_solicitado")}>
-                                Comprobar disponibilidad
+                                {t("pedido_venta.comprobarDisponibilidad")}
                             </QBoton>
                         </div>
                         <Listado<ItemPedidoVenta>
@@ -115,7 +117,7 @@ export const MaestroPedidoVenta = () => {
                                 <div className="maestro-botones">
                                     {ctx.seleccionadas.length > 0 && (
                                         <QBoton onClick={() => emitir("generar_salida_solicitada")}>
-                                            Generar salida ({ctx.seleccionadas.length})
+                                            {t("pedido_venta.generarSalidaLength", { length: ctx.seleccionadas.length })}
                                         </QBoton>
                                     )}
                                 </div>

@@ -5,6 +5,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { EstadoLinea, ItemPedidoVenta, LineaPedidoVenta } from "../../diseño.ts";
 import { ETIQUETA_POSICION, FilaCompetencia, filasCompetencia } from "../../dominio.ts";
 import "./CompetidoresLinea.css";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 const metaTablaCompetencia = (
     onAbrirPedido: (pedidoId: string) => void,
@@ -12,15 +13,15 @@ const metaTablaCompetencia = (
     cols: [
         {
             id: "posicion",
-            cabecera: "Prioridad",
+            cabecera: tAlmacen("pedido_venta.prioridad"),
             render: (f) => {
-                const posicion = f.posicion === "propia" ? "Esta línea" : ETIQUETA_POSICION[f.posicion];
+                const posicion = f.posicion === "propia" ? tAlmacen("pedido_venta.estaLinea") : ETIQUETA_POSICION[f.posicion];
                 return f.prioritaria ? `★ ${posicion}` : posicion;
             },
         },
         {
             id: "codigo",
-            cabecera: "Pedido",
+            cabecera: tAlmacen("pedido_venta.pedido"),
             render: (f) =>
                 f.posicion === "propia" ? (
                     f.codigo
@@ -30,10 +31,10 @@ const metaTablaCompetencia = (
                     </QBoton>
                 ),
         },
-        { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-        { id: "cliente", cabecera: "Cliente" },
-        { id: "pendiente", cabecera: "Pendiente", tipo: "numero" },
-        { id: "asignado", cabecera: "Asignado", tipo: "numero" },
+        { id: "fecha", cabecera: tAlmacen("pedido_venta.fecha"), tipo: "fecha" },
+        { id: "cliente", cabecera: tAlmacen("pedido_venta.cliente") },
+        { id: "pendiente", cabecera: tAlmacen("pedido_venta.pendiente"), tipo: "numero" },
+        { id: "asignado", cabecera: tAlmacen("pedido_venta.asignado"), tipo: "numero" },
     ],
 });
 
@@ -53,9 +54,9 @@ export const CompetidoresLinea = ({
 
     return (
         <section className="CompetidoresLinea">
-            <h3>Pedidos que piden {linea.referencia}</h3>
+            <h3>{tAlmacen("pedido_venta.pedidosQuePidenReferencia", { referencia: linea.referencia })}</h3>
             {estado.competidores.length === 0 ? (
-                <p>Ningún otro pedido pendiente pide este artículo.</p>
+                <p>{tAlmacen("pedido_venta.ningunOtroPedidoPendientePideEste")}</p>
             ) : (
                 <ListadoSemiControlado
                     metaTabla={metaTablaCompetencia(onAbrirPedido)}

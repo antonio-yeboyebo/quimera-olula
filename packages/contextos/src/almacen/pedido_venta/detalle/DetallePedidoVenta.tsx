@@ -16,6 +16,7 @@ import { getMaquina } from "./maquina.ts";
 import { PedidoCompetidor } from "../vistas/pedido_competidor/PedidoCompetidor.tsx";
 import { CompetidoresLinea } from "./competidores/CompetidoresLinea.tsx";
 import { TabLineas } from "./TabLineas.tsx";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const DetallePedidoVenta = ({
     id,
@@ -26,6 +27,7 @@ export const DetallePedidoVenta = ({
     zonas?: number[];
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePedidoVentaInicial, publicar);
 
     const claveZonas = zonas.join(",");
@@ -45,9 +47,9 @@ export const DetallePedidoVenta = ({
     const conPrioridad = prioridadDisponible();
     const acciones = conPrioridad
         ? [
-            { texto: "Priorizar pedido", onClick: () => emitir("prioridad_pedido_solicitada", true) },
+            { texto: t("pedido_venta.priorizarPedido"), onClick: () => emitir("prioridad_pedido_solicitada", true) },
             {
-                texto: "Quitar prioridad al pedido",
+                texto: t("pedido_venta.quitarPrioridadAlPedido"),
                 onClick: () => emitir("prioridad_pedido_solicitada", false),
                 deshabilitado: !hayLineasPrioritarias(ctx.pedido),
             },
@@ -65,26 +67,26 @@ export const DetallePedidoVenta = ({
             <div className="DetallePedidoVenta">
                 {acciones.length > 0 && <QuimeraAcciones acciones={acciones} vertical />}
                 <div className="maestro-botones">
-                    <QBoton variante="borde" enlace={urlListado.ordenesDePedidoVenta(ctx.pedido.id)}>Ver órdenes</QBoton>
+                    <QBoton variante="borde" enlace={urlListado.ordenesDePedidoVenta(ctx.pedido.id)}>{t("pedido_venta.verOrdenes")}</QBoton>
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="codigo" valor={ctx.pedido.codigo} soloLectura />
-                    <QInput label="Fecha" nombre="fecha" valor={formatearFechaDate(ctx.pedido.fecha)} soloLectura />
-                    <QInput label="Cliente" nombre="cliente" valor={ctx.pedido.cliente} soloLectura />
+                    <QInput label={t("pedido_venta.codigo")} nombre="codigo" valor={ctx.pedido.codigo} soloLectura />
+                    <QInput label={t("pedido_venta.fecha")} nombre="fecha" valor={formatearFechaDate(ctx.pedido.fecha)} soloLectura />
+                    <QInput label={t("pedido_venta.cliente")} nombre="cliente" valor={ctx.pedido.cliente} soloLectura />
                     {ctx.pedido.observaciones && (
-                        <QInput label="Observaciones" nombre="observaciones" valor={ctx.pedido.observaciones} soloLectura />
+                        <QInput label={t("pedido_venta.observaciones")} nombre="observaciones" valor={ctx.pedido.observaciones} soloLectura />
                     )}
                 </quimera-formulario>
 
                 <Tabs children={[
                     <Tab
-                        label="Líneas"
+                        label={t("pedido_venta.lineas")}
                         key="tab-lineas"
                         children={
                             <>
                                 {zonas.length === 0 && (
                                     <p className="aviso-disponibilidad">
-                                        Comprueba disponibilidad en el listado para ver el estado de las líneas.
+                                        {t("pedido_venta.compruebaDisponibilidadEnElListadoPara")}
                                     </p>
                                 )}
                                 <TabLineas
