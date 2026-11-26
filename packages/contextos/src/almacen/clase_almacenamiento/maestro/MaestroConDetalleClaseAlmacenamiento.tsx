@@ -11,13 +11,15 @@ import { CrearClaseAlmacenamiento } from "../crear/CrearClaseAlmacenamiento.js";
 import { DetalleClaseAlmacenamiento } from "../detalle/DetalleClaseAlmacenamiento.js";
 import { ClaseAlmacenamiento } from "../diseño.ts";
 import { getMaquina } from "./maquina.js";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaClaseAlmacenamiento: MetaTabla<ClaseAlmacenamiento> = [
-    { id: "codigo", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "codigo", get cabecera() { return tAlmacen("clase_almacenamiento.codigo"); } },
+    { id: "descripcion", get cabecera() { return tAlmacen("clase_almacenamiento.descripcion"); } },
 ];
 
 export const MaestroConDetalleClaseAlmacenamiento = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -42,7 +44,7 @@ export const MaestroConDetalleClaseAlmacenamiento = () => {
             <MaestroDetalle<ClaseAlmacenamiento>
                 Maestro={
                     <>
-                        <h2>Clases de almacenamiento</h2>
+                        <h2>{t("clase_almacenamiento.clasesDeAlmacenamiento")}</h2>
                         <Listado<ClaseAlmacenamiento>
                             metaTabla={metaTablaClaseAlmacenamiento}
                             criteria={clases.criteria}
@@ -54,7 +56,7 @@ export const MaestroConDetalleClaseAlmacenamiento = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_clase_almacenamiento_solicitado")}>
-                                        Nueva Clase de Almacenamiento
+                                        {t("clase_almacenamiento.nuevaClaseDeAlmacenamiento")}
                                     </QBoton>
                                 </div>
                             )}
