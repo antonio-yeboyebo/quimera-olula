@@ -121,6 +121,15 @@ export const en: Traduccion<typeof es> = {
         arqueoTpv: "POS cash count",
         tipoDeDocumento: "Document type",
     },
+    pgc: {
+        noTienesPermisoParaVerEl: "You do not have permission to view the general chart of accounts.",
+        subcuentas: "Sub-accounts",
+        cuentas: "Accounts",
+        cuentasEspeciales: "Special accounts",
+        subgrupos: "Subgroups",
+        grupos: "Groups",
+        codigosDeBalance2008: "2008 balance sheet codes",
+    },
     plantilla_asiento: {
         borrarPlantillaDeAsiento: "Delete entry template",
         estaSeguroDeQueDeseaBorrar: "Are you sure you want to delete template {{id}} and its lines?",

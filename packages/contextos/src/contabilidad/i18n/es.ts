@@ -122,6 +122,15 @@ export const es = {
         arqueoTpv: "Arqueo TPV",
         tipoDeDocumento: "Tipo de documento",
     },
+    pgc: {
+        noTienesPermisoParaVerEl: "No tienes permiso para ver el plan general contable.",
+        subcuentas: "Subcuentas",
+        cuentas: "Cuentas",
+        cuentasEspeciales: "Cuentas especiales",
+        subgrupos: "Subgrupos",
+        grupos: "Grupos",
+        codigosDeBalance2008: "Codigos de balance 2008",
+    },
     plantilla_asiento: {
         borrarPlantillaDeAsiento: "Borrar plantilla de asiento",
         estaSeguroDeQueDeseaBorrar: "¿Está seguro de que desea borrar la plantilla {{id}} y sus partidas?",
