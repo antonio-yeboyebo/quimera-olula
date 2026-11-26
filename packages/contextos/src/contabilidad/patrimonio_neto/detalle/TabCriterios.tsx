@@ -1,5 +1,6 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
+import { tContabilidad } from "../../i18n/index.ts";
 
 interface TabCriteriosProps {
     form: FormModelo;
@@ -13,15 +14,15 @@ export const TabCriterios = ({ form }: TabCriteriosProps) => {
     return (
         <div className="TabCriterios">
             <quimera-formulario>
-                <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QInput label="Ejercicio actual" {...uiProps("ejercicioId")} />
+                <QInput label={tContabilidad("patrimonio_neto.descripcion")} {...uiProps("descripcion")} />
+                <QInput label={tContabilidad("patrimonio_neto.ejercicioActual")} {...uiProps("ejercicioId")} />
                 <QInput
-                    label="Ejercicio X-1"
+                    label={tContabilidad("patrimonio_neto.ejercicioX1")}
                     {...uiProps("ejercicioAnteriorId")}
                     opcional
                 />
                 <QInput
-                    label="Ejercicio X-2"
+                    label={tContabilidad("patrimonio_neto.ejercicioX2")}
                     {...uiProps("ejercicioAnteriorAnteriorId")}
                     opcional
                 />

@@ -8,6 +8,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postPatrimonioNeto } from "../infraestructura.ts";
 import { metaNuevoPatrimonioNeto, nuevoPatrimonioNetoInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearPatrimonioNeto = ({
     publicar,
@@ -17,6 +18,7 @@ export const CrearPatrimonioNeto = ({
     ejercicioId: string;
 }) => {
     // Memoizado: useModelo reinicia el formulario si cambia la identidad.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoPatrimonioNetoInicial(ejercicioId),
         [ejercicioId]
@@ -45,20 +47,20 @@ export const CrearPatrimonioNeto = ({
         <QModal
             abierto={true}
             nombre="crearPatrimonioNeto"
-            titulo="Nuevo estado de cambios en el patrimonio neto"
+            titulo={t("patrimonio_neto.nuevoEstadoDeCambiosEnEl")}
             onCerrar={cancelar}
         >
             <div className="CrearPatrimonioNeto">
                 <quimera-formulario>
-                    <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
-                    <QInput label="Ejercicio actual" {...uiProps("ejercicioId")} />
+                    <QInput label={t("patrimonio_neto.descripcion")} {...uiProps("descripcion")} ref={focus} />
+                    <QInput label={t("patrimonio_neto.ejercicioActual")} {...uiProps("ejercicioId")} />
                     <QInput
-                        label="Ejercicio X-1"
+                        label={t("patrimonio_neto.ejercicioX1")}
                         {...uiProps("ejercicioAnteriorId")}
                         opcional
                     />
                     <QInput
-                        label="Ejercicio X-2"
+                        label={t("patrimonio_neto.ejercicioX2")}
                         {...uiProps("ejercicioAnteriorAnteriorId")}
                         opcional
                     />
@@ -66,7 +68,7 @@ export const CrearPatrimonioNeto = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("patrimonio_neto.crear")}
                     </QBoton>
                 </div>
             </div>

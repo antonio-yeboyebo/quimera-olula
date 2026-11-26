@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { PatrimonioNeto } from "../diseño.ts";
 import { etiquetaPatrimonioNeto } from "../dominio.ts";
 import { deletePatrimonioNeto } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarPatrimonioNeto = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarPatrimonioNeto = ({
     informe: PatrimonioNeto;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deletePatrimonioNeto(informe.id);
         publicar("informe_borrado", informe);
@@ -29,8 +31,8 @@ export const BorrarPatrimonioNeto = ({
         <QModalConfirmacion
             nombre="borrarPatrimonioNeto"
             abierto={true}
-            titulo="Borrar informe"
-            mensaje={`¿Confirma borrar ${etiquetaPatrimonioNeto(informe)}? Solo se borra la configuración del informe, no hay datos contables implicados.`}
+            titulo={t("patrimonio_neto.borrarInforme")}
+            mensaje={t("patrimonio_neto.confirmaBorrarInformeSoloSeBorra", { informe: etiquetaPatrimonioNeto(informe) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

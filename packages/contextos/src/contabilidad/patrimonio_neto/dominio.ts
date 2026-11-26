@@ -5,6 +5,7 @@ import {
     NuevoPatrimonioNeto,
     PatrimonioNeto,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export { ejercicioActual };
 
@@ -16,7 +17,7 @@ export const etiquetaPatrimonioNeto = (
 ): string =>
     p.descripcion
         ? `${p.descripcion} — ${p.ejercicioId}`
-        : `Patrimonio neto ${p.ejercicioId}`;
+        : tContabilidad("patrimonio_neto.patrimonioNetoEjercicioid", { ejercicioId: p.ejercicioId });
 
 export const patrimonioNetoVacio = (): PatrimonioNeto => ({
     id: "",

@@ -15,6 +15,7 @@ import {
     PatrimonioNeto,
     PostPatrimonioNeto,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.PATRIMONIO_NETO;
@@ -105,14 +106,14 @@ export const getDatosPatrimonioNeto: GetDatosPatrimonioNeto = async (id) =>
     RestAPI.getItem<EstadoPatrimonioNeto, EstadoPatrimonioNetoApi>(
         urls.PATRIMONIO_NETO_DATOS(id),
         estadoDesdeApi,
-        "Error al calcular el estado de cambios en el patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlCalcularElEstadoDe")
     );
 
 export const postPatrimonioNeto: PostPatrimonioNeto = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoPatrimonioNetoAApi(nuevo),
-        "Error al crear el informe de patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlCrearElInformeDe")
     );
     return String(respuesta.id);
 };
@@ -121,21 +122,21 @@ export const patchPatrimonioNeto: PatchPatrimonioNeto = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosPatrimonioNetoAApi(cambios),
-        "Error al guardar el informe de patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlGuardarElInformeDe")
     );
 };
 
 export const deletePatrimonioNeto: DeletePatrimonioNeto = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar el informe de patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlBorrarElInformeDe")
     );
 };
 
 export const getReportPatrimonioNeto: GetReportPatrimonioNeto = async (id) =>
     RestAPI.blob(
         urls.PATRIMONIO_NETO_REPORT(id),
-        "Error al descargar el PDF del patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlDescargarElPdfDel")
     );
 
 export const getHojaPatrimonioNeto: GetHojaPatrimonioNeto = async (
@@ -144,5 +145,5 @@ export const getHojaPatrimonioNeto: GetHojaPatrimonioNeto = async (
 ) =>
     RestAPI.blob(
         urls.PATRIMONIO_NETO_HOJA(id, formato),
-        "Error al descargar la hoja del patrimonio neto"
+        tContabilidad("patrimonio_neto.errorAlDescargarLaHojaDel")
     );
