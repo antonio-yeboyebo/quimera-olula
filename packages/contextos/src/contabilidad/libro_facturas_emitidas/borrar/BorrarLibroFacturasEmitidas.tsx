@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { LibroFacturasEmitidas } from "../diseño.ts";
 import { etiquetaLibroFacturasEmitidas } from "../dominio.ts";
 import { deleteLibroFacturasEmitidas } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarLibroFacturasEmitidas = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarLibroFacturasEmitidas = ({
     informe: LibroFacturasEmitidas;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteLibroFacturasEmitidas(informe.id);
         publicar("informe_borrado", informe);
@@ -29,8 +31,8 @@ export const BorrarLibroFacturasEmitidas = ({
         <QModalConfirmacion
             nombre="borrarLibroFacturasEmitidas"
             abierto={true}
-            titulo="Borrar informe"
-            mensaje={`¿Confirma borrar ${etiquetaLibroFacturasEmitidas(informe)}? Solo se borra la configuración del informe, no hay datos contables implicados.`}
+            titulo={t("libro_facturas_emitidas.borrarInforme")}
+            mensaje={t("libro_facturas_emitidas.confirmaBorrarInformeSoloSeBorra", { informe: etiquetaLibroFacturasEmitidas(informe) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

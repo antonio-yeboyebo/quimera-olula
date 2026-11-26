@@ -15,11 +15,13 @@ import {
     metaTablaLibroFacturasEmitidas,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Libros de facturas emitidas guardados: cada ficha son los criterios de un
  * informe de I.V.A. repercutido. Se comparten con el ERP de escritorio, que
  * usa la misma tabla. */
 export const MaestroConDetalleLibroFacturasEmitidas = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaLibroFacturasEmitidasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetalleLibroFacturasEmitidas = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el libro de facturas emitidas.</p>;
+        return <p>{t("libro_facturas_emitidas.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
@@ -64,7 +66,7 @@ export const MaestroConDetalleLibroFacturasEmitidas = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("libro_facturas_emitidas.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}
