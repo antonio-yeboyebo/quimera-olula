@@ -16,9 +16,10 @@ export const MenuUsuarioElementosSanhigia: MenuUsuarioElementos = [
                 color: "success",
                 variant: "main",
             },
-            { ...elementoMiCuenta, icono: "usuario" },
         ],
     },
+    // Al mismo nivel que las demás secciones.
+    { ...elementoMiCuenta, icono: "usuario" },
     {
         nombre: "Administración",
         subelementos: [

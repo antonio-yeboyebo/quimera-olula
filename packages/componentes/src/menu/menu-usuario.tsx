@@ -30,10 +30,11 @@ const elementosDelMenuDefault: MenuUsuarioElementos = [
       },
     ],
   },
+  // Al mismo nivel que «Usuarios» y «Sesión»: un enlace directo, sin sección.
+  { ...elementoMiCuenta, icono: "usuario" },
   {
     nombre: "Sesión",
     subelementos: [
-      elementoMiCuenta,
       {
         nombre: "Cerrar sesión",
         url: "/logout",

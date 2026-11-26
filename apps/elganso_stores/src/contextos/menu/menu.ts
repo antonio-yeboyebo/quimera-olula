@@ -14,9 +14,10 @@ export const MenuUsuarioElementosGanso: MenuUsuarioElementos = [
                 regla: "contexto.recibo_venta",
                 icono: "usuario",
             },
-            { ...elementoMiCuenta, icono: "usuario" },
         ],
     },
+    // Al mismo nivel que las demás secciones.
+    { ...elementoMiCuenta, icono: "usuario" },
     {
         nombre: "Administración",
         subelementos: [

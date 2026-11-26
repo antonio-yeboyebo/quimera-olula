@@ -16,9 +16,10 @@ export const MenuUsuarioElementosCabrera: MenuUsuarioElementos = [
                 color: "success",
                 variant: "main",
             },
-            { ...elementoMiCuenta, icono: "usuario" },
         ],
     },
+    // Al mismo nivel que «Usuario» y «Sesión».
+    { ...elementoMiCuenta, icono: "usuario" },
     {
         nombre: "Sesión",
         subelementos: [
