@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { useContext } from "react";
 import { TransferenciaStock } from "../diseño.ts";
 import { eliminarTransferenciaStock } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarTransferenciaStock = ({
   publicar,
@@ -13,6 +14,7 @@ export const BorrarTransferenciaStock = ({
   transferencia: TransferenciaStock;
   activo: boolean;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const borrar = async () => {
@@ -26,8 +28,8 @@ export const BorrarTransferenciaStock = ({
     <QModalConfirmacion
       nombre="confirmarBorrarTransferenciaStock"
       abierto={activo}
-      titulo="Confirmar borrado"
-      mensaje="¿Está seguro de que desea borrar esta transferencia?"
+      titulo={t("transferencias.confirmarBorrado")}
+      mensaje={t("transferencias.estaSeguroDeQueDeseaBorrar")}
       onCerrar={() => publicar("borrado_cancelado")}
       onAceptar={borrar}
     />

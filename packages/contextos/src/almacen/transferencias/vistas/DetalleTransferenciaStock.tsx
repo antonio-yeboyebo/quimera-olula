@@ -17,6 +17,7 @@ import { useMaquinaTransferenciaStock } from "../maquina_detalle_transferencia_s
 import { BorrarTransferenciaStock } from "./BorrarTransferenciaStock.tsx";
 import { LineasTransferenciaStock } from "./lineas/LineasTransferenciaStock.tsx";
 import "./TransferenciasStock.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (transferencia: TransferenciaStock) =>
   transferencia.origen + " -> " + transferencia.destino;
@@ -28,6 +29,7 @@ export const DetalleTransferenciaStock = ({
   id?: string;
   publicar?: ProcesarEvento;
 }) => {
+  const t = useTAlmacen();
   const params = useParams();
   const { intentar } = useContext(ContextoError);
 
@@ -71,22 +73,22 @@ export const DetalleTransferenciaStock = ({
       {!!transferenciaID && (
         <>
           <div className="maestro-botones ">
-            <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
+            <QBoton onClick={() => emitir("borrar")}>{t("transferencias.borrar")}</QBoton>
           </div>
           <div className="DetalleTransferenciaStock">
             <quimera-formulario>
-              <Almacen label="Origen" {...uiProps("origen", "nombre_origen")} />
+              <Almacen label={t("transferencias.origen")} {...uiProps("origen", "nombre_origen")} />
               <Almacen
-                label="Destino"
+                label={t("transferencias.destino")}
                 {...uiProps("destino", "nombre_destino")}
               />
-              <QDate label="Fecha" {...uiProps("fecha")} />
+              <QDate label={t("transferencias.fecha")} {...uiProps("fecha")} />
             </quimera-formulario>
           </div>
           {transferencia.modificado && (
             <div className="botones maestro-botones">
               <QBoton onClick={guardar} deshabilitado={!transferencia.valido}>
-                Guardar
+                {t("transferencias.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
@@ -94,7 +96,7 @@ export const DetalleTransferenciaStock = ({
                 onClick={cancelar}
                 deshabilitado={!transferencia.modificado}
               >
-                Cancelar
+                {t("transferencias.cancelar")}
               </QBoton>
             </div>
           )}

@@ -12,6 +12,7 @@ import {
   nuevaLineaTransferenciaStockVacia,
 } from "../../dominio.ts";
 import { crearLineaTransferenciaStock } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CrearLineaTransferenciaStock = ({
   publicar = async () => {},
@@ -52,6 +53,7 @@ const FormAltaLineaTransferenciaStock = ({
   linea: HookModelo<NuevaLineaTransferenciaStock>;
   transferenciaID: string;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
@@ -72,17 +74,17 @@ const FormAltaLineaTransferenciaStock = ({
 
   return (
     <div className="CrearLineaTransferenciaStock">
-      <h2>Nueva línea</h2>
+      <h2>{t("transferencias.nuevaLinea")}</h2>
       <quimera-formulario>
         <Articulo {...linea.uiProps("sku", "descripcion_producto")} />
-        <QInput label="Cantidad" {...linea.uiProps("cantidad")} />
+        <QInput label={t("transferencias.cantidad")} {...linea.uiProps("cantidad")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={crear} deshabilitado={!linea.valido}>
-          Guardar
+          {t("transferencias.guardar")}
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">
-          Cancelar
+          {t("transferencias.cancelar")}
         </QBoton>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useContext } from "react";
 import { LineaTransferenciaStock } from "../../diseño.ts";
 import { eliminarLineaTransferenciaStock } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const BorrarLineaTransferenciaStock = ({
   publicar,
@@ -16,6 +17,7 @@ export const BorrarLineaTransferenciaStock = ({
   activo: boolean;
   transferenciaID: string;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const borrar = async () => {
@@ -31,8 +33,8 @@ export const BorrarLineaTransferenciaStock = ({
     <QModalConfirmacion
       nombre="confirmarBorrarLineaTransferenciaStock"
       abierto={activo}
-      titulo="Confirmar borrado"
-      mensaje="¿Está seguro de que desea borrar esta linea?"
+      titulo={t("transferencias.confirmarBorrado")}
+      mensaje={t("transferencias.estaSeguroDeQueDeseaBorrar2")}
       onCerrar={() => publicar("borrado_cancelado")}
       onAceptar={borrar}
     />
