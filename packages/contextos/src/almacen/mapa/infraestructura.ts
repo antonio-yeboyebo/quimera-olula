@@ -6,6 +6,7 @@ import {
     GetTrazado, MotivoFormula, PlantaAlmacen, TrazadoRecorrido, UbicacionMapa, ZonaMapa,
 } from "./diseño.ts";
 import { METROS_NIVEL_POR_DEFECTO } from "./dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/mapa`;
 
@@ -177,7 +178,7 @@ export const getMapa: GetMapa = async (almacenId, dias, origen) => {
 };
 
 export const guardarPlanta: GuardarPlanta = async (almacenId, planta) => {
-    await RestAPI.put(`/almacen/planta/${encodeURIComponent(almacenId)}`, plantaAApi(planta), "Error al guardar la planta");
+    await RestAPI.put(`/almacen/planta/${encodeURIComponent(almacenId)}`, plantaAApi(planta), tAlmacen("mapa.errorAlGuardarLaPlanta"));
 };
 
 interface TrazadoApi {

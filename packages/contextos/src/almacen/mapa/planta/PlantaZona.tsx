@@ -5,6 +5,7 @@ import {
     geometriaZona, letraModulo, MEDIDAS, puntoDeModulo, resumenModulo, resumenUbicacion, tonoModulo, tonoUbicacion,
     trazoRecorrido, ubicacionesPorModulo, ubicacionesSueltas,
 } from "../dominio.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type Props = {
     zona: ZonaMapa;
@@ -49,7 +50,7 @@ export const PlantaZona = ({
                         width={ancho * 1.6}
                         height={alto * 1.6}
                         role="group"
-                        aria-label={`Planta de la zona ${zona.zona}`}
+                        aria-label={tAlmacen("mapa.plantaDeLaZonaZona", { zona: zona.zona })}
                     >
                         {zona.pasillos.map((p, i) => {
                             const g = geometrias[i];
@@ -119,7 +120,7 @@ export const PlantaZona = ({
                                 <g key={p.secuencia} className={`mapa-parada mapa-parada-${p.accion.toLowerCase()}`}>
                                     <circle cx={x} cy={y} r={7} />
                                     <text x={x} y={y}>{p.secuencia}</text>
-                                    <title>{`${p.secuencia}. ${textoAccionParada[p.accion]} en ${p.ubicacion}`}</title>
+                                    <title>{tAlmacen("mapa.secuenciaValorEnUbicacion", { secuencia: p.secuencia, valor: textoAccionParada[p.accion], ubicacion: p.ubicacion })}</title>
                                 </g>
                             );
                         })}
@@ -141,7 +142,7 @@ export const PlantaZona = ({
                     ))}
                 </div>
             )}
-            {zona.pasillos.length === 0 && sueltas.length === 0 && <p>Sin ubicaciones.</p>}
+            {zona.pasillos.length === 0 && sueltas.length === 0 && <p>{tAlmacen("mapa.sinUbicaciones")}</p>}
         </section>
     );
 };
