@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { CuentaEspecial } from "../diseño.ts";
 import { etiquetaCuentaEspecial } from "../dominio.ts";
 import { deleteCuentaEspecial } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarCuentaEspecial = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarCuentaEspecial = ({
     cuentaEspecial: CuentaEspecial;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteCuentaEspecial(cuentaEspecial.id);
         publicar("cuenta_especial_borrada", cuentaEspecial);
@@ -29,8 +31,8 @@ export const BorrarCuentaEspecial = ({
         <QModalConfirmacion
             nombre="borrarCuentaEspecial"
             abierto={true}
-            titulo="Borrar cuenta especial"
-            mensaje={`¿Confirma borrar ${etiquetaCuentaEspecial(cuentaEspecial)}? Las cuentas y subcuentas que la usen dejarán de tenerla asignada.`}
+            titulo={t("cuenta_especial.borrarCuentaEspecial")}
+            mensaje={t("cuenta_especial.confirmaBorrarCuentaespecialLasCuentasY", { cuentaEspecial: etiquetaCuentaEspecial(cuentaEspecial) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

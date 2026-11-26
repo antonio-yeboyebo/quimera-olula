@@ -10,6 +10,7 @@ import {
     PatchCuentaEspecial,
     PostCuentaEspecial,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().CUENTA_ESPECIAL;
 
@@ -55,7 +56,7 @@ export const postCuentaEspecial: PostCuentaEspecial = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevaCuentaEspecialAApi(nuevo),
-        "Error al crear la cuenta especial",
+        tContabilidad("cuenta_especial.errorAlCrearLaCuentaEspecial"),
     );
     return String(respuesta.id);
 };
@@ -80,13 +81,13 @@ export const patchCuentaEspecial: PatchCuentaEspecial = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosCuentaEspecialAApi(cambios),
-        "Error al guardar la cuenta especial",
+        tContabilidad("cuenta_especial.errorAlGuardarLaCuentaEspecial"),
     );
 };
 
 export const deleteCuentaEspecial: DeleteCuentaEspecial = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar la cuenta especial"
+        tContabilidad("cuenta_especial.errorAlBorrarLaCuentaEspecial")
     );
 };

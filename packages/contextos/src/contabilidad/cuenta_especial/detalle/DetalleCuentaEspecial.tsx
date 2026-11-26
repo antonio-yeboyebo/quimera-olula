@@ -16,6 +16,7 @@ import {
 } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleCuentaEspecial = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleCuentaEspecial = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCuentaEspecialInicial,
@@ -56,7 +58,7 @@ export const DetalleCuentaEspecial = ({
 
     const accionesCuentaEspecial = [
         {
-            texto: "Borrar",
+            texto: t("cuenta_especial.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.cuenta_especial"),
             advertencia: true,
@@ -78,7 +80,7 @@ export const DetalleCuentaEspecial = ({
                     <QuimeraAcciones acciones={accionesCuentaEspecial} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("cuenta_especial.general")}
                         key="tab-general"
                         children={
                             <TabGeneral

@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { CuentaEspecial } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroCuentaEspecial = 'INICIAL' | 'CREANDO';
 
@@ -13,10 +14,10 @@ export type ContextoMaestroCuentaEspecial = {
 };
 
 export const metaTablaCuentaEspecial: MetaTabla<CuentaEspecial> = [
-    { id: 'id', cabecera: 'Código' },
-    { id: 'descripcion', cabecera: 'Descripción' },
-    { id: 'codigoCuenta', cabecera: 'Cuenta' },
-    { id: 'codigoSubcuenta', cabecera: 'Subcuenta' },
+    { id: 'id', get cabecera() { return tContabilidad("cuenta_especial.codigo"); } },
+    { id: 'descripcion', get cabecera() { return tContabilidad("cuenta_especial.descripcion"); } },
+    { id: 'codigoCuenta', get cabecera() { return tContabilidad("cuenta_especial.cuenta"); } },
+    { id: 'codigoSubcuenta', get cabecera() { return tContabilidad("cuenta_especial.subcuenta"); } },
 ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -25,7 +26,7 @@ export const metaFiltroCuentaEspecial: MetaFiltro = {
     id: {
         id: "id",
         campo: "id",
-        label: "Código",
+        get label() { return tContabilidad("cuenta_especial.codigo"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["id", "~", valor as string];
@@ -34,7 +35,7 @@ export const metaFiltroCuentaEspecial: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tContabilidad("cuenta_especial.descripcion"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["descripcion", "~", valor as string];

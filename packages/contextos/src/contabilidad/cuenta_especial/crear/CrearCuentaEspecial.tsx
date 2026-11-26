@@ -11,12 +11,14 @@ import {
     metaNuevaCuentaEspecial,
     nuevaCuentaEspecialInicial,
 } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearCuentaEspecial = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaCuentaEspecialInicial, []);
 
     const { modelo: cuentaEspecial, uiProps, valido } = useModelo(
@@ -42,20 +44,20 @@ export const CrearCuentaEspecial = ({
         <QModal
             abierto={true}
             nombre="crearCuentaEspecial"
-            titulo="Nueva cuenta especial"
+            titulo={t("cuenta_especial.nuevaCuentaEspecial")}
             onCerrar={cancelar}
         >
             <div className="CrearCuentaEspecial">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
-                    <QInput label="Cuenta" {...uiProps("codigoCuenta")} />
-                    <QInput label="Subcuenta" {...uiProps("codigoSubcuenta")} />
+                    <QInput label={t("cuenta_especial.codigo")} {...uiProps("id")} ref={focus} />
+                    <QInput label={t("cuenta_especial.descripcion")} {...uiProps("descripcion")} />
+                    <QInput label={t("cuenta_especial.cuenta")} {...uiProps("codigoCuenta")} />
+                    <QInput label={t("cuenta_especial.subcuenta")} {...uiProps("codigoSubcuenta")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("cuenta_especial.crear")}
                     </QBoton>
                 </div>
             </div>
