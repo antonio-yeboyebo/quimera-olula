@@ -8,6 +8,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { CambiosTipoCaja, TipoCaja } from "../../diseño.js";
 import { patchTipoCaja } from "../../infraestructura.js";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Tipo local para el formulario de cambio de SKU/capacidad
@@ -44,6 +45,7 @@ export const CambiarSkuTipoCaja = ({
     tipoCaja: TipoCaja;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const skuInicial: FormSkuCapacidad = useMemo(
         () => ({
             sku: tipoCaja.sku,
@@ -77,17 +79,17 @@ export const CambiarSkuTipoCaja = ({
         <QModal
             abierto={true}
             nombre="cambiarSkuTipoCaja"
-            titulo="Cambiar SKU"
+            titulo={t("tipo_caja.cambiarSku")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
                 <QInput label="SKU" {...uiProps("sku")} />
-                <QInput label="Capacidad" {...uiProps("capacidad")} />
+                <QInput label={t("tipo_caja.capacidad")} {...uiProps("capacidad")} />
             </quimera-formulario>
 
             <div className="botones maestro-botones">
                 <QBoton onClick={guardar} deshabilitado={!valido}>
-                    Guardar
+                    {t("tipo_caja.guardar")}
                 </QBoton>
             </div>
         </QModal>

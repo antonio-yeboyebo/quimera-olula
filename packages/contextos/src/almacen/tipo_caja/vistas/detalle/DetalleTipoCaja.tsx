@@ -12,6 +12,7 @@ import { contextoDetalleTipoCajaInicial, guardarTipoCaja, metaTipoCaja } from ".
 import "./DetalleTipoCaja.css";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Componente detalle de tipo de caja.
@@ -29,6 +30,7 @@ export const DetalleTipoCaja = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const tx = useTAlmacen();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleTipoCajaInicial,
@@ -59,7 +61,7 @@ export const DetalleTipoCaja = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: tx("tipo_caja.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             advertencia: true,
         },
@@ -77,7 +79,7 @@ export const DetalleTipoCaja = ({
                 <QuimeraAcciones acciones={acciones} />
                 <Tabs children={[
                     <Tab
-                        label="General"
+                        label={tx("tipo_caja.general")}
                         key="tab-general"
                         children={
                             <TabGeneral
