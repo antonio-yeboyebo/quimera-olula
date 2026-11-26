@@ -8,6 +8,7 @@ import { direccionVacia, payloadCambioCliente } from "../venta/dominio.ts";
 import { articuloDeLinea, NuevaLineaVentaApiReq, NuevaLineaVentaApiRes, peticionNuevaLineaApi, respuestaNuevaLineaApi } from "../venta/infraestructura.ts";
 import { DeleteLinea, GetLineasPedido, GetPedido, GetPedidos, GetReportPedido, LineaPedido, PatchArticuloLinea, PatchCambiarAgente, PatchCambiarDivisa, PatchCantidadLinea, PatchClientePedido, PatchLinea, Pedido, PostLinea, PostPedido, QueryNuevaLinea } from "./diseño.ts";
 import { getTraza } from "#/comun/componentes/traza/infraestructura.ts";
+import { tVentas } from "../i18n/index.ts";
 
 export interface LineaPedidoApi {
     id: string;
@@ -128,7 +129,7 @@ export const getOrdenesAlmacenDePedido = async (pedidoId: string): Promise<Orden
 };
 
 export const getReportPedido: GetReportPedido = async (id) =>
-    RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del pedido");
+    RestAPI.blob(`${baseUrl}/${id}/report`, tVentas("pedido.errores.report"));
 
 export const getPedidos: GetPedidos = async (
     filtro: Filtro,
@@ -146,14 +147,14 @@ export const postPedido: PostPedido = async (pedido) => {
         cliente: payloadCambioCliente(pedido),
         empresa_id: pedido.empresa_id || empresaActual()
     }
-    return await RestAPI.post(baseUrl, payload, "Error al crear pedido").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrl, payload, tVentas("pedido.errores.crear")).then((respuesta) => respuesta.id);
 }
 
 
 export const patchCambiarCliente: PatchClientePedido = async (id, cambio) => {
     await RestAPI.patch(`${baseUrl}/${id}`, {
         cambios: { cliente: payloadCambioCliente(cambio) }
-    }, "Error al cambiar cliente del pedido");
+    }, tVentas("pedido.errores.cambiarCliente"));
 }
 
 export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
@@ -161,7 +162,7 @@ export const patchCambiarDescuento = async (id: string, dto_porcentual: number):
         cambios: {
             por_descuento: dto_porcentual,
         }
-    }, "Error al cambiar descuento del pedido");
+    }, tVentas("pedido.errores.cambiarDescuento"));
 }
 
 export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
@@ -172,7 +173,7 @@ export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
                 tasa_conversion: cambio.tasa_conversion,
             }
         }
-    }, "Error al cambiar divisa del pedido");
+    }, tVentas("pedido.errores.cambiarDivisa"));
 }
 
 export const patchCambiarAgente: PatchCambiarAgente = async (id, cambio) => {
@@ -181,7 +182,7 @@ export const patchCambiarAgente: PatchCambiarAgente = async (id, cambio) => {
             agente_id: cambio.agente_id,
             por_comision: cambio.por_comision,
         }
-    }, "Error al cambiar agente del pedido");
+    }, tVentas("pedido.errores.cambiarAgente"));
 }
 
 export const getLineas: GetLineasPedido = async (id) =>
@@ -223,7 +224,7 @@ export const postLinea: PostLinea = async (id, linea, { dryRun = false } = {}) =
     const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea`, {
         lineas: [lineaApi],
         dry_run: dryRun,
-    }, "Error al crear línea de pedido")
+    }, tVentas("pedido.errores.crearLinea"))
     const miRespuesta = respuesta as unknown as NuevaLineaVentaApiRes[];
     const lineaActualizada = respuestaNuevaLineaApi(linea, miRespuesta[0]);
     return { ...lineaActualizada, id: miRespuesta[0].id } as unknown as typeof linea;
@@ -234,7 +235,7 @@ export const queryNuevaLinea: QueryNuevaLinea = async (id, linea) => {
     // Cambiar POST a QUERY cuando fastapi lo soporte
     const respuesta = await RestAPI.query<NuevaLineaVentaApiReq, NuevaLineaVentaApiRes>(
         `${baseUrl}/${id}/nueva_linea`, lineaApi,
-        "Error al obtener la nueva línea de pedido")
+        tVentas("pedido.errores.obtenerLinea"))
     const lineaActualizada = respuestaNuevaLineaApi(linea, respuesta);
     return lineaActualizada;
 }
@@ -257,7 +258,7 @@ export const patchArticuloLinea: PatchArticuloLinea = async (id, lineaId, refere
             },
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar artículo de la línea de pedido");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, tVentas("pedido.errores.cambiarArticuloLinea"));
 }
 
 export const patchLinea: PatchLinea = async (id, linea) => {
@@ -274,7 +275,7 @@ export const patchLinea: PatchLinea = async (id, linea) => {
             comision: linea.por_comision,
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de pedido");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("pedido.errores.cambiarLinea"));
 }
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
@@ -283,13 +284,13 @@ export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad
             cantidad: cantidad,
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar cantidad de la línea de pedido");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("pedido.errores.cambiarCantidadLinea"));
 }
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
     await RestAPI.patch(`${baseUrl}/${id}/linea/borrar`, {
         lineas: [lineaId]
-    }, "Error al borrar línea de pedido");
+    }, tVentas("pedido.errores.borrarLinea"));
 }
 
 export const patchPedido = async (id: string, pedido: Pedido) => {
@@ -298,7 +299,7 @@ export const patchPedido = async (id: string, pedido: Pedido) => {
     const payload = api_payloadPatchPedido(pedido) as Record<string, unknown>;
 
     await RestAPI.patch(`${baseUrl}/${id}`, payload,
-        'Error al guardar el pedido'
+        tVentas("pedido.errores.guardar")
     );
 };
 
@@ -306,14 +307,14 @@ export const patchPedido = async (id: string, pedido: Pedido) => {
 export { payloadPatchPedido } from "./infraestructura_base.ts";
 
 export const borrarPedido = async (id: string) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar pedido");
+    await RestAPI.delete(`${baseUrl}/${id}`, tVentas("pedido.errores.borrar"));
 }
 
 export const postAlbaranarPedidos = async (pedidoIds: string[]): Promise<{ id: string; codigo: string }> => {
     const respuesta = (await RestAPI.post(
         `${new ApiUrls().ALBARAN}/desde-pedidos`,
         { pedido_ids: pedidoIds },
-        "Error al albaranar los pedidos"
+        tVentas("pedido.errores.albaranarVarios")
     )) as unknown as
         | { datos: { albaran_id: string; codigo?: string } }
         | { albaran_id: string; codigo?: string };

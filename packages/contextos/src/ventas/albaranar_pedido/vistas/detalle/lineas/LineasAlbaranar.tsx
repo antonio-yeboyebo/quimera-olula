@@ -12,6 +12,7 @@ import { CambiarLoteAlbaranar } from "../../cambiar_lote/CambiarLoteAlbaranar.ts
 import { CrearLoteAlbaranar } from "../../crear_lote/CrearLoteAlbaranar.tsx";
 import { EstadoAlbaranar } from "../diseño.ts";
 import "./LineasAlbaranar.css";
+import { useTVentas } from "../../../../i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // Fila de línea
@@ -26,6 +27,7 @@ const FilaLinea = ({
     conLotes: boolean;
     emitir: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const { uiProps } = useModelo(metaLinea, linea, async (lineaActualizada) => {
         await emitir("enviada_cambiada", {
             idLinea: lineaActualizada.idLinea,
@@ -61,14 +63,14 @@ const FilaLinea = ({
                         <QInput label="" {...uiProps("enviada")} />
                     )}
                 </td>
-                {conLotes && <td>{linea.porLotes ? "Sí" : "No"}</td>}
+                {conLotes && <td>{linea.porLotes ? t("pedido.albaranar.si") : t("pedido.albaranar.no")}</td>}
                 <td>
                     {conLotes && linea.porLotes && (
                         <QBoton
                             tamaño="pequeño"
                             onClick={() => emitir("alta_lote_solicitada", linea.idLinea)}
                         >
-                            + Lote
+                            {t("pedido.albaranar.anadirLote")}
                         </QBoton>
                     )}
                 </td>
@@ -79,8 +81,8 @@ const FilaLinea = ({
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Lote</th>
-                                    <th className="num">Cantidad</th>
+                                    <th>{t("pedido.albaranar.lote")}</th>
+                                    <th className="num">{t("documento.formLinea.cantidad")}</th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -111,7 +113,9 @@ const FilaLote = ({
     linea: LineaAlbaranar;
     lote: LoteAlbaranar;
     emitir: EmitirEvento;
-}) => (
+}) => {
+  const t = useTVentas();
+  return (
     <tr>
         <td>{lote.idLote}</td>
         <td className="num">{lote.cantidad}</td>
@@ -122,7 +126,7 @@ const FilaLote = ({
                     emitir("cambio_lote_solicitado", { idLinea: linea.idLinea, lote })
                 }
             >
-                Editar
+                {t("documento.lineas.editar")}
             </QBoton>
         </td>
         <td>
@@ -132,11 +136,12 @@ const FilaLote = ({
                     emitir("baja_lote_solicitada", { idLinea: linea.idLinea, lote })
                 }
             >
-                Borrar
+                {t("documento.detalle.borrar")}
             </QBoton>
         </td>
     </tr>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Orquestador principal
@@ -156,16 +161,17 @@ export const LineasAlbaranar = ({
     lineaActiva: LineaAlbaranar | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const conLotes = plugin("trazabilidad") === "activa";
     return (
     <div className="LineasAlbaranar">
         <table>
             <thead>
                 <tr>
-                    <th>Artículo</th>
-                    <th className="num">Enviada</th>
-                    <th className="num">A Enviar</th>
-                    {conLotes && <th>Por lotes</th>}
+                    <th>{t("pedido.albaranar.articulo")}</th>
+                    <th className="num">{t("pedido.albaranar.enviada")}</th>
+                    <th className="num">{t("pedido.albaranar.aEnviar")}</th>
+                    {conLotes && <th>{t("pedido.albaranar.porLotes")}</th>}
                     <th></th>
                 </tr>
             </thead>

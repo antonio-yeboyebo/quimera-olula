@@ -17,12 +17,14 @@ import { useCallback, useState } from "react";
 import { getPedido, postPedido } from "../infraestructura.ts";
 import "./CrearPedido.css";
 import { metaNuevoPedido, nuevoPedidoVacio } from "./crear.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearPedido = ({
   publicar = async () => {},
 }: {
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const [modoNoRegistrado, setModoNoRegistrado] = useState(false);
   /* Lazy initializer: referencia estable para useModelo y empresa ya puesta en el
      primer render, sin depender del efecto de EmpresaActual. */
@@ -79,7 +81,7 @@ export const CrearPedido = ({
     <>
       <div className="modo-cliente">
         <QBoton onClick={toggleModoCliente} variante="texto" tipo="button">
-          {modoNoRegistrado ? "Cliente registrado" : "Cliente no registrado"}
+          {modoNoRegistrado ? t("documento.crear.clienteRegistrado") : t("documento.crear.clienteNoRegistrado")}
         </QBoton>
       </div>
       <div className="CrearPedido campos-direccion">
@@ -90,12 +92,12 @@ export const CrearPedido = ({
                 onChange={(id) => pedidoNoRegistrado.uiProps("empresa_id").onChange(id)}
               />
               <QInput
-                label="Nombre del Cliente"
+                label={t("documento.crear.nombreCliente")}
                 {...pedidoNoRegistrado.uiProps("nombre_cliente")}
                 ref={focus}
               />
               <QInput
-                label="ID Fiscal"
+                label={t("documento.detalle.idFiscal")}
                 {...pedidoNoRegistrado.uiProps("id_fiscal")}
               />
               <CamposDireccionVenta uiProps={pedidoNoRegistrado.uiProps} />

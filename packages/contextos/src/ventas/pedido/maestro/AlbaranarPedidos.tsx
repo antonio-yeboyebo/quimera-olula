@@ -3,6 +3,7 @@ import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { GrupoAlbaranar } from "./maestro.ts";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 
 const lineasPorCliente = (grupos: GrupoAlbaranar[]): string[] => {
     const porEtiqueta = new Map<string, { pedidos: number; albaranes: number }>();
@@ -16,8 +17,8 @@ const lineasPorCliente = (grupos: GrupoAlbaranar[]): string[] => {
     });
 
     return [...porEtiqueta.entries()].map(([etiqueta, { pedidos, albaranes }]) => {
-        const cuantos = `${pedidos} ${pedidos === 1 ? "pedido" : "pedidos"}`;
-        const reparto = albaranes > 1 ? ` en ${albaranes} albaranes` : "";
+        const cuantos = tVentas("pedido.albaranarVarios.pedidos", { count: pedidos });
+        const reparto = albaranes > 1 ? tVentas("pedido.albaranarVarios.enAlbaranes", { count: albaranes }) : "";
         return `· ${etiqueta} — ${cuantos}${reparto}`;
     });
 };
@@ -31,6 +32,7 @@ export const AlbaranarPedidos = ({
     pedidos: number;
     grupos: GrupoAlbaranar[];
 }) => {
+    const t = useTVentas();
     const albaranar_ = useCallback(async () => {
         publicar("pedidos_albaranados");
     }, [publicar]);
@@ -42,15 +44,15 @@ export const AlbaranarPedidos = ({
 
     const [albaranar, cancelar] = useForm(albaranar_, cancelar_);
 
-    const cabecera = `Albaranar los ${pedidos} pedidos seleccionados. Se ${
-        grupos.length === 1 ? "generará 1 albarán" : `generarán ${grupos.length} albaranes`
-    }.`;
+    const cabecera = grupos.length === 1
+        ? t("pedido.albaranarVarios.cabeceraUno", { count: pedidos })
+        : t("pedido.albaranarVarios.cabeceraVarios", { count: pedidos, albaranes: grupos.length });
 
     return (
         <QModalConfirmacion
             nombre="albaranarPedidos"
             abierto={true}
-            titulo="Albaranar pedidos"
+            titulo={t("pedido.albaranarVarios.titulo")}
             mensaje={[cabecera, "", ...lineasPorCliente(grupos)].join("\n")}
             onCerrar={cancelar}
             onAceptar={albaranar}

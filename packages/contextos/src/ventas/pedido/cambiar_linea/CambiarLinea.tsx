@@ -13,6 +13,7 @@ import { LineaPedido } from "../diseño.ts";
 import { patchLinea } from "../infraestructura.ts";
 import "./CambiarLinea.css";
 import { getModeloInicial, metaLinea, ModeloCambiarLinea } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export type CambiarLineaProps = {
   pedidoId: string;
@@ -32,6 +33,7 @@ export const CambiarLineaBase = ({
   publicar,
   linea,
 }: CambiarLineaProps) => {
+      const t = useTVentas();
   
     const modeloInicial = useMemo(() => getModeloInicial(linea), [linea.id]);
 
@@ -56,7 +58,7 @@ export const CambiarLineaBase = ({
         <QModal
             abierto={true}
             nombre="editar_linea_pedido"
-            titulo="Editar línea"
+            titulo={t("documento.formLinea.editar")}
             onCerrar={cancelar}
         >
         <div className="EditarLinea">
@@ -71,9 +73,9 @@ export const CambiarLineaBase = ({
                 bloqueado={true}
             />
 
-            <QInput label="Cantidad" {...uiProps("cantidad")} />
+            <QInput label={t("documento.formLinea.cantidad")} {...uiProps("cantidad")} />
 
-            <QInput label="Precio" {...uiProps("pvp_unitario")} />
+            <QInput label={t("documento.formLinea.precio")} {...uiProps("pvp_unitario")} />
 
             <div className="mostrar-mas-fila">
                 <button
@@ -81,24 +83,24 @@ export const CambiarLineaBase = ({
                 className="mostrar-mas-btn"
                 onClick={() => setMostrarMas((v) => !v)}
                 >
-                {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                {mostrarMas ? t("documento.formLinea.menosOpciones") : t("documento.formLinea.masOpciones")}
                 </button>
             </div>
 
             {mostrarMas && (
                 <>
                     <div className="seccion-separador">Descuento</div>
-                    <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
-                    <QInput label="Dto. lineal" {...uiProps("dto_lineal")} />
+                    <QInput label={t("documento.formLinea.descuento")} {...uiProps("dto_porcentual")} />
+                    <QInput label={t("documento.formLinea.dtoLineal")} {...uiProps("dto_lineal")} />
 
                     <div className="seccion-separador">Impuestos</div>
                     <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} soloLectura={!libre} />
-                    <QInput label="% IVA" {...uiProps("tipo_iva")} soloLectura />
-                    <QCheckbox label="IVA incluido" {...uiProps("iva_incluido")} soloLectura={!libre} />
-                    <QInput label="% I.R.P.F." {...uiProps("tipo_irpf")} />
-                    <QInput label="% Comisión agente" {...uiProps("por_comision")} />
+                    <QInput label={t("documento.formLinea.iva")} {...uiProps("tipo_iva")} soloLectura />
+                    <QCheckbox label={t("documento.formLinea.ivaIncluido")} {...uiProps("iva_incluido")} soloLectura={!libre} />
+                    <QInput label={t("documento.formLinea.irpf")} {...uiProps("tipo_irpf")} />
+                    <QInput label={t("documento.formLinea.porComision")} {...uiProps("por_comision")} />
                     <QInput
-                        label="Importe comisión"
+                        label={t("documento.formLinea.importeComision")}
                         {...uiProps("importe_comision")}
                     />
                 </>

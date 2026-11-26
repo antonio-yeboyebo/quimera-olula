@@ -32,6 +32,7 @@ import { getMaquina } from "./maquina.ts";
 import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatosBase as TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 
 export type DetallePedidoProps = {
   id?: string;
@@ -53,6 +54,7 @@ export const DetallePedidoBase = ({
   id,
   publicar = async () => {},
 }: DetallePedidoProps) => {
+  const t = useTVentas();
   const params = useParams();
   const navigate = useNavigate();
   const pedidoId = id ?? params.id;
@@ -86,7 +88,7 @@ export const DetallePedidoBase = ({
   const { estado, lineaActiva } = ctx;
 
   const titulo = (pedido: Pedido) =>
-    tituloDocumentoVenta(pedido, "Nuevo Pedido");
+    tituloDocumentoVenta(pedido, t("pedido.maestro.nuevo"));
 
   const handleAlbaranar = useCallback(() => {
     const id = ctx.pedido.id ?? params.id;
@@ -104,21 +106,21 @@ export const DetallePedidoBase = ({
 
   const acciones = [
     {
-      texto: "Albaran parcial",
+      texto: t("pedido.detalle.albaranParcial"),
       onClick: handleAlbaranar,
       deshabilitado: !esEditable,
     },
     {
-      texto: "Imprimir",
+      texto: t("documento.detalle.imprimir"),
       onClick: imprimir,
     },
     {
-      texto: "Documentos relacionados",
+      texto: t("documento.detalle.documentosRelacionados"),
       onClick: () => emitir("traza_solicitada"),
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: !pedidoPendiente(ctx.pedido),
@@ -149,7 +151,7 @@ export const DetallePedidoBase = ({
       <AvisoPreparacionAlmacen pedido={ctx.pedido} />
 
       <Tabs>
-        <Tab label="Líneas">
+        <Tab label={t("documento.detalle.pestanas.lineas")}>
           <Lineas
             pedido={ctx.pedido}
             lineaActiva={lineaActiva}
@@ -158,15 +160,15 @@ export const DetallePedidoBase = ({
           />
         </Tab>
 
-        <Tab label="Cliente">
+        <Tab label={t("documento.detalle.pestanas.cliente")}>
           <TabCliente pedido={pedido} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Datos">
+        <Tab label={t("documento.detalle.pestanas.datos")}>
           <TabDatos pedido={pedido} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Observaciones">
+        <Tab label={t("documento.detalle.pestanas.observaciones")}>
           <TabObservaciones pedido={pedido} />
         </Tab>
       </Tabs>

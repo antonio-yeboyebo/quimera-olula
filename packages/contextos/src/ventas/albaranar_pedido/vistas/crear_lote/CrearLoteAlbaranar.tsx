@@ -8,6 +8,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { LineaAlbaranar, LoteAlbaranar } from "../../diseño.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 type NuevoLote = { idLote: string; cantidad: number };
 
@@ -27,6 +28,7 @@ export const CrearLoteAlbaranar = ({
     linea: LineaAlbaranar;
     emitir: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const { modelo, uiProps, valido } = useModelo(metaNuevoLote, nuevoLoteVacio);
 
     const crear_ = useCallback(async () => {
@@ -48,12 +50,12 @@ export const CrearLoteAlbaranar = ({
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Lote label="Lote" {...uiProps("idLote")} sku={linea.sku} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
+                <Lote label={t("pedido.albaranar.lote")} {...uiProps("idLote")} sku={linea.sku} />
+                <QInput label={t("documento.formLinea.cantidad")} {...uiProps("cantidad")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Añadir
+                    {t("pedido.albaranar.anadir")}
                 </QBoton>
             </div>
         </QModal>

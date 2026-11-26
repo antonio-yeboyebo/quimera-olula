@@ -1,6 +1,7 @@
 import { LineaPedido } from "#/ventas/pedido/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { AlbaranarPedido, LineaAlbaranar, LoteAlbaranar } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // MetaModelo
@@ -30,7 +31,7 @@ export const metaAlbaranarPedido: MetaModelo<AlbaranarPedido> = {
     },
     validacion: (modelo: AlbaranarPedido) => {
         const hayAlgunaEnviada = modelo.lineas.some((l) => calcularEnviada(l) > 0);
-        return hayAlgunaEnviada ? true : "Al menos una línea debe tener cantidad enviada";
+        return hayAlgunaEnviada ? true : tVentas("pedido.albaranar.algunaEnviada");
     },
 };
 

@@ -4,11 +4,13 @@
  * traducción, con las mismas claves, en `en/`).
  */
 import { documento } from "./es/documento.ts";
+import { pedido } from "./es/pedido.ts";
 import { presupuesto } from "./es/presupuesto.ts";
 
 export const es = {
     documento,
     presupuesto,
+    pedido,
     comun: {
         agente: "Agente",
         seleccionarContacto: "Seleccionar contacto",

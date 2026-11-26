@@ -1,12 +1,13 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useEffect, useState } from "react";
 import { LineaPedido as Linea } from "../../diseño.ts";
+import { tVentas } from "../../../i18n/index.ts";
 
 const validacionPorDefecto = (cantidadRaw: string) => {
   const cantidad = parseInt(cantidadRaw);
 
   return isNaN(cantidad) || cantidad <= 0
-    ? "Debe tener una cantidad mayor que cero."
+    ? tVentas("documento.formLinea.cantidadMayorQueCero")
     : "";
 };
 

@@ -5,9 +5,10 @@ import { useCallback } from "react";
 import { LineaPedido } from "../diseño.ts";
 import { deleteLinea } from "../infraestructura.ts";
 import {
-  TEXTO_CAMBIOS_EN_PREPARACION,
+  textoCambiosEnPreparacion,
   useOrdenesAlmacenDePedido,
 } from "../detalle/aviso_almacen/ordenes_almacen.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarLinea = ({
   pedidoId,
@@ -18,6 +19,7 @@ export const BorrarLinea = ({
   publicar: ProcesarEvento;
   linea: LineaPedido;
 }) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     await deleteLinea(pedidoId, linea.id);
     publicar("linea_borrada", linea.id);
@@ -31,15 +33,17 @@ export const BorrarLinea = ({
   const [borrar, cancelar] = useForm(borrar_, cancelar_);
   const ordenesAlmacen = useOrdenesAlmacenDePedido(pedidoId);
   const mensaje = ordenesAlmacen.length > 0
-    ? `El pedido está en preparación en almacén (${ordenesAlmacen.map((o) => o.id).join(", ")}). ` +
-      `${TEXTO_CAMBIOS_EN_PREPARACION} ¿Borrar la línea?`
-    : "¿Está seguro de que desea borrar esta línea?";
+    ? t("pedido.almacen.borrarLineaEnPreparacion", {
+        ordenes: ordenesAlmacen.map((o) => o.id).join(", "),
+        cambios: textoCambiosEnPreparacion(),
+      })
+    : t("documento.borrarLinea.mensaje");
 
   return (
     <QModalConfirmacion
       nombre="confirmarBorrarLinea"
       abierto={true}
-      titulo="Borrar línea"
+      titulo={t("documento.borrarLinea.titulo")}
       mensaje={mensaje}
       onCerrar={cancelar}
       onAceptar={borrar}

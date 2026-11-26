@@ -7,6 +7,7 @@ import { accionesListaActivaEntidades, ProcesarListaActivaEntidades } from "@olu
 import { Pedido } from "../diseño.ts";
 import { getPedidos } from "../infraestructura.ts";
 import { ContextoMaestroPedido, EstadoMaestroPedido } from "./diseño.ts";
+import { tVentas } from "../../i18n/index.ts";
 
 type ProcesarPedidos = ProcesarContexto<EstadoMaestroPedido, ContextoMaestroPedido>;
 
@@ -51,7 +52,7 @@ export type GrupoAlbaranar = {
 };
 
 const etiquetaCliente = (pedido: Pedido): string =>
-    pedido.cliente?.nombre_cliente || pedido.cliente?.cliente_id || "Sin cliente";
+    pedido.cliente?.nombre_cliente || pedido.cliente?.cliente_id || tVentas("pedido.maestro.sinCliente");
 
 const claveCliente = (pedido: Pedido): string =>
     [
@@ -108,11 +109,11 @@ export const albaranarPedidos: ProcesarPedidos = async (contexto) => {
 const mensajeDeError = (error: unknown): string =>
     error instanceof Error ? error.message : String(error);
 
-const etiquetasServido: Record<EstadoDocumento, EstadoEtiqueta> = {
-    pendiente: { texto: "Pendiente", tono: "pendiente" },
-    parcial: { texto: "Parcial", tono: "parcial" },
-    cerrado: { texto: "Servido", tono: "completado" },
-};
+const etiquetasServido = (): Record<EstadoDocumento, EstadoEtiqueta> => ({
+    pendiente: { texto: tVentas("pedido.estado.pendiente"), tono: "pendiente" },
+    parcial: { texto: tVentas("pedido.estado.parcial"), tono: "parcial" },
+    cerrado: { texto: tVentas("pedido.estado.servido"), tono: "completado" },
+});
 
 export const etiquetaEstadoPedido = (pedido: { servido?: string }): EstadoEtiqueta =>
-    etiquetasServido[estadoServidoPedido(pedido)];
+    etiquetasServido()[estadoServidoPedido(pedido)];
