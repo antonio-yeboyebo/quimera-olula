@@ -1,6 +1,7 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { Subcuenta } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 interface TabGeneralProps {
     form: FormModelo;
@@ -15,44 +16,44 @@ export const TabGeneral = ({ form, subcuenta }: TabGeneralProps) => {
         <div className="TabGeneral">
             <quimera-formulario>
                 <QInput
-                    label="Código"
+                    label={tContabilidad("subcuenta.codigo")}
                     nombre="codigo"
                     valor={subcuenta.codigo}
                     soloLectura
                 />
-                <QInput label="Descripción" {...uiProps("nombre")} />
+                <QInput label={tContabilidad("subcuenta.descripcion")} {...uiProps("nombre")} />
                 <QInput
-                    label="Cuenta (plan)"
+                    label={tContabilidad("subcuenta.cuentaPlan")}
                     nombre="codigo_cuenta"
                     valor={subcuenta.codigoCuenta}
                     soloLectura
                 />
                 <QInput
-                    label="Ejercicio"
+                    label={tContabilidad("subcuenta.ejercicio")}
                     nombre="ejercicio_id"
                     valor={subcuenta.ejercicioId}
                     soloLectura
                 />
                 <QInput
-                    label="Grupo de IVA"
+                    label={tContabilidad("subcuenta.grupoDeIva")}
                     nombre="impuesto_id"
                     valor={subcuenta.impuestoId}
                     soloLectura
                 />
                 <QInput
-                    label="% I.V.A."
+                    label={tContabilidad("subcuenta.iVA")}
                     nombre="iva"
                     valor={String(subcuenta.iva)}
                     soloLectura
                 />
                 <QInput
-                    label="% R. Equivalencia"
+                    label={tContabilidad("subcuenta.rEquivalencia")}
                     nombre="recargo"
                     valor={String(subcuenta.recargo)}
                     soloLectura
                 />
                 <QInput
-                    label="Cuenta especial"
+                    label={tContabilidad("subcuenta.cuentaEspecial")}
                     nombre="cuenta_especial_id"
                     valor={subcuenta.cuentaEspecialId}
                     soloLectura

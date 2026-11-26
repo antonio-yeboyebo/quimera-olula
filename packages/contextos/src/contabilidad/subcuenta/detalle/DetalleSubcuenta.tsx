@@ -16,6 +16,7 @@ import {
 } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleSubcuenta = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleSubcuenta = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleSubcuentaInicial,
@@ -52,7 +54,7 @@ export const DetalleSubcuenta = ({
 
     const accionesSubcuenta = [
         {
-            texto: "Borrar",
+            texto: t("subcuenta.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.subcuenta"),
             advertencia: true,
@@ -72,7 +74,7 @@ export const DetalleSubcuenta = ({
                     <QuimeraAcciones acciones={accionesSubcuenta} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("subcuenta.general")}
                         key="tab-general"
                         children={
                             <TabGeneral form={formModelo} subcuenta={subcuenta} />

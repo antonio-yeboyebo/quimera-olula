@@ -5,6 +5,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { ejercicioActual } from "#/contabilidad/asiento/dominio.ts";
 import { Subcuenta } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroSubcuenta = 'INICIAL' | 'CREANDO';
 
@@ -14,10 +15,10 @@ export type ContextoMaestroSubcuenta = {
 };
 
 export const metaTablaSubcuenta: MetaTabla<Subcuenta> = [
-    { id: 'codigo', cabecera: 'Código' },
-    { id: 'nombre', cabecera: 'Descripción' },
-    { id: 'codigoCuenta', cabecera: 'Cuenta' },
-    { id: 'ejercicioId', cabecera: 'Ejercicio' },
+    { id: 'codigo', get cabecera() { return tContabilidad("subcuenta.codigo"); } },
+    { id: 'nombre', get cabecera() { return tContabilidad("subcuenta.descripcion"); } },
+    { id: 'codigoCuenta', get cabecera() { return tContabilidad("subcuenta.cuenta"); } },
+    { id: 'ejercicioId', get cabecera() { return tContabilidad("subcuenta.ejercicio"); } },
 ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -26,7 +27,7 @@ export const metaFiltroSubcuenta: MetaFiltro = {
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("subcuenta.ejercicio"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["ejercicio_id", "eq", valor as string];
@@ -35,7 +36,7 @@ export const metaFiltroSubcuenta: MetaFiltro = {
     codigo: {
         id: "codigo",
         campo: "codigo",
-        label: "Código",
+        get label() { return tContabilidad("subcuenta.codigo"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["codigo", "~", valor as string];
@@ -44,7 +45,7 @@ export const metaFiltroSubcuenta: MetaFiltro = {
     nombre: {
         id: "nombre",
         campo: "nombre",
-        label: "Descripción",
+        get label() { return tContabilidad("subcuenta.descripcion"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["nombre", "~", valor as string];

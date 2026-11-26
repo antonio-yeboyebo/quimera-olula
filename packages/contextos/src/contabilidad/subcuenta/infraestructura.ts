@@ -12,6 +12,7 @@ import {
     ResultadoRecalculoSaldos,
     Subcuenta,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().SUBCUENTA;
 
@@ -61,7 +62,7 @@ export const postSubcuenta: PostSubcuenta = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevaSubcuentaAApi(nuevo),
-        "Error al crear subcuenta",
+        tContabilidad("subcuenta.errorAlCrearSubcuenta"),
     );
     return String(respuesta.id);
 };
@@ -79,12 +80,12 @@ export const patchSubcuenta: PatchSubcuenta = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosSubcuentaAApi(cambios),
-        "Error al guardar subcuenta",
+        tContabilidad("subcuenta.errorAlGuardarSubcuenta"),
     );
 };
 
 export const deleteSubcuenta: DeleteSubcuenta = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar subcuenta");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("subcuenta.errorAlBorrarSubcuenta"));
 };
 
 export interface ResultadoRecalculoSaldosApi {
@@ -129,7 +130,7 @@ export const patchRecalcularSaldosSubcuentas: PatchRecalcularSaldosSubcuentas = 
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/recalcular_saldos`,
         ejercicioId ? { ejercicio_id: ejercicioId } : {},
-        "Error al recalcular los saldos de las subcuentas"
+        tContabilidad("subcuenta.errorAlRecalcularLosSaldosDe")
     )) as unknown as ResultadoRecalculoSaldosApi | { datos: ResultadoRecalculoSaldosApi };
     const datos = "datos" in respuesta ? respuesta.datos : respuesta;
     return resultadoRecalculoSaldosDesdeApi(datos);
