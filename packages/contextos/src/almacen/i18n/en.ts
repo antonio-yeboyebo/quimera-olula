@@ -174,4 +174,8 @@ export const en: Traduccion<typeof es> = {
         ubicacionDePicking: "Picking location",
         zona: "Zone",
     },
+    config: {
+        eligeElIVAPor: "Choose the default VAT: without it the option has no effect.",
+        errorAlGuardarLaConfiguracionDe: "Error saving the warehouse settings",
+    },
 };

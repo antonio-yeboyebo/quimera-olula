@@ -175,4 +175,8 @@ export const es = {
         ubicacionDePicking: "Ubicación de picking",
         zona: "Zona",
     },
+    config: {
+        eligeElIVAPor: "Elige el I.V.A. por defecto: sin él la opción no tiene efecto.",
+        errorAlGuardarLaConfiguracionDe: "Error al guardar la configuración de almacén",
+    },
 } as const;

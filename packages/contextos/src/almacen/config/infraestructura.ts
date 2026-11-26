@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
 import { ConfigAlmacen, GetConfigAlmacen, PatchConfigAlmacen } from "./diseño.ts";
 import { configAlmacenPorDefecto } from "./dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export interface ConfigAlmacenApi {
     impuesto_id: string | null;
@@ -33,5 +34,5 @@ export const getConfigAlmacen: GetConfigAlmacen = async () => {
 
 export const patchConfigAlmacen: PatchConfigAlmacen = async (config) => {
     await RestAPI.patch(
-        baseUrl, { cambios: configAlmacenAApi(config) }, "Error al guardar la configuración de almacén");
+        baseUrl, { cambios: configAlmacenAApi(config) }, tAlmacen("config.errorAlGuardarLaConfiguracionDe"));
 };
