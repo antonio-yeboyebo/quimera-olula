@@ -1,7 +1,7 @@
 import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmacion.tsx";
+import { ContextoError } from "@olula/lib/contexto.ts";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
-import { useForm } from "@olula/lib/useForm.js";
-import { useCallback } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useTVentas } from "../../i18n/index.ts";
 import { deleteCliente } from "../infraestructura.ts";
 
@@ -19,15 +19,26 @@ export const BorrarCliente = ({
   onCancelar = () => {},
 }: BorrarClienteProps) => {
   const t = useTVentas();
-  const borrar_ = useCallback(async () => {
-    await deleteCliente(clienteId);
+  const { intentar } = useContext(ContextoError);
+  const [borrando, setBorrando] = useState(false);
+
+  // Si el servidor no deja borrar (p. ej. el cliente tiene facturas: 409), se cierra la
+  // confirmación y queda a la vista el modal de error con su mensaje.
+  const borrar = useCallback(async () => {
+    setBorrando(true);
+    try {
+      await intentar(() => deleteCliente(clienteId));
+    } catch {
+      onCancelar();
+      return;
+    }
     publicar("borrado_de_cliente_listo", { clienteId });
     onCancelar();
-  }, [clienteId, publicar, onCancelar]);
+  }, [clienteId, intentar, publicar, onCancelar]);
 
-  const cancelar_ = useCallback(() => onCancelar(), [onCancelar]);
-
-  const [borrar, cancelar] = useForm(borrar_, cancelar_);
+  const cancelar = useCallback(() => {
+    if (!borrando) onCancelar();
+  }, [borrando, onCancelar]);
 
   return (
     <QModalConfirmacion
