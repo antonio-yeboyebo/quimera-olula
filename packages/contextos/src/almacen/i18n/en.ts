@@ -178,4 +178,10 @@ export const en: Traduccion<typeof es> = {
         eligeElIVAPor: "Choose the default VAT: without it the option has no effect.",
         errorAlGuardarLaConfiguracionDe: "Error saving the warehouse settings",
     },
+    configuracion: {
+        tiposDeUbicacion: "Location types",
+        tiposDeCaja: "Box types",
+        clasesDeAlmacenamiento: "Storage classes",
+        configuracionDelAlmacen: "Warehouse settings",
+    },
 };

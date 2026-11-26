@@ -179,4 +179,10 @@ export const es = {
         eligeElIVAPor: "Elige el I.V.A. por defecto: sin él la opción no tiene efecto.",
         errorAlGuardarLaConfiguracionDe: "Error al guardar la configuración de almacén",
     },
+    configuracion: {
+        tiposDeUbicacion: "Tipos de ubicación",
+        tiposDeCaja: "Tipos de caja",
+        clasesDeAlmacenamiento: "Clases de almacenamiento",
+        configuracionDelAlmacen: "Configuración del almacén",
+    },
 } as const;
