@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Cuenta } from "#/contabilidad/cuenta/diseño.ts";
 import { buscarCuentas, codigoYNombre, cuentaPorCodigo } from "../busqueda_plan_contable.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 /** El valor de la opción es el CÓDIGO de la cuenta, no su id: es lo que pide
  * el alta de subcuenta (`codigo_cuenta`). */
@@ -32,7 +33,7 @@ export const CuentaSelector = ({
     valor,
     descripcion = "",
     nombre = "codigo_cuenta",
-    label = "Cuenta del plan",
+    label = tContabilidad("comun.cuentaDelPlan"),
     onChange,
     evaluarCambio,
     ...props

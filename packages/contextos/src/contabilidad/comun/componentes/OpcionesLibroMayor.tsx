@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/index.js";
 import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar.tsx";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type OpcionFijaProps = Omit<
     QAutocompletarProps,
@@ -14,14 +15,14 @@ type OpcionFijaProps = Omit<
  * diario. Los valores son los literales que guarda Eneboo.
  */
 const CRITERIOS_ORDEN_MAYOR = [
-    { valor: "Fecha", descripcion: "Fecha" },
-    { valor: "Asiento", descripcion: "Asiento" },
+    { valor: "Fecha", get descripcion() { return tContabilidad("comun.fecha"); } },
+    { valor: "Asiento", get descripcion() { return tContabilidad("comun.asiento"); } },
 ];
 
 export const CriterioOrdenMayor = ({
     valor,
     nombre = "orden",
-    label = "Criterio",
+    label = tContabilidad("comun.criterio"),
     onChange,
     ...props
 }: OpcionFijaProps) => (

@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/index.js";
 import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar.tsx";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type TipoDocumentoAsientoProps = Omit<
     QAutocompletarProps,
@@ -15,18 +16,18 @@ type TipoDocumentoAsientoProps = Omit<
  * documento de origen: el caso normal de un asiento manual.
  */
 const TIPOS_DOCUMENTO_ASIENTO = [
-    { valor: "", descripcion: "Sin documento" },
-    { valor: "Factura de cliente", descripcion: "Factura de cliente" },
-    { valor: "Factura de proveedor", descripcion: "Factura de proveedor" },
-    { valor: "Recibo de cliente", descripcion: "Recibo de cliente" },
-    { valor: "Recibo de proveedor", descripcion: "Recibo de proveedor" },
-    { valor: "Arqueo TPV", descripcion: "Arqueo TPV" },
+    { valor: "", get descripcion() { return tContabilidad("comun.sinDocumento"); } },
+    { valor: "Factura de cliente", get descripcion() { return tContabilidad("comun.facturaDeCliente"); } },
+    { valor: "Factura de proveedor", get descripcion() { return tContabilidad("comun.facturaDeProveedor"); } },
+    { valor: "Recibo de cliente", get descripcion() { return tContabilidad("comun.reciboDeCliente"); } },
+    { valor: "Recibo de proveedor", get descripcion() { return tContabilidad("comun.reciboDeProveedor"); } },
+    { valor: "Arqueo TPV", get descripcion() { return tContabilidad("comun.arqueoTpv"); } },
 ];
 
 export const TipoDocumentoAsiento = ({
     valor,
     nombre = "tipoDocumento",
-    label = "Tipo de documento",
+    label = tContabilidad("comun.tipoDeDocumento"),
     onChange,
     ...props
 }: TipoDocumentoAsientoProps) => {

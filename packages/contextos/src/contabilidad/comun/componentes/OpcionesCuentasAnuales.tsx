@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/index.js";
 import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar.tsx";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type OpcionFijaProps = Omit<
     QAutocompletarProps,
@@ -15,26 +16,26 @@ type OpcionFijaProps = Omit<
  * compatibilidad con los informes dados de alta desde el ERP de escritorio.
  */
 const TIPOS_CUENTAS_ANUALES = [
-    { valor: "Situacion", descripcion: "Situación" },
-    { valor: "Perdidas y ganancias", descripcion: "Pérdidas y ganancias" },
-    { valor: "Ingresos y gastos", descripcion: "Ingresos y gastos" },
+    { valor: "Situacion", get descripcion() { return tContabilidad("comun.situacion"); } },
+    { valor: "Perdidas y ganancias", get descripcion() { return tContabilidad("comun.perdidasYGanancias"); } },
+    { valor: "Ingresos y gastos", get descripcion() { return tContabilidad("comun.ingresosYGastos"); } },
 ];
 
 const FORMATOS_CUENTAS_ANUALES = [
-    { valor: "Normal", descripcion: "Normal" },
-    { valor: "Abreviado", descripcion: "Abreviado" },
+    { valor: "Normal", get descripcion() { return tContabilidad("comun.normal"); } },
+    { valor: "Abreviado", get descripcion() { return tContabilidad("comun.abreviado"); } },
 ];
 
 const NIVELES_DESGLOSE = [
-    { valor: "No desglosar", descripcion: "No desglosar" },
-    { valor: "Cuenta", descripcion: "Cuenta" },
-    { valor: "Subcuenta", descripcion: "Subcuenta" },
+    { valor: "No desglosar", get descripcion() { return tContabilidad("comun.noDesglosar"); } },
+    { valor: "Cuenta", get descripcion() { return tContabilidad("comun.cuenta"); } },
+    { valor: "Subcuenta", get descripcion() { return tContabilidad("comun.subcuenta"); } },
 ];
 
 export const TipoCuentasAnuales = ({
     valor,
     nombre = "tipo",
-    label = "Tipo de informe",
+    label = tContabilidad("comun.tipoDeInforme"),
     onChange,
     ...props
 }: OpcionFijaProps) => (
@@ -51,7 +52,7 @@ export const TipoCuentasAnuales = ({
 export const FormatoCuentasAnuales = ({
     valor,
     nombre = "formato",
-    label = "Formato",
+    label = tContabilidad("comun.formato"),
     onChange,
     ...props
 }: OpcionFijaProps) => (
@@ -68,7 +69,7 @@ export const FormatoCuentasAnuales = ({
 export const NivelDesgloseCuentasAnuales = ({
     valor,
     nombre = "nivelDesglose",
-    label = "Desglose",
+    label = tContabilidad("comun.desglose"),
     onChange,
     ...props
 }: OpcionFijaProps) => (
