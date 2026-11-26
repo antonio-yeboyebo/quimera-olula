@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { Factura } from "../diseño.ts";
 import { deleteFactura } from "../infraestructura.ts";
 
@@ -12,6 +13,7 @@ export const BorrarFactura = ({
     factura: Factura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const borrar_ = useCallback(async () => {
         await deleteFactura(factura.id);
         publicar("factura_borrada", factura.id);
@@ -25,8 +27,8 @@ export const BorrarFactura = ({
         <QModalConfirmacion
             nombre="borrarFacturaCompra"
             abierto={true}
-            titulo="Borrar factura"
-            mensaje={`¿Está seguro de que desea borrar la factura ${factura.codigo}?`}
+            titulo={t("factura.borrar.titulo")}
+            mensaje={t("factura.borrar.mensaje", { codigo: factura.codigo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -4,12 +4,14 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { ReciboFactura } from "../diseño.ts";
 import { getRecibosFactura } from "../infraestructura.ts";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 
 interface TabRecibosProps {
   facturaId: string;
 }
 
 export const TabRecibos = ({ facturaId }: TabRecibosProps) => {
+  const t = useTCompras();
   const [recibos, setRecibos] = useState<ReciboFactura[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -22,7 +24,7 @@ export const TabRecibos = ({ facturaId }: TabRecibosProps) => {
 
   return (
     <ListadoSemiControlado
-      metaTabla={metaTablaRecibos}
+      metaTabla={metaTablaRecibos(t)}
       entidades={recibos}
       totalEntidades={recibos.length}
       cargando={cargando}
@@ -35,9 +37,9 @@ export const TabRecibos = ({ facturaId }: TabRecibosProps) => {
   );
 };
 
-const metaTablaRecibos: MetaTabla<ReciboFactura> = [
-  { id: "codigo", cabecera: "Código" },
-  { id: "fecha_vencimiento", cabecera: "Vencimiento", tipo: "fecha" },
-  { id: "importe", cabecera: "Importe", tipo: "moneda" },
-  { id: "estado", cabecera: "Estado" },
+const metaTablaRecibos = (t = tCompras): MetaTabla<ReciboFactura> => [
+  { id: "codigo", cabecera: t("comun.campos.codigo") },
+  { id: "fecha_vencimiento", cabecera: t("factura.detalle.vencimiento"), tipo: "fecha" },
+  { id: "importe", cabecera: t("comun.campos.importe"), tipo: "moneda" },
+  { id: "estado", cabecera: t("comun.campos.estado") },
 ];

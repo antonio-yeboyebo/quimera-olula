@@ -1,4 +1,5 @@
 import { formatearMoneda, formatearNumero } from "@olula/lib/dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import {
     AlertaImportacion,
     AlertaLineaImportacion,
@@ -11,27 +12,23 @@ import {
     TipoFicheroOriginal,
 } from "./diseño.ts";
 
-const etiquetasAlerta: Record<AlertaImportacion, string> = {
-    sin_proveedor: "Falta el proveedor",
-    total_discordante: "El total leído no coincide con el calculado",
-    lineas_sin_albaran: "Hay líneas de la factura que no vienen de los albaranes seleccionados",
-};
+const ALERTAS: readonly AlertaImportacion[] = ["sin_proveedor", "total_discordante", "lineas_sin_albaran"];
 
-const etiquetasAlertaLinea: Record<AlertaLineaImportacion, string> = {
-    sin_articulo: "Sin artículo",
-    sin_subcuenta: "Sin subcuenta",
-    sin_coste_proveedor: "Sin coste de proveedor",
-    precio_distinto: "Precio distinto al teórico",
-    dto_distinto: "Descuento distinto al teórico",
-    sin_precio: "Sin precio",
-    sin_albaran: "No viene de ningún albarán seleccionado",
-};
+const ALERTAS_LINEA: readonly AlertaLineaImportacion[] = [
+    "sin_articulo", "sin_subcuenta", "sin_coste_proveedor", "precio_distinto",
+    "dto_distinto", "sin_precio", "sin_albaran",
+];
 
+/** Texto de una alerta en el idioma activo (una que no conocemos sale tal cual). */
 export const etiquetaAlerta = (alerta: string): string =>
-    etiquetasAlerta[alerta as AlertaImportacion] ?? alerta;
+    ALERTAS.includes(alerta as AlertaImportacion)
+        ? tCompras(`factura.importacion.alertas.${alerta as AlertaImportacion}`)
+        : alerta;
 
 export const etiquetaAlertaLinea = (alerta: string): string =>
-    etiquetasAlertaLinea[alerta as AlertaLineaImportacion] ?? alerta;
+    ALERTAS_LINEA.includes(alerta as AlertaLineaImportacion)
+        ? tCompras(`factura.importacion.alertasLinea.${alerta as AlertaLineaImportacion}`)
+        : alerta;
 
 export const hayTotalDiscordante = (propuesta: PropuestaImportacion | null): boolean =>
     propuesta?.alertas.includes("total_discordante") ?? false;
@@ -97,30 +94,30 @@ export const motivosNoConfirmable = (
     propuesta: PropuestaImportacion | null,
 ): string[] => {
     const motivos: string[] = [];
-    if (!propuesta) return ["Propuesta no calculada"];
+    if (!propuesta) return [tCompras("factura.importacion.motivos.sinPropuesta")];
 
-    if (vacio(leida.proveedorId)) motivos.push("Falta el proveedor");
-    if (leida.lineas.length === 0) motivos.push("La factura no tiene líneas");
+    if (vacio(leida.proveedorId)) motivos.push(tCompras("factura.importacion.motivos.sinProveedor"));
+    if (leida.lineas.length === 0) motivos.push(tCompras("factura.importacion.motivos.sinLineas"));
 
     leida.lineas.forEach((l, i) => {
         if (vacio(l.descripcion) || vacio(l.cantidad)) {
-            motivos.push(`Línea ${i + 1}: falta descripción o cantidad`);
+            motivos.push(tCompras("factura.importacion.motivos.faltaDescripcion", { linea: i + 1 }));
         }
         if (vacio(l.articuloId) && vacio(l.precioUnitario)) {
-            motivos.push(`Línea ${i + 1}: sin artículo y sin precio`);
+            motivos.push(tCompras("factura.importacion.motivos.sinArticuloNiPrecio", { linea: i + 1 }));
         }
     });
 
     if (propuesta.albaranes.some((a) => a.seleccionado && !a.coincide)) {
-        motivos.push("Hay albaranes seleccionados que no coinciden");
+        motivos.push(tCompras("factura.importacion.motivos.albaranesNoCoinciden"));
     }
 
     propuesta.lineas
         .filter((pl) => pl.alertas.includes("sin_albaran"))
-        .forEach((pl) => motivos.push(`Línea ${pl.indice + 1}: no viene de ningún albarán seleccionado`));
+        .forEach((pl) => motivos.push(tCompras("factura.importacion.motivos.lineaSinAlbaran", { linea: pl.indice + 1 })));
 
     if (hayTotalDiscordante(propuesta) && leida.aceptarTotalDiscordante !== true) {
-        motivos.push("Hay que aceptar la diferencia de total");
+        motivos.push(tCompras("factura.importacion.motivos.aceptarDiferencia"));
     }
     return motivos;
 };
@@ -231,9 +228,6 @@ export type ResumenImportacion = {
     avisos: string[];
 };
 
-const plural = (n: number, singular: string, plural: string): string =>
-    `${n} ${n === 1 ? singular : plural}`;
-
 /** Lo que se va a crear, para la última comprobación antes de importar. */
 export const resumenImportacion = (
     leida: FacturaLeida,
@@ -247,15 +241,15 @@ export const resumenImportacion = (
 
     const avisos = [
         aCompra > 0 &&
-            `${plural(aCompra, "línea irá", "líneas irán")} a la cuenta especial de compras`,
+            tCompras("factura.importacion.avisos.cuentaEspecial", { count: aCompra }),
         cuenta("sin_articulo") > 0 &&
-            `${plural(cuenta("sin_articulo"), "línea", "líneas")} sin artículo`,
+            tCompras("factura.importacion.avisos.sinArticulo", { count: cuenta("sin_articulo") }),
         cuenta("precio_distinto") > 0 &&
-            `${plural(cuenta("precio_distinto"), "línea", "líneas")} con precio distinto al teórico`,
+            tCompras("factura.importacion.avisos.precioDistinto", { count: cuenta("precio_distinto") }),
         cuenta("dto_distinto") > 0 &&
-            `${plural(cuenta("dto_distinto"), "línea", "líneas")} con descuento distinto al teórico`,
+            tCompras("factura.importacion.avisos.dtoDistinto", { count: cuenta("dto_distinto") }),
         cuenta("sin_coste_proveedor") > 0 &&
-            `${plural(cuenta("sin_coste_proveedor"), "línea", "líneas")} sin coste de proveedor`,
+            tCompras("factura.importacion.avisos.sinCoste", { count: cuenta("sin_coste_proveedor") }),
     ].filter((a): a is string => Boolean(a));
 
     return {

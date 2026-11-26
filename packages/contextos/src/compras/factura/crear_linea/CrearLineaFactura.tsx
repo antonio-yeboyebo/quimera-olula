@@ -20,6 +20,7 @@ import {
 } from "../dominio.ts";
 import { postLineaFactura, queryNuevaLineaFactura } from "../infraestructura.ts";
 import "./CrearLineaFactura.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearLineaFactura = ({
     factura,
@@ -28,6 +29,7 @@ export const CrearLineaFactura = ({
     factura: Factura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const inicial = useMemo(nuevaLineaFacturaVacia, []);
 
     const onModeloListo = useCallback(
@@ -79,7 +81,7 @@ export const CrearLineaFactura = ({
         <QModal
             abierto={true}
             nombre="crearLineaFacturaCompra"
-            titulo="Crear línea"
+            titulo={t("comun.lineas.crear")}
             onCerrar={cancelar}
         >
             <div className="CrearLineaFactura">
@@ -93,9 +95,9 @@ export const CrearLineaFactura = ({
                         onChange={onArticuloCambiado}
                         autoFocus
                     />
-                    <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
-                    <QInput label="Total" {...uiProps("pvpTotal")} soloLectura />
+                    <QInput label={t("comun.lineas.cantidad")} {...uiProps("cantidad")} />
+                    <QInput label={t("comun.lineas.costeUnitario")} {...uiProps("pvpUnitario")} />
+                    <QInput label={t("comun.campos.total")} {...uiProps("pvpTotal")} soloLectura />
 
                     <div className="mostrar-mas-fila">
                         <button
@@ -103,31 +105,31 @@ export const CrearLineaFactura = ({
                             className="mostrar-mas-btn"
                             onClick={() => setMostrarMas((v) => !v)}
                         >
-                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                            {mostrarMas ? t("comun.lineas.menosOpciones") : t("comun.lineas.masOpciones")}
                         </button>
                     </div>
 
                     {mostrarMas && (
                         <>
-                            <div className="seccion-separador">Descuento</div>
-                            <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
-                            <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+                            <div className="seccion-separador">{t("comun.lineas.descuento")}</div>
+                            <QInput label={t("comun.lineas.pctDescuento")} {...uiProps("dtoPorcentual")} />
+                            <QInput label={t("comun.lineas.descuentoLineal")} {...uiProps("dtoLineal")} />
 
-                            <div className="seccion-separador">Impuestos</div>
+                            <div className="seccion-separador">{t("comun.lineas.impuestos")}</div>
                             <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
-                            <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
+                            <QInput label={t("comun.lineas.pctIva")} {...uiProps("tipoIva")} soloLectura />
                             <QInput
-                                label="% R.Equivalencia"
+                                label={t("comun.lineas.pctRecargo")}
                                 {...uiProps("tipoRecargo")}
                                 soloLectura
                             />
-                            <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
+                            <QInput label={t("comun.lineas.pctIrpf")} {...uiProps("tipoIrpf")} />
                         </>
                     )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("comun.botones.crear")}
                     </QBoton>
                 </div>
             </div>

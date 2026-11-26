@@ -6,6 +6,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback, useState } from "react";
 import { Factura } from "../diseño.ts";
 import "./CambiarRectificativa.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CambiarRectificativa = ({
     factura,
@@ -14,6 +15,7 @@ export const CambiarRectificativa = ({
     factura: Factura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const [rectificativaId, setRectificativaId] = useState(factura.rectificativaId ?? "");
     const [codigo, setCodigo] = useState(factura.codigoRectificativa ?? "");
 
@@ -35,13 +37,13 @@ export const CambiarRectificativa = ({
         <QModal
             abierto={true}
             nombre="cambiarRectificativaCompra"
-            titulo="Factura rectificativa"
+            titulo={t("factura.rectificativa.titulo")}
             onCerrar={cancelar}
         >
             <div className="CambiarRectificativa">
                 <quimera-formulario>
                     <FacturaCompra
-                        label="Rectifica a la factura"
+                        label={t("factura.rectificativa.rectificaA")}
                         nombre="rectificativaId"
                         valor={rectificativaId}
                         descripcion={codigo}
@@ -53,7 +55,7 @@ export const CambiarRectificativa = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={cambiar} deshabilitado={esLaPropiaFactura}>
-                        Guardar
+                        {t("comun.botones.guardar")}
                     </QBoton>
                 </div>
             </div>

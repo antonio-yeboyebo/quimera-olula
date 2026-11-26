@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Factura, LineaFactura } from "../diseño.ts";
 import { etiquetaLinea } from "../dominio.ts";
 import { borrarLineasFactura } from "../infraestructura.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const BorrarLineaFactura = ({
     factura,
@@ -15,6 +16,7 @@ export const BorrarLineaFactura = ({
     linea: LineaFactura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const borrar_ = useCallback(async () => {
         await borrarLineasFactura(factura.id, [linea.id]);
         publicar("linea_borrada", linea.id);
@@ -31,8 +33,8 @@ export const BorrarLineaFactura = ({
         <QModalConfirmacion
             nombre="borrarLineaFacturaCompra"
             abierto={true}
-            titulo="Borrar línea"
-            mensaje={`¿Está seguro de que desea borrar la línea "${etiquetaLinea(linea)}"?`}
+            titulo={t("comun.lineas.borrar")}
+            mensaje={t("comun.lineas.borrarMensaje", { linea: etiquetaLinea(linea) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
