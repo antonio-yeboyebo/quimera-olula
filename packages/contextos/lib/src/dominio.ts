@@ -2,6 +2,7 @@ import { Permiso, permisosGrupo } from "./api/permisos.js";
 import { QError } from "./contexto.js";
 import { ClausulaFiltro, Contexto, Criteria, Direccion, Entidad, EventoMaquina, Filtro, Maquina, Modelo, Orden, ProcesarContexto, TipoInput, ValorCampoUI } from "./diseño.js";
 import { filtroDefecto, ordenDefecto, paginacionDefecto } from "./url-params.js";
+import { tLib } from "./i18n/textos.ts";
 import { UiProps, ValorControl } from "./useModelo.js";
 
 export const actualizarEntidadEnLista = <T extends Entidad>(entidades: T[], entidad: T): T[] => {
@@ -44,7 +45,7 @@ export const direccionVacia: Direccion = {
     apartado: '',
     telefono: '',
 }
-export const boolAString = (valor: boolean) => valor ? "Sí" : "No";
+export const boolAString = (valor: boolean) => valor ? tLib("si") : tLib("no");
 
 export const stringNoVacio = (valor: string) => {
     return valor.length > 0;
@@ -561,18 +562,18 @@ export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => 
     const requerido = typeof requeridoRaw === 'function' ? requeridoRaw(modelo) : requeridoRaw;
 
     if (requerido && (valor === null || valor === undefined || valor === "")) {
-        return "Campo requerido";
+        return tLib("validacion.requerido");
     }
 
     if (campos[campo]?.tipo === "email" && typeof valor === "string" && valor.length > 0) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(valor)) {
-            return "Formato Email incorrecto";
+            return tLib("validacion.email");
         }
     }
 
     if (tipoCampo && ["texto", "fecha", "numero", "selector", "autocompletar"].includes(tipoCampo) && requerido && valor === '') {
-        return "Campo requerido";
+        return tLib("validacion.requerido");
     }
     const tipoCampoEsNumero = ['numero', 'decimal', 'entero'].includes(tipoCampo as string);
 
@@ -581,21 +582,21 @@ export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => 
 
         if (campos[campo]?.positivo) {
             if (numero < 0) {
-                return "El número debe ser positivo";
+                return tLib("validacion.positivo");
             }
         }
 
         if (campos[campo]?.maximo) {
             const maximo = Number(campos[campo]?.maximo);
             if (numero > maximo) {
-                return `El número debe ser menor o igual a ${maximo}`;
+                return tLib("validacion.maximo", { maximo });
             }
         }
 
         if (campos[campo]?.minimo) {
             const minimo = Number(campos[campo]?.minimo);
             if (numero < minimo) {
-                return `El número debe ser mayor o igual a ${minimo}`;
+                return tLib("validacion.minimo", { minimo });
             }
         }
     }
@@ -603,23 +604,23 @@ export const validacionCampoModelo = <T extends Modelo>(meta: MetaModelo<T>) => 
     // Sub-objeto: validación recursiva con su propio MetaModelo
     if (campos[campo]?.meta && typeof valor === "object" && valor !== null && !Array.isArray(valor)) {
         const subValido = modeloEsValido(campos[campo].meta!)(valor as Modelo);
-        if (!subValido) return "Sub-objeto inválido";
+        if (!subValido) return tLib("validacion.subobjeto");
     }
 
     // Lista: validación de cardinalidad e ítems
     if (campos[campo]?.itemMeta && Array.isArray(valor)) {
         const min = campos[campo].minItems ?? 0;
         if (valor.length < min) {
-            return `Se requieren al menos ${min} elemento${min !== 1 ? "s" : ""}`;
+            return tLib("validacion.minimoElementos", { count: min });
         }
         const max = campos[campo].maxItems;
         if (max !== undefined && valor.length > max) {
-            return `Se permiten como máximo ${max} elemento${max !== 1 ? "s" : ""}`;
+            return tLib("validacion.maximoElementos", { count: max });
         }
         const itemInvalido = valor.some(
             (item) => !modeloEsValido(campos[campo].itemMeta!)(item as Modelo)
         );
-        if (itemInvalido) return "Algún elemento de la lista es inválido";
+        if (itemInvalido) return tLib("validacion.elementoInvalido");
     }
 
     const validacion = campos[campo]?.validacion

@@ -1,5 +1,7 @@
+import type { Idioma } from "@olula/lib/i18n/i18n.ts";
+
 /** Idioma preferido del usuario (`usuarios.idioma` en el servidor; sin elegir = español). */
-export type Idioma = "es" | "en";
+export type { Idioma };
 
 /**
  * La cuenta del usuario autenticado. Nombre y email solo se leen (los cambia un

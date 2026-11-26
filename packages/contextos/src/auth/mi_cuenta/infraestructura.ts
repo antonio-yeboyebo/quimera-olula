@@ -1,4 +1,5 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
+import { cambiarIdioma } from "@olula/lib/i18n/i18n.ts";
 import ApiUrls from "../comun/urls.ts";
 import { GetMiCuenta, Idioma, MiCuenta, PatchMiCuenta } from "./diseño.ts";
 import { idiomaDesde } from "./dominio.ts";
@@ -35,4 +36,10 @@ export const getMiCuenta: GetMiCuenta = async () => {
 
 export const patchMiCuenta: PatchMiCuenta = async (miCuenta) => {
     await RestAPI.patch(baseUrl, miCuentaAApi(miCuenta), "Error al guardar tu cuenta");
+};
+
+/** Guarda la cuenta y, si el servidor lo acepta, pone la interfaz en su idioma sin recargar. */
+export const guardarMiCuenta: PatchMiCuenta = async (miCuenta) => {
+    await patchMiCuenta(miCuenta);
+    await cambiarIdioma(miCuenta.idioma);
 };

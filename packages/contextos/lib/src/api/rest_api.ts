@@ -1,6 +1,8 @@
 import { Criteria } from "../diseño.js";
 import { criteriaAQueryString } from "../infraestructura.js";
 import type { API, RespuestaGetItem, RespuestaGetLista, RespuestaGetQuery } from "./diseño.js";
+import { idiomaActual } from "../i18n/i18n.ts";
+import { tLib } from "../i18n/textos.ts";
 import { tokenAcceso } from "./token_acceso.js";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -18,6 +20,8 @@ const llamada = async <T>({ method, url, headers = {}, body, msgError }: {
     method,
     headers: {
       "Authorization": `Bearer ${tokenAcceso.obtener() ?? ""}`,
+      // El servidor traduce sus mensajes de error a este idioma (sin cabecera, español).
+      "Accept-Language": idiomaActual(),
       ...headers,
     },
     body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
@@ -31,7 +35,7 @@ const llamada = async <T>({ method, url, headers = {}, body, msgError }: {
   if (!response.ok) {
     const errorText = await response.text();
     const error = {
-      nombre: msgError || `Error ${response.status}`,
+      nombre: msgError || tLib("errorHttp", { estado: response.status }),
       descripcion: errorText,
       estado: response.status,
     };

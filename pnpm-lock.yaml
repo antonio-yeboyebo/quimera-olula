@@ -14,12 +14,18 @@ importers:
       d3:
         specifier: ^7.9.0
         version: 7.9.0
+      i18next:
+        specifier: ^27.2.9
+        version: 27.2.9(typescript@5.9.3)
       react:
         specifier: ^19.2.8
         version: 19.2.8
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
+      react-i18next:
+        specifier: ^18.0.3
+        version: 18.0.3(@types/react@19.2.17)(i18next@27.2.9(typescript@5.9.3))(react@19.2.8)(typescript@5.9.3)
       react-infinite-scroll-component:
         specifier: ^5.1.0
         version: 5.1.0(react@19.2.8)
@@ -2423,7 +2429,7 @@ importers:
         version: 11.0.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-i18next:
         specifier: ^10.0.0
-        version: 10.13.2(i18next@22.5.1)(react@19.2.8)
+        version: 10.13.2(i18next@27.2.9(typescript@5.9.3))(react@19.2.8)
       react-infinite-scroll-component:
         specifier: ^5.0.4
         version: 5.1.0(react@19.2.8)
@@ -4094,6 +4100,7 @@ packages:
   '@plotly/mapbox-gl@1.13.4':
     resolution: {integrity: sha512-sR3/Pe5LqT/fhYgp4rT4aSFf1rTsxMbGiH6Hojc7PH36ny5Bn17iVFUjpzycafETURuFbLZUfjODO8LvSI+5zQ==}
     engines: {node: '>=6.4.0'}
+    deprecated: This package is deprecated as of August 2026. plotly.js v4 uses MapLibre for map traces — see https://github.com/maplibre/maplibre-gl-js.
 
   '@plotly/point-cluster@3.1.9':
     resolution: {integrity: sha512-MwaI6g9scKf68Orpr1pHZ597pYx9uP8UEFXLPbsCmuw3a84obwz6pnMXGc90VhgDNeNiLEdlmuK7CPo+5PIxXw==}
@@ -6264,6 +6271,9 @@ packages:
   html-parse-stringify2@2.0.1:
     resolution: {integrity: sha512-wMKQ3aJ/dwXzDHPpA7XgsRXXCkEhHkAF6Ioh7D51lgZO7Qy0LmcFddC9TI/qNQJvSM1KL8KbcR3FtuybsrzFlQ==}
 
+  html-parse-stringify@4.0.1:
+    resolution: {integrity: sha512-0zHsZJrK7S3K2aucXWL6ycoYJ/iNtIcFHC/nYQgFklPtrv5LpJctIiSCroWZWeuoXvuyFdzp6KzjJQ+OT5MfFw==}
+
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
@@ -6280,6 +6290,15 @@ packages:
 
   i18next@22.5.1:
     resolution: {integrity: sha512-8TGPgM3pAD+VRsMtUMNknRz3kzqwp/gPALrWMsDnmC1mKqJwpWyooQRLMcbTwq8z8YwSmuj+ZYvc+xCuEpkssA==}
+
+  i18next@27.2.9:
+    resolution: {integrity: sha512-GOWWofCGYPSPEzUKJnRLJSoHrSUDa/NzYWqAOJJDZUaM7faLPd9VABlbHDZ+jv8uadu/fq1wsHFfZP6+0tFPkg==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -7069,6 +7088,20 @@ packages:
     peerDependencies:
       i18next: '>= 17.0.0'
       react: '>= 16.8.0'
+
+  react-i18next@18.0.3:
+    resolution: {integrity: sha512-S84rtVuaKuiRtoCOspbGEaDlFjka+KvK/A5YCOr4LQ41XF3iJOrJ5rqQTD/jJHFVUf6X1i4ZMN5PGGgpz8NN6g==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@types/react': '*'
+      i18next: '>= 27.0.1'
+      react: '>= 18.0.0'
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      typescript:
+        optional: true
 
   react-infinite-scroll-component@5.1.0:
     resolution: {integrity: sha512-ZQ7lYlLByil1ZVdvt57UJeBIj/tSOwKyds+B0LIm/xGmxzJJZwW/hYGKKs74sHO3LoIDwcq2ci6YXqrkWSalLQ==}
@@ -12300,6 +12333,8 @@ snapshots:
     dependencies:
       void-elements: 2.0.1
 
+  html-parse-stringify@4.0.1: {}
+
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
@@ -12323,6 +12358,10 @@ snapshots:
   i18next@22.5.1:
     dependencies:
       '@babel/runtime': 7.29.7
+
+  i18next@27.2.9(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
 
   iconv-lite@0.4.24:
     dependencies:
@@ -13203,12 +13242,21 @@ snapshots:
       react: 19.2.8
       scheduler: 0.27.0
 
-  react-i18next@10.13.2(i18next@22.5.1)(react@19.2.8):
+  react-i18next@10.13.2(i18next@27.2.9(typescript@5.9.3))(react@19.2.8):
     dependencies:
       '@babel/runtime': 7.29.7
       html-parse-stringify2: 2.0.1
-      i18next: 22.5.1
+      i18next: 27.2.9(typescript@5.9.3)
       react: 19.2.8
+
+  react-i18next@18.0.3(@types/react@19.2.17)(i18next@27.2.9(typescript@5.9.3))(react@19.2.8)(typescript@5.9.3):
+    dependencies:
+      html-parse-stringify: 4.0.1
+      i18next: 27.2.9(typescript@5.9.3)
+      react: 19.2.8
+    optionalDependencies:
+      '@types/react': 19.2.17
+      typescript: 5.9.3
 
   react-infinite-scroll-component@5.1.0(react@19.2.8):
     dependencies:
