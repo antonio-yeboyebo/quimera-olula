@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Zona } from "../../diseño.ts";
 import { deleteZona } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const BorrarZona = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarZona = ({
     zona: Zona;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteZona(zona.id);
         publicar("zona_borrada", zona);
@@ -28,8 +30,8 @@ export const BorrarZona = ({
         <QModalConfirmacion
             nombre="borrarZona"
             abierto={true}
-            titulo="Borrar zona"
-            mensaje={`¿Está seguro de que desea borrar la zona "${zona.codigo}"?`}
+            titulo={t("zona.borrarZona")}
+            mensaje={t("zona.estaSeguroDeQueDeseaBorrar", { codigo: zona.codigo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -14,14 +14,15 @@ import { ListaEntidades } from "@olula/lib/ListaEntidades.js";
 import { Zona } from "../../../diseño.ts";
 import { EstadoDetalleZona } from "../diseño.ts";
 import "./PasillosZona.css";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 const metaTablaPasillos: MetaTabla<Pasillo> = [
-    { id: "orden", cabecera: "Orden" },
+    { id: "orden", get cabecera() { return tAlmacen("zona.orden"); } },
     // Lleva a las ubicaciones del pasillo.
-    { id: "codigo", cabecera: "Código", enlace: (p) => urlListado.ubicacionesDePasillo(p.id) },
-    { id: "caras", cabecera: "Caras", render: (p) => descripcionCaras(p.caras) },
-    { id: "modulos", cabecera: "Módulos/cara" },
-    { id: "accesos", cabecera: "Accesos", render: (p) => descripcionAccesos(p.accesos) },
+    { id: "codigo", get cabecera() { return tAlmacen("zona.codigo"); }, enlace: (p) => urlListado.ubicacionesDePasillo(p.id) },
+    { id: "caras", get cabecera() { return tAlmacen("zona.caras"); }, render: (p) => descripcionCaras(p.caras) },
+    { id: "modulos", get cabecera() { return tAlmacen("zona.modulosCara"); } },
+    { id: "accesos", get cabecera() { return tAlmacen("zona.accesos"); }, render: (p) => descripcionAccesos(p.accesos) },
 ];
 
 export const PasillosZona = ({
@@ -40,15 +41,15 @@ export const PasillosZona = ({
     return (
         <div className="PasillosZona">
             <div className="botones maestro-botones">
-                <QBoton onClick={() => publicar("alta_pasillo_solicitada")}>Nuevo pasillo</QBoton>
+                <QBoton onClick={() => publicar("alta_pasillo_solicitada")}>{tAlmacen("zona.nuevoPasillo")}</QBoton>
                 <QBoton onClick={() => publicar("cambio_pasillo_solicitado")} deshabilitado={!activo}>
-                    Editar
+                    {tAlmacen("zona.editar")}
                 </QBoton>
                 <QBoton onClick={() => publicar("baja_pasillo_solicitada")} deshabilitado={!activo}>
-                    Borrar
+                    {tAlmacen("zona.borrar")}
                 </QBoton>
                 <QBoton onClick={() => publicar("generar_ubicaciones_solicitado")} deshabilitado={!activo}>
-                    Generar ubicaciones
+                    {tAlmacen("zona.generarUbicaciones")}
                 </QBoton>
             </div>
             <ListadoSemiControlado

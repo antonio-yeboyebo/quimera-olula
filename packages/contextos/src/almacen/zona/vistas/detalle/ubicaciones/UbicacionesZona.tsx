@@ -7,15 +7,16 @@ import { descripcionEstadoUbicacion } from "#/almacen/ubicacion/dominio.ts";
 import { StockUbicacionItem, Ubicacion } from "#/almacen/ubicacion/diseño.ts";
 import { getStocksUbicacion } from "#/almacen/ubicacion/infraestructura.ts";
 import { StocksUbicacion } from "#/almacen/ubicacion/vistas/detalle/stocks/StocksUbicacion.tsx";
+import { tAlmacen, useTAlmacen } from "../../../../i18n/index.ts";
 
 const metaTablaUbicaciones: MetaTabla<Ubicacion> = [
-    { id: "codigo", cabecera: "Código", enlace: (u) => urlFicha.ubicacion(u.id) },
-    { id: "pasillo", cabecera: "Pasillo" },
-    { id: "modulo", cabecera: "Módulo" },
-    { id: "nivel", cabecera: "Nivel" },
-    { id: "hueco", cabecera: "Hueco" },
-    { id: "tipoUbicacion", cabecera: "Tipo", enlace: (u) => urlFicha.tipoUbicacion(u.tipoUbicacionId) },
-    { id: "estado", cabecera: "Estado", render: (u) => descripcionEstadoUbicacion(u.estado) },
+    { id: "codigo", get cabecera() { return tAlmacen("zona.codigo"); }, enlace: (u) => urlFicha.ubicacion(u.id) },
+    { id: "pasillo", get cabecera() { return tAlmacen("zona.pasillo"); } },
+    { id: "modulo", get cabecera() { return tAlmacen("zona.modulo"); } },
+    { id: "nivel", get cabecera() { return tAlmacen("zona.nivel"); } },
+    { id: "hueco", get cabecera() { return tAlmacen("zona.hueco"); } },
+    { id: "tipoUbicacion", get cabecera() { return tAlmacen("zona.tipo"); }, enlace: (u) => urlFicha.tipoUbicacion(u.tipoUbicacionId) },
+    { id: "estado", get cabecera() { return tAlmacen("zona.estado"); }, render: (u) => descripcionEstadoUbicacion(u.estado) },
 ];
 
 /** Ubicaciones de la zona, paginadas en el servidor: cada cambio de página u orden se publica
@@ -31,6 +32,7 @@ export const UbicacionesZona = ({
     criteria: Criteria;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState<Ubicacion | null>(null);
     const [stocks, setStocks] = useState<StockUbicacionItem[]>([]);
 
@@ -55,7 +57,7 @@ export const UbicacionesZona = ({
             />
             {ubicacionSeleccionada && (
                 <div className="UbicacionesZona-stocks">
-                    <h4>Stock de la ubicación</h4>
+                    <h4>{t("zona.stockDeLaUbicacion")}</h4>
                     <StocksUbicacion stocks={stocks} />
                 </div>
             )}

@@ -17,16 +17,17 @@ import { descripcionFuncionZona } from "../../dominio.ts";
 import { CrearZona } from "../crear/CrearZona.js";
 import { DetalleZona } from "../detalle/DetalleZona.js";
 import { getMaquina } from "./maquina.js";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const metaTablaZona: MetaTabla<Zona> = [
-    { id: "codigo", cabecera: "Código" },
+    { id: "codigo", get cabecera() { return tAlmacen("zona.codigo"); } },
     {
-        id: "almacenId", cabecera: "Almacén",
+        id: "almacenId", get cabecera() { return tAlmacen("zona.almacen"); },
         render: (z) => <NombreAlmacen id={z.almacenId} />,
         enlace: (z) => urlFicha.almacen(z.almacenId),
     },
-    { id: "funcion", cabecera: "Función", render: (z) => descripcionFuncionZona(z.funcion) },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "funcion", get cabecera() { return tAlmacen("zona.funcion"); }, render: (z) => descripcionFuncionZona(z.funcion) },
+    { id: "descripcion", get cabecera() { return tAlmacen("zona.descripcion"); } },
 ];
 
 // El almacén con su selector (el de por defecto filtraría por el texto de la columna).
@@ -34,6 +35,7 @@ const { almacenId: _sinFiltroTexto, ...filtrosZona } = getMetaFiltroDefecto(meta
 const metaFiltroZona: MetaFiltro = { almacen: filtroAlmacen(), ...filtrosZona };
 
 export const MaestroConDetalleZona = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -58,7 +60,7 @@ export const MaestroConDetalleZona = () => {
             <MaestroDetalle<Zona>
                 Maestro={
                     <>
-                        <h2>Zonas</h2>
+                        <h2>{t("zona.zonas")}</h2>
                         <Listado<Zona>
                             metaTabla={metaTablaZona}
                             metaFiltro={metaFiltroZona}
@@ -71,7 +73,7 @@ export const MaestroConDetalleZona = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_zona_solicitado")}>
-                                        Nueva Zona
+                                        {t("zona.nuevaZona")}
                                     </QBoton>
                                 </div>
                             )}
