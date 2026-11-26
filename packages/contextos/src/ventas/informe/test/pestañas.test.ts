@@ -1,7 +1,13 @@
 import { fichaAApi, fichaNueva, metaFichaInforme } from "#/comun/informe_documentos/dominio.ts";
 import { FichaInforme } from "#/comun/informe_documentos/diseño.ts";
 import { describe, expect, test } from "vitest";
-import { ALBARANES, FACTURAS, PEDIDOS, PESTAÑAS_VENTAS, PRESUPUESTOS } from "../pestañas.tsx";
+import { albaranes, facturas, pedidos, pestañasVentas, presupuestos } from "../pestañas.tsx";
+
+const PRESUPUESTOS = presupuestos();
+const PEDIDOS = pedidos();
+const ALBARANES = albaranes();
+const FACTURAS = facturas();
+const PESTAÑAS_VENTAS = pestañasVentas();
 
 const ids = (filas: { id: string }[][]) => filas.flat().map((campo) => campo.id);
 
@@ -89,5 +95,23 @@ describe("pestañas de Ventas > Informes", () => {
         const campo = FACTURAS.filas.flat().find((c) => c.id === "importe_desde")!;
         expect(campo.activo!({ ...fichaNueva(FACTURAS), filtrar_importes: false })).toBe(false);
         expect(campo.activo!({ ...fichaNueva(FACTURAS), filtrar_importes: true })).toBe(true);
+    });
+});
+
+describe("Ventas > Informes en inglés", () => {
+    test("etiquetas traducidas y valores de la API en español", async () => {
+        const { cambiarIdioma } = await import("@olula/lib/i18n/i18n.ts");
+        await cambiarIdioma("en");
+        try {
+            const pedidosEn = pedidos();
+            expect(pedidosEn.titulo).toBe("Orders");
+            const servido = pedidosEn.filas.flat().find((c) => c.id === "servido")!;
+            expect(servido.label).toBe("Delivered");
+            expect(servido.opciones).toContainEqual({ valor: "Sí", descripcion: "Yes" });
+            const desde = pedidosEn.filas.flat().find((c) => c.id === "codigo_desde")!;
+            expect(desde.label).toBe("From order No.");
+        } finally {
+            await cambiarIdioma("es");
+        }
     });
 });

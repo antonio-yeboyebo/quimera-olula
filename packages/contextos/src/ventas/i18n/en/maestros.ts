@@ -1,5 +1,5 @@
 import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
-import type { agente as esAgente, config as esConfig, tarifa as esTarifa } from "../es/maestros.ts";
+import type { agente as esAgente, config as esConfig, informe as esInforme, tarifa as esTarifa } from "../es/maestros.ts";
 
 export const agente: Traduccion<typeof esAgente> = {
     maestro: {
@@ -99,5 +99,74 @@ export const config: Traduccion<typeof esConfig> = {
     },
     errores: {
         guardar: "Error saving the sales configuration",
+    },
+};
+
+export const informe: Traduccion<typeof esInforme> = {
+    titulo: "Sales",
+    pestanas: {
+        presupuestos: "Quotes",
+        pedidos: "Orders",
+        albaranes: "Delivery notes",
+        facturas: "Invoices",
+    },
+    documento: {
+        presupuesto: "quote",
+        pedido: "order",
+        albaran: "delivery note",
+        factura: "invoice",
+    },
+    campos: {
+        codigoDesde: "From {{documento}} No.",
+        codigoHasta: "To {{documento}} No.",
+        ejercicio: "Fiscal year",
+        intervalo: "Period",
+        fechaDesde: "Date from",
+        fechaHasta: "Date to",
+        cliente: "Customer",
+        agente: "Sales agent",
+        ordenarPor: "{{documentos}} by ({{n}})",
+        orden: "Order",
+        pteAprobar: "Pending approval",
+        servido: "Delivered",
+        serie: "Series",
+        referencia: "Reference",
+        mostrarLineas: "Show lines",
+        soloPendientes: "Pending only",
+        pteFactura: "Pending invoice",
+        grupoClientes: "Customer group",
+        regimenIva: "VAT regime",
+        ptePago: "Pending payment",
+        soloAbono: "Credit invoices only",
+        incluirBorradores: "Include drafts",
+        filtrarImporte: "Filter by amount",
+        importeDesde: "Amount from",
+        importeHasta: "Amount to",
+        tipoInforme: "Report type",
+        acumulado: "Accumulated",
+        ordenAcumulado: "Acc. order",
+        limiteAcumulado: "Acc. limit",
+    },
+    opciones: {
+        noOrdenar: "Do not sort",
+        codigo: "Code",
+        codCliente: "Customer code",
+        cliente: "Customer",
+        fecha: "Date",
+        total: "Total",
+        ascendente: "Ascending",
+        descendente: "Descending",
+        todos: "All",
+        si: "Yes",
+        no: "No",
+        pendiente: "Pending",
+        parcial: "Partial",
+        general: "General",
+        exportaciones: "Exports",
+        ue: "EU",
+        exento: "Exempt",
+        monedaOriginal: "Original currency",
+        monedaOriginalEuros: "Original currency and euros",
+        euros: "Euros",
     },
 };

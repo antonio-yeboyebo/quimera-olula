@@ -3,7 +3,7 @@ import { albaran } from "./en/albaran.ts";
 import { articulo, precioArticulo } from "./en/articulo.ts";
 import { documento } from "./en/documento.ts";
 import { factura } from "./en/factura.ts";
-import { agente, config, tarifa } from "./en/maestros.ts";
+import { agente, config, informe, tarifa } from "./en/maestros.ts";
 import { pedido } from "./en/pedido.ts";
 import { presupuesto } from "./en/presupuesto.ts";
 import type { es } from "./es.ts";
@@ -19,6 +19,7 @@ export const en: Traduccion<typeof es> = {
     agente,
     tarifa,
     config,
+    informe,
     comun: {
         agente: "Sales agent",
         seleccionarContacto: "Select contact",
