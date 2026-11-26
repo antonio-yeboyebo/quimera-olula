@@ -1,6 +1,7 @@
 import { formatearFechaString, formatearNumero } from "@olula/lib/dominio.ts";
 import { FichaInforme, PestañaInforme } from "#/comun/informe_documentos/diseño.ts";
 import { FormatoHoja, ResultadoInventario } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 /** Nombre del fichero descargado: clave del informe y descripción de la ficha. */
 export const nombreFicheroInventario = (
@@ -19,13 +20,13 @@ export const nombreFicheroInventario = (
 
 /** Línea bajo el título: fecha del stock y, en el valorado, la valoración. */
 export const criteriosResultado = (resultado: ResultadoInventario): string => {
-    const partes = [resultado.fecha ? `Stock a ${formatearFechaString(resultado.fecha)}` : "Stock actual"];
+    const partes = [resultado.fecha ? tAlmacen("informe_inventario.stockAFecha", { fecha: formatearFechaString(resultado.fecha) }) : tAlmacen("informe_inventario.stockActual")];
     if (resultado.valorado && resultado.tipoValoracion) {
         const recargo = resultado.porPvp ? ` + ${formatearNumero(resultado.porPvp)} %` : "";
-        partes.push(`Valoración: ${resultado.tipoValoracion}${recargo}`);
+        partes.push(tAlmacen("informe_inventario.valoracionTipovaloracionRecargo", { tipoValoracion: resultado.tipoValoracion, recargo }));
     }
     const articulos = resultado.totalArticulos;
-    partes.push(`${formatearNumero(articulos)} ${articulos === 1 ? "artículo" : "artículos"}`);
+    partes.push(`${formatearNumero(articulos)} ${articulos === 1 ? tAlmacen("informe_inventario.articulo") : tAlmacen("informe_inventario.articulos")}`);
     return partes.join(" · ");
 };
 

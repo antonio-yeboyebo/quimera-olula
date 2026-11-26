@@ -4,6 +4,7 @@ import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { obtenerAlmacenes } from "../almacen/infraestructura.ts";
 import { getFamilias } from "../familia/infraestructura.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
@@ -35,9 +36,9 @@ const cargarFamilias = async () =>
     }));
 
 export const ControlAlmacen = (props: PropsControlInforme) => (
-    <QSelect {...props} opciones={useOpciones(cargarAlmacenes, "Todos")} />
+    <QSelect {...props} opciones={useOpciones(cargarAlmacenes, tAlmacen("informe_inventario.todos"))} />
 );
 
 export const ControlFamilia = (props: PropsControlInforme) => (
-    <QSelect {...props} opciones={useOpciones(cargarFamilias, "Todas")} />
+    <QSelect {...props} opciones={useOpciones(cargarFamilias, tAlmacen("informe_inventario.todas"))} />
 );
