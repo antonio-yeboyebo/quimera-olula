@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
+import { useTVentas } from "../../i18n/index.ts";
 import { deleteCliente } from "../infraestructura.ts";
 
 interface BorrarClienteProps {
@@ -17,6 +18,7 @@ export const BorrarCliente = ({
   publicar = async () => {},
   onCancelar = () => {},
 }: BorrarClienteProps) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     await deleteCliente(clienteId);
     publicar("borrado_de_cliente_listo", { clienteId });
@@ -31,8 +33,8 @@ export const BorrarCliente = ({
     <QModalConfirmacion
       nombre="borrarCliente"
       abierto={true}
-      titulo="Confirmar borrar"
-      mensaje={`¿Está seguro de que desea borrar el cliente "${clienteNombre}"?`}
+      titulo={t("cliente.borrar.titulo")}
+      mensaje={t("cliente.borrar.mensaje", { nombre: clienteNombre })}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

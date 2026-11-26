@@ -1,5 +1,6 @@
 import { QEtiqueta, QTarjetaGenerica } from "@olula/componentes/index.js";
 import { formatearDireccionUnaLinea } from "@olula/lib/dominio.ts";
+import { tVentas } from "../../../i18n/index.ts";
 import { DirCliente } from "../../diseño.ts";
 
 const ubicacion = (direccion: DirCliente) =>
@@ -18,14 +19,14 @@ export const TarjetaDireccion = (direccion: DirCliente) => {
       arribaDerecha={
         <span className="TarjetaDireccion-marcas">
           {direccion.dir_facturacion && (
-            <QEtiqueta variante="primario">Facturación</QEtiqueta>
+            <QEtiqueta variante="primario">{tVentas("cliente.direccion.facturacion")}</QEtiqueta>
           )}
-          {direccion.dir_envio && <QEtiqueta variante="exito">Envío</QEtiqueta>}
+          {direccion.dir_envio && <QEtiqueta variante="exito">{tVentas("cliente.direccion.envio")}</QEtiqueta>}
         </span>
       }
       abajoIzquierda={ubicacion(direccion)}
       abajoDerecha={
-        direccion.telefono ? `Tel: ${direccion.telefono}` : undefined
+        direccion.telefono ? tVentas("cliente.direccion.tel", { telefono: direccion.telefono }) : undefined
       }
     />
   );

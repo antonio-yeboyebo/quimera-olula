@@ -1,28 +1,30 @@
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { boolAString, ejecutarListaProcesos, formatearDireccionUnaLinea } from "@olula/lib/dominio.js";
 import { accionesListaEntidades, ProcesarListaEntidades } from "@olula/lib/ListaEntidades.js";
+import { tVentas } from "../../../i18n/index.ts";
 import { DirCliente } from "../../diseño.ts";
 import { getDirecciones, setDirEnvio, setDirFacturacion } from "../../infraestructura.ts";
 import { ContextoDirecciones, EstadoDirecciones } from "./diseño.ts";
 
-export const metaTablaDirecciones = [
+/** Columnas de las direcciones, en el idioma activo (se piden al pintar). */
+export const metaTablaDirecciones = () => [
     {
         id: "direccion",
-        cabecera: "Dirección",
+        cabecera: tVentas("cliente.direccion.direccion"),
         render: (direccion: DirCliente) => formatearDireccionUnaLinea(direccion),
     },
-    { id: "cod_postal", cabecera: "Cód. postal" },
-    { id: "provincia", cabecera: "Provincia" },
-    { id: "pais_id", cabecera: "País" },
-    { id: "telefono", cabecera: "Teléfono" },
+    { id: "cod_postal", cabecera: tVentas("cliente.direccion.codPostal") },
+    { id: "provincia", cabecera: tVentas("cliente.direccion.provincia") },
+    { id: "pais_id", cabecera: tVentas("cliente.direccion.pais") },
+    { id: "telefono", cabecera: tVentas("cliente.direccion.telefono") },
     {
         id: "dir_facturacion",
-        cabecera: "Facturación",
+        cabecera: tVentas("cliente.direccion.facturacion"),
         render: (direccion: DirCliente) => boolAString(direccion.dir_facturacion),
     },
     {
         id: "dir_envio",
-        cabecera: "Envío",
+        cabecera: tVentas("cliente.direccion.envio"),
         render: (direccion: DirCliente) => boolAString(direccion.dir_envio),
     },
 ];

@@ -1,3 +1,4 @@
+import { useTVentas } from "../../../i18n/index.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useFocus } from "@olula/lib/useFocus.js";
@@ -18,6 +19,7 @@ export const EdicionCuentaBanco = ({
   cuenta,
   emitir,
 }: EdicionCuentaBancoProps) => {
+  const t = useTVentas();
   const { modelo, uiProps, valido } = useModelo(metaCuentaBanco, cuenta);
   const focus = useFocus();
 
@@ -29,26 +31,26 @@ export const EdicionCuentaBanco = ({
   return (
     <div className="EdicionCuentaBanco">
       <quimera-formulario>
-        <QInput label="Descripción" {...uiProps("descripcion")} soloLectura />
-        <QInput label="IBAN" {...uiProps("iban")} ref={focus} />
-        <QInput label="BIC" {...uiProps("bic")} soloLectura />
-        <QInput label="Código cuenta" {...uiProps("codigo_cuenta")} soloLectura />
-        <QInput label="País" {...uiProps("pais_id")} soloLectura />
-        <QInput label="Entidad" {...uiProps("entidad")} soloLectura />
-        <QInput label="Agencia" {...uiProps("agencia")} soloLectura />
-        <QInput label="Dígito control" {...uiProps("digito_control")} soloLectura />
-        <QInput label="Cuenta" {...uiProps("cuenta")} soloLectura />
+        <QInput label={t("cliente.cuentas.descripcion")} {...uiProps("descripcion")} soloLectura />
+        <QInput label={t("cliente.cuentas.iban")} {...uiProps("iban")} ref={focus} />
+        <QInput label={t("cliente.cuentas.bic")} {...uiProps("bic")} soloLectura />
+        <QInput label={t("cliente.cuentas.codigoCuenta")} {...uiProps("codigo_cuenta")} soloLectura />
+        <QInput label={t("cliente.cuentas.pais")} {...uiProps("pais_id")} soloLectura />
+        <QInput label={t("cliente.cuentas.entidad")} {...uiProps("entidad")} soloLectura />
+        <QInput label={t("cliente.cuentas.agencia")} {...uiProps("agencia")} soloLectura />
+        <QInput label={t("cliente.cuentas.digitoControl")} {...uiProps("digito_control")} soloLectura />
+        <QInput label={t("cliente.cuentas.cuenta")} {...uiProps("cuenta")} soloLectura />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton
           tipo="reset"
           variante="texto"
           onClick={() => emitir("edicion_cancelada")}
         >
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

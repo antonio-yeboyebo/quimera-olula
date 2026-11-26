@@ -1,6 +1,7 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { obtenerOpcionesSelector } from "@olula/lib/infraestructura.ts";
 import { useEffect, useState } from "react";
+import { useTComun } from "../i18n/index.ts";
 
 interface FormaPagoProps {
   valor: string;
@@ -14,6 +15,7 @@ export const FormaPago = ({
   onChange,
   ...props
 }: FormaPagoProps) => {
+  const t = useTComun();
   const [opciones, setOpciones] = useState<
     { valor: string; descripcion: string }[]
   >([]);
@@ -34,7 +36,7 @@ export const FormaPago = ({
   return (
     <QSelect
       {...props}
-      label="Forma de Pago"
+      label={t("formaPago")}
       nombre={nombre}
       valor={valor}
       onChange={onChange}

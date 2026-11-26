@@ -1,3 +1,4 @@
+import { useTComun } from "../../i18n/index.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { getPaises } from "./infraestructura.ts";
@@ -19,11 +20,12 @@ export const PaisSelector = ({
   descripcion = "",
   valor,
   nombre = "pais_id",
-  label = "Seleccionar país",
+  label,
   deshabilitado = false,
   onChange,
   evaluarCambio,
 }: PaisSelectorProps) => {
+  const t = useTComun();
   // El segundo argumento llega cuando QAutocompletar tiene un id sin descripción
   // y necesita resolver su nombre (ej. la dirección ya guardada de un documento).
   const obtenerOpciones = async (texto: string, id?: string) => {
@@ -47,7 +49,7 @@ export const PaisSelector = ({
 
   return (
     <QAutocompletar
-      label={label}
+      label={label ?? t("pais")}
       nombre={nombre}
       onChange={onChange}
       valor={valor}

@@ -8,10 +8,12 @@ import { useEffect, useState } from "react";
 import { CrearCrmContactos } from "./CrearCrmContactos.tsx";
 import { EdicionCrmContactos } from "./EdicionCrmContactos.tsx";
 import { TabCrmContactosLista } from "./TabCrmContactosLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 import { getMaquina } from "./maquina.ts";
 
 /** Agenda de contactos de un cliente o un proveedor: `api` dice contra qué rutas trabaja. */
 export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: ApiAgenda }) => {
+  const t = useTVentas();
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "lista",
     contactos: [],
@@ -34,17 +36,17 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
 
   const acciones = [
     {
-      texto: "Añadir contacto existente",
+      texto: t("cliente.agenda.anadirExistente"),
       onClick: () => emitir("asociar_solicitado"),
     },
     {
-      texto: "Quitar de la agenda",
+      texto: t("cliente.agenda.quitar"),
       onClick: () => emitir("eliminar_asociacion"),
       deshabilitado: !ctx.contactoActivo,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("cliente.botones.borrar"),
       advertencia: true,
       onClick: () => emitir("borrado_solicitado"),
       deshabilitado: !ctx.contactoActivo,
@@ -66,8 +68,8 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
       <QModalConfirmacion
         nombre="confirmacionBorrarContacto"
         abierto={estado === "confirmar_borrado"}
-        titulo="Confirmar borrar"
-        mensaje="¿Borrar este contacto? Se quitará también de todas las agendas de clientes y proveedores en las que esté."
+        titulo={t("cliente.agenda.borrarTitulo")}
+        mensaje={t("cliente.agenda.borrarMensaje")}
         onCerrar={() => emitir("borrado_cancelado")}
         onAceptar={() => emitir("borrado_confirmado")}
       />
@@ -75,8 +77,8 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
       <QModalConfirmacion
         nombre="confirmacionEliminarAsociacion"
         abierto={estado === "confirmar_eliminar_asociacion"}
-        titulo="Quitar de la agenda"
-        mensaje="¿Quitar este contacto de la agenda? El contacto no se borra."
+        titulo={t("cliente.agenda.quitar")}
+        mensaje={t("cliente.agenda.quitarMensaje")}
         onCerrar={() => emitir("eliminacion_cancelada")}
         onAceptar={() => emitir("eliminacion_solicitada")}
       />
@@ -85,7 +87,7 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
         nombre="altaCrmContacto"
         abierto={estado === "alta"}
         onCerrar={() => emitir("alta_cancelada")}
-        titulo="Nuevo contacto"
+        titulo={t("cliente.agenda.nuevo")}
       >
         {estado === "alta" && <CrearCrmContactos emitir={emitir} />}
       </QModal>
@@ -94,7 +96,7 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
         nombre="edicionCrmContacto"
         abierto={estado === "edicion"}
         onCerrar={() => emitir("edicion_cancelada")}
-        titulo="Editar contacto"
+        titulo={t("cliente.agenda.editar")}
       >
         {estado === "edicion" && ctx.contactoActivo && (
           <EdicionCrmContactos contacto={ctx.contactoActivo} emitir={emitir} />
@@ -105,13 +107,13 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
         nombre="asociarCrmContacto"
         abierto={estado === "asociar"}
         onCerrar={() => emitir("asociacion_cancelada")}
-        titulo="Añadir contacto existente"
+        titulo={t("cliente.agenda.anadirExistente")}
       >
         <ContactoSelector
           valor={contactoSeleccionado?.valor || ""}
           descripcion=""
           nombre="cliente/contacto_id"
-          label="Seleccionar contacto"
+          label={t("comun.seleccionarContacto")}
           excluir={ctx.contactos.map((contacto) => contacto.id)}
           obtenerContactos={api.buscar}
           onChange={(contacto) => setContactoSeleccionado(contacto)}
@@ -125,14 +127,14 @@ export const TabCrmContactos = ({ entidadId, api }: { entidadId: string; api: Ap
             }}
             deshabilitado={!contactoSeleccionado}
           >
-            Guardar
+            {t("cliente.botones.guardar")}
           </QBoton>
           <QBoton
             tipo="reset"
             variante="texto"
             onClick={() => emitir("asociacion_cancelada")}
           >
-            Cancelar
+            {t("cliente.botones.cancelar")}
           </QBoton>
         </div>
       </QModal>

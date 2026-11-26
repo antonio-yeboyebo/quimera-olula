@@ -1,3 +1,4 @@
+import { useTVentas } from "../../../i18n/index.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useFocus } from "@olula/lib/useFocus.js";
@@ -15,6 +16,7 @@ export const CrearCuentaBanco = ({
   clienteId,
   emitir,
 }: CrearCuentaBancoProps) => {
+  const t = useTVentas();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevaCuentaBanco,
     nuevaCuentaBancoVacia
@@ -29,19 +31,19 @@ export const CrearCuentaBanco = ({
   return (
     <div className="alta-cuenta-banco">
       <quimera-formulario>
-        <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
-        <QInput label="IBAN" {...uiProps("iban")} />
+        <QInput label={t("cliente.cuentas.descripcion")} {...uiProps("descripcion")} ref={focus} />
+        <QInput label={t("cliente.cuentas.iban")} {...uiProps("iban")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton
           tipo="reset"
           variante="texto"
           onClick={() => emitir("alta_cancelada")}
         >
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

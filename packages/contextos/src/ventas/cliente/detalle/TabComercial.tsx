@@ -5,6 +5,7 @@ import { GrupoIvaNegocio } from "#/comun/componentes/grupo_iva_negocio.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { HookModelo } from "@olula/lib/useModelo.ts";
+import { useTVentas } from "../../i18n/index.ts";
 import { Cliente } from "../diseño.ts";
 import "./TabComercial.css";
 
@@ -15,6 +16,7 @@ interface TabComercialProps {
 }
 
 export const TabComercial = ({ form }: TabComercialProps) => {
+  const t = useTVentas();
   const { uiProps } = form;
 
   return (
@@ -25,7 +27,7 @@ export const TabComercial = ({ form }: TabComercialProps) => {
           nombre="cliente/agente_id"
         />
         <QInput
-          label="Serie"
+          label={t("cliente.campos.serie")}
           {...uiProps("serie_id")}
           nombre="cliente/serie_id"
         />

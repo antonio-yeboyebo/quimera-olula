@@ -9,6 +9,8 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { DirCliente } from "../diseño.ts";
 import { actualizarDireccion } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
+import { opcionesTipoVia } from "../crear_direccion/dominio.ts";
 import { metaDireccion } from "./dominio.ts";
 
 export const CambiarDireccion = ({
@@ -20,6 +22,7 @@ export const CambiarDireccion = ({
   clienteId: string;
   publicar: ProcesarEvento;
 }) => {
+  const t = useTVentas();
   const direccionEditada = useModelo(metaDireccion, direccion);
   const focus = useFocus();
 
@@ -35,21 +38,14 @@ export const CambiarDireccion = ({
 
   const [guardar, cancelar] = useForm(guardar_, cancelar_);
 
-  const opciones = [
-    { valor: "Calle", descripcion: "Calle" },
-    { valor: "Avenida", descripcion: "Avenida" },
-    { valor: "Plaza", descripcion: "Plaza" },
-    { valor: "Paseo", descripcion: "Paseo" },
-    { valor: "Camino", descripcion: "Camino" },
-    { valor: "Carretera", descripcion: "Carretera" },
-  ];
+  const opciones = opcionesTipoVia();
 
   return (
     <div className="EdicionDireccion">
       <quimera-formulario>
         <div style={{ gridColumn: "span 2" }}>
           <QSelect
-            label="Tipo de Vía"
+            label={t("cliente.direccion.tipoVia")}
             opciones={opciones}
             {...direccionEditada.uiProps("tipo_via")}
             ref={focus}
@@ -57,37 +53,37 @@ export const CambiarDireccion = ({
         </div>
         <div style={{ gridColumn: "span 7" }}>
           <QInput
-            label="Nombre de la Vía"
+            label={t("cliente.direccion.nombreVia")}
             {...direccionEditada.uiProps("nombre_via")}
           />
         </div>
         <div style={{ gridColumn: "span 3" }}>
-          <QInput label="Número" {...direccionEditada.uiProps("numero")} />
+          <QInput label={t("cliente.direccion.numero")} {...direccionEditada.uiProps("numero")} />
         </div>
         <div style={{ gridColumn: "span 6" }}>
-          <QInput label="Otros" {...direccionEditada.uiProps("otros")} />
+          <QInput label={t("cliente.direccion.otros")} {...direccionEditada.uiProps("otros")} />
         </div>
         <div style={{ gridColumn: "span 3" }}>
           <QInput
-            label="Apdo. Correos"
+            label={t("cliente.direccion.apartado")}
             {...direccionEditada.uiProps("apartado")}
           />
         </div>
         <div style={{ gridColumn: "span 3" }}>
           <QInput
-            label="Cód. Postal"
+            label={t("cliente.direccion.codPostal")}
             {...direccionEditada.uiProps("cod_postal")}
           />
         </div>
         <div style={{ gridColumn: "span 6" }}>
-          <QInput label="Ciudad" {...direccionEditada.uiProps("ciudad")} />
+          <QInput label={t("cliente.direccion.ciudad")} {...direccionEditada.uiProps("ciudad")} />
         </div>
         <div style={{ gridColumn: "span 6" }}>
-          <QInput label="Provincia" {...direccionEditada.uiProps("provincia")} />
+          <QInput label={t("cliente.direccion.provincia")} {...direccionEditada.uiProps("provincia")} />
         </div>
         <div style={{ gridColumn: "span 6" }}>
           <PaisSelector
-            label="País"
+            label={t("cliente.direccion.pais")}
             nombre="direccion/pais_id"
             valor={direccionEditada.modelo.pais_id}
             onChange={(opcion) =>
@@ -99,15 +95,15 @@ export const CambiarDireccion = ({
           />
         </div>
         <div style={{ gridColumn: "span 6" }}>
-          <QInput label="Teléfono" {...direccionEditada.uiProps("telefono")} />
+          <QInput label={t("cliente.direccion.telefono")} {...direccionEditada.uiProps("telefono")} />
         </div>
       </quimera-formulario>
       <div className="botones maestro-botones">
         <QBoton deshabilitado={!direccionEditada.valido} onClick={guardar}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton tipo="reset" variante="texto" onClick={cancelar}>
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

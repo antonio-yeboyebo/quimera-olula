@@ -4,6 +4,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useContext, useMemo } from "react";
+import { useTVentas } from "../../i18n/index.ts";
 import { darDeBajaCliente } from "../infraestructura.ts";
 import "./BajaCliente.css";
 import { metaDarDeBaja } from "./dominio.ts";
@@ -19,6 +20,7 @@ export const BajaCliente = ({
   publicar = async () => {},
   onCancelar = () => {},
 }: BajaClienteProps) => {
+  const t = useTVentas();
   const modeloInicial = useMemo(() => ({ fecha_baja: null }), []);
   const bajaCliente = useModelo(metaDarDeBaja, modeloInicial);
   const { intentar } = useContext(ContextoError);
@@ -40,14 +42,14 @@ export const BajaCliente = ({
   return (
     <div className="BajaCliente">
       <quimera-formulario>
-        <QDate label="Fecha Baja" {...uiProps("fecha_baja")} />
+        <QDate label={t("cliente.campos.fechaBaja")} {...uiProps("fecha_baja")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton tipo="reset" variante="texto" onClick={onCancelar}>
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

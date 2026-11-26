@@ -4,6 +4,7 @@ import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { CuentaBanco } from "../../diseño.ts";
 import { metaTablaCuentasBanco as metaTablaBase } from "./dominio.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 import "./TabCuentasBancoLista.css";
 
 export const TabCuentasBancoLista = ({
@@ -26,6 +27,7 @@ export const TabCuentasBancoLista = ({
   descripcionCuentaRemesa: string;
   onSeleccionarRemesa: () => void;
 }) => {
+  const t = useTVentas();
   const metaTablaCuentasBanco = [
     {
       id: "domiciliada",
@@ -41,18 +43,18 @@ export const TabCuentasBancoLista = ({
           </div>
         ) : null,
     },
-    ...metaTablaBase,
+    ...metaTablaBase(),
   ] as MetaTabla<CuentaBanco>;
 
   return (
     <div className="CuentasBanco">
       <div className="cuenta-remesa">
-        <span className="cuenta-remesa-label">Remesa:</span>
+        <span className="cuenta-remesa-label">{t("cliente.cuentas.remesa")}</span>
         <span className="cuenta-remesa-valor">
-          {descripcionCuentaRemesa || "Sin asignar"}
+          {descripcionCuentaRemesa || t("cliente.cuentas.sinAsignar")}
         </span>
         <QBoton variante="borde" onClick={onSeleccionarRemesa}>
-          Seleccionar
+          {t("cliente.botones.seleccionar")}
         </QBoton>
       </div>
 
@@ -74,13 +76,13 @@ export const TabCuentasBancoLista = ({
         onCriteriaChanged={() => null}
         renderAcciones={() => (
           <div className="detalle-cliente-tab-contenido maestro-botones">
-            <QBoton onClick={() => emitir("alta_solicitada")}>Nueva</QBoton>
+            <QBoton onClick={() => emitir("alta_solicitada")}>{t("cliente.botones.nueva")}</QBoton>
             <QBoton
               variante="borde"
               deshabilitado={!seleccionada}
               onClick={() => seleccionada && emitir("edicion_solicitada")}
             >
-              Editar
+              {t("cliente.botones.editar")}
             </QBoton>
             <QuimeraAcciones acciones={acciones} vertical />
           </div>

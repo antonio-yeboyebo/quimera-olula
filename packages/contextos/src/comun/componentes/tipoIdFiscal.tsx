@@ -1,4 +1,5 @@
-import { opcionesTipoIdFiscal } from "#/valores/idfiscal.ts";
+import { useTComun } from "#/comun/i18n/index.ts";
+import { opcionesTipoIdFiscalTraducidas } from "#/valores/idfiscal.ts";
 import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
 
 type TipoIdFiscalProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
@@ -10,11 +11,13 @@ type TipoIdFiscalProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
 
 export const TipoIdFiscal = ({
   valor,
-  label = "Tipo Id Fiscal",
+  label,
   nombre = "tipo_id_fiscal",
-  opciones = opcionesTipoIdFiscal,
+  opciones,
   ...props
 }: TipoIdFiscalProps) => {
+  const t = useTComun();
+  opciones = opciones ?? opcionesTipoIdFiscalTraducidas();
   const opcionesConValor =
     valor && !opciones.some((opcion) => opcion.valor === valor)
       ? [...opciones, { valor, descripcion: valor }]
@@ -23,7 +26,7 @@ export const TipoIdFiscal = ({
   return (
     <QSelect
       {...props}
-      label={label}
+      label={label ?? t("tipoIdFiscal.etiqueta")}
       nombre={nombre}
       valor={valor}
       opciones={opcionesConValor}

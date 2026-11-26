@@ -5,6 +5,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useMemo } from "react";
+import { useTVentas } from "#/ventas/i18n/index.ts";
 import "./CambiarIdFiscal.css";
 import { CambioIdFiscal } from "./diseño.ts";
 import {
@@ -25,8 +26,9 @@ export const CambiarIdFiscal = ({
   publicar,
   tipoIdFiscal,
   idFiscal,
-  titulo = "Id Fiscal",
+  titulo,
 }: CambiarIdFiscalProps) => {
+  const t = useTVentas();
   const idFiscalInicial = useMemo(
     () => ({
       ...cambioIdFiscalVacio,
@@ -62,7 +64,7 @@ export const CambiarIdFiscal = ({
     <QModal
       abierto={true}
       nombre="cambiar_id_fiscal"
-      titulo={titulo}
+      titulo={titulo ?? t("comun.idFiscal")}
       onCerrar={cancelar}
     >
       <div className="CambiarIdFiscal">
@@ -72,14 +74,14 @@ export const CambiarIdFiscal = ({
             textoValidacion={mensaje(validacionTipoIdFiscal(modelo))}
           />
           <QInput
-            label="Id Fiscal"
+            label={t("comun.idFiscal")}
             {...uiProps("id_fiscal")}
             textoValidacion={mensaje(validacionIdFiscal(modelo))}
           />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Guardar
+            {t("cliente.botones.guardar")}
           </QBoton>
         </div>
       </div>

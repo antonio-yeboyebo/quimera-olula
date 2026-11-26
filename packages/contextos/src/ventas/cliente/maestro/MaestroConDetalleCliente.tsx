@@ -4,7 +4,8 @@ import { Listado } from "@olula/componentes/maestro/Listado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useTVentas } from "../../i18n/index.ts";
 import { CrearCliente } from "../crear/CrearCliente.tsx";
 import { DetalleCliente } from "../detalle/DetalleCliente.tsx";
 import { Cliente } from "../diseño.ts";
@@ -14,6 +15,7 @@ import "./MaestroConDetalleCliente.css";
 import { getMaquina } from "./maquina.ts";
 
 export const MaestroConDetalleCliente = () => {
+  const t = useTVentas();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -22,6 +24,10 @@ export const MaestroConDetalleCliente = () => {
   });
 
   useUrlParams(ctx.clientes.activo, ctx.clientes.criteria);
+
+  // Columnas y filtros en el idioma activo: se rehacen al cambiarlo.
+  const metaTabla = useMemo(() => metaTablaCliente(t), [t]);
+  const metaFiltro = useMemo(() => metaFiltroCliente(t), [t]);
 
   useEffect(() => {
     emitir("recarga_de_clientes_solicitada", ctx.clientes.criteria);
@@ -33,10 +39,10 @@ export const MaestroConDetalleCliente = () => {
       <MaestroDetalle<Cliente>
         Maestro={
           <>
-            <h2>Clientes</h2>
+            <h2>{t("cliente.maestro.titulo")}</h2>
             <Listado<Cliente>
-              metaTabla={metaTablaCliente}
-              metaFiltro={metaFiltroCliente}
+              metaTabla={metaTabla}
+              metaFiltro={metaFiltro}
               tarjeta={TarjetaCliente}
               modoInicial="tabla"
               criteria={ctx.clientes.criteria}
@@ -46,7 +52,7 @@ export const MaestroConDetalleCliente = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("creacion_solicitada")}>
-                    Nuevo Cliente
+                    {t("cliente.maestro.nuevo")}
                   </QBoton>
                 </div>
               )}

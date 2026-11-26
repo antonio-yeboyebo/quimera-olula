@@ -7,9 +7,11 @@ import { CrearDireccion } from "../../crear_direccion/CrearDireccion.tsx";
 import { DirCliente } from "../../diseño.ts";
 import { CambiarDireccion } from "../../cambiar_direccion/CambiarDireccion.tsx";
 import { TabDireccionesLista } from "./TabDireccionesLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 import { getMaquina } from "./maquina.ts";
 
 export const TabDirecciones = ({ clienteId }: { clienteId: string }) => {
+  const t = useTVentas();
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "lista",
     direcciones: listaEntidadesInicial<DirCliente>(),
@@ -38,7 +40,7 @@ export const TabDirecciones = ({ clienteId }: { clienteId: string }) => {
         nombre="crearDireccion"
         abierto={estado === "alta"}
         onCerrar={() => emitir("alta_cancelada")}
-        titulo="Nueva Dirección"
+        titulo={t("cliente.direccion.nueva")}
       >
         <CrearDireccion clienteId={clienteId} publicar={emitir} />
       </QModal>
@@ -47,7 +49,7 @@ export const TabDirecciones = ({ clienteId }: { clienteId: string }) => {
         nombre="editarDireccion"
         abierto={estado === "edicion"}
         onCerrar={() => emitir("edicion_cancelada")}
-        titulo="Editar Dirección"
+        titulo={t("cliente.direccion.editar")}
       >
         {ctx.direcciones.activo && (
           <CambiarDireccion

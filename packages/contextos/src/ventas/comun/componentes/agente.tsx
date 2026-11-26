@@ -1,3 +1,4 @@
+import { useTVentas } from "#/ventas/i18n/index.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { getAgentes } from "../../agente/infraestructura.ts";
@@ -17,11 +18,12 @@ export const Agente = ({
   descripcion = "",
   valor,
   nombre = "agente_id",
-  label = "Agente",
+  label,
   enlace = "/ventas/agente?id={id}",
   onChange,
   ...props
 }: AgenteProps) => {
+  const t = useTVentas();
   const obtenerOpciones = async (valor: string, id?: string) => {
     const criteria = {
       filtro: id ? [["id", "=", id]] : ["nombre", "~", valor],
@@ -42,7 +44,7 @@ export const Agente = ({
 
   return (
     <QAutocompletar
-      label={label}
+      label={label ?? t("comun.agente")}
       nombre={nombre}
       onChange={onChange}
       valor={valor}
