@@ -11,6 +11,7 @@ import { Zona } from "../../zona/diseño.ts";
 import { accesosPasillo, carasPasillo, metaNuevoPasillo, nuevoPasilloVacio } from "../dominio.ts";
 import { postPasillo } from "../infraestructura.ts";
 import "./CrearPasillo.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearPasillo = ({
     zona,
@@ -19,6 +20,7 @@ export const CrearPasillo = ({
     zona: Zona;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaNuevoPasillo, nuevoPasilloVacio);
 
     const crear_ = useCallback(async () => {
@@ -36,19 +38,19 @@ export const CrearPasillo = ({
         <QModal
             abierto={true}
             nombre="crearPasillo"
-            titulo={`Crear pasillo en ${zona.codigo}`}
+            titulo={t("pasillo.crearPasilloEnCodigo", { codigo: zona.codigo })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Código" {...uiProps("codigo")} maxLength={10} ref={focus} />
-                <QInput label="Orden de recorrido" {...uiProps("orden")} />
-                <QSelect label="Caras" {...uiProps("caras")} opciones={carasPasillo} />
-                <QInput label="Módulos por cara" {...uiProps("modulos")} />
-                <QSelect label="Accesos" {...uiProps("accesos")} opciones={accesosPasillo} />
+                <QInput label={t("pasillo.codigo")} {...uiProps("codigo")} maxLength={10} ref={focus} />
+                <QInput label={t("pasillo.ordenDeRecorrido")} {...uiProps("orden")} />
+                <QSelect label={t("pasillo.caras")} {...uiProps("caras")} opciones={carasPasillo} />
+                <QInput label={t("pasillo.modulosPorCara")} {...uiProps("modulos")} />
+                <QSelect label={t("pasillo.accesos")} {...uiProps("accesos")} opciones={accesosPasillo} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Crear
+                    {t("pasillo.crear")}
                 </QBoton>
             </div>
         </QModal>

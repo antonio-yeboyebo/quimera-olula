@@ -14,6 +14,7 @@ import {
     ResultadoGenerarUbicaciones,
 } from "./diseño.ts";
 import { normalizarAccesos } from "./dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/pasillo`;
 
@@ -79,7 +80,7 @@ export const getPasillosZona = async (zonaId: string): Promise<Pasillo[]> => {
 
 export const postPasillo: PostPasillo = async (zonaId, nuevo) => {
     const payload: NuevoPasilloApi = { zona_id: zonaId, ...cambiosPasilloAApi(nuevo) } as NuevoPasilloApi;
-    const respuesta = await RestAPI.post<NuevoPasilloApi>(baseUrl, payload, "Error al crear pasillo");
+    const respuesta = await RestAPI.post<NuevoPasilloApi>(baseUrl, payload, tAlmacen("pasillo.errorAlCrearPasillo"));
     return respuesta.id;
 };
 
@@ -87,12 +88,12 @@ export const patchPasillo: PatchPasillo = async (id, cambios) => {
     await RestAPI.patch<CambiosPasilloApi>(
         `${baseUrl}/${id}`,
         cambiosPasilloAApi(cambios),
-        "Error al guardar pasillo"
+        tAlmacen("pasillo.errorAlGuardarPasillo")
     );
 };
 
 export const deletePasillo: DeletePasillo = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar pasillo");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("pasillo.errorAlBorrarPasillo"));
 };
 
 export const generarUbicacionesPasillo: GenerarUbicacionesPasillo = async (id, p) => {
@@ -107,7 +108,7 @@ export const generarUbicacionesPasillo: GenerarUbicacionesPasillo = async (id, p
     const respuesta = await RestAPI.post<typeof payload>(
         `${baseUrl}/${id}/generar_ubicaciones`,
         payload,
-        "Error al generar ubicaciones"
+        tAlmacen("pasillo.errorAlGenerarUbicaciones")
     );
     return respuesta as unknown as ResultadoGenerarUbicaciones;
 };

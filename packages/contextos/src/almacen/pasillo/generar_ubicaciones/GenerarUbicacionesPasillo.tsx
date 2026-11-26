@@ -14,6 +14,7 @@ import {
 } from "../dominio.ts";
 import { generarUbicacionesPasillo } from "../infraestructura.ts";
 import "./GenerarUbicacionesPasillo.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Modal de generación de ubicaciones de un pasillo. Tras generar, el formulario deja paso a un
@@ -27,6 +28,7 @@ export const GenerarUbicacionesPasillo = ({
     pasillo: Pasillo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const { modelo, uiProps, valido } = useModelo(
         metaGenerarUbicaciones,
@@ -47,7 +49,7 @@ export const GenerarUbicacionesPasillo = ({
             <QModalConfirmacion
                 nombre="ubicacionesGeneradas"
                 abierto={true}
-                titulo="Ubicaciones generadas"
+                titulo={t("pasillo.ubicacionesGeneradas")}
                 mensaje={mensajeUbicacionesGeneradas(resultado.creadas)}
                 mostrarCancelar={false}
                 onAceptar={terminar}
@@ -60,20 +62,20 @@ export const GenerarUbicacionesPasillo = ({
         <QModal
             abierto={true}
             nombre="generarUbicacionesPasillo"
-            titulo={`Generar ubicaciones del pasillo ${pasillo.codigo}`}
+            titulo={t("pasillo.generarUbicacionesDelPasilloCodigo", { codigo: pasillo.codigo })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Nivel desde" {...uiProps("nivelDesde")} />
-                <QInput label="Nivel hasta" {...uiProps("nivelHasta")} />
-                <QInput label="Huecos por nivel" {...uiProps("huecosPorNivel")} />
+                <QInput label={t("pasillo.nivelDesde")} {...uiProps("nivelDesde")} />
+                <QInput label={t("pasillo.nivelHasta")} {...uiProps("nivelHasta")} />
+                <QInput label={t("pasillo.huecosPorNivel")} {...uiProps("huecosPorNivel")} />
                 <TipoUbicacion {...uiProps("tipoUbicacionId")} />
-                <QInput label="Módulo desde (opcional)" {...uiProps("moduloDesde")} />
-                <QInput label="Módulo hasta (opcional)" {...uiProps("moduloHasta")} />
+                <QInput label={t("pasillo.moduloDesdeOpcional")} {...uiProps("moduloDesde")} />
+                <QInput label={t("pasillo.moduloHastaOpcional")} {...uiProps("moduloHasta")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={generar} deshabilitado={!valido}>
-                    Generar
+                    {t("pasillo.generar")}
                 </QBoton>
             </div>
         </QModal>

@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Pasillo } from "../diseño.ts";
 import { deletePasillo } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarPasillo = ({
     pasillo,
@@ -12,6 +13,7 @@ export const BorrarPasillo = ({
     pasillo: Pasillo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deletePasillo(pasillo.id);
         publicar("pasillo_borrado", pasillo.id);
@@ -25,8 +27,8 @@ export const BorrarPasillo = ({
         <QModalConfirmacion
             nombre="confirmarBorrarPasillo"
             abierto={true}
-            titulo="Borrar pasillo"
-            mensaje={`¿Está seguro de que desea borrar el pasillo "${pasillo.codigo}"?`}
+            titulo={t("pasillo.borrarPasillo")}
+            mensaje={t("pasillo.estaSeguroDeQueDeseaBorrar", { codigo: pasillo.codigo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
