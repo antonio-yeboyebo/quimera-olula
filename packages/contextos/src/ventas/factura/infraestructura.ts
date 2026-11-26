@@ -7,6 +7,7 @@ import { direccionVacia, payloadCambioCliente } from "../venta/dominio.ts";
 import { articuloDeLinea, NuevaLineaVentaApiReq, NuevaLineaVentaApiRes, peticionNuevaLineaApi, respuestaNuevaLineaApi } from "../venta/infraestructura.ts";
 import { DeleteLinea, EstadoExpedicion, Factura, GetFactura, GetFacturas, GetLineasFactura, GetRecibosFactura, GetReportFactura, LineaFactura, PatchArticuloLinea, PatchCambiarAgente, PatchCambiarDivisa, PatchCantidadLinea, PatchClienteFactura, PatchEmitirFactura, PatchLinea, PostFactura, PostLinea, QueryNuevaLinea, ReciboFactura } from "./diseño.ts";
 import { getTraza } from "#/comun/componentes/traza/infraestructura.ts";
+import { tVentas } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().FACTURA;
 
@@ -94,11 +95,11 @@ export const getFacturas: GetFacturas = async (
 };
 
 export const patchEmitirFactura: PatchEmitirFactura = async (id) => {
-    await RestAPI.patch(`${baseUrl}/${id}/emitir`, {}, "Error al emitir la factura");
+    await RestAPI.patch(`${baseUrl}/${id}/emitir`, {}, tVentas("factura.errores.emitir"));
 };
 
 export const getReportFactura: GetReportFactura = async (id) =>
-    RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report de la factura");
+    RestAPI.blob(`${baseUrl}/${id}/report`, tVentas("factura.errores.report"));
 
 export const postFactura: PostFactura = async (factura) => {
     const cliente = factura.cliente_id
@@ -123,13 +124,13 @@ export const postFactura: PostFactura = async (factura) => {
         cliente,
         empresa_id: factura.empresa_id || empresaActual()
     };
-    return await RestAPI.post(baseUrl, payload, "Error al crear factura").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrl, payload, tVentas("factura.errores.crear")).then((respuesta) => respuesta.id);
 };
 
 export const patchCambiarCliente: PatchClienteFactura = async (id, cambio) => {
     await RestAPI.patch(`${baseUrl}/${id}`, {
         cambios: { cliente: payloadCambioCliente(cambio) }
-    }, "Error al cambiar cliente de la factura");
+    }, tVentas("factura.errores.cambiarCliente"));
 };
 
 export const getLineas: GetLineasFactura = async (id) =>
@@ -143,7 +144,7 @@ export const postLinea: PostLinea = async (id, linea) => {
     const lineaApi = peticionNuevaLineaApi(linea);
     const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea`, {
         lineas: [lineaApi],
-    }, "Error al crear línea de factura");
+    }, tVentas("factura.errores.crearLinea"));
     const miRespuesta = respuesta as unknown as NuevaLineaVentaApiRes[];
     const lineaActualizada = respuestaNuevaLineaApi(linea, miRespuesta[0]);
     return { ...lineaActualizada, id: miRespuesta[0].id } as unknown as typeof linea;
@@ -153,7 +154,7 @@ export const queryNuevaLinea: QueryNuevaLinea = async (id, linea) => {
     const lineaApi = peticionNuevaLineaApi(linea);
     const respuesta = await RestAPI.query<NuevaLineaVentaApiReq, NuevaLineaVentaApiRes>(
         `${baseUrl}/${id}/nueva_linea`, lineaApi,
-        "Error al obtener la nueva línea de factura")
+        tVentas("factura.errores.obtenerLinea"))
     const lineaActualizada = respuestaNuevaLineaApi(linea, respuesta);
     return lineaActualizada;
 };
@@ -166,7 +167,7 @@ export const patchArticuloLinea: PatchArticuloLinea = async (id, lineaId, refere
             },
         },
     };
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar artículo de la línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, tVentas("factura.errores.cambiarArticuloLinea"));
 };
 
 export const patchLinea: PatchLinea = async (id, linea) => {
@@ -182,7 +183,7 @@ export const patchLinea: PatchLinea = async (id, linea) => {
             comision: linea.por_comision,
         },
     };
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("factura.errores.cambiarLinea"));
 };
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
@@ -191,13 +192,13 @@ export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad
             cantidad: cantidad,
         },
     };
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar cantidad de la línea de factura");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("factura.errores.cambiarCantidadLinea"));
 };
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
     await RestAPI.patch(`${baseUrl}/${id}/linea/borrar`, {
         lineas: [lineaId]
-    }, "Error al borrar línea de factura");
+    }, tVentas("factura.errores.borrarLinea"));
 };
 
 export const patchFactura = async (id: string, factura: Factura) => {
@@ -223,12 +224,12 @@ export const patchFactura = async (id: string, factura: Factura) => {
     };
 
     await RestAPI.patch(`${baseUrl}/${id}`, payload,
-        'Error al guardar el factura'
+        tVentas("factura.errores.guardar")
     );
 };
 
 export const borrarFactura = async (id: string) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar factura");
+    await RestAPI.delete(`${baseUrl}/${id}`, tVentas("factura.errores.borrar"));
 }
 
 export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
@@ -236,7 +237,7 @@ export const patchCambiarDescuento = async (id: string, dto_porcentual: number):
         cambios: {
             por_descuento: dto_porcentual,
         }
-    }, "Error al cambiar descuento de la factura");
+    }, tVentas("factura.errores.cambiarDescuento"));
 };
 
 export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
@@ -247,7 +248,7 @@ export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
                 tasa_conversion: cambio.tasa_conversion,
             }
         }
-    }, "Error al cambiar divisa de la factura");
+    }, tVentas("factura.errores.cambiarDivisa"));
 };
 
 export const patchCambiarAgente: PatchCambiarAgente = async (id, cambio) => {
@@ -256,7 +257,7 @@ export const patchCambiarAgente: PatchCambiarAgente = async (id, cambio) => {
             agente_id: cambio.agente_id,
             por_comision: cambio.por_comision,
         }
-    }, "Error al cambiar agente de la factura");
+    }, tVentas("factura.errores.cambiarAgente"));
 };
 
 interface ReciboFacturaAPI {

@@ -41,6 +41,7 @@ import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
 import { TabRecibos } from "./TabRecibos.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const DetalleFactura = ({
   id,
@@ -49,6 +50,7 @@ export const DetalleFactura = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const facturaId = id ?? params.id;
 
@@ -82,7 +84,7 @@ export const DetalleFactura = ({
   const { estado, lineaActiva } = ctx;
 
   const titulo = (factura: Factura) =>
-    tituloDocumentoVenta(factura, "Nueva Factura");
+    tituloDocumentoVenta(factura, t("factura.maestro.nueva"));
 
   const estadoFactura = (factura: Factura) => (
     <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />
@@ -104,30 +106,30 @@ export const DetalleFactura = ({
 
   const acciones = [
     {
-      texto: "Emitir",
+      texto: t("factura.detalle.emitir"),
       onClick: () => emitir("emitir_solicitado"),
       deshabilitado: !facturaEmitible(ctx.factura),
     },
     {
-      texto: "Imprimir",
+      texto: t("documento.detalle.imprimir"),
       onClick: imprimir,
     },
     ...(pasarelaHabilitada
       ? [
           {
-            texto: "Enlace de pago con tarjeta",
+            texto: t("factura.detalle.enlacePago"),
             onClick: () => emitir("enlace_tarjeta_solicitado"),
             deshabilitado: !cobrableConTarjeta,
           },
         ]
       : []),
     {
-      texto: "Documentos relacionados",
+      texto: t("documento.detalle.documentosRelacionados"),
       onClick: () => emitir("traza_solicitada"),
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: !esEditable,
@@ -154,7 +156,7 @@ export const DetalleFactura = ({
       </div>
 
       <Tabs>
-        <Tab label="Líneas">
+        <Tab label={t("documento.detalle.pestanas.lineas")}>
           <Lineas
             factura={ctx.factura}
             lineaActiva={lineaActiva}
@@ -163,19 +165,19 @@ export const DetalleFactura = ({
           />
         </Tab>
 
-        <Tab label="Cliente">
+        <Tab label={t("documento.detalle.pestanas.cliente")}>
           <TabCliente factura={factura} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Datos">
+        <Tab label={t("documento.detalle.pestanas.datos")}>
           <TabDatos factura={factura} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Observaciones">
+        <Tab label={t("documento.detalle.pestanas.observaciones")}>
           <TabObservaciones factura={factura} />
         </Tab>
 
-        <Tab label="Recibos">
+        <Tab label={t("factura.detalle.recibos")}>
           <TabRecibos facturaId={ctx.factura.id} />
           {pasarelaHabilitada && (
             <CobrosOnline
@@ -187,7 +189,7 @@ export const DetalleFactura = ({
         </Tab>
 
         {puede("contabilidad.asiento") && (
-          <Tab label="Contabilidad">
+          <Tab label={t("factura.detalle.contabilidad")}>
             <AsientoDeDocumento asientoId={ctx.factura.asiento_id ?? null} sinDatosDocumento />
           </Tab>
         )}

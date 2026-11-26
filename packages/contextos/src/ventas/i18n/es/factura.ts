@@ -1,0 +1,61 @@
+/** Facturas de venta (`ventas/factura`). */
+export const factura = {
+    maestro: {
+        titulo: "Facturas",
+        nueva: "Nueva Factura",
+    },
+    estado: {
+        sinExpedir: "Sin expedir",
+        BORRADOR: "Borrador",
+        EMITIDA: "Emitida",
+        FIRMADA: "Firmada",
+        ERROR_FIRMA: "Error de firma",
+        PRE_VERIFACTU: "Pre Verifactu",
+    },
+    widgets: {
+        plural: "Facturas",
+        total: "Total facturado",
+        medio: "Ticket medio",
+    },
+    detalle: {
+        emitir: "Emitir",
+        enlacePago: "Enlace de pago con tarjeta",
+        recibos: "Recibos",
+        contabilidad: "Contabilidad",
+        automatica: "Automática",
+        servicios: "Servicios",
+        rectificativa: "Rectificativa",
+    },
+    recibos: {
+        codigo: "Código",
+        vencimiento: "Vencimiento",
+        importe: "Importe",
+        estado: "Estado",
+    },
+    emitir: {
+        titulo: "Emitir factura",
+        tituloReintento: "Reintentar emisión",
+        mensaje: "¿Emitir la factura {{codigo}}? Dejará de ser un borrador.",
+        mensajeReintento: "La firma de la factura {{codigo}} falló. ¿Reintentar la emisión?",
+    },
+    borrar: {
+        mensaje: "¿Está seguro de que desea borrar esta factura?",
+    },
+    errores: {
+        emitir: "Error al emitir la factura",
+        report: "Error al obtener el report de la factura",
+        crear: "Error al crear factura",
+        cambiarCliente: "Error al cambiar cliente de la factura",
+        crearLinea: "Error al crear línea de factura",
+        obtenerLinea: "Error al obtener la nueva línea de factura",
+        cambiarArticuloLinea: "Error al actualizar artículo de la línea de factura",
+        cambiarLinea: "Error al actualizar línea de factura",
+        cambiarCantidadLinea: "Error al actualizar cantidad de la línea de factura",
+        borrarLinea: "Error al borrar línea de factura",
+        guardar: "Error al guardar la factura",
+        borrar: "Error al borrar factura",
+        cambiarDescuento: "Error al cambiar descuento de la factura",
+        cambiarDivisa: "Error al cambiar divisa de la factura",
+        cambiarAgente: "Error al cambiar agente de la factura",
+    },
+} as const;

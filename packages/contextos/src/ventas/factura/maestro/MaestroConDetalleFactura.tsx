@@ -8,7 +8,7 @@ import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
 import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   filtroAgente,
   filtroAlmacen,
@@ -27,8 +27,13 @@ import {
 } from "../dominio.ts";
 import "./MaestroConDetalleFactura.css";
 import { getMaquina } from "./maquina.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const MaestroConDetalleFactura = () => {
+  const t = useTVentas();
+  // Se recalculan al cambiar de idioma (t cambia).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const widgets = useMemo(() => widgetsFactura(), [t]);
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -46,12 +51,12 @@ export const MaestroConDetalleFactura = () => {
   const metaTablaFactura = [
     {
       id: "estadoExpedicion",
-      cabecera: "Estado",
+      cabecera: t("documento.maestro.estado"),
       render: (factura: Factura) => (
         <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />
       ),
     },
-    ...metaTablaBase,
+    ...metaTablaBase(),
   ] as MetaTabla<Factura>;
 
   const metaFiltroFactura: MetaFiltro = {
@@ -67,11 +72,11 @@ export const MaestroConDetalleFactura = () => {
       <MaestroDetalle<Factura>
         Maestro={
           <>
-            <h2>Facturas</h2>
+            <h2>{t("factura.maestro.titulo")}</h2>
             <Listado<Factura>
               metaTabla={metaTablaFactura}
               metaFiltro={metaFiltroFactura}
-              widgets={widgetsFactura}
+              widgets={widgets}
               tarjeta={(factura) => (
                 <TarjetaDocumentoVenta
                   codigo={factura.codigo}
@@ -92,7 +97,7 @@ export const MaestroConDetalleFactura = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("crear_factura_solicitado")}>
-                    Nueva Factura
+                    {t("factura.maestro.nueva")}
                   </QBoton>
                 </div>
               )}

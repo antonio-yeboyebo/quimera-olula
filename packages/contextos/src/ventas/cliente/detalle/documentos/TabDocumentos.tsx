@@ -67,7 +67,7 @@ const metaFacturas = () => sinCliente([
     cabecera: tVentas("documento.maestro.estado"),
     render: (factura: Factura) => <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />,
   },
-  ...metaTablaFactura,
+  ...metaTablaFactura(),
 ] as MetaTabla<Factura>);
 // El orden de la lista viene del criteria; las columnas de recibo usan los nombres de la web.
 const metaRecibos = sinCliente(metaTablaReciboVenta);
