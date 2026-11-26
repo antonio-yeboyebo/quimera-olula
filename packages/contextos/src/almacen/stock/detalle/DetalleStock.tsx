@@ -16,6 +16,7 @@ import "./DetalleStock.css";
 import { contextoDetalleStockInicial } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { RegularizacionesStock } from "./regularizaciones/RegularizacionesStock.tsx";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (stock: Stock) => stock.articulo as string;
 
@@ -31,15 +32,15 @@ const ExpansionMovimientos = ({ entidad }: { entidad: StockUbicacion }) => (
 
 const metaTablaUbicaciones: MetaTabla<StockUbicacion> = {
     cols: [
-        { id: "ubicacion", cabecera: "Ubicación", enlace: (u) => urlFicha.ubicacion(u.idUbicacion) },
-        { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
+        { id: "ubicacion", get cabecera() { return tAlmacen("stock.ubicacion"); }, enlace: (u) => urlFicha.ubicacion(u.idUbicacion) },
+        { id: "cantidad", get cabecera() { return tAlmacen("stock.cantidad"); }, tipo: "numero" },
     ],
     expansion: ExpansionMovimientos,
 };
 
 const UbicacionesStock = ({ ubicaciones }: { ubicaciones: StockUbicacion[] }) => (
     <details className="DetalleStock-ubicaciones">
-        <summary>Ubicaciones ({ubicaciones.length})</summary>
+        <summary>{tAlmacen("stock.ubicacionesLength", { length: ubicaciones.length })}</summary>
         <ListadoSemiControlado
             metaTabla={metaTablaUbicaciones}
             entidades={ubicaciones}
@@ -61,6 +62,7 @@ export const DetalleStock = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleStockInicial,
@@ -85,23 +87,23 @@ export const DetalleStock = ({
         >
             <div className="DetalleStock">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("regularizar_solicitado")}>Regularizar</QBoton>
+                    <QBoton onClick={() => emitir("regularizar_solicitado")}>{t("stock.regularizar")}</QBoton>
                 </div>
                 <quimera-formulario>
-                    <QInput label="Artículo"     nombre="articulo"    valor={stock.articulo ?? ""}               soloLectura />
-                    <QInput label="Referencia"   nombre="articulo_id" valor={String(stock.articuloId ?? "")}     soloLectura enlace={PLANTILLA_FICHA.articulo} />
-                    <QInput label="Almacén"      nombre="almacen_id"  valor={stock.almacenId ?? ""}              soloLectura enlace={PLANTILLA_FICHA.almacen} />
-                    <QInput label="N. Almacén"   nombre="almacen"     valor={stock.almacen ?? ""}                soloLectura />
-                    <QInput label="Cantidad física"     nombre="cantidadFisica"     valor={numero(stock.cantidadFisica)}     soloLectura />
-                    <QInput label="Disponible"          nombre="cantidadDisponible" valor={numero(stock.cantidadDisponible)} soloLectura />
-                    <QInput label="Reservada"           nombre="cantidadReservada"  valor={numero(stock.cantidadReservada)}  soloLectura />
-                    <QInput label="Pte. recibir"        nombre="cantidadPendiente"  valor={numero(stock.cantidadPendiente)}  soloLectura />
-                    <QInput label="Necesidad"           nombre="necesidad"          valor={numero(stock.necesidad)}          soloLectura />
-                    <QInput label="Stock mínimo"        nombre="stockMinimo"        valor={numero(stock.stockMinimo)}        soloLectura />
-                    <QInput label="Stock máximo"        nombre="stockMaximo"        valor={numero(stock.stockMaximo)}        soloLectura />
-                    <QInput label="Fecha últ. regularización" nombre="fechaUltReg"    valor={fecha(stock.fechaUltimaRegularizacion)}    soloLectura />
-                    <QInput label="Hora últ. regularización"  nombre="horaUltReg"     valor={stock.horaUltimaRegularizacion?.slice(0, 8) ?? ""} soloLectura />
-                    <QInput label="Cantidad últ. regularización" nombre="cantidadUltReg" valor={numero(stock.cantidadUltimaRegularizacion)} soloLectura />
+                    <QInput label={t("stock.articulo")}     nombre="articulo"    valor={stock.articulo ?? ""}               soloLectura />
+                    <QInput label={t("stock.referencia")}   nombre="articulo_id" valor={String(stock.articuloId ?? "")}     soloLectura enlace={PLANTILLA_FICHA.articulo} />
+                    <QInput label={t("stock.almacen")}      nombre="almacen_id"  valor={stock.almacenId ?? ""}              soloLectura enlace={PLANTILLA_FICHA.almacen} />
+                    <QInput label={t("stock.nAlmacen")}   nombre="almacen"     valor={stock.almacen ?? ""}                soloLectura />
+                    <QInput label={t("stock.cantidadFisica")}     nombre="cantidadFisica"     valor={numero(stock.cantidadFisica)}     soloLectura />
+                    <QInput label={t("stock.disponible")}          nombre="cantidadDisponible" valor={numero(stock.cantidadDisponible)} soloLectura />
+                    <QInput label={t("stock.reservada")}           nombre="cantidadReservada"  valor={numero(stock.cantidadReservada)}  soloLectura />
+                    <QInput label={t("stock.pteRecibir")}        nombre="cantidadPendiente"  valor={numero(stock.cantidadPendiente)}  soloLectura />
+                    <QInput label={t("stock.necesidad")}           nombre="necesidad"          valor={numero(stock.necesidad)}          soloLectura />
+                    <QInput label={t("stock.stockMinimo")}        nombre="stockMinimo"        valor={numero(stock.stockMinimo)}        soloLectura />
+                    <QInput label={t("stock.stockMaximo")}        nombre="stockMaximo"        valor={numero(stock.stockMaximo)}        soloLectura />
+                    <QInput label={t("stock.fechaUltRegularizacion")} nombre="fechaUltReg"    valor={fecha(stock.fechaUltimaRegularizacion)}    soloLectura />
+                    <QInput label={t("stock.horaUltRegularizacion")}  nombre="horaUltReg"     valor={stock.horaUltimaRegularizacion?.slice(0, 8) ?? ""} soloLectura />
+                    <QInput label={t("stock.cantidadUltRegularizacion")} nombre="cantidadUltReg" valor={numero(stock.cantidadUltimaRegularizacion)} soloLectura />
                 </quimera-formulario>
                 <RegularizacionesStock
                     regularizaciones={ctx.regularizaciones}

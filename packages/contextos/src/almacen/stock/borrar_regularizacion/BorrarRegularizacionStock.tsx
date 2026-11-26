@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { RegularizacionStock } from "../diseño.ts";
 import { deleteRegularizacionStock } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarRegularizacionStock = ({
     regularizacion,
@@ -12,6 +13,7 @@ export const BorrarRegularizacionStock = ({
     regularizacion: RegularizacionStock;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteRegularizacionStock(regularizacion.id);
         publicar("regularizacion_borrada", regularizacion);
@@ -28,8 +30,8 @@ export const BorrarRegularizacionStock = ({
         <QModalConfirmacion
             nombre="borrarRegularizacionStock"
             abierto={true}
-            titulo="Borrar regularización"
-            mensaje={`¿Borrar la regularización a ${regularizacion.cantidadFinal} del ${regularizacion.fecha} ${regularizacion.hora}? El stock se recalculará desde la regularización anterior.`}
+            titulo={t("stock.borrarRegularizacion")}
+            mensaje={t("stock.borrarLaRegularizacionACantidadfinalDel", { cantidadFinal: regularizacion.cantidadFinal, fecha: regularizacion.fecha, hora: regularizacion.hora })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
