@@ -14,6 +14,7 @@ import "./DetalleAgente.css";
 import { getMaquina } from "./maquina.js";
 import { TabContacto } from "./TabContacto.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const DetalleAgente = ({
     id,
@@ -22,6 +23,7 @@ export const DetalleAgente = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTVentas();
 
     const { ctx, emitir } = useMaquina(
         getMaquina,
@@ -59,11 +61,11 @@ export const DetalleAgente = ({
         >
             <div className="DetalleAgente">
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("agente.detalle.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label="Datos"
+                    <Tab label={t("agente.detalle.datos")}
                         key="tab-datos"
                         children={<TabContacto form={formModelo} />}
                     />,

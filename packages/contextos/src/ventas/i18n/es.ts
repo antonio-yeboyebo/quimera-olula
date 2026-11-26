@@ -7,6 +7,7 @@ import { albaran } from "./es/albaran.ts";
 import { articulo, precioArticulo } from "./es/articulo.ts";
 import { documento } from "./es/documento.ts";
 import { factura } from "./es/factura.ts";
+import { agente, config, tarifa } from "./es/maestros.ts";
 import { pedido } from "./es/pedido.ts";
 import { presupuesto } from "./es/presupuesto.ts";
 
@@ -18,6 +19,9 @@ export const es = {
     factura,
     articulo,
     precioArticulo,
+    agente,
+    tarifa,
+    config,
     comun: {
         agente: "Agente",
         seleccionarContacto: "Seleccionar contacto",

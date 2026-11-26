@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
 import { ConfigVentas, GetConfigVentas, PatchConfigVentas, SiNoPreguntar } from "./diseño.ts";
 import { configVentasPorDefecto } from "./dominio.ts";
+import { tVentas } from "../i18n/index.ts";
 
 export interface ConfigVentasApi {
     mostrar_observaciones_cliente: boolean;
@@ -41,5 +42,5 @@ export const getConfigVentas: GetConfigVentas = async () => {
 
 export const patchConfigVentas: PatchConfigVentas = async (config) => {
     await RestAPI.patch(
-        baseUrl, { cambios: configVentasAApi(config) }, "Error al guardar la configuración de ventas");
+        baseUrl, { cambios: configVentasAApi(config) }, tVentas("config.errores.guardar"));
 };

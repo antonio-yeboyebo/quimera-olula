@@ -12,6 +12,7 @@ import "./DetalleTarifa.css";
 import { ArticulosTarifa } from "./lineas/ArticulosTarifa.js";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de tarifa.
@@ -31,6 +32,7 @@ export const DetalleTarifa = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTVentas();
 
     const { ctx, emitir } = useMaquina(
         getMaquina,
@@ -62,7 +64,7 @@ export const DetalleTarifa = ({
 
     const accionesTarifa = [
         {
-            texto: "Borrar",
+            texto: t("tarifa.borrar.boton"),
             onClick: () => emitir("borrado_solicitado"),
             advertencia: true,
         },
@@ -83,7 +85,7 @@ export const DetalleTarifa = ({
                     <QuimeraAcciones acciones={accionesTarifa} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("tarifa.detalle.general")}
                         key="tab-general"
                         children={
                             <TabGeneral form={formModelo} codigo={tarifa.id} />

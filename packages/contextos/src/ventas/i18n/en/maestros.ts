@@ -1,0 +1,103 @@
+import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
+import type { agente as esAgente, config as esConfig, tarifa as esTarifa } from "../es/maestros.ts";
+
+export const agente: Traduccion<typeof esAgente> = {
+    maestro: {
+        titulo: "Sales agents",
+        nuevo: "New agent",
+        id: "ID",
+        nombre: "Name",
+        idFiscal: "Tax ID",
+        comision: "% Commission",
+        telefono: "Phone",
+        email: "Email",
+        ciudad: "City",
+    },
+    campos: {
+        nombrePila: "First name",
+        nombre: "Name",
+        apellidos: "Last name",
+        idFiscal: "Tax ID",
+        dniCif: "Tax ID",
+        comision: "% Commission",
+        telefono: "Phone",
+        email: "Email",
+        direccion: "Address",
+        codPostal: "Postcode",
+        ciudad: "City",
+        provincia: "Province",
+        usuario: "User",
+    },
+    detalle: {
+        general: "General",
+        datos: "Data",
+    },
+    errores: {
+        obtener: "Error getting the sales agent",
+        obtenerLista: "Error getting the sales agents",
+        crear: "Error creating the sales agent",
+        actualizar: "Error updating the sales agent",
+    },
+};
+
+export const tarifa: Traduccion<typeof esTarifa> = {
+    maestro: {
+        titulo: "Rates",
+        nueva: "New Rate",
+        codigo: "Code",
+        nombre: "Name",
+        divisa: "Currency",
+    },
+    crear: "Create rate",
+    borrar: {
+        titulo: "Delete rate",
+        mensaje: "Are you sure you want to delete rate {{nombre}}?",
+        boton: "Delete",
+    },
+    detalle: {
+        acciones: "Actions",
+        general: "General",
+    },
+    articulos: {
+        titulo: "Rate items",
+        anadir: "Add item",
+        cambiarPrecio: "Change price",
+        anadirBoton: "Add",
+        referencia: "Reference",
+        descripcion: "Description",
+        precio: "Price",
+        quitarTitulo: "Remove item from rate",
+        quitarMensaje: "Are you sure you want to remove item {{articulo}} from the rate?",
+    },
+    errores: {
+        obtener: "Error getting the rate",
+        obtenerLista: "Error getting the rates",
+        crear: "Error creating the rate",
+        actualizar: "Error updating the rate",
+        eliminar: "Error deleting the rate",
+        obtenerArticulos: "Error getting the rate items",
+        anadirArticulo: "Error adding the item to the rate",
+        actualizarArticulo: "Error updating the rate item",
+        quitarArticulo: "Error removing the item from the rate",
+    },
+};
+
+export const config: Traduccion<typeof esConfig> = {
+    titulo: "Sales configuration",
+    subtitulo: "General invoicing data that affects sales.",
+    documentos: "Invoicing documents",
+    mostrarObservaciones: "Show customer notes in invoicing documents",
+    facturarAlbaranesBorrador: "Invoice delivery notes as draft",
+    crearFacturasBorrador: "Create invoices as draft",
+    correo: "Email",
+    correoCopias: "Address for the email copy",
+    correoNoValido: "It does not look like an email address",
+    opciones: {
+        Si: "Yes",
+        No: "No",
+        Preguntar: "Ask",
+    },
+    errores: {
+        guardar: "Error saving the sales configuration",
+    },
+};

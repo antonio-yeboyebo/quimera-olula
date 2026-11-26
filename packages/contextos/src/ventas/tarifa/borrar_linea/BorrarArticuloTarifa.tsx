@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { ArticuloTarifa } from "../diseño.js";
 import { descripcionArticuloTarifa } from "../dominio.js";
 import { deleteArticuloTarifa } from "../infraestructura.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarArticuloTarifa = ({
     articulo,
@@ -13,6 +14,7 @@ export const BorrarArticuloTarifa = ({
     articulo: ArticuloTarifa;
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const borrar_ = useCallback(
         async () => {
             await deleteArticuloTarifa(articulo.id);
@@ -32,8 +34,8 @@ export const BorrarArticuloTarifa = ({
         <QModalConfirmacion
             nombre="confirmarBorrarArticuloTarifa"
             abierto={true}
-            titulo="Quitar artículo de la tarifa"
-            mensaje={`¿Está seguro de que desea quitar el artículo ${descripcionArticuloTarifa(articulo)} de la tarifa?`}
+            titulo={t("tarifa.articulos.quitarTitulo")}
+            mensaje={t("tarifa.articulos.quitarMensaje", { articulo: descripcionArticuloTarifa(articulo) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -11,6 +11,7 @@ import {
     PatchAgente,
     PostAgente,
 } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().AGENTE;
 
@@ -91,7 +92,7 @@ export const getAgente: GetAgente = async (id) =>
     await RestAPI.getItem<Agente, AgenteApi>(
         `${baseUrl}/${id}`,
         agenteDesdeApi,
-        "Error al obtener el agente"
+        tVentas("agente.errores.obtener")
     );
 
 export const getAgentesLista: GetAgentesLista = async (criteria) =>
@@ -99,14 +100,14 @@ export const getAgentesLista: GetAgentesLista = async (criteria) =>
         baseUrl,
         criteria,
         agenteDesdeApi,
-        "Error al obtener los agentes"
+        tVentas("agente.errores.obtenerLista")
     );
 
 export const postAgente: PostAgente = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoAgenteAApi(nuevo),
-        "Error al crear el agente"
+        tVentas("agente.errores.crear")
     );
 
     return String(respuesta.id);
@@ -116,6 +117,6 @@ export const patchAgente: PatchAgente = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         { cambios: cambiosAgenteAApi(cambios) },
-        "Error al actualizar el agente"
+        tVentas("agente.errores.actualizar")
     );
 };
