@@ -10,8 +10,10 @@ import { useCallback } from "react";
 import { metaNuevoPickingFijo, nuevoPickingFijoVacio } from "../dominio.ts";
 import { postPickingFijo } from "../infraestructura.ts";
 import "./CrearPickingFijo.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearPickingFijo = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaNuevoPickingFijo, nuevoPickingFijoVacio);
 
     const crear_ = useCallback(async () => {
@@ -27,21 +29,21 @@ export const CrearPickingFijo = ({ publicar }: { publicar: EmitirEvento }) => {
         <QModal
             abierto={true}
             nombre="crearPickingFijo"
-            titulo="Crear picking fijo"
+            titulo={t("picking_fijo.crearPickingFijo")}
             onCerrar={cancelar}
         >
             <div className="CrearPickingFijo">
                 <quimera-formulario>
                     <Articulo {...uiProps("articuloId")} />
                     <UbicacionPicking {...uiProps("ubicacionId")} />
-                    <QInput label="Mínimo" {...uiProps("minimo")} />
-                    <QInput label="Máximo" {...uiProps("maximo")} />
-                    <QInput label="Unidad de reposición" {...uiProps("unidadReposicion")} />
+                    <QInput label={t("picking_fijo.minimo")} {...uiProps("minimo")} />
+                    <QInput label={t("picking_fijo.maximo")} {...uiProps("maximo")} />
+                    <QInput label={t("picking_fijo.unidadDeReposicion")} {...uiProps("unidadReposicion")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("picking_fijo.crear")}
                     </QBoton>
                 </div>
             </div>
