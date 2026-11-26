@@ -10,6 +10,7 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import { useOpcionesGrupo } from "../crear/OpcionesGrupo.ts";
 import { FiltroInforme, InformeAmortizaciones as Informe, ValoresInforme } from "../diseño.ts";
 import { getInformeAmortizaciones, getReportAmortizaciones } from "../infraestructura.ts";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 const metaFiltro: MetaModelo<FiltroInforme> = {
     campos: {
@@ -22,16 +23,16 @@ const metaFiltro: MetaModelo<FiltroInforme> = {
 };
 
 const COLUMNAS: { campo: keyof ValoresInforme; cabecera: string }[] = [
-    { campo: "costeInicio", cabecera: "Coste inicio" },
-    { campo: "adicion", cabecera: "Adición período" },
-    { campo: "venta", cabecera: "Venta/Baja período" },
-    { campo: "costeFin", cabecera: "Coste fin" },
-    { campo: "amortizacionInicio", cabecera: "Amortización inicio" },
-    { campo: "amortizacionPeriodo", cabecera: "Amortización período" },
-    { campo: "ventaAmortizacionPeriodo", cabecera: "Venta/Baja amort. per." },
-    { campo: "amortizacionFin", cabecera: "Amortización fin" },
-    { campo: "valorInicio", cabecera: "Valor neto inicio" },
-    { campo: "valorFin", cabecera: "Valor neto fin" },
+    { campo: "costeInicio", get cabecera() { return tContabilidad("amortizacion.costeInicio"); } },
+    { campo: "adicion", get cabecera() { return tContabilidad("amortizacion.adicionPeriodo"); } },
+    { campo: "venta", get cabecera() { return tContabilidad("amortizacion.ventaBajaPeriodo"); } },
+    { campo: "costeFin", get cabecera() { return tContabilidad("amortizacion.costeFin"); } },
+    { campo: "amortizacionInicio", get cabecera() { return tContabilidad("amortizacion.amortizacionInicio"); } },
+    { campo: "amortizacionPeriodo", get cabecera() { return tContabilidad("amortizacion.amortizacionPeriodo"); } },
+    { campo: "ventaAmortizacionPeriodo", get cabecera() { return tContabilidad("amortizacion.ventaBajaAmortPer"); } },
+    { campo: "amortizacionFin", get cabecera() { return tContabilidad("amortizacion.amortizacionFin"); } },
+    { campo: "valorInicio", get cabecera() { return tContabilidad("amortizacion.valorNetoInicio"); } },
+    { campo: "valorFin", get cabecera() { return tContabilidad("amortizacion.valorNetoFin"); } },
 ];
 
 const importe = (valor: number): string =>
@@ -43,6 +44,7 @@ const celdas = (valores: ValoresInforme) =>
 /** Informe de amortizaciones (Eneboo `co_i_amortizaciones`): cuadro por
  * cuenta del elemento con coste, amortización y valor neto del ejercicio. */
 export const InformeAmortizaciones = () => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const inicial = useMemo((): FiltroInforme => ({
         ejercicioId: ejercicioActual(), grupoId: "", codigoCuenta: "", amortizacionId: "",
@@ -73,35 +75,35 @@ export const InformeAmortizaciones = () => {
     }, [intentar, modelo]);
 
     if (!puede("contabilidad.asiento")) {
-        return <p>No tienes permiso para ver el informe de amortizaciones.</p>;
+        return <p>{t("amortizacion.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
         <div className="InformeAmortizaciones">
-            <h2>Informe de amortizaciones</h2>
+            <h2>{t("amortizacion.informeDeAmortizaciones")}</h2>
             <quimera-formulario>
-                <QInput label="Ejercicio" {...uiProps("ejercicioId")} />
-                <QSelect label="Grupo contable" opciones={[{ valor: "", descripcion: "(Todos)" }, ...grupos]}
+                <QInput label={t("amortizacion.ejercicio")} {...uiProps("ejercicioId")} />
+                <QSelect label={t("amortizacion.grupoContable")} opciones={[{ valor: "", descripcion: t("amortizacion.todos") }, ...grupos]}
                     {...uiProps("grupoId")} />
-                <QInput label="Cuenta" {...uiProps("codigoCuenta")} />
-                <QInput label="Amortización" {...uiProps("amortizacionId")} />
-                <QInput label="Descripción del informe" {...uiProps("descripcion")} />
+                <QInput label={t("amortizacion.cuenta")} {...uiProps("codigoCuenta")} />
+                <QInput label={t("amortizacion.amortizacion")} {...uiProps("amortizacionId")} />
+                <QInput label={t("amortizacion.descripcionDelInforme")} {...uiProps("descripcion")} />
             </quimera-formulario>
             <div className="maestro-botones">
-                <QBoton onClick={consultar} deshabilitado={!valido || ocupado}>Consultar</QBoton>
+                <QBoton onClick={consultar} deshabilitado={!valido || ocupado}>{t("amortizacion.consultar")}</QBoton>
                 <QBoton variante="borde" onClick={pdf} deshabilitado={!valido || ocupado}>
-                    Descargar PDF
+                    {t("amortizacion.descargarPdf")}
                 </QBoton>
             </div>
 
             {informe && informe.cuentas.length === 0 && (
-                <p>No hay amortizaciones para el ejercicio y los filtros indicados.</p>
+                <p>{t("amortizacion.noHayAmortizacionesParaElEjercicio")}</p>
             )}
             {informe && informe.cuentas.length > 0 && (
                 <table className="tabla-informe-amortizaciones">
                     <thead>
                         <tr>
-                            <th>Elemento</th>
+                            <th>{t("amortizacion.elemento")}</th>
                             {COLUMNAS.map((c) => <th key={c.campo}>{c.cabecera}</th>)}
                         </tr>
                     </thead>
@@ -119,12 +121,12 @@ export const InformeAmortizaciones = () => {
                                 </tr>
                             )),
                             <tr key={`t-${cuenta.codigoCuenta}`} className="total">
-                                <td><strong>Total cuenta</strong></td>
+                                <td><strong>{t("amortizacion.totalCuenta")}</strong></td>
                                 {celdas(cuenta.total)}
                             </tr>,
                         ])}
                         <tr className="total">
-                            <td><strong>TOTAL INFORME</strong></td>
+                            <td><strong>{t("amortizacion.totalInforme")}</strong></td>
                             {celdas(informe.total)}
                         </tr>
                     </tbody>

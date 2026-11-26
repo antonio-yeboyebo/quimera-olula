@@ -6,7 +6,13 @@ import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { useOpcionesGrupo } from "../crear/OpcionesGrupo.ts";
 import { Amortizacion } from "../diseño.ts";
-import { PERIODOS, planBloqueado } from "../dominio.ts";
+import {
+    PERIODOS,
+    planBloqueado,
+    textoEstadoAmortizacion,
+    textoMetodoAmortizacion,
+} from "../dominio.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 const importe = (valor: number): string =>
     valor.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -20,6 +26,7 @@ export const TabGeneral = ({
     form: FormModelo;
     amortizacion: Amortizacion;
 }) => {
+    const t = useTContabilidad();
     const grupos = useOpcionesGrupo();
     const bloqueado = planBloqueado(amortizacion);
     const { uiProps } = form;
@@ -28,32 +35,32 @@ export const TabGeneral = ({
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Código" nombre="id" valor={amortizacion.id} soloLectura />
-                <QInput label="Estado" nombre="estado" valor={amortizacion.estado} soloLectura />
-                <QInput label="Elemento de inmovilizado" {...uiProps("elemento")} />
-                <QSelect label="Grupo contable" opciones={grupos} {...uiProps("grupoId")} />
-                <QDate label="Fecha de adquisición" {...uiProps("fecha")} />
-                <QDate label="Fecha de inicio" {...plan("fechaInicio")} />
-                <QInput label="Valor de adquisición" {...plan("valorAdquisicion")} />
-                <QInput label="Valor residual" {...plan("valorResidual")} />
-                <QInput label="Valor amortizable" nombre="valor_amortizable"
+                <QInput label={t("amortizacion.codigo")} nombre="id" valor={amortizacion.id} soloLectura />
+                <QInput label={t("amortizacion.estado")} nombre="estado" valor={textoEstadoAmortizacion(amortizacion.estado)} soloLectura />
+                <QInput label={t("amortizacion.elementoDeInmovilizado")} {...uiProps("elemento")} />
+                <QSelect label={t("amortizacion.grupoContable")} opciones={grupos} {...uiProps("grupoId")} />
+                <QDate label={t("amortizacion.fechaDeAdquisicion")} {...uiProps("fecha")} />
+                <QDate label={t("amortizacion.fechaDeInicio")} {...plan("fechaInicio")} />
+                <QInput label={t("amortizacion.valorDeAdquisicion")} {...plan("valorAdquisicion")} />
+                <QInput label={t("amortizacion.valorResidual")} {...plan("valorResidual")} />
+                <QInput label={t("amortizacion.valorAmortizable")} nombre="valor_amortizable"
                     valor={importe(amortizacion.valorAmortizable)} soloLectura />
-                <QInput label="Método" nombre="metodo" valor={amortizacion.metodo} soloLectura />
-                <QSelect label="Periodo" opciones={PERIODOS} {...plan("periodo")} />
-                <QInput label="% anual" {...plan("porcentajeAnual")} />
-                <QInput label="% periodo" {...plan("porcentajePeriodo")} />
-                <QInput label="Amortización del periodo" {...plan("amortizacionPeriodo")} />
-                <QInput label="Nº de periodos" {...plan("numPeriodos")} />
-                <QInput label="Amortización primer periodo" nombre="primer_periodo"
+                <QInput label={t("amortizacion.metodo")} nombre="metodo" valor={textoMetodoAmortizacion(amortizacion.metodo)} soloLectura />
+                <QSelect label={t("amortizacion.periodo")} opciones={PERIODOS} {...plan("periodo")} />
+                <QInput label={t("amortizacion.anual")} {...plan("porcentajeAnual")} />
+                <QInput label={t("amortizacion.periodo2")} {...plan("porcentajePeriodo")} />
+                <QInput label={t("amortizacion.amortizacionDelPeriodo")} {...plan("amortizacionPeriodo")} />
+                <QInput label={t("amortizacion.nDePeriodos")} {...plan("numPeriodos")} />
+                <QInput label={t("amortizacion.amortizacionPrimerPeriodo")} nombre="primer_periodo"
                     valor={importe(amortizacion.amortizacionPrimerPeriodo)} soloLectura />
-                <QInput label="Amortización último periodo" nombre="ultimo_periodo"
+                <QInput label={t("amortizacion.amortizacionUltimoPeriodo")} nombre="ultimo_periodo"
                     valor={importe(amortizacion.amortizacionUltimoPeriodo)} soloLectura />
-                <QInput label="Total amortizado" nombre="total_amortizado"
+                <QInput label={t("amortizacion.totalAmortizado")} nombre="total_amortizado"
                     valor={importe(amortizacion.totalAmortizado)} soloLectura />
-                <QInput label="Pendiente" nombre="pendiente"
+                <QInput label={t("amortizacion.pendiente")} nombre="pendiente"
                     valor={importe(amortizacion.pendiente)} soloLectura />
-                <QCheckbox label="Bloqueado" {...uiProps("bloqueado")} />
-                <QTextArea label="Notas" {...uiProps("notas")} />
+                <QCheckbox label={t("amortizacion.bloqueado")} {...uiProps("bloqueado")} />
+                <QTextArea label={t("amortizacion.notas")} {...uiProps("notas")} />
             </quimera-formulario>
         </div>
     );

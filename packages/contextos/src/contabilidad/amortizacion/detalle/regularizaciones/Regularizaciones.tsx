@@ -6,11 +6,12 @@ import { useCallback, useEffect, useState } from "react";
 import { CrearRegularizacion } from "../../crear_regularizacion/CrearRegularizacion.tsx";
 import { Amortizacion, RegularizacionValor } from "../../diseño.ts";
 import { deleteRegularizacion, getRegularizaciones } from "../../infraestructura.ts";
+import { tContabilidad, useTContabilidad } from "../../../i18n/index.ts";
 
 const metaTabla: MetaTabla<RegularizacionValor> = [
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "importe", cabecera: "Importe", tipo: "moneda" },
+    { id: "fecha", get cabecera() { return tContabilidad("amortizacion.fecha"); }, tipo: "fecha" },
+    { id: "descripcion", get cabecera() { return tContabilidad("amortizacion.descripcion"); } },
+    { id: "importe", get cabecera() { return tContabilidad("amortizacion.importe"); }, tipo: "moneda" },
 ];
 
 type Estado = "INICIAL" | "CREANDO" | "BORRANDO";
@@ -18,6 +19,7 @@ type Estado = "INICIAL" | "CREANDO" | "BORRANDO";
 const BorrarRegularizacion = ({
     regularizacion, onBorrada, onCancelar,
 }: { regularizacion: RegularizacionValor; onBorrada: () => void; onCancelar: () => void }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteRegularizacion(regularizacion.id);
         onBorrada();
@@ -25,14 +27,15 @@ const BorrarRegularizacion = ({
     const [borrar, cancelar] = useForm(borrar_, onCancelar);
     return (
         <QModalConfirmacion nombre="borrarRegularizacionValor" abierto={true}
-            titulo="Borrar regularización de valor"
-            mensaje="¿Confirma borrar la regularización de valor?"
+            titulo={t("amortizacion.borrarRegularizacionDeValor")}
+            mensaje={t("amortizacion.confirmaBorrarLaRegularizacionDeValor")}
             onCerrar={cancelar} onAceptar={borrar} />
     );
 };
 
 /** Pestaña «Regularizaciones» (`co_regvaloramor`): solo registro de datos. */
 export const Regularizaciones = ({ amortizacion }: { amortizacion: Amortizacion }) => {
+    const t = useTContabilidad();
     const [lista, setLista] = useState<RegularizacionValor[]>([]);
     const [cargando, setCargando] = useState(true);
     const [activa, setActiva] = useState<RegularizacionValor | null>(null);
@@ -58,8 +61,8 @@ export const Regularizaciones = ({ amortizacion }: { amortizacion: Amortizacion 
     return (
         <div className="RegularizacionesValor">
             <div className="botones maestro-botones">
-                <QBoton onClick={() => setEstado("CREANDO")}>Nueva regularización</QBoton>
-                <QBoton onClick={() => setEstado("BORRANDO")} deshabilitado={!activa}>Borrar</QBoton>
+                <QBoton onClick={() => setEstado("CREANDO")}>{t("amortizacion.nuevaRegularizacion")}</QBoton>
+                <QBoton onClick={() => setEstado("BORRANDO")} deshabilitado={!activa}>{t("amortizacion.borrar")}</QBoton>
             </div>
             <QTabla metaTabla={metaTabla} datos={lista} cargando={cargando}
                 seleccionadaId={activa?.id} onSeleccion={setActiva}

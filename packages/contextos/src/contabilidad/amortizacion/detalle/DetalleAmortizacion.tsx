@@ -16,6 +16,7 @@ import { getMaquina } from "./maquina.ts";
 import { Regularizaciones } from "./regularizaciones/Regularizaciones.tsx";
 import { TabCierre } from "./TabCierre.tsx";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `co_amortizaciones.ui`: datos generales, dotaciones,
  * compra, regularizaciones y cierre. */
@@ -26,6 +27,7 @@ export const DetalleAmortizacion = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleAmortizacionInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -51,7 +53,7 @@ export const DetalleAmortizacion = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("amortizacion.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -71,16 +73,16 @@ export const DetalleAmortizacion = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="Datos generales" key="tab-general"
+                    <Tab label={t("amortizacion.datosGenerales")} key="tab-general"
                         children={<TabGeneral form={formModelo} amortizacion={amortizacion} />} />,
-                    <Tab label="Dotaciones" key="tab-dotaciones"
+                    <Tab label={t("amortizacion.dotaciones")} key="tab-dotaciones"
                         children={<Dotaciones key={amortizacion.id} amortizacion={amortizacion}
                             onCambio={refrescar} />} />,
-                    <Tab label="Compra" key="tab-compra"
+                    <Tab label={t("amortizacion.compra")} key="tab-compra"
                         children={<PartidasCompra key={amortizacion.id} amortizacion={amortizacion} />} />,
-                    <Tab label="Regularizaciones" key="tab-regularizaciones"
+                    <Tab label={t("amortizacion.regularizaciones")} key="tab-regularizaciones"
                         children={<Regularizaciones key={amortizacion.id} amortizacion={amortizacion} />} />,
-                    <Tab label="Cierre" key="tab-cierre"
+                    <Tab label={t("amortizacion.cierre")} key="tab-cierre"
                         children={<TabCierre key={amortizacion.id} form={formModelo}
                             amortizacion={amortizacion} onCambio={refrescar} />} />,
                 ]} />

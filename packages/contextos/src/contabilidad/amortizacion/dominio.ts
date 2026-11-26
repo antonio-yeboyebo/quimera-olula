@@ -6,20 +6,29 @@ import {
     NuevaRegularizacionValor,
     ResultadoGeneracion,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export const PERIODOS = [
-    { valor: "Mensual", descripcion: "Mensual" },
-    { valor: "Trimestral", descripcion: "Trimestral" },
-    { valor: "Semestral", descripcion: "Semestral" },
-    { valor: "Anual", descripcion: "Anual" },
+    { valor: "Mensual", get descripcion() { return tContabilidad("amortizacion.mensual"); } },
+    { valor: "Trimestral", get descripcion() { return tContabilidad("amortizacion.trimestral"); } },
+    { valor: "Semestral", get descripcion() { return tContabilidad("amortizacion.semestral"); } },
+    { valor: "Anual", get descripcion() { return tContabilidad("amortizacion.anual2"); } },
 ];
 
 export const ESTADOS = [
-    { valor: "En Curso", descripcion: "En Curso" },
-    { valor: "Terminada", descripcion: "Terminada" },
-    { valor: "Suspendida", descripcion: "Suspendida" },
-    { valor: "Cerrada", descripcion: "Cerrada" },
+    { valor: "En Curso", get descripcion() { return tContabilidad("amortizacion.enCurso"); } },
+    { valor: "Terminada", get descripcion() { return tContabilidad("amortizacion.terminada"); } },
+    { valor: "Suspendida", get descripcion() { return tContabilidad("amortizacion.suspendida"); } },
+    { valor: "Cerrada", get descripcion() { return tContabilidad("amortizacion.cerrada"); } },
 ];
+
+/** Texto visible del estado (el valor se guarda en español). */
+export const textoEstadoAmortizacion = (estado: string): string =>
+    ESTADOS.find((e) => e.valor === estado)?.descripcion ?? estado;
+
+/** Texto visible del método (hoy solo «Lineal»). */
+export const textoMetodoAmortizacion = (metodo: string): string =>
+    metodo === "Lineal" ? tContabilidad("amortizacion.metodoLineal") : metodo;
 
 /** `codamortizacion` es varchar(6); vacío = contador automático. */
 export const LONGITUD_CODIGO = 6;
@@ -111,7 +120,7 @@ export const metaNuevaAmortizacion: MetaModelo<NuevaAmortizacion> = {
     },
     validacion: (m) =>
         m.fechaInicio >= m.fecha ||
-        "La fecha de inicio no puede ser anterior a la de adquisición",
+        tContabilidad("amortizacion.laFechaDeInicioNoPuede"),
 };
 
 export const nuevaDotacionVacia = (): NuevaDotacion => ({
@@ -157,15 +166,15 @@ const importe = (valor: number): string =>
 
 /** `muestraDotacionesRealizadas`: resumen de lo generado. */
 export const resumenGeneracion = (r: ResultadoGeneracion): string => {
-    if (r.totalDotaciones === 0) return "No es necesario generar dotaciones";
+    if (r.totalDotaciones === 0) return tContabilidad("amortizacion.noEsNecesarioGenerarDotaciones");
     if (r.totalDotaciones > 25) {
-        return `Se han generado ${r.totalDotaciones} dotaciones por un total de ${importe(r.importe)}`;
+        return tContabilidad("amortizacion.seHanGeneradoTotaldotacionesDotacionesPo", { totalDotaciones: r.totalDotaciones, importe: importe(r.importe) });
     }
     return r.amortizaciones
         .map((a) =>
-            [`Elemento: ${a.elemento}`]
+            [tContabilidad("amortizacion.elementoElemento", { elemento: a.elemento })]
                 .concat(a.dotaciones.map((d) =>
-                    `    Dotación: Desde ${d.fechaInicio} hasta ${d.fechaFin}. Importe: ${importe(d.importe)}`))
+                    tContabilidad("amortizacion.dotacionDesdeFechainicioHastaFechafinImp", { fechaInicio: d.fechaInicio, fechaFin: d.fechaFin, importe: importe(d.importe) })))
                 .join("\n"))
         .join("\n");
 };

@@ -13,6 +13,7 @@ import {
     patchCerrarAmortizacion,
     patchReabrirAmortizacion,
 } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Pestaña «Cierre»: botón «Cerrar / reabrir la amortización» con el asiento
  * de cierre (elemento, amortización acumulada y pérdidas). */
@@ -25,6 +26,7 @@ export const TabCierre = ({
     amortizacion: Amortizacion;
     onCambio: () => void;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [fecha, setFecha] = useState<Date>(amortizacion.fechaCierre ?? new Date());
     const [ocupado, setOcupado] = useState(false);
@@ -46,26 +48,26 @@ export const TabCierre = ({
     return (
         <div className="TabCierre">
             <quimera-formulario>
-                <QDate label="Fecha de cierre" nombre="fecha_cierre" valor={fechaAApi(fecha)}
+                <QDate label={t("amortizacion.fechaDeCierre")} nombre="fecha_cierre" valor={fechaAApi(fecha)}
                     deshabilitado={cerrada}
                     onChange={(valor) => valor && setFecha(new Date(`${valor}T12:00:00`))} />
-                <QCheckbox label="Ignorar contabilidad (sin asiento de cierre)"
+                <QCheckbox label={t("amortizacion.ignorarContabilidadSinAsientoDeCierre")}
                     {...form.uiProps("noGenerarAsientoCierre")} deshabilitado={cerrada} />
-                <QInput label="Asiento de cierre" nombre="asiento_cierre"
+                <QInput label={t("amortizacion.asientoDeCierre")} nombre="asiento_cierre"
                     valor={amortizacion.numeroAsientoCierre
                         ? `${amortizacion.numeroAsientoCierre} (${amortizacion.ejercicioAsientoCierre})`
                         : ""}
                     soloLectura />
-                <QCheckbox label="Vendido" {...form.uiProps("vendido")} />
+                <QCheckbox label={t("amortizacion.vendido")} {...form.uiProps("vendido")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={ejecutar} deshabilitado={ocupado}>
-                    {cerrada ? "Reabrir la amortización" : "Cerrar la amortización"}
+                    {cerrada ? t("amortizacion.reabrirLaAmortizacion") : t("amortizacion.cerrarLaAmortizacion")}
                 </QBoton>
             </div>
             {cerrada
-                ? <p>Al reabrir se borra el asiento de cierre.</p>
-                : <p>El asiento de cierre va al ejercicio {ejercicioActual()}.</p>}
+                ? <p>{t("amortizacion.alReabrirSeBorraElAsiento")}</p>
+                : <p>{t("amortizacion.elAsientoDeCierreVaAl", { valor: ejercicioActual() })}</p>}
         </div>
     );
 };

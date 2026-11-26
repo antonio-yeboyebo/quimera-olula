@@ -6,6 +6,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Amortizacion, PartidaCompra } from "../diseño.ts";
 import { metaTablaPartidasCompra } from "./meta.ts";
 import { getPartidasCompra, postAsociarPartida } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 
 /** `pbnAsociarFact_clicked`: partidas de la subcuenta de elemento del grupo
@@ -19,6 +20,7 @@ export const AsociarPartidaCompra = ({
     onAsociada: () => void;
     onCancelar: () => void;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [candidatas, setCandidatas] = useState<PartidaCompra[]>([]);
     const [cargando, setCargando] = useState(true);
@@ -37,11 +39,11 @@ export const AsociarPartidaCompra = ({
     }, [amortizacion.id, elegida, intentar, onAsociada]);
 
     return (
-        <QModal abierto={true} nombre="asociarPartidaCompra" titulo="Asociar factura de compra"
+        <QModal abierto={true} nombre="asociarPartidaCompra" titulo={t("amortizacion.asociarFacturaDeCompra")}
             onCerrar={onCancelar}>
             <div className="AsociarPartidaCompra">
                 {!cargando && candidatas.length === 0 && (
-                    <p>No hay facturas de proveedor con partidas de la subcuenta de elemento sin asociar.</p>
+                    <p>{t("amortizacion.noHayFacturasDeProveedorCon")}</p>
                 )}
                 <QTabla
                     metaTabla={metaTablaPartidasCompra}
@@ -53,7 +55,7 @@ export const AsociarPartidaCompra = ({
                     totalEntidades={candidatas.length}
                 />
                 <div className="botones maestro-botones">
-                    <QBoton onClick={asociar} deshabilitado={!elegida}>Asociar</QBoton>
+                    <QBoton onClick={asociar} deshabilitado={!elegida}>{t("amortizacion.asociar")}</QBoton>
                 </div>
             </div>
         </QModal>

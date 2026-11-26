@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Amortizacion } from "../diseño.ts";
 import { etiquetaAmortizacion } from "../dominio.ts";
 import { deleteAmortizacion } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarAmortizacion = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarAmortizacion = ({
     amortizacion: Amortizacion;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteAmortizacion(amortizacion.id);
         publicar("amortizacion_borrada", amortizacion);
@@ -26,8 +28,8 @@ export const BorrarAmortizacion = ({
         <QModalConfirmacion
             nombre="borrarAmortizacion"
             abierto={true}
-            titulo="Borrar amortización"
-            mensaje={`¿Confirma borrar ${etiquetaAmortizacion(amortizacion)}? No se puede borrar si tiene dotaciones o regularizaciones.`}
+            titulo={t("amortizacion.borrarAmortizacion")}
+            mensaje={t("amortizacion.confirmaBorrarAmortizacionNoSePuede", { amortizacion: etiquetaAmortizacion(amortizacion) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

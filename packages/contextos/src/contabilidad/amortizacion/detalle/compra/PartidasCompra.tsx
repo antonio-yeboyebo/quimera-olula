@@ -6,10 +6,12 @@ import { AsociarPartidaCompra } from "../../asociar_partida/AsociarPartidaCompra
 import { metaTablaPartidasCompra } from "../../asociar_partida/meta.ts";
 import { Amortizacion, PartidaCompra } from "../../diseño.ts";
 import { deleteQuitarPartida, getPartidasCompra } from "../../infraestructura.ts";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 /** Pestaña «Compra»: partidas de facturas de proveedor asociadas al activo
  * (`co_partidas.codactivo`); el informe de amortizaciones las usa como coste. */
 export const PartidasCompra = ({ amortizacion }: { amortizacion: Amortizacion }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [partidas, setPartidas] = useState<PartidaCompra[]>([]);
     const [cargando, setCargando] = useState(true);
@@ -37,8 +39,8 @@ export const PartidasCompra = ({ amortizacion }: { amortizacion: Amortizacion })
     return (
         <div className="PartidasCompra">
             <div className="botones maestro-botones">
-                <QBoton onClick={() => setAsociando(true)}>Asociar factura</QBoton>
-                <QBoton onClick={quitar} deshabilitado={!activa}>Quitar factura</QBoton>
+                <QBoton onClick={() => setAsociando(true)}>{t("amortizacion.asociarFactura")}</QBoton>
+                <QBoton onClick={quitar} deshabilitado={!activa}>{t("amortizacion.quitarFactura")}</QBoton>
             </div>
             <QTabla metaTabla={metaTablaPartidasCompra} datos={partidas} cargando={cargando}
                 seleccionadaId={activa?.id} onSeleccion={setActiva}
