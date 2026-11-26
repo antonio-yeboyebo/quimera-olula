@@ -13,6 +13,7 @@ import { contextoDetallePedidoCompraInicial } from "./detalle.ts";
 import "./DetallePedidoCompra.css";
 import { getMaquina } from "./maquina.ts";
 import { TabLineas } from "./TabLineas.tsx";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de solo lectura para pedidos de compra.
@@ -29,6 +30,7 @@ export const DetallePedidoCompra = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePedidoCompraInicial, publicar);
 
     // Recargar cuando el ID cambia (o se deselecciona con undefined)
@@ -51,27 +53,27 @@ export const DetallePedidoCompra = ({
         >
             <div className="DetallePedidoCompra">
                 <dl>
-                    <dt>Código</dt>
+                    <dt>{t("pedido_compra.codigo")}</dt>
                     <dd>{ctx.pedido.codigo}</dd>
-                    <dt>Proveedor</dt>
+                    <dt>{t("pedido_compra.proveedor")}</dt>
                     <dd>{ctx.pedido.proveedor}</dd>
-                    <dt>Fecha</dt>
+                    <dt>{t("pedido_compra.fecha")}</dt>
                     <dd>{ctx.pedido.fecha.toLocaleDateString()}</dd>
                 </dl>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={() => emitir("crear_entrada_solicitado")}>
-                        Recibir albarán
+                        {t("pedido_compra.recibirAlbaran")}
                     </QBoton>
                     <QBoton onClick={() => emitir("leer_albaran_solicitado")}>
-                        Leer albarán
+                        {t("pedido_compra.leerAlbaran")}
                     </QBoton>
-                    <QBoton variante="borde" enlace={urlListado.ordenesDePedidoCompra(ctx.pedido.id)}>Ver órdenes</QBoton>
+                    <QBoton variante="borde" enlace={urlListado.ordenesDePedidoCompra(ctx.pedido.id)}>{t("pedido_compra.verOrdenes")}</QBoton>
                 </div>
 
                 <Tabs children={[
                     <Tab
-                        label="Líneas"
+                        label={t("pedido_compra.lineas")}
                         key="tab-lineas"
                         children={
                             <TabLineas lineas={ctx.pedido.lineas} />

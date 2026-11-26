@@ -1,6 +1,7 @@
 import { Modelo } from "@olula/lib/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { LineaNuevaEntradaDesdePedido } from "../../diseño.ts";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // Paso 1 — cantidades y lotes detectados
@@ -21,7 +22,7 @@ export const metaLineaEditableEntrada: MetaModelo<LineaEditableEntrada> = {
             tipo: "numero",
             requerido: true,
             positivo: true,
-            validacion: (m) => (m.cantidad > 0 ? true : "La cantidad debe ser mayor que 0"),
+            validacion: (m) => (m.cantidad > 0 ? true : tAlmacen("pedido_compra.laCantidadDebeSerMayorQue")),
         },
     },
 };
@@ -68,14 +69,14 @@ export const metaLineaCajaEntrada: MetaModelo<LineaCajaEntrada> = {
             validacion: (m) =>
                 m.tipo_caja_id === "" || (m.cantidad_caja != null && m.cantidad_caja > 0)
                     ? true
-                    : "La cantidad por caja debe ser mayor que 0",
+                    : tAlmacen("pedido_compra.laCantidadPorCajaDebeSer"),
         },
         num_cajas: {
             tipo: "numero",
             validacion: (m) =>
                 m.tipo_caja_id === "" || (m.num_cajas != null && m.num_cajas > 0)
                     ? true
-                    : "El número de cajas debe ser mayor que 0",
+                    : tAlmacen("pedido_compra.elNumeroDeCajasDebeSer"),
         },
     },
 };

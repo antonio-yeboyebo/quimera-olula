@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { GetInfoLineasPedidoCompra, GetPedido, GetPedidos, ItemPedidoCompra, LineaNuevaEntradaDesdePedido, LineaPedidoCompra, NuevaEntradaDesdePedido, PedidoCompra, PostEntradaDesdePedido } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 
 interface ItemPedidoCompraApi {
@@ -87,7 +88,7 @@ export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: Nuev
                 "lineas" in nueva ? { lineas: nueva.lineas!.map((l) => lineaAApi(l)) } : {}
             )
         },
-        "Error al crear entrada desde pedido de compra"
+        tAlmacen("pedido_compra.errorAlCrearEntradaDesdePedido")
     );
     return respuesta.id as string;
 };
@@ -121,7 +122,7 @@ export const getInfoLineasPedidoCompra: GetInfoLineasPedidoCompra = async (pedid
     const respuesta = await RestAPI.query<FormData, { lineas: LineaNuevaEntradaDesdePedidoApi[] }>(
         `${baseUrl}/${pedidoCompraId}/analizar_recepcion`,
         formData,
-        "Error al leer albarán"
+        tAlmacen("pedido_compra.errorAlLeerAlbaran")
     );
     return respuesta.lineas.map(lineaNuevaEntradaDesdeApi);
 };
