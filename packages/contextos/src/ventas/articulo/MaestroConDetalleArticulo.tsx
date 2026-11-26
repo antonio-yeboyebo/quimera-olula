@@ -15,20 +15,22 @@ import { DetalleArticulo } from "./detalle/DetalleArticulo.tsx";
 import { Articulo } from "./diseño.ts";
 import { getMaquina } from "./maestro/maquina.ts";
 import { TarjetaArticulo } from "./TarjetaArticulo.tsx";
+import { tVentas, useTVentas } from "../i18n/index.ts";
 
-const metaTablaArticulo: MetaTabla<Articulo> = [
-  { id: "id", cabecera: "Referencia" },
-  { id: "descripcion", cabecera: "Descripción" },
+const metaTablaArticulo = (): MetaTabla<Articulo> => [
+  { id: "id", cabecera: tVentas("articulo.maestro.referencia") },
+  { id: "descripcion", cabecera: tVentas("articulo.maestro.descripcion") },
   {
     id: "descripcion_familia",
-    cabecera: "Familia",
+    cabecera: tVentas("articulo.maestro.familia"),
     render: (a) => a.descripcionFamilia,
   },
-  { id: "barcode", cabecera: "Cód. barras", render: (a) => a.codbarras },
-  { id: "precio", cabecera: "Precio", tipo: "moneda" },
+  { id: "barcode", cabecera: tVentas("articulo.maestro.codBarras"), render: (a) => a.codbarras },
+  { id: "precio", cabecera: tVentas("articulo.maestro.precio"), tipo: "moneda" },
 ];
 
 export const MaestroConDetalleArticulo = () => {
+  const t = useTVentas();
   const criteriaBase = useMemo(criteriaArticulosVenta, []);
 
   const { id, criteria } = getUrlParams();
@@ -51,11 +53,11 @@ export const MaestroConDetalleArticulo = () => {
       <MaestroDetalle<Articulo>
         Maestro={
           <>
-            <h2>Artículos</h2>
+            <h2>{t("articulo.maestro.titulo")}</h2>
             <Listado<Articulo>
-              metaTabla={metaTablaArticulo}
+              metaTabla={metaTablaArticulo()}
               tarjeta={TarjetaArticulo}
-              metaFiltro={metaFiltro}
+              metaFiltro={metaFiltro()}
               criteria={ctx.articulos.criteria}
               entidades={ctx.articulos.lista}
               totalEntidades={ctx.articulos.total}
@@ -63,7 +65,7 @@ export const MaestroConDetalleArticulo = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("creacion_solicitada")}>
-                    Nuevo Artículo
+                    {t("articulo.maestro.nuevo")}
                   </QBoton>
                 </div>
               )}
@@ -95,26 +97,26 @@ const criteriaArticulosVenta = (): Criteria => ({
   paginacion: { ...criteriaDefecto.paginacion },
 });
 
-const metaFiltro: MetaFiltro = {
+const metaFiltro = (): MetaFiltro => ({
   id: {
     id: "id",
-    label: "Referencia",
+    label: tVentas("articulo.maestro.referencia"),
     filtro: (v) => (v ? ["id", "~", v as string] : null),
   },
   descripcion: {
     id: "descripcion",
-    label: "Descripción",
+    label: tVentas("articulo.maestro.descripcion"),
     filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
   },
   familia_id: filtroFamilia,
   barcode: {
     id: "barcode",
-    label: "Cód. barras",
+    label: tVentas("articulo.maestro.codBarras"),
     filtro: (v) => (v ? ["barcode", "~", v as string] : null),
   },
   se_vende: {
     id: "se_vende",
-    label: "Solo vendibles",
+    label: tVentas("articulo.maestro.soloVendibles"),
     tipo: "checkbox",
     filtro: (v) => (v === "true" ? ["se_vende", "=", "true"] : null),
     fromFiltro: (filtro) =>
@@ -126,7 +128,7 @@ const metaFiltro: MetaFiltro = {
   },
   sin_stock: {
     id: "sin_stock",
-    label: "Sin stock",
+    label: tVentas("articulo.maestro.sinStock"),
     tipo: "checkbox",
     filtro: (v) => (v === "true" ? ["sin_stock", "=", "false"] : null),
     fromFiltro: (filtro) =>
@@ -136,4 +138,4 @@ const metaFiltro: MetaFiltro = {
         ? "true"
         : "",
   },
-};
+});

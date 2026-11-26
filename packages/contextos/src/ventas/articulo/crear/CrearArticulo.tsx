@@ -10,6 +10,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useContext } from "react";
 import { getArticulo, postArticulo } from "../infraestructura.ts";
 import { metaNuevoArticulo, nuevoArticuloVacio } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 interface CrearArticuloProps {
   publicar?: EmitirEvento;
@@ -22,6 +23,7 @@ export const CrearArticulo = ({
   onCancelar = () => {},
   activo = false,
 }: CrearArticuloProps) => {
+  const t = useTVentas();
   const nuevoArticulo = useModelo(metaNuevoArticulo, nuevoArticuloVacio);
   const impuestoDefecto = useAplicarImpuestoDefecto(
     nuevoArticulo,
@@ -46,14 +48,14 @@ export const CrearArticulo = ({
     <QModal
       abierto={activo}
       nombre="crear_articulo"
-      titulo="Nuevo Artículo"
+      titulo={t("articulo.maestro.nuevo")}
       onCerrar={onCancelar}
     >
       <>
         <quimera-formulario>
-          <QInput label="Referencia" autoSeleccion={true} {...nuevoArticulo.uiProps("id")} />
+          <QInput label={t("articulo.maestro.referencia")} autoSeleccion={true} {...nuevoArticulo.uiProps("id")} />
           <QInput
-            label="Descripción"
+            label={t("articulo.detalle.descripcion")}
             {...nuevoArticulo.uiProps("descripcion")}
           />
           <GrupoIvaProducto {...nuevoArticulo.uiProps("grupoIvaProductoId")} />

@@ -3,6 +3,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.ts";
 import { Articulo } from "../diseño.ts";
 import "./TabVentas.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const TabVentas = ({
   form,
@@ -10,21 +11,22 @@ export const TabVentas = ({
   form: FormModelo;
   articulo: Articulo;
 }) => {
+  const t = useTVentas();
   const { uiProps } = form;
 
   return (
     <div className="TabVentas">
       <quimera-formulario>
-        <QInput label="Precio" {...uiProps("precio")} />
+        <QInput label={t("articulo.detalle.precio")} {...uiProps("precio")} />
         <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
         {/* <QCheckbox
-          label="PVP variable"
+          label={t("articulo.detalle.pvpVariable")}
           nombre="pvpVariable"
           valor={articulo.pvpVariable}
           soloLectura
         />
         <QCheckbox
-          label="Sin stock"
+          label={t("articulo.detalle.sinStock")}
           nombre="noStock"
           valor={articulo.noStock}
           soloLectura

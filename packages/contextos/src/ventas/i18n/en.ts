@@ -1,5 +1,6 @@
 import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
 import { albaran } from "./en/albaran.ts";
+import { articulo, precioArticulo } from "./en/articulo.ts";
 import { documento } from "./en/documento.ts";
 import { factura } from "./en/factura.ts";
 import { pedido } from "./en/pedido.ts";
@@ -12,6 +13,8 @@ export const en: Traduccion<typeof es> = {
     pedido,
     albaran,
     factura,
+    articulo,
+    precioArticulo,
     comun: {
         agente: "Sales agent",
         seleccionarContacto: "Select contact",

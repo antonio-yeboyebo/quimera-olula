@@ -2,6 +2,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { UiProps } from "@olula/lib/useModelo.ts";
 import { pvpIgnorado, tramoValido } from "../dominio.ts";
 import "./CamposCondicion.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 type Condicion = { cantidadMin: number; cantidadMax: number; dtoPorcentual: number; pvp: number };
 
@@ -18,15 +19,16 @@ export const CamposCondicion = ({
     uiProps: (campo: string, secundario?: string) => UiProps;
     modelo: Condicion;
 }) => {
+    const t = useTVentas();
     const errorTramo = tramoValido(modelo);
 
     return (
         <>
-            <QInput label="Cantidad desde (0 = sin límite)" {...uiProps("cantidadMin")} />
-            <QInput label="Cantidad hasta (0 = sin límite)" {...uiProps("cantidadMax")} />
-            <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
+            <QInput label={t("precioArticulo.campos.cantidadDesde")} {...uiProps("cantidadMin")} />
+            <QInput label={t("precioArticulo.campos.cantidadHasta")} {...uiProps("cantidadMax")} />
+            <QInput label={t("precioArticulo.campos.descuento")} {...uiProps("dtoPorcentual")} />
             <QInput
-                label="Precio neto"
+                label={t("precioArticulo.campos.precioNeto")}
                 {...uiProps("pvp")}
                 divisa="EUR"
                 deshabilitado={pvpIgnorado(modelo)}
@@ -34,7 +36,7 @@ export const CamposCondicion = ({
             {errorTramo !== true && <span className="texto-validacion">{errorTramo}</span>}
             {pvpIgnorado(modelo) && (
                 <p className="nota">
-                    Con descuento se aplica sobre el precio de la tarifa del cliente o de la ficha del artículo.
+                    {t("precioArticulo.campos.ayudaDescuento")}
                 </p>
             )}
         </>

@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { CamposCondicion } from "../comun/CamposCondicion.tsx";
 import { metaNuevoPrecioArticulo, nuevoPrecioArticuloVacio } from "../dominio.ts";
 import { postPrecioArticulo } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Alta de una condición de precio para el cliente.
@@ -22,6 +23,7 @@ export const CrearPrecioArticulo = ({
     clienteId: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const inicial = useMemo(nuevoPrecioArticuloVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoPrecioArticulo, inicial);
@@ -39,7 +41,7 @@ export const CrearPrecioArticulo = ({
         <QModal
             abierto={true}
             nombre="crear_precio_articulo"
-            titulo="Nuevo precio por artículo"
+            titulo={t("precioArticulo.nuevo")}
             onCerrar={cancelar}
         >
             <div className="CrearPrecioArticulo">

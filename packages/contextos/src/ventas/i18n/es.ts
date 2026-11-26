@@ -4,6 +4,7 @@
  * traducción, con las mismas claves, en `en/`).
  */
 import { albaran } from "./es/albaran.ts";
+import { articulo, precioArticulo } from "./es/articulo.ts";
 import { documento } from "./es/documento.ts";
 import { factura } from "./es/factura.ts";
 import { pedido } from "./es/pedido.ts";
@@ -15,6 +16,8 @@ export const es = {
     pedido,
     albaran,
     factura,
+    articulo,
+    precioArticulo,
     comun: {
         agente: "Agente",
         seleccionarContacto: "Seleccionar contacto",

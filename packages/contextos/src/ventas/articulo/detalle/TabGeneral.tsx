@@ -4,6 +4,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { FormModelo } from "@olula/lib/dominio.ts";
 import "./TabGeneral.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const TabGeneral = ({
   form,
@@ -12,17 +13,32 @@ export const TabGeneral = ({
   form: FormModelo;
   articuloId: string;
 }) => {
+  const t = useTVentas();
   const { uiProps } = form;
 
   return (
     <div className="TabGeneral">
       <quimera-formulario>
-        <QInput label="Referencia" nombre="id" valor={articuloId} soloLectura />
-        <QInput label="Descripción" {...uiProps("descripcion")} />
+        <QInput
+          label={t("articulo.maestro.referencia")}
+          nombre="id"
+          valor={articuloId}
+          soloLectura
+        />
+        <QInput
+          label={t("articulo.detalle.descripcion")}
+          {...uiProps("descripcion")}
+        />
         <Familia {...uiProps("familiaId")} />
-        <QInput label="Código de barras" {...uiProps("codbarras")} />
+        <QInput
+          label={t("articulo.detalle.codigoBarras")}
+          {...uiProps("codbarras")}
+        />
         <TipoCodBarras {...uiProps("tipoCodBarras")} />
-        <QTextArea label="Observaciones" {...uiProps("observaciones")} />
+        <QTextArea
+          label={t("articulo.detalle.observaciones")}
+          {...uiProps("observaciones")}
+        />
       </quimera-formulario>
     </div>
   );

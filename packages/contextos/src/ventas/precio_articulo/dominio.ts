@@ -1,5 +1,6 @@
 import { fuentesPrecioArticulo, MetaModelo, puede } from "@olula/lib/dominio.ts";
 import { NuevoPrecioArticulo, PrecioArticulo } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 type CondicionPrecio = Pick<PrecioArticulo, "cantidadMin" | "cantidadMax" | "dtoPorcentual" | "pvp">;
 
@@ -11,7 +12,7 @@ export const tramoValido = (m: CondicionPrecio): string | true => {
     const minimo = Number(m.cantidadMin) || 0;
     const maximo = Number(m.cantidadMax) || 0;
     return minimo && maximo && minimo > maximo
-        ? "La cantidad desde no puede ser mayor que la cantidad hasta"
+        ? tVentas("precioArticulo.desdeMayorQueHasta")
         : true;
 };
 
@@ -50,9 +51,9 @@ export const nuevoPrecioArticuloVacio = (): NuevoPrecioArticulo => ({
 /** Texto del tramo para la lista: "Todas", "Desde 10", "Hasta 9", "10 – 50". */
 export const textoTramo = (p: Pick<PrecioArticulo, "cantidadMin" | "cantidadMax">): string => {
     const { cantidadMin: minimo, cantidadMax: maximo } = p;
-    if (!minimo && !maximo) return "Todas";
-    if (!maximo) return `Desde ${minimo}`;
-    if (!minimo) return `Hasta ${maximo}`;
+    if (!minimo && !maximo) return tVentas("precioArticulo.tramo.todas");
+    if (!maximo) return tVentas("precioArticulo.tramo.desde", { minimo });
+    if (!minimo) return tVentas("precioArticulo.tramo.hasta", { maximo });
     return `${minimo} – ${maximo}`;
 };
 

@@ -16,6 +16,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
 import { TabVentas } from "./TabVentas.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 
 const titulo = (articulo: Articulo) => articulo.descripcion;
 
@@ -26,6 +27,7 @@ export const DetalleArticulo = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const articuloId = id ?? params.id;
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ export const DetalleArticulo = ({
 
   const acciones = [
     {
-      texto: "Ver en almacén",
+      texto: t("articulo.detalle.verEnAlmacen"),
       onClick: () => navigate(`/almacen/articulo?id=${articulo.id}`),
     },
   ];
@@ -78,12 +80,12 @@ export const DetalleArticulo = ({
           children={[
             <Tab
               key="tab-general"
-              label="General"
+              label={t("articulo.detalle.general")}
               children={<TabGeneral form={form} articuloId={articulo.id} />}
             />,
             <Tab
               key="tab-ventas"
-              label="Ventas"
+              label={t("articulo.detalle.ventas")}
               children={<TabVentas form={form} articulo={articulo} />}
             />,
           ]}
