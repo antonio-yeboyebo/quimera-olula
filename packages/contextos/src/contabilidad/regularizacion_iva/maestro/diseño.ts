@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { RegularizacionIva } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroRegularizacionIva = "INICIAL" | "CREANDO";
 
@@ -13,19 +14,19 @@ export type ContextoMaestroRegularizacionIva = {
 };
 
 export const metaTablaRegularizacionIva: MetaTabla<RegularizacionIva> = [
-    { id: "ejercicioId", cabecera: "Ejercicio" },
-    { id: "periodo", cabecera: "Periodo" },
-    { id: "fechaInicio", cabecera: "Desde", tipo: "fecha" },
-    { id: "fechaFin", cabecera: "Hasta", tipo: "fecha" },
-    { id: "numeroAsiento", cabecera: "Asiento" },
-    { id: "importe", cabecera: "Importe", tipo: "numero" },
+    { id: "ejercicioId", get cabecera() { return tContabilidad("regularizacion_iva.ejercicio"); } },
+    { id: "periodo", get cabecera() { return tContabilidad("regularizacion_iva.periodo"); } },
+    { id: "fechaInicio", get cabecera() { return tContabilidad("regularizacion_iva.desde"); }, tipo: "fecha" },
+    { id: "fechaFin", get cabecera() { return tContabilidad("regularizacion_iva.hasta"); }, tipo: "fecha" },
+    { id: "numeroAsiento", get cabecera() { return tContabilidad("regularizacion_iva.asiento"); } },
+    { id: "importe", get cabecera() { return tContabilidad("regularizacion_iva.importe"); }, tipo: "numero" },
 ];
 
 export const metaFiltroRegularizacionIva: MetaFiltro = {
     ejercicio_id: {
         id: "ejercicio_id",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("regularizacion_iva.ejercicio"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["ejercicio_id", "eq", valor as string];

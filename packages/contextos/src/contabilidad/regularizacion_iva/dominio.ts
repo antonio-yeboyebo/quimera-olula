@@ -4,6 +4,7 @@ import {
     RegularizacionIva,
     Trimestre,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const MESES_TRIMESTRE: Record<Exclude<Trimestre, "OTRO">, number> = {
     T1: 0,
@@ -13,11 +14,11 @@ const MESES_TRIMESTRE: Record<Exclude<Trimestre, "OTRO">, number> = {
 };
 
 export const opcionesTrimestre = [
-    { valor: "T1", descripcion: "1er trimestre" },
-    { valor: "T2", descripcion: "2º trimestre" },
-    { valor: "T3", descripcion: "3er trimestre" },
-    { valor: "T4", descripcion: "4º trimestre" },
-    { valor: "OTRO", descripcion: "Otro periodo" },
+    { valor: "T1", get descripcion() { return tContabilidad("regularizacion_iva.t1erTrimestre"); } },
+    { valor: "T2", get descripcion() { return tContabilidad("regularizacion_iva.t2Trimestre"); } },
+    { valor: "T3", get descripcion() { return tContabilidad("regularizacion_iva.t3erTrimestre"); } },
+    { valor: "T4", get descripcion() { return tContabilidad("regularizacion_iva.t4Trimestre"); } },
+    { valor: "OTRO", get descripcion() { return tContabilidad("regularizacion_iva.otroPeriodo"); } },
 ];
 
 const fechaLocal = (anyo: number, mes: number, dia: number): Date =>
@@ -120,7 +121,7 @@ export const trimestreSiguiente = (
 
 export const etiquetaRegularizacionIva = (
     r: Pick<RegularizacionIva, "ejercicioId" | "periodo">
-): string => `Regularización IVA ${r.ejercicioId} ${r.periodo}`;
+): string => tContabilidad("regularizacion_iva.regularizacionIvaEjercicioidPeriodo", { ejercicioId: r.ejercicioId, periodo: r.periodo });
 
 export const regularizacionIvaVacia = (): RegularizacionIva => ({
     id: "",

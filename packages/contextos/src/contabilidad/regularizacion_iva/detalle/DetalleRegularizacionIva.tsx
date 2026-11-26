@@ -11,6 +11,7 @@ import { etiquetaRegularizacionIva } from "../dominio.ts";
 import { contextoDetalleRegularizacionIvaInicial } from "./detalle.ts";
 import "./DetalleRegularizacionIva.css";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Solo lectura, como el formulario de Eneboo una vez calculado: para
  * rehacer una regularización se borra (con su asiento) y se vuelve a crear. */
@@ -22,6 +23,7 @@ export const DetalleRegularizacionIva = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleRegularizacionIvaInicial,
@@ -39,7 +41,7 @@ export const DetalleRegularizacionIva = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("regularizacion_iva.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -65,14 +67,14 @@ export const DetalleRegularizacionIva = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    {campo("Ejercicio", "ejercicioId", regularizacion.ejercicioId)}
-                    {campo("Periodo", "periodo", regularizacion.periodo)}
-                    {campo("Fecha desde", "fechaInicio", formatearFechaDate(regularizacion.fechaInicio))}
-                    {campo("Fecha hasta", "fechaFin", formatearFechaDate(regularizacion.fechaFin))}
-                    {campo("Subcuenta H.P. deudora", "codigoSubcuentaDeudora", regularizacion.codigoSubcuentaDeudora)}
-                    {campo("Subcuenta H.P. acreedora", "codigoSubcuentaAcreedora", regularizacion.codigoSubcuentaAcreedora)}
-                    {campo("Nº de asiento", "numeroAsiento", String(regularizacion.numeroAsiento ?? ""))}
-                    {campo("Fecha de asiento", "fechaAsiento", formatearFechaDate(regularizacion.fechaAsiento))}
+                    {campo(t("regularizacion_iva.ejercicio"), "ejercicioId", regularizacion.ejercicioId)}
+                    {campo(t("regularizacion_iva.periodo"), "periodo", regularizacion.periodo)}
+                    {campo(t("regularizacion_iva.fechaDesde"), "fechaInicio", formatearFechaDate(regularizacion.fechaInicio))}
+                    {campo(t("regularizacion_iva.fechaHasta"), "fechaFin", formatearFechaDate(regularizacion.fechaFin))}
+                    {campo(t("regularizacion_iva.subcuentaHPDeudora"), "codigoSubcuentaDeudora", regularizacion.codigoSubcuentaDeudora)}
+                    {campo(t("regularizacion_iva.subcuentaHPAcreedora"), "codigoSubcuentaAcreedora", regularizacion.codigoSubcuentaAcreedora)}
+                    {campo(t("regularizacion_iva.nDeAsiento"), "numeroAsiento", String(regularizacion.numeroAsiento ?? ""))}
+                    {campo(t("regularizacion_iva.fechaDeAsiento"), "fechaAsiento", formatearFechaDate(regularizacion.fechaAsiento))}
                 </quimera-formulario>
                 <AsientoDeDocumento
                     asientoId={regularizacion.asientoId || null}

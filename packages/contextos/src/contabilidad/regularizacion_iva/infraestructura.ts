@@ -10,6 +10,7 @@ import {
     SubcuentasRegularizacionIva,
 } from "./diseño.ts";
 import { periodoNuevaRegularizacion } from "./dominio.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().REGULARIZACION_IVA;
 
@@ -85,7 +86,7 @@ export const postRegularizacionIva: PostRegularizacionIva = async (nueva) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevaRegularizacionIvaAApi(nueva),
-        "Error al regularizar el IVA",
+        tContabilidad("regularizacion_iva.errorAlRegularizarElIva"),
     );
     return String(respuesta.id);
 };
@@ -112,6 +113,6 @@ export const getSubcuentasRegularizacionIva = async (
 export const deleteRegularizacionIva: DeleteRegularizacionIva = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar la regularización de IVA"
+        tContabilidad("regularizacion_iva.errorAlBorrarLaRegularizacionDe")
     );
 };

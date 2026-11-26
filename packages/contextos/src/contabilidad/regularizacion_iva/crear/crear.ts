@@ -6,6 +6,7 @@ import {
     fechasTrimestre,
     trimestreSiguiente,
 } from "../dominio.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export const metaNuevaRegularizacionIva: MetaModelo<NuevaRegularizacionIva> = {
     campos: {
@@ -20,7 +21,7 @@ export const metaNuevaRegularizacionIva: MetaModelo<NuevaRegularizacionIva> = {
     validacion: (m) =>
         !m.fechaInicio || !m.fechaFin || m.fechaInicio <= m.fechaFin
             ? true
-            : "La fecha de inicio debe ser anterior a la de fin",
+            : tContabilidad("regularizacion_iva.laFechaDeInicioDebeSer"),
     onChange: (modelo, campo) => cambiarNuevaRegularizacion(modelo, campo),
 };
 
