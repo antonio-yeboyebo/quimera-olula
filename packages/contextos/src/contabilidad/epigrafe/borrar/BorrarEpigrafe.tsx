@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Epigrafe } from "../diseño.ts";
 import { etiquetaEpigrafe } from "../dominio.ts";
 import { deleteEpigrafe } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarEpigrafe = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarEpigrafe = ({
     epigrafe: Epigrafe;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteEpigrafe(epigrafe.id);
         publicar("epigrafe_borrado", epigrafe);
@@ -29,8 +31,8 @@ export const BorrarEpigrafe = ({
         <QModalConfirmacion
             nombre="borrarEpigrafe"
             abierto={true}
-            titulo="Borrar subgrupo"
-            mensaje={`¿Confirma borrar ${etiquetaEpigrafe(epigrafe)}? Solo es posible si no tiene cuentas asociadas.`}
+            titulo={t("epigrafe.borrarSubgrupo")}
+            mensaje={t("epigrafe.confirmaBorrarEpigrafeSoloEsPosible", { epigrafe: etiquetaEpigrafe(epigrafe) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

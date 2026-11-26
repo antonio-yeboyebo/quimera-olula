@@ -10,6 +10,7 @@ import {
     PatchEpigrafe,
     PostEpigrafe,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().EPIGRAFE;
 
@@ -53,7 +54,7 @@ export const postEpigrafe: PostEpigrafe = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoEpigrafeAApi(nuevo),
-        "Error al crear el subgrupo",
+        tContabilidad("epigrafe.errorAlCrearElSubgrupo"),
     );
     return String(respuesta.id);
 };
@@ -74,10 +75,10 @@ export const patchEpigrafe: PatchEpigrafe = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosEpigrafeAApi(cambios),
-        "Error al guardar el subgrupo",
+        tContabilidad("epigrafe.errorAlGuardarElSubgrupo"),
     );
 };
 
 export const deleteEpigrafe: DeleteEpigrafe = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el subgrupo");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("epigrafe.errorAlBorrarElSubgrupo"));
 };

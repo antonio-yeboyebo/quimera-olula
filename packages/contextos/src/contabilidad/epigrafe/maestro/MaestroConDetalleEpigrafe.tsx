@@ -15,6 +15,7 @@ import {
     metaTablaEpigrafe,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Maestro de subgrupos del plan contable (`co_epigrafes`).
@@ -25,6 +26,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleEpigrafe = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaEpigrafesDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -46,7 +48,7 @@ export const MaestroConDetalleEpigrafe = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los subgrupos del plan contable.</p>;
+        return <p>{t("epigrafe.noTienesPermisoParaVerLos")}</p>;
     }
 
     const ejercicioId =
@@ -73,7 +75,7 @@ export const MaestroConDetalleEpigrafe = () => {
                                             emitir("crear_epigrafe_solicitado")
                                         }
                                     >
-                                        Nuevo subgrupo
+                                        {t("epigrafe.nuevoSubgrupo")}
                                     </QBoton>
                                 </div>
                             )}
