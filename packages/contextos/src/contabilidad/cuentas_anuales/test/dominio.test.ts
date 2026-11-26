@@ -144,13 +144,13 @@ describe("nombres", () => {
                 descripcion: "Cierre 2026",
                 tipo: "Situacion",
             })
-        ).toBe("Cierre 2026 — Situacion");
+        ).toBe("Cierre 2026 — Situación");
     });
 
     test("sin descripción se queda el tipo", () => {
         expect(
             etiquetaCuentasAnuales({ descripcion: "", tipo: "Situacion" })
-        ).toBe("Situacion");
+        ).toBe("Situación");
     });
 
     test("el fichero descargado se nombra a partir de la descripción", () => {

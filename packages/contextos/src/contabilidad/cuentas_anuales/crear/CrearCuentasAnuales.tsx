@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { CamposCuentasAnuales } from "../detalle/CamposCuentasAnuales.tsx";
 import { postCuentasAnuales } from "../infraestructura.ts";
 import { metaNuevaCuentasAnuales, nuevaCuentasAnualesInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearCuentasAnuales = ({
     publicar,
@@ -18,6 +19,7 @@ export const CrearCuentasAnuales = ({
 }) => {
     // Memoizado: useModelo reinicia el formulario cada vez que cambia la
     // identidad del inicial, así que pasarlo en línea entra en bucle.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevaCuentasAnualesInicial(ejercicioId),
         [ejercicioId]
@@ -46,7 +48,7 @@ export const CrearCuentasAnuales = ({
         <QModal
             abierto={true}
             nombre="crearCuentasAnuales"
-            titulo="Nuevo informe de cuentas anuales"
+            titulo={t("cuentas_anuales.nuevoInformeDeCuentasAnuales")}
             onCerrar={cancelar}
         >
             <div className="CrearCuentasAnuales">
@@ -60,7 +62,7 @@ export const CrearCuentasAnuales = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("cuentas_anuales.crear")}
                     </QBoton>
                 </div>
             </div>

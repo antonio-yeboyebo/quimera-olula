@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { CuentasAnuales } from "../diseño.ts";
 import { etiquetaCuentasAnuales } from "../dominio.ts";
 import { deleteCuentasAnuales } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarCuentasAnuales = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarCuentasAnuales = ({
     informe: CuentasAnuales;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteCuentasAnuales(informe.id);
         publicar("informe_borrado", informe);
@@ -29,8 +31,8 @@ export const BorrarCuentasAnuales = ({
         <QModalConfirmacion
             nombre="borrarCuentasAnuales"
             abierto={true}
-            titulo="Borrar informe"
-            mensaje={`¿Confirma borrar ${etiquetaCuentasAnuales(informe)}? Solo se borra la configuración del informe, no hay datos contables implicados.`}
+            titulo={t("cuentas_anuales.borrarInforme")}
+            mensaje={t("cuentas_anuales.confirmaBorrarInformeSoloSeBorra", { informe: etiquetaCuentasAnuales(informe) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

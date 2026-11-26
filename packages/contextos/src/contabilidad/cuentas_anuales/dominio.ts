@@ -9,12 +9,31 @@ import {
     SubtotalCuentasAnuales,
     TipoCuentasAnuales,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export { ejercicioActual };
 
+const TEXTO_VALOR: Record<string, () => string> = {
+    Situacion: () => tContabilidad("comun.situacion"),
+    "Perdidas y ganancias": () => tContabilidad("comun.perdidasYGanancias"),
+    "Ingresos y gastos": () => tContabilidad("comun.ingresosYGastos"),
+    Normal: () => tContabilidad("comun.normal"),
+    Abreviado: () => tContabilidad("comun.abreviado"),
+    "No desglosar": () => tContabilidad("comun.noDesglosar"),
+    Cuenta: () => tContabilidad("comun.cuenta"),
+    Subcuenta: () => tContabilidad("comun.subcuenta"),
+};
+
+/** Texto visible de un tipo, formato o desglose (el valor se guarda como en Eneboo). */
+export const textoValorCuentasAnuales = (valor: string): string =>
+    TEXTO_VALOR[valor]?.() ?? valor;
+
 export const etiquetaCuentasAnuales = (
     c: Pick<CuentasAnuales, "descripcion" | "tipo">
-): string => (c.descripcion ? `${c.descripcion} — ${c.tipo}` : c.tipo);
+): string => {
+    const tipo = textoValorCuentasAnuales(c.tipo);
+    return c.descripcion ? `${c.descripcion} — ${tipo}` : tipo;
+};
 
 export const cuentasAnualesVacias = (): CuentasAnuales => ({
     id: "",

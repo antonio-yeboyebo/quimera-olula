@@ -4,6 +4,8 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { CuentasAnuales } from "../diseño.ts";
+import { textoValorCuentasAnuales } from "../dominio.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroCuentasAnuales = "INICIAL" | "CREANDO";
 
@@ -13,10 +15,10 @@ export type ContextoMaestroCuentasAnuales = {
 };
 
 export const metaTablaCuentasAnuales: MetaTabla<CuentasAnuales> = [
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "tipo", cabecera: "Tipo" },
-    { id: "formato", cabecera: "Formato" },
-    { id: "nivelDesglose", cabecera: "Desglose" },
+    { id: "descripcion", get cabecera() { return tContabilidad("cuentas_anuales.descripcion"); } },
+    { id: "tipo", get cabecera() { return tContabilidad("cuentas_anuales.tipo"); }, render: (c) => textoValorCuentasAnuales(c.tipo) },
+    { id: "formato", get cabecera() { return tContabilidad("cuentas_anuales.formato"); }, render: (c) => textoValorCuentasAnuales(c.formato) },
+    { id: "nivelDesglose", get cabecera() { return tContabilidad("cuentas_anuales.desglose"); }, render: (c) => textoValorCuentasAnuales(c.nivelDesglose) },
 ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -25,7 +27,7 @@ export const metaFiltroCuentasAnuales: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tContabilidad("cuentas_anuales.descripcion"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null
@@ -34,14 +36,14 @@ export const metaFiltroCuentasAnuales: MetaFiltro = {
     tipo: {
         id: "tipo",
         campo: "tipo",
-        label: "Tipo",
+        get label() { return tContabilidad("cuentas_anuales.tipo"); },
         filtro: (valor) =>
             !valor || valor === "" ? null : ["tipo", "eq", valor as string],
     },
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("cuentas_anuales.ejercicio"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null

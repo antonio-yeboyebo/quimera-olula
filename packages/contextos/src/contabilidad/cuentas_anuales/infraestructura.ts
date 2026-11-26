@@ -16,6 +16,7 @@ import {
     PostCuentasAnuales,
     TipoFilaInforme,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.CUENTAS_ANUALES;
@@ -178,7 +179,7 @@ export const getBalanceCuentasAnuales: GetBalanceCuentasAnuales = async (id) =>
     RestAPI.getItem<BalanceCuentasAnuales, BalanceCuentasAnualesApi>(
         urls.CUENTAS_ANUALES_BALANCE(id),
         balanceDesdeApi,
-        "Error al calcular las cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlCalcularLasCuentasAnuales")
     );
 
 const periodoAApi = (
@@ -214,7 +215,7 @@ export const postCuentasAnuales: PostCuentasAnuales = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevaCuentasAnualesAApi(nuevo),
-        "Error al crear el informe de cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlCrearElInformeDe")
     );
     return String(respuesta.id);
 };
@@ -254,21 +255,21 @@ export const patchCuentasAnuales: PatchCuentasAnuales = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosCuentasAnualesAApi(cambios),
-        "Error al guardar el informe de cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlGuardarElInformeDe")
     );
 };
 
 export const deleteCuentasAnuales: DeleteCuentasAnuales = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar el informe de cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlBorrarElInformeDe")
     );
 };
 
 export const getReportCuentasAnuales: GetReportCuentasAnuales = async (id) =>
     RestAPI.blob(
         urls.CUENTAS_ANUALES_REPORT(id),
-        "Error al descargar el PDF de cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlDescargarElPdfDe")
     );
 
 export const getHojaCuentasAnuales: GetHojaCuentasAnuales = async (
@@ -277,5 +278,5 @@ export const getHojaCuentasAnuales: GetHojaCuentasAnuales = async (
 ) =>
     RestAPI.blob(
         urls.CUENTAS_ANUALES_HOJA(id, formato),
-        "Error al descargar la hoja de cuentas anuales"
+        tContabilidad("cuentas_anuales.errorAlDescargarLaHojaDe")
     );
