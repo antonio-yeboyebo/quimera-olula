@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { getTagsArticulo } from "../../articulo/infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 interface ArticuloProps {
   descripcion?: string;
@@ -16,10 +17,12 @@ export const Articulo = ({
   descripcion = "",
   valor,
   nombre = "referencia",
-  label = "Artículo",
+  label: labelProp,
   onChange,
   ...props
 }: ArticuloProps) => {
+  const t = useTVentas();
+  const label = labelProp ?? t("comun.campos.articulo");
   const obtenerOpciones = async (texto: string) => {
     const criteria = {
       filtro: {

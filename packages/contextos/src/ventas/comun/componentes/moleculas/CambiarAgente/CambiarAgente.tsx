@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import "./CambiarAgente.css";
 import { CambioAgente } from "./diseño.ts";
 import { cambioAgenteVacio, metaCambioAgente } from "./dominio.ts";
+import { useTVentas } from "../../../../i18n/index.ts";
 
 interface CambiarAgenteProps {
   publicar: EmitirEvento;
@@ -22,8 +23,10 @@ export const CambiarAgente = ({
   agenteId,
   nombreAgente,
   porComision,
-  titulo = "Agente",
+  titulo: tituloProp,
 }: CambiarAgenteProps) => {
+  const t = useTVentas();
+  const titulo = tituloProp ?? t("comun.agente");
   const agenteInicial = useMemo(
     () => ({
       ...cambioAgenteVacio,
@@ -64,11 +67,14 @@ export const CambiarAgente = ({
       <div className="CambiarAgente">
         <quimera-formulario>
           <Agente {...uiProps("agente_id", "nombre_agente")} />
-          <QInput label="% Comisión" {...uiProps("por_comision")} />
+          <QInput
+            label={t("comun.campos.comision")}
+            {...uiProps("por_comision")}
+          />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Guardar
+            {t("comun.guardar")}
           </QBoton>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import "./CambiarDivisa.css";
 import { CambioDivisa } from "./diseño.ts";
 import { cambioDivisaVacio, metaCambioDivisa } from "./dominio.ts";
+import { useTVentas } from "../../../../i18n/index.ts";
 
 interface CambiarDivisaProps {
   publicar: EmitirEvento;
@@ -20,8 +21,10 @@ export const CambiarDivisa = ({
   publicar,
   divisaId,
   tasaConversion,
-  titulo = "Divisa",
+  titulo: tituloProp,
 }: CambiarDivisaProps) => {
+  const t = useTVentas();
+  const titulo = tituloProp ?? t("comun.campos.divisa");
   const divisaInicial = useMemo(
     () => ({
       ...cambioDivisaVacio,
@@ -60,11 +63,14 @@ export const CambiarDivisa = ({
       <div className="CambiarDivisa">
         <quimera-formulario>
           <Divisa {...uiProps("divisa_id")} />
-          <QInput label="T. Conversión" {...uiProps("tasa_conversion")} />
+          <QInput
+            label={t("comun.campos.tasaConversion")}
+            {...uiProps("tasa_conversion")}
+          />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Guardar
+            {t("comun.guardar")}
           </QBoton>
         </div>
       </div>

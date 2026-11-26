@@ -3,6 +3,7 @@ import { TipoArticuloLinea } from "#/ventas/venta/diseño.ts";
 import { QIcono, QInput } from "@olula/componentes/index.js";
 import { useEffect, useRef } from "react";
 import "./ArticuloLinea.css";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export type CamposArticuloLinea = {
     tipoArticulo: TipoArticuloLinea;
@@ -28,6 +29,7 @@ export const ArticuloLinea = ({
     onChange,
     bloqueado = false,
 }: ArticuloLineaProps) => {
+    const t = useTVentas();
     const refArticulo = useRef<HTMLInputElement | null>(null);
     const refDescripcionRegistrado = useRef<HTMLInputElement | null>(null);
     const refDescripcionLibre = useRef<HTMLInputElement | null>(null);
@@ -87,8 +89,8 @@ export const ArticuloLinea = ({
                         <button
                             type="button"
                             onClick={toggleDescripcion}
-                            title="Editar descripción"
-                            aria-label="Editar descripción"
+                            title={t("comun.linea.editarDescripcion")}
+                            aria-label={t("comun.linea.editarDescripcion")}
                             className="ArticuloLinea-boton-candado"
                         >
                             <QIcono nombre="editar_2" tamaño="sm" />
@@ -98,8 +100,8 @@ export const ArticuloLinea = ({
                         <button
                             type="button"
                             onClick={abrir}
-                            title="Abrir descripción libre"
-                            aria-label="Abrir descripción libre"
+                            title={t("comun.linea.abrirDescripcionLibre")}
+                            aria-label={t("comun.linea.abrirDescripcionLibre")}
                             className="ArticuloLinea-boton-candado"
                         >
                             <QIcono nombre="candado_abierto" tamaño="sm" />
@@ -109,7 +111,7 @@ export const ArticuloLinea = ({
                 {tipoArticulo === "generico" && (
                     <QInput
                         nombre="descripcion"
-                        label="Descripción personalizada"
+                        label={t("comun.campos.descripcionPersonalizada")}
                         valor={descripcion ?? ""}
                         onChange={(val) => onChange({ descripcion: val })}
                         valido={!!descripcion}
@@ -124,7 +126,7 @@ export const ArticuloLinea = ({
         <div className="ArticuloLinea-campo">
             <QInput
                 nombre="descripcion"
-                label="Descripción"
+                label={t("comun.campos.descripcion")}
                 valor={descripcion ?? ""}
                 erroneo={!descripcion}
                 onChange={(val) => onChange({ descripcion: val })}
@@ -134,8 +136,8 @@ export const ArticuloLinea = ({
                 <button
                     type="button"
                     onClick={cerrar}
-                    title="Cerrar descripción libre"
-                    aria-label="Cerrar descripción libre"
+                    title={t("comun.linea.cerrarDescripcionLibre")}
+                    aria-label={t("comun.linea.cerrarDescripcionLibre")}
                     className="ArticuloLinea-boton-candado"
                 >
                     <QIcono nombre="candado" tamaño="sm" />
