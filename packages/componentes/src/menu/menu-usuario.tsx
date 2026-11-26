@@ -1,9 +1,10 @@
 import "./menu-usuario.css";
 
+import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { puedeAlguna } from "@olula/lib/dominio.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { ElementoMenu, ElementoMenuPadre } from "@olula/lib/menu.ts";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { QAvatar } from "../atomos/qavatar.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
@@ -39,11 +40,52 @@ const usuarioConectado = (): string => {
   }
 };
 
+const CLAVE_NOMBRE = "nombre-usuario";
+
+/** Nombre del usuario conectado, guardado la última vez que se leyó de «Mi cuenta». */
+const nombreGuardado = (usuarioId: string): string => {
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CLAVE_NOMBRE) ?? "{}");
+    return guardado?.id === usuarioId && typeof guardado?.nombre === "string" ? guardado.nombre : "";
+  } catch {
+    return "";
+  }
+};
+
+/** El nombre del usuario (de `GET /auth/mi_cuenta`); mientras llega, el último conocido o su id. */
+const useNombreUsuario = (usuarioId: string): string => {
+  const [nombre, setNombre] = useState(() => nombreGuardado(usuarioId));
+
+  useEffect(() => {
+    if (!usuarioId) return;
+    let vigente = true;
+    RestAPI.get<{ datos: { nombre?: string | null } }>("/auth/mi_cuenta")
+      .then((respuesta) => {
+        const leido = respuesta?.datos?.nombre?.trim();
+        if (!vigente || !leido) return;
+        setNombre(leido);
+        try {
+          localStorage.setItem(CLAVE_NOMBRE, JSON.stringify({ id: usuarioId, nombre: leido }));
+        } catch {
+          // Sin almacenamiento local: solo se pierde el nombre al recargar.
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      vigente = false;
+    };
+  }, [usuarioId]);
+
+  return nombre || usuarioId;
+};
+
 export const MenuUsuarioBase = (props: {
   elementos?: MenuUsuarioElementos;
   procesarElementos?: ProcesoElementosFn;
 }) => {
   const { menuAbierto, cerrarMenu } = useMenuControl();
+  const usuarioId = usuarioConectado();
+  const usuario = useNombreUsuario(usuarioId);
 
   // No mostrar menú si no está autenticado
   if (!estaAutentificado()) {
@@ -91,8 +133,6 @@ export const MenuUsuarioBase = (props: {
       </details>
     );
   };
-
-  const usuario = usuarioConectado();
 
   const elementos = elementosDelMenu.map((elemento) =>
     renderizaElemento(elemento)
