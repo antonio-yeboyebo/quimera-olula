@@ -358,4 +358,18 @@ export const es = {
         noTienesPermisoParaVerEl: "No tienes permiso para ver el plan de cuentas.",
         cuenta: "Cuenta",
     },
+    subcuentas_tercero: {
+        subcuenta: "Subcuenta",
+        descripcion: "Descripción",
+        subcuentaPorEjercicio: "Subcuenta por ejercicio",
+        asientoNumero: "Asiento {{numero}}",
+        fecha: "Fecha",
+        asiento: "Asiento",
+        concepto: "Concepto",
+        debe: "Debe",
+        haber: "Haber",
+        saldo: "Saldo",
+        errorAlLeerLasSubcuentas: "Error al leer las subcuentas",
+        errorAlLeerLasPartidas: "Error al leer las partidas",
+    },
 } as const;

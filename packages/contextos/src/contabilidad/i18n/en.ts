@@ -357,4 +357,18 @@ export const en: Traduccion<typeof es> = {
         noTienesPermisoParaVerEl: "You do not have permission to view the chart of accounts.",
         cuenta: "Account",
     },
+    subcuentas_tercero: {
+        subcuenta: "Sub-account",
+        descripcion: "Description",
+        subcuentaPorEjercicio: "Sub-account per fiscal year",
+        asientoNumero: "Entry {{numero}}",
+        fecha: "Date",
+        asiento: "Entry",
+        concepto: "Description",
+        debe: "Debit",
+        haber: "Credit",
+        saldo: "Balance",
+        errorAlLeerLasSubcuentas: "Error reading the sub-accounts",
+        errorAlLeerLasPartidas: "Error reading the lines",
+    },
 };
