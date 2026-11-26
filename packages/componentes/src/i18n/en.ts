@@ -63,9 +63,18 @@ export const en: Traduccion<typeof es> = {
         abrir: "Open {{que}}",
         ficha: "record",
         limpiarSeleccion: "Clear selection",
+        opcional: "(optional)",
         limpiarHora: "Clear time",
     },
+    widgets: {
+        resumen: "Summary",
+        segunFiltros: "· for the current filters",
+        anadir: "Add widgets",
+        personalizar: "Customize",
+        noDisponible: "Not available with the current filters",
+    },
     cabecera: {
+        irAPantalla: "Go to a screen…",
         abrirMenuUsuario: "Open user menu",
         buscarPantalla: "Search screen (Ctrl K)",
         abrirMenuLateral: "Open side menu",

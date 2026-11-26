@@ -269,10 +269,11 @@ export const FormInput = ({
 
 
 export const Etiqueta = ({ label }: { label: string }) => {
+  const t = useTComponentes();
   return (
     <span className="etiqueta">
       {label}
-      <span className="etiqueta-opcional">(opcional)</span>
+      <span className="etiqueta-opcional">{t("campos.opcional")}</span>
     </span>
   );
 };

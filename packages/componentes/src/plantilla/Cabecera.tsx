@@ -103,7 +103,7 @@ export const CabeceraBase = ({
             onClick={abrirBusqueda}
           >
             <QIcono nombre="buscar" tamaño="sm" />
-            <span className="boton-busqueda-texto">Ir a una pantalla…</span>
+            <span className="boton-busqueda-texto">{t("cabecera.irAPantalla")}</span>
             <span className="boton-busqueda-texto-movil">Buscar</span>
             <kbd>Ctrl K</kbd>
           </button>

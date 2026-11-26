@@ -61,9 +61,18 @@ export const es = {
         abrir: "Abrir {{que}}",
         ficha: "ficha",
         limpiarSeleccion: "Limpiar selección",
+        opcional: "(opcional)",
         limpiarHora: "Limpiar hora",
     },
+    widgets: {
+        resumen: "Resumen",
+        segunFiltros: "· según los filtros actuales",
+        anadir: "Añadir widgets",
+        personalizar: "Personalizar",
+        noDisponible: "No disponible con los filtros actuales",
+    },
     cabecera: {
+        irAPantalla: "Ir a una pantalla…",
         abrirMenuUsuario: "Abrir menú usuario",
         buscarPantalla: "Buscar pantalla (Ctrl K)",
         abrirMenuLateral: "Abrir menú lateral",
