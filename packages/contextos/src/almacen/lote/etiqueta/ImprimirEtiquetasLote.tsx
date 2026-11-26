@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import "./ImprimirEtiquetasLote.css";
 import { FormEtiquetaLote, FormatoEtiquetaLote, OpcionesEtiquetaLote } from "../diseño.ts";
 import { FORMATOS_ETIQUETA_LOTE, formEtiquetaPorDefecto, opcionesEtiquetaDesdeForm } from "../dominio.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Modal de «Imprimir etiquetas» de un lote: copias, formato (3x9 o 2,5x6) y cantidad opcional
@@ -14,14 +15,14 @@ import { FORMATOS_ETIQUETA_LOTE, formEtiquetaPorDefecto, opcionesEtiquetaDesdeFo
  * del lote, la pestaña Lote de la orden y el Terminal (al terminar o declarar la tarea final).
  */
 export const ImprimirEtiquetasLote = ({
-    titulo = "Imprimir etiquetas",
+    titulo = tAlmacen("lote.imprimirEtiquetas"),
     mensaje,
-    ayudaCantidad = "Vacía: lo fabricado o, si aún no hay nada, la cantidad del lote.",
+    ayudaCantidad = tAlmacen("lote.vaciaLoFabricadoOSiAun"),
     nombreFichero,
     cargar,
     cerrar,
-    labelAceptar = "Imprimir",
-    labelCancelar = "Cancelar",
+    labelAceptar = tAlmacen("lote.imprimir"),
+    labelCancelar = tAlmacen("lote.cancelar"),
 }: {
     titulo?: string;
     mensaje?: string;
@@ -32,6 +33,7 @@ export const ImprimirEtiquetasLote = ({
     labelAceptar?: string;
     labelCancelar?: string;
 }) => {
+    const t = useTAlmacen();
     const [form, setForm] = useState<FormEtiquetaLote>(formEtiquetaPorDefecto);
     const [aviso, setAviso] = useState("");
     const { intentar } = useContext(ContextoError);
@@ -64,21 +66,21 @@ export const ImprimirEtiquetasLote = ({
             onAceptar={imprimir}
         >
             <quimera-formulario>
-                <QInput label="Copias" nombre="copiasEtiqueta" valor={form.copias} onChange={(v) => cambiar("copias", String(v ?? ""))} />
+                <QInput label={t("lote.copias")} nombre="copiasEtiqueta" valor={form.copias} onChange={(v) => cambiar("copias", String(v ?? ""))} />
                 <QSelect
-                    label="Formato"
+                    label={t("lote.formato")}
                     nombre="formatoEtiqueta"
                     valor={form.formato}
                     opciones={FORMATOS_ETIQUETA_LOTE}
                     onChange={(opcion) => cambiar("formato", (opcion?.valor as FormatoEtiquetaLote | undefined) ?? "3x9")}
                 />
                 <QInput
-                    label="Cantidad"
+                    label={t("lote.cantidad")}
                     nombre="cantidadEtiqueta"
                     valor={form.cantidad}
                     onChange={(v) => cambiar("cantidad", String(v ?? ""))}
                     opcional
-                    placeholder="Automática"
+                    placeholder={t("lote.automatica")}
                 />
             </quimera-formulario>
             <p className="nota-etiqueta">{ayudaCantidad}</p>

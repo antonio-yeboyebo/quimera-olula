@@ -11,26 +11,27 @@ import { ESTADOS_LOTE, etiquetaEstadoLote, fechaDdMmAaaa, formatearCantidad, tex
 import { getLote, getLotes } from "../infraestructura.ts";
 import { RevisarTodosLotes } from "../revisar/RevisarTodosLotes.tsx";
 import "./MaestroLote.css";
+import { tAlmacen } from "../../i18n/index.ts";
 
 const conProduccion = () => plugin("produccion") === "activo";
 
 // Los id de columna son los campos de la API: con ellos se ordena.
 const columnasBase: MetaTabla<Lote> = [
-    { id: "id", cabecera: "Código", estilo: "secundario", prioridad: "alta" },
-    { id: "sku", cabecera: "Artículo", estilo: "destacado", render: (l) => textoArticulo(l), prioridad: "alta" },
-    { id: "caducidad", cabecera: "Caducidad", render: (l) => fechaDdMmAaaa(l.caducidad) },
-    { id: "en_almacen", cabecera: "En almacén", render: (l) => formatearCantidad(l.enAlmacen) },
+    { id: "id", get cabecera() { return tAlmacen("lote.codigo"); }, estilo: "secundario", prioridad: "alta" },
+    { id: "sku", get cabecera() { return tAlmacen("lote.articulo"); }, estilo: "destacado", render: (l) => textoArticulo(l), prioridad: "alta" },
+    { id: "caducidad", get cabecera() { return tAlmacen("lote.caducidad"); }, render: (l) => fechaDdMmAaaa(l.caducidad) },
+    { id: "en_almacen", get cabecera() { return tAlmacen("lote.enAlmacen"); }, render: (l) => formatearCantidad(l.enAlmacen) },
 ];
 
 const columnasProduccion: MetaTabla<Lote> = [
     {
         id: "estado",
-        cabecera: "Estado",
+        get cabecera() { return tAlmacen("lote.estado"); },
         render: (l) => (l.produccion ? <EtiquetaEstado {...etiquetaEstadoLote(l.produccion.estado)} /> : ""),
         prioridad: "alta",
     },
-    { id: "cantidad_disponible", cabecera: "Disponible", render: (l) => formatearCantidad(l.produccion?.cantidadDisponible) },
-    { id: "orden_id", cabecera: "Orden", render: (l) => l.produccion?.ordenId ?? "", prioridad: "baja" },
+    { id: "cantidad_disponible", get cabecera() { return tAlmacen("lote.disponible"); }, render: (l) => formatearCantidad(l.produccion?.cantidadDisponible) },
+    { id: "orden_id", get cabecera() { return tAlmacen("lote.orden"); }, render: (l) => l.produccion?.ordenId ?? "", prioridad: "baja" },
 ];
 
 const metaTabla = (): MetaTabla<Lote> => (conProduccion() ? [...columnasBase, ...columnasProduccion] : columnasBase);
@@ -38,13 +39,13 @@ const metaTabla = (): MetaTabla<Lote> => (conProduccion() ? [...columnasBase, ..
 const filtrosBase: MetaFiltro = {
     id: {
         id: "id",
-        label: "Código",
+        get label() { return tAlmacen("lote.codigo"); },
         tipo: "texto",
         filtro: (v) => (v ? ["id", "~", v as string] : null),
     },
     sku: {
         id: "sku",
-        label: "Artículo",
+        get label() { return tAlmacen("lote.articulo"); },
         filtro: (v) => (v ? ["sku", "=", v as string] : null),
         render: (valor, onChange) => (
             <Articulo valor={(valor as string) ?? ""} nombre="sku" onChange={(opcion) => onChange(opcion?.valor ?? "")} />
@@ -52,7 +53,7 @@ const filtrosBase: MetaFiltro = {
     },
     caducidad: {
         id: "caducidad",
-        label: "Caducidad",
+        get label() { return tAlmacen("lote.caducidad"); },
         tipo: "intervalo_fechas",
         filtro: (v) => filtroFechas("caducidad", v),
     },
@@ -62,7 +63,7 @@ const filtrosBase: MetaFiltro = {
 const filtrosProduccion: MetaFiltro = {
     estado: {
         id: "estado",
-        label: "Estado",
+        get label() { return tAlmacen("lote.estado"); },
         tipo: "multiseleccion",
         opciones: ESTADOS_LOTE,
         filtro: (valor) => {
@@ -73,7 +74,7 @@ const filtrosProduccion: MetaFiltro = {
     },
     orden_id: {
         id: "orden_id",
-        label: "Orden de producción",
+        get label() { return tAlmacen("lote.ordenDeProduccion"); },
         tipo: "texto",
         filtro: (v) => (v ? ["orden_id", "~", v as string] : null),
     },
@@ -94,7 +95,7 @@ const consultas = { getUno: getLote, getLista: getLotes };
 export const MaestroLote = () => (
     <MaestroSimple<Lote>
         clase="MaestroLote"
-        titulo="Lotes"
+        titulo={tAlmacen("lote.lotes")}
         metaTabla={metaTabla()}
         metaFiltro={metaFiltro()}
         consultas={consultas}
@@ -107,8 +108,8 @@ export const MaestroLote = () => (
                     {l.produccion && <EtiquetaEstado {...etiquetaEstadoLote(l.produccion.estado)} />}
                 </div>
                 <div>
-                    {formatearCantidad(l.enAlmacen)} en almacén
-                    {l.caducidad ? ` · caduca ${fechaDdMmAaaa(l.caducidad)}` : ""}
+                    {formatearCantidad(l.enAlmacen)}{" "}{tAlmacen("lote.enAlmacen2")}
+                    {l.caducidad ? tAlmacen("lote.caducaCaducidad", { caducidad: fechaDdMmAaaa(l.caducidad) }) : ""}
                 </div>
             </div>
         )}

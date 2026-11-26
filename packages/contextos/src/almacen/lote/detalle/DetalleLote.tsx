@@ -27,27 +27,28 @@ import {
 import { ImprimirEtiquetasLote } from "../etiqueta/ImprimirEtiquetasLote.tsx";
 import { getEtiquetaLote, getLote, revisarLote } from "../infraestructura.ts";
 import "../maestro/MaestroLote.css";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const getMaquina = getMaquinaDetalleSimple(getLote, loteVacio);
 const contextoInicial = { estado: "INICIAL" as const, entidad: loteVacio() };
 
 const DatosProduccion = ({ p }: { p: ProduccionLote }) => (
     <>
-        <h4 className="subtitulo-lote">Producción</h4>
+        <h4 className="subtitulo-lote">{tAlmacen("lote.produccion")}</h4>
         <div className="estado-lote">
-            <span className="etiqueta-campo">Estado</span>
+            <span className="etiqueta-campo">{tAlmacen("lote.estado")}</span>
             <EtiquetaEstado {...etiquetaEstadoLote(p.estado)} />
         </div>
-        <QInput label="Orden de producción" nombre="ordenId" valor={p.ordenId} soloLectura enlace="/produccion/ordenes?id={id}" />
-        <QInput label="Fecha de fabricación" nombre="fechaFabricacion" valor={fechaDdMmAaaa(p.fechaFabricacion)} soloLectura />
-        <QInput label="Cliente" nombre="cliente" valor={p.cliente && p.clienteId ? `${p.clienteId} - ${p.cliente}` : p.clienteId} soloLectura />
-        <QInput label="Cantidad programada" nombre="cantidadProgramada" valor={formatearCantidad(p.cantidadProgramada)} soloLectura />
-        <QInput label="Cantidad del lote" nombre="cantidadLote" valor={formatearCantidad(p.cantidadLote)} soloLectura />
-        <QInput label="Total recibido" nombre="cantidadTotal" valor={formatearCantidad(p.cantidadTotal)} soloLectura />
-        <QInput label="Usada" nombre="cantidadUsada" valor={formatearCantidad(p.cantidadUsada)} soloLectura />
-        <QInput label="Reservada" nombre="cantidadReservada" valor={formatearCantidad(p.cantidadReservada)} soloLectura />
-        <QInput label="Por recibir" nombre="cantidadPorRecibir" valor={formatearCantidad(p.cantidadPorRecibir)} soloLectura />
-        <QInput label="Disponible" nombre="cantidadDisponible" valor={formatearCantidad(p.cantidadDisponible)} soloLectura />
+        <QInput label={tAlmacen("lote.ordenDeProduccion")} nombre="ordenId" valor={p.ordenId} soloLectura enlace="/produccion/ordenes?id={id}" />
+        <QInput label={tAlmacen("lote.fechaDeFabricacion")} nombre="fechaFabricacion" valor={fechaDdMmAaaa(p.fechaFabricacion)} soloLectura />
+        <QInput label={tAlmacen("lote.cliente")} nombre="cliente" valor={p.cliente && p.clienteId ? `${p.clienteId} - ${p.cliente}` : p.clienteId} soloLectura />
+        <QInput label={tAlmacen("lote.cantidadProgramada")} nombre="cantidadProgramada" valor={formatearCantidad(p.cantidadProgramada)} soloLectura />
+        <QInput label={tAlmacen("lote.cantidadDelLote")} nombre="cantidadLote" valor={formatearCantidad(p.cantidadLote)} soloLectura />
+        <QInput label={tAlmacen("lote.totalRecibido")} nombre="cantidadTotal" valor={formatearCantidad(p.cantidadTotal)} soloLectura />
+        <QInput label={tAlmacen("lote.usada")} nombre="cantidadUsada" valor={formatearCantidad(p.cantidadUsada)} soloLectura />
+        <QInput label={tAlmacen("lote.reservada")} nombre="cantidadReservada" valor={formatearCantidad(p.cantidadReservada)} soloLectura />
+        <QInput label={tAlmacen("lote.porRecibir")} nombre="cantidadPorRecibir" valor={formatearCantidad(p.cantidadPorRecibir)} soloLectura />
+        <QInput label={tAlmacen("lote.disponible")} nombre="cantidadDisponible" valor={formatearCantidad(p.cantidadDisponible)} soloLectura />
     </>
 );
 
@@ -57,6 +58,7 @@ const DatosProduccion = ({ p }: { p: ProduccionLote }) => (
  * trazabilidad hacia atrás y hacia delante. «Revisar lote» recalcula sus cantidades.
  */
 export const DetalleLote = ({ id, publicar = async () => {} }: { id?: string; publicar?: EmitirEvento }) => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(getMaquina, contextoInicial, publicar);
     const lote: Lote = ctx.entidad;
     const { intentar } = useContext(ContextoError);
@@ -105,22 +107,22 @@ export const DetalleLote = ({ id, publicar = async () => {} }: { id?: string; pu
             <div className="DetalleLote">
                 <div className="fila-acciones-lote">
                     {mensaje && <span className="nota-lote" role="status">{mensaje}</span>}
-                    <QBoton variante="borde" onClick={() => setEtiquetas(true)}>Imprimir etiquetas</QBoton>
+                    <QBoton variante="borde" onClick={() => setEtiquetas(true)}>{t("lote.imprimirEtiquetas")}</QBoton>
                     {puede("almacen.lote.revisar") && (
                         <QBoton deshabilitado={revisando} onClick={revisar}>
-                            {revisando ? "Revisando..." : "Revisar lote"}
+                            {revisando ? t("lote.revisando") : t("lote.revisarLote")}
                         </QBoton>
                     )}
                 </div>
                 <Tabs key={lote.id}>
                     {[
-                        <Tab key="tab-datos-lote" label="Datos">
+                        <Tab key="tab-datos-lote" label={t("lote.datos")}>
                             <quimera-formulario>
-                                <QInput label="Código" nombre="id" valor={lote.id} soloLectura />
-                                <QInput label="Caducidad" nombre="caducidad" valor={fechaDdMmAaaa(lote.caducidad)} soloLectura />
-                                <QInput label="Artículo" nombre="articulo" valor={textoArticulo(lote)} soloLectura />
-                                <QInput label="Referencia" nombre="sku" valor={lote.sku} soloLectura enlace={PLANTILLA_FICHA.articulo} />
-                                <QInput label="En almacén" nombre="enAlmacen" valor={formatearCantidad(lote.enAlmacen)} soloLectura />
+                                <QInput label={t("lote.codigo")} nombre="id" valor={lote.id} soloLectura />
+                                <QInput label={t("lote.caducidad")} nombre="caducidad" valor={fechaDdMmAaaa(lote.caducidad)} soloLectura />
+                                <QInput label={t("lote.articulo")} nombre="articulo" valor={textoArticulo(lote)} soloLectura />
+                                <QInput label={t("lote.referencia")} nombre="sku" valor={lote.sku} soloLectura enlace={PLANTILLA_FICHA.articulo} />
+                                <QInput label={t("lote.enAlmacen")} nombre="enAlmacen" valor={formatearCantidad(lote.enAlmacen)} soloLectura />
                                 {p && <DatosProduccion p={p} />}
                             </quimera-formulario>
                         </Tab>,
@@ -130,10 +132,10 @@ export const DetalleLote = ({ id, publicar = async () => {} }: { id?: string; pu
             </div>
             {etiquetas && (
                 <ImprimirEtiquetasLote
-                    titulo={`Imprimir etiquetas del lote ${lote.id}`}
+                    titulo={t("lote.imprimirEtiquetasDelLoteId", { id: lote.id })}
                     ayudaCantidad={p
-                        ? "Vacía: lo fabricado o, si aún no hay nada, la cantidad del lote."
-                        : "Vacía: lo que hay en almacén."}
+                        ? t("lote.vaciaLoFabricadoOSiAun")
+                        : t("lote.vaciaLoQueHayEnAlmacen")}
                     nombreFichero={nombreEtiquetaLote(lote.id)}
                     cargar={(opciones) => getEtiquetaLote(lote.id, opciones)}
                     cerrar={() => setEtiquetas(false)}

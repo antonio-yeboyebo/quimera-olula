@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { Criteria } from "@olula/lib/diseño.ts";
 import { GetLote, GetLotes, Lote, OpcionesEtiquetaLote, RevisarLote, RevisarLotes } from "./diseño.ts";
 import { queryEtiquetaLote } from "./dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/lote`;
 
@@ -67,14 +68,14 @@ export const revisadosDesdeApi = (respuesta: { revisados?: number | string | nul
     numero(respuesta?.revisados);
 
 export const revisarLote: RevisarLote = async (id) =>
-    revisadosDesdeApi(await RestAPI.query<object, { revisados: number }>(`${url(id)}/revisar`, {}, "Error al revisar el lote"));
+    revisadosDesdeApi(await RestAPI.query<object, { revisados: number }>(`${url(id)}/revisar`, {}, tAlmacen("lote.errorAlRevisarElLote")));
 
 export const revisarLotes: RevisarLotes = async () =>
-    revisadosDesdeApi(await RestAPI.query<object, { revisados: number }>(`${baseUrl}/revisar`, {}, "Error al revisar los lotes"));
+    revisadosDesdeApi(await RestAPI.query<object, { revisados: number }>(`${baseUrl}/revisar`, {}, tAlmacen("lote.errorAlRevisarLosLotes")));
 
 /** Etiquetas del lote (PDF, una página por copia; regla `almacen.lote`). */
 export const urlEtiquetaLote = (id: string, opciones: OpcionesEtiquetaLote): string =>
     `${url(id)}/etiqueta?${queryEtiquetaLote(opciones)}`;
 
 export const getEtiquetaLote = async (id: string, opciones: OpcionesEtiquetaLote): Promise<Blob> =>
-    RestAPI.blob(urlEtiquetaLote(id, opciones), "Error al imprimir las etiquetas del lote");
+    RestAPI.blob(urlEtiquetaLote(id, opciones), tAlmacen("lote.errorAlImprimirLasEtiquetasDel"));
