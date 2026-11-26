@@ -14,6 +14,7 @@ import {
     SerieEjercicio,
 } from "./diseño.ts";
 import { asientosDelEjercicio, seriesDesdeTexto } from "./dominio.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.EJERCICIO;
@@ -85,7 +86,7 @@ export const postEjercicio = async (
     await RestAPI.post(
         urls.EJERCICIO_ALTA,
         nuevoEjercicioAApi(nuevo, empresaId),
-        "Error al crear el ejercicio",
+        tContabilidad("ejercicio.errorAlCrearElEjercicio"),
     );
     await patchGenerarPgc(nuevo.id, {
         ejercicioOrigenId: nuevo.ejercicioOrigenPgc,
@@ -98,7 +99,7 @@ export const patchGenerarPgc = async (id: string, datos: GenerarPgc): Promise<vo
     await RestAPI.patch(
         `${baseUrl}/${id}/generar_pgc`,
         generarPgcAApi(datos),
-        "Error al generar el plan contable",
+        tContabilidad("ejercicio.errorAlGenerarElPlanContable"),
     );
 };
 
@@ -113,7 +114,7 @@ export const patchEjercicioActual = async (id: string): Promise<void> => {
     await RestAPI.patch(
         `${baseUrl}/actual`,
         { ejercicio_id: id },
-        "Error al cambiar el ejercicio actual",
+        tContabilidad("ejercicio.errorAlCambiarElEjercicioActual"),
     );
 };
 
@@ -144,7 +145,7 @@ export const patchCerrarEjercicio = async (
     const r = (await RestAPI.patch(
         `${baseUrl}/${id}/cerrar`,
         opcionesCierreAApi(opciones),
-        "Error al cerrar el ejercicio",
+        tContabilidad("ejercicio.errorAlCerrarElEjercicio"),
     )) as unknown as ResultadoCierreApi;
     return {
         asientoPygId: r.asiento_pyg_id,
@@ -159,7 +160,7 @@ export const patchDeshacerCierre = async (id: string): Promise<void> => {
     await RestAPI.patch(
         `${baseUrl}/${id}/deshacer_cierre`,
         {},
-        "Error al deshacer el cierre",
+        tContabilidad("ejercicio.errorAlDeshacerElCierre"),
     );
 };
 
@@ -177,13 +178,13 @@ export const patchDatosEjercicio = async (
     if (cambios.fechaInicio) datos.fecha_inicio = fechaAApi(cambios.fechaInicio);
     if (cambios.fechaFin) datos.fecha_fin = fechaAApi(cambios.fechaFin);
     if (Object.keys(datos).length > 0) {
-        await RestAPI.patch(urlEjercicioFacturacion(id), datos, "Error al guardar el ejercicio");
+        await RestAPI.patch(urlEjercicioFacturacion(id), datos, tContabilidad("ejercicio.errorAlGuardarElEjercicio"));
     }
     if (cambios.digitosSubcuenta !== undefined) {
         await RestAPI.patch(
             `${baseUrl}/${id}`,
             { digitos_subcuenta: cambios.digitosSubcuenta },
-            "Error al cambiar la longitud de subcuenta",
+            tContabilidad("ejercicio.errorAlCambiarLaLongitudDe"),
         );
     }
 };
@@ -210,14 +211,14 @@ export const getSeriesEjercicio = async (id: string): Promise<SerieEjercicio[]> 
 export const postSerieEjercicio = async (id: string, serieId: string): Promise<void> => {
     await RestAPI.post(
         `${urlEjercicioFacturacion(id)}/serie`, { serie_id: serieId },
-        "Error al añadir la serie al ejercicio",
+        tContabilidad("ejercicio.errorAlAnadirLaSerieAl"),
     );
 };
 
 export const deleteSerieEjercicio = async (id: string, serieId: string): Promise<void> => {
     await RestAPI.delete(
         `${urlEjercicioFacturacion(id)}/serie/${encodeURIComponent(serieId)}`,
-        "Error al quitar la serie del ejercicio",
+        tContabilidad("ejercicio.errorAlQuitarLaSerieDel"),
     );
 };
 
@@ -225,7 +226,7 @@ export const deleteSerieEjercicio = async (id: string, serieId: string): Promise
 export const postCopiarSeries = async (id: string, ejercicioOrigenId: string): Promise<void> => {
     await RestAPI.post(
         `${urlEjercicioFacturacion(id)}/copiar_series`, { ejercicio_origen_id: ejercicioOrigenId },
-        "Error al copiar las series",
+        tContabilidad("ejercicio.errorAlCopiarLasSeries"),
     );
 };
 
@@ -249,7 +250,7 @@ export const getFilasAsientosEjercicio = async (
     Promise.all(asientosDelEjercicio(ejercicio).map(async ({ tipo, titulo, asientoId }) => {
         const vacia: FilaAsientoEjercicio = {
             id: asientoId, tipo, titulo, numero: null, ejercicioId: ejercicio.id,
-            fecha: null, concepto: "(no se encuentra el asiento)", importe: null,
+            fecha: null, concepto: tContabilidad("ejercicio.noSeEncuentraElAsiento"), importe: null,
         };
         try {
             const a = await getAsiento(asientoId);

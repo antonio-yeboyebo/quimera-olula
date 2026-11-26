@@ -13,6 +13,7 @@ import { Ejercicio } from "../diseño.ts";
 import { etiquetaEjercicio, nuevoEjercicioPropuesto } from "../dominio.ts";
 import { postEjercicio } from "../infraestructura.ts";
 import { metaNuevoEjercicio } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearEjercicio = ({
     publicar,
@@ -21,15 +22,16 @@ export const CrearEjercicio = ({
     publicar: EmitirEvento;
     ejercicios: Ejercicio[];
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(() => nuevoEjercicioPropuesto(ejercicios), [ejercicios]);
     const { modelo, uiProps, valido } = useModelo(metaNuevoEjercicio, inicial);
 
     const opcionesPgc = useMemo(() => [
-        { valor: "", descripcion: "Generar PGC 2008 nuevo" },
+        { valor: "", descripcion: t("ejercicio.generarPgc2008Nuevo") },
         ...ejercicios.filter((e) => e.tienePgc).map((e) => ({
-            valor: e.id, descripcion: `Copiar de ${etiquetaEjercicio(e)}`,
+            valor: e.id, descripcion: t("ejercicio.copiarDeE", { e: etiquetaEjercicio(e) }),
         })),
-    ], [ejercicios]);
+    ], [ejercicios, t]);
 
     // Al copiar el plan de otro ejercicio la longitud de subcuenta es la suya.
     const origenPgc = ejercicios.find((e) => e.id === modelo.ejercicioOrigenPgc);
@@ -44,26 +46,26 @@ export const CrearEjercicio = ({
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearEjercicio" titulo="Nuevo ejercicio" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearEjercicio" titulo={t("ejercicio.nuevoEjercicio")} onCerrar={cancelar}>
             <div className="CrearEjercicio">
                 <quimera-formulario>
                     <FilaFormulario columnas="1fr 3fr">
-                        <QInput label="Código" {...uiProps("id")} ref={focus} />
-                        <QInput label="Nombre" {...uiProps("nombre")} />
+                        <QInput label={t("ejercicio.codigo")} {...uiProps("id")} ref={focus} />
+                        <QInput label={t("ejercicio.nombre")} {...uiProps("nombre")} />
                     </FilaFormulario>
                     <FilaFormulario>
-                        <QDate label="Inicio" {...uiProps("fechaInicio")} />
-                        <QDate label="Fin" {...uiProps("fechaFin")} />
+                        <QDate label={t("ejercicio.inicio")} {...uiProps("fechaInicio")} />
+                        <QDate label={t("ejercicio.fin")} {...uiProps("fechaFin")} />
                         {origenPgc
-                            ? <QInput label="Dígitos de subcuenta" nombre="digitosSubcuenta"
+                            ? <QInput label={t("ejercicio.digitosDeSubcuenta")} nombre="digitosSubcuenta"
                                 valor={String(origenPgc.digitosSubcuenta)} soloLectura />
-                            : <QInput label="Dígitos de subcuenta" {...uiProps("digitosSubcuenta")} />}
+                            : <QInput label={t("ejercicio.digitosDeSubcuenta")} {...uiProps("digitosSubcuenta")} />}
                     </FilaFormulario>
-                    <QSelect label="Plan contable" opciones={opcionesPgc} {...uiProps("ejercicioOrigenPgc")} />
-                    <QInput label="Series (separadas por comas)" {...uiProps("series")} />
+                    <QSelect label={t("ejercicio.planContable")} opciones={opcionesPgc} {...uiProps("ejercicioOrigenPgc")} />
+                    <QInput label={t("ejercicio.seriesSeparadasPorComas")} {...uiProps("series")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
-                    <QBoton onClick={crear} deshabilitado={!valido}>Crear</QBoton>
+                    <QBoton onClick={crear} deshabilitado={!valido}>{t("ejercicio.crear")}</QBoton>
                 </div>
             </div>
         </QModal>

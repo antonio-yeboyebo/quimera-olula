@@ -10,6 +10,7 @@ import { useCallback, useMemo } from "react";
 import { Ejercicio, GenerarPgc } from "../diseño.ts";
 import { etiquetaEjercicio } from "../dominio.ts";
 import { patchGenerarPgc } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 const metaGenerarPgc: MetaModelo<GenerarPgc> = {
     campos: {
@@ -28,6 +29,7 @@ export const GenerarPgcEjercicio = ({
     ejercicios: Ejercicio[];
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const conPgc = useMemo(
         () => ejercicios.filter((e) => e.tienePgc && e.id !== ejercicio.id),
         [ejercicios, ejercicio.id]
@@ -45,20 +47,20 @@ export const GenerarPgcEjercicio = ({
     const [aceptar, cancelar] = useForm(aceptar_, () => publicar("cancelado"));
 
     const opciones = [
-        { valor: "", descripcion: "Generar PGC 2008 nuevo" },
-        ...conPgc.map((e) => ({ valor: e.id, descripcion: `Copiar de ${etiquetaEjercicio(e)}` })),
+        { valor: "", descripcion: t("ejercicio.generarPgc2008Nuevo") },
+        ...conPgc.map((e) => ({ valor: e.id, descripcion: t("ejercicio.copiarDeE", { e: etiquetaEjercicio(e) }) })),
     ];
 
     return (
-        <QModal abierto={true} nombre="generarPgc" titulo="Plan General Contable" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="generarPgc" titulo={t("ejercicio.planGeneralContable")} onCerrar={cancelar}>
             <quimera-formulario>
-                <QSelect label="Plan contable" opciones={opciones} {...uiProps("ejercicioOrigenId")} />
+                <QSelect label={t("ejercicio.planContable")} opciones={opciones} {...uiProps("ejercicioOrigenId")} />
                 {!modelo.ejercicioOrigenId && (
-                    <QInput label="Dígitos de subcuenta" {...uiProps("digitosSubcuenta")} />
+                    <QInput label={t("ejercicio.digitosDeSubcuenta")} {...uiProps("digitosSubcuenta")} />
                 )}
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={aceptar} deshabilitado={!valido}>Generar</QBoton>
+                <QBoton onClick={aceptar} deshabilitado={!valido}>{t("ejercicio.generar")}</QBoton>
             </div>
         </QModal>
     );

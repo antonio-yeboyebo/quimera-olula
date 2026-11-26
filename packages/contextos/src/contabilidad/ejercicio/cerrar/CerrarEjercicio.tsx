@@ -19,6 +19,7 @@ import {
     validarOpcionesCierre,
 } from "../dominio.ts";
 import { patchCerrarEjercicio } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 const metaOpcionesCierre = (ejercicio: Ejercicio): MetaModelo<OpcionesCierre> => ({
     campos: {
@@ -43,6 +44,7 @@ export const CerrarEjercicio = ({
     ejercicios: Ejercicio[];
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => opcionesCierreIniciales(ejercicio, ejercicios),
         [ejercicio, ejercicios]
@@ -76,28 +78,27 @@ export const CerrarEjercicio = ({
 
     return (
         <QModal abierto={true} nombre="cerrarEjercicio"
-            titulo={`Cerrar el ejercicio ${etiquetaEjercicio(ejercicio)}`}
+            titulo={t("ejercicio.cerrarElEjercicioEjercicio", { ejercicio: etiquetaEjercicio(ejercicio) })}
             onCerrar={cancelar}>
             <quimera-formulario>
-                <QDate label="Fecha de los asientos de regularización y cierre" {...uiProps("fecha")} />
-                <QCheckbox label="Asiento de pérdidas y ganancias" {...uiProps("regularizar")} soloLectura />
-                <QCheckbox label="Asiento cierre" {...uiProps("cerrar")} soloLectura />
-                <QCheckbox label="Asiento de apertura" {...uiProps("abrir")} />
+                <QDate label={t("ejercicio.fechaDeLosAsientosDeRegularizacion")} {...uiProps("fecha")} />
+                <QCheckbox label={t("ejercicio.asientoDePerdidasYGanancias")} {...uiProps("regularizar")} soloLectura />
+                <QCheckbox label={t("ejercicio.asientoCierre")} {...uiProps("cerrar")} soloLectura />
+                <QCheckbox label={t("ejercicio.asientoDeApertura")} {...uiProps("abrir")} />
                 {modelo.abrir && (
-                    <QSelect label="Ejercicio de apertura" opciones={destinos} {...uiProps("ejercicioDestinoId")} />
+                    <QSelect label={t("ejercicio.ejercicioDeApertura")} opciones={destinos} {...uiProps("ejercicioDestinoId")} />
                 )}
             </quimera-formulario>
             {modelo.abrir && destinos.length === 0 && (
                 <p className="aviso">
-                    No hay ningún ejercicio abierto posterior sin asiento de apertura. Créelo en
-                    Fiscalidad &gt; Ejercicios fiscales o desmarque «Asiento de apertura».
+                    {t("ejercicio.noHayNingunEjercicioAbiertoPosterior")}
                 </p>
             )}
             {aviso && (
-                <p className="aviso">{aviso} Pulse de nuevo «Cerrar» para continuar.</p>
+                <p className="aviso">{t("ejercicio.avisoPulseDeNuevoCerrarPara", { aviso })}</p>
             )}
             <div className="botones maestro-botones">
-                <QBoton onClick={aceptar} deshabilitado={!valido}>Cerrar</QBoton>
+                <QBoton onClick={aceptar} deshabilitado={!valido}>{t("ejercicio.cerrar")}</QBoton>
             </div>
         </QModal>
     );
