@@ -11,6 +11,7 @@ import { NuevaFamilia } from "../diseño.ts";
 import { metaNuevaFamilia, nuevaFamiliaVacia } from "../dominio.ts";
 import { getFamilia, postFamilia } from "../infraestructura.ts";
 import "./CrearFamilia.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearFamilia = ({
   publicar = async () => {},
@@ -40,6 +41,7 @@ const FormAltaFamilia = ({
   publicar?: ProcesarEvento;
   familia: HookModelo<NuevaFamilia>;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
@@ -59,20 +61,20 @@ const FormAltaFamilia = ({
 
   return (
     <div className="CrearFamilia">
-      <h2>Nueva Familia</h2>
+      <h2>{t("familia.nuevaFamilia")}</h2>
       <quimera-formulario>
-        <QInput label="Código familia" {...familia.uiProps("id")} />
-        <QInput label="Descripción" {...familia.uiProps("descripcion")} />
+        <QInput label={t("familia.codigoFamilia")} {...familia.uiProps("id")} />
+        <QInput label={t("familia.descripcion")} {...familia.uiProps("descripcion")} />
         {plugin("pesos_medidas") === "activo" && (
           <PesoMedida {...familia.uiProps("unidadId")} />
         )}
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={crear} deshabilitado={!familia.valido}>
-          Guardar
+          {t("familia.guardar")}
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">
-          Cancelar
+          {t("familia.cancelar")}
         </QBoton>
       </div>
     </div>

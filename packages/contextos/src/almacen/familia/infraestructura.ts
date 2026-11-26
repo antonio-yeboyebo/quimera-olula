@@ -9,6 +9,7 @@ import {
     PatchFamilia,
     PostFamilia
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrlFamilia = `/almacen/familia`;
 
@@ -43,7 +44,7 @@ export const getFamilias: GetFamilias = async (
 };
 
 export const postFamilia: PostFamilia = async (modulo) => {
-    return await RestAPI.post(baseUrlFamilia, moduloToApi(modulo), "Error al guardar Familia").then(
+    return await RestAPI.post(baseUrlFamilia, moduloToApi(modulo), tAlmacen("familia.errorAlGuardarFamilia")).then(
         (respuesta) => respuesta.id
     );
 };
@@ -53,10 +54,10 @@ export const patchFamilia: PatchFamilia = async (id, modulo) => {
     const moduloSinNulls = Object.fromEntries(
         Object.entries(apiFamilia).map(([k, v]) => [k, v === null ? "" : v])
     );
-    await RestAPI.patch(`${baseUrlFamilia}/${id}`, moduloSinNulls, "Error al guardar Familia");
+    await RestAPI.patch(`${baseUrlFamilia}/${id}`, moduloSinNulls, tAlmacen("familia.errorAlGuardarFamilia"));
 };
 
 export const deleteFamilia: DeleteFamilia = async (id) => {
-    await RestAPI.delete(`${baseUrlFamilia}/${id}`, "Error al borrar Familia");
+    await RestAPI.delete(`${baseUrlFamilia}/${id}`, tAlmacen("familia.errorAlBorrarFamilia"));
 };
 

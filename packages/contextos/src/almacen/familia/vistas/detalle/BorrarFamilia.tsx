@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { useContext } from "react";
 import { Familia } from "../../diseño.ts";
 import { deleteFamilia } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const BorrarFamilia = ({
   publicar,
@@ -13,6 +14,7 @@ export const BorrarFamilia = ({
   familia: Familia;
   activo: boolean;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const borrar = async () => {
@@ -26,8 +28,8 @@ export const BorrarFamilia = ({
     <QModalConfirmacion
       nombre="confirmarBorrarFamilia"
       abierto={activo}
-      titulo="Confirmar borrado"
-      mensaje="¿Está seguro de que desea borrar esta familia?"
+      titulo={t("familia.confirmarBorrado")}
+      mensaje={t("familia.estaSeguroDeQueDeseaBorrar")}
       onCerrar={() => publicar("borrado_cancelado")}
       onAceptar={borrar}
     />
