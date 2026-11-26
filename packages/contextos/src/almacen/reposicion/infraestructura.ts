@@ -1,5 +1,6 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { GenerarReposicion, NecesidadReposicion, OrigenReposicion, Reposicion } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/reposicion`;
 
@@ -71,7 +72,7 @@ export const generarReposicion: GenerarReposicion = async (almacenId, simular, p
     const respuesta = await RestAPI.query<PeticionReposicionApi, ReposicionApi>(
         baseUrl,
         { almacen_id: almacenId, simular, ...(pickingFijoIds ? { picking_fijo_ids: pickingFijoIds } : {}) },
-        simular ? "Error al calcular la reposición" : "Error al generar el traspaso de reposición"
+        simular ? tAlmacen("reposicion.errorAlCalcularLaReposicion") : tAlmacen("reposicion.errorAlGenerarElTraspasoDe")
     );
     return reposicionDesdeApi(respuesta);
 };
