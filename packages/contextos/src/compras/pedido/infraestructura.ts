@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { empresaActual } from "#/valores/empresaActual.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
@@ -312,7 +313,7 @@ export const getPedido: GetPedido = async (id) =>
     await RestAPI.getItem<Pedido, PedidoApi>(
         `${baseUrl}/${id}`,
         pedidoDesdeApi,
-        "Error al obtener el pedido"
+        tCompras("pedido.errores.obtener")
     );
 
 export const getPedidos: GetPedidos = async (criteria) =>
@@ -320,14 +321,14 @@ export const getPedidos: GetPedidos = async (criteria) =>
         baseUrl,
         criteria,
         pedidoDesdeApi,
-        "Error al obtener los pedidos"
+        tCompras("pedido.errores.obtenerLista")
     );
 
 export const postPedido: PostPedido = async (nuevoPedido) => {
     const respuesta = await RestAPI.post<NuevoPedidoApi>(
         baseUrl,
         nuevoPedidoAApi(nuevoPedido),
-        "Error al crear el pedido"
+        tCompras("pedido.errores.crear")
     );
     return respuesta.id;
 };
@@ -336,36 +337,36 @@ export const patchPedido: PatchPedido = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         { cambios: cambiosPedidoAApi(cambios) },
-        "Error al guardar el pedido"
+        tCompras("pedido.errores.guardar")
     );
 };
 
 export const deletePedido: DeletePedido = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el pedido");
+    await RestAPI.delete(`${baseUrl}/${id}`, tCompras("pedido.errores.borrar"));
 };
 
 export const getReportPedido: GetReportPedido = async (id) =>
-    await RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del pedido");
+    await RestAPI.blob(`${baseUrl}/${id}/report`, tCompras("pedido.errores.report"));
 
 export const getLineasPedido: GetLineasPedido = async (id) =>
     await RestAPI.getLista<LineaPedido, LineaPedidoApi>(
         `${baseUrl}/${id}/linea`,
         lineaPedidoDesdeApi,
-        "Error al obtener las líneas del pedido"
+        tCompras("pedido.errores.obtenerLineas")
     );
 
 export const getLineaPedido: GetLineaPedido = async (id, lineaId) =>
     await RestAPI.getItem<LineaPedido, LineaPedidoApi>(
         `${baseUrl}/${id}/linea/${lineaId}`,
         lineaPedidoDesdeApi,
-        "Error al obtener la línea"
+        tCompras("pedido.errores.obtenerLinea")
     );
 
 export const postLineasPedido: PostLineasPedido = async (id, lineas) => {
     const respuesta = await RestAPI.post<{ lineas: NuevaLineaPedidoApi[] }>(
         `${baseUrl}/${id}/linea`,
         { lineas: lineas.map(nuevaLineaAApi) },
-        "Error al crear las líneas del pedido"
+        tCompras("pedido.errores.crearLineas")
     );
     const { lineas: ids } = respuesta as unknown as { lineas: string[] };
     return ids;
@@ -386,7 +387,7 @@ export const queryNuevaLineaPedido: QueryNuevaLineaPedido = async (id, linea) =>
     >(
         `${baseUrl}/${id}/nueva_linea`,
         queryNuevaLineaAApi(linea),
-        "Error al calcular la nueva línea del pedido"
+        tCompras("pedido.errores.nuevaLinea")
     );
     return queryNuevaLineaDesdeApi(linea, respuesta);
 };
@@ -395,7 +396,7 @@ export const patchLineaPedido: PatchLineaPedido = async (id, lineaId, cambios) =
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${lineaId}`,
         { cambios: cambiosLineaAApi(cambios) },
-        "Error al actualizar la línea"
+        tCompras("pedido.errores.actualizarLinea")
     );
 };
 
@@ -403,7 +404,7 @@ export const cerrarLineaPedido: CerrarLineaPedido = async (id, lineaId, cerrada)
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${lineaId}/cerrar`,
         { cerrada },
-        "Error al cerrar la línea"
+        tCompras("pedido.errores.cerrarLinea")
     );
 };
 
@@ -411,7 +412,7 @@ export const borrarLineasPedido: BorrarLineasPedido = async (id, lineas) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/borrar`,
         { lineas },
-        "Error al borrar las líneas del pedido"
+        tCompras("pedido.errores.borrarLineas")
     );
 };
 

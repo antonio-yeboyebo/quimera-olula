@@ -15,8 +15,10 @@ import {
     nuevoPedidoProveedorNoRegistradoInicial,
 } from "./crear.ts";
 import "./CrearPedido.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearPedido = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTCompras();
     const [modoNoRegistrado, setModoNoRegistrado] = useState(false);
 
     const inicialRegistrado = useMemo(nuevoPedidoInicial, []);
@@ -53,12 +55,12 @@ export const CrearPedido = ({ publicar }: { publicar: EmitirEvento }) => {
         <QModal
             abierto={true}
             nombre="crearPedidoCompra"
-            titulo="Crear pedido de compra"
+            titulo={t("pedido.crear.titulo")}
             onCerrar={cancelar}
         >
             <div className="modo-proveedor">
                 <QBoton onClick={alternarModo} variante="texto" tipo="button">
-                    {modoNoRegistrado ? "Proveedor registrado" : "Proveedor no registrado"}
+                    {modoNoRegistrado ? t("comun.cambioProveedor.registrado") : t("comun.cambioProveedor.noRegistrado")}
                 </QBoton>
             </div>
             <div className="CrearPedido">
@@ -67,10 +69,10 @@ export const CrearPedido = ({ publicar }: { publicar: EmitirEvento }) => {
                     {modoNoRegistrado ? (
                         <>
                             <QInput
-                                label="Nombre del proveedor"
+                                label={t("comun.cambioProveedor.nombreProveedor")}
                                 {...noRegistrado.uiProps("nombre")}
                             />
-                            <QInput label="Id Fiscal" {...noRegistrado.uiProps("idFiscal")} />
+                            <QInput label={t("comun.campos.idFiscal")} {...noRegistrado.uiProps("idFiscal")} />
                         </>
                     ) : (
                         <Proveedor
@@ -78,11 +80,11 @@ export const CrearPedido = ({ publicar }: { publicar: EmitirEvento }) => {
                             nombre="proveedorPedido"
                         />
                     )}
-                    <QInput label="Nº proveedor" {...form.uiProps("numeroProveedor")} />
+                    <QInput label={t("comun.campos.numeroProveedor")} {...form.uiProps("numeroProveedor")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!form.valido}>
-                        Crear
+                        {t("comun.botones.crear")}
                     </QBoton>
                 </div>
             </div>

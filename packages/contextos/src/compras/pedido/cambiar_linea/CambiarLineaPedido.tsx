@@ -15,6 +15,7 @@ import {
 } from "../dominio.ts";
 import { patchLineaPedido } from "../infraestructura.ts";
 import "./CambiarLineaPedido.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CambiarLineaPedido = ({
   pedido,
@@ -25,6 +26,7 @@ export const CambiarLineaPedido = ({
   linea: LineaPedido;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const inicial = useMemo(() => modeloLineaPedido(linea), [linea]);
   const { modelo, uiProps, valido, set } = useModelo(metaLineaPedido, inicial);
 
@@ -48,7 +50,7 @@ export const CambiarLineaPedido = ({
     <QModal
       abierto={true}
       nombre="cambiarLineaPedidoCompra"
-      titulo="Cambiar línea"
+      titulo={t("comun.lineas.cambiar")}
       onCerrar={cancelar}
     >
       <div className="CambiarLineaPedido">
@@ -62,8 +64,8 @@ export const CambiarLineaPedido = ({
             onChange={(cambios) => set({ ...modelo, ...cambios })}
             bloqueado={articuloLineaBloqueado(linea)}
           />
-          <QInput label="Cantidad" {...uiProps("cantidad")} />
-          <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+          <QInput label={t("comun.lineas.cantidad")} {...uiProps("cantidad")} />
+          <QInput label={t("comun.lineas.costeUnitario")} {...uiProps("pvpUnitario")} />
 
           <div className="mostrar-mas-fila">
             <button
@@ -71,26 +73,26 @@ export const CambiarLineaPedido = ({
               className="mostrar-mas-btn"
               onClick={() => setMostrarMas((v) => !v)}
             >
-              {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+              {mostrarMas ? t("comun.lineas.menosOpciones") : t("comun.lineas.masOpciones")}
             </button>
           </div>
 
           {mostrarMas && (
             <>
-              <div className="seccion-separador">Descuento</div>
-              <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
-              <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+              <div className="seccion-separador">{t("comun.lineas.descuento")}</div>
+              <QInput label={t("comun.lineas.pctDescuento")} {...uiProps("dtoPorcentual")} />
+              <QInput label={t("comun.lineas.descuentoLineal")} {...uiProps("dtoLineal")} />
 
-              <div className="seccion-separador">Impuestos</div>
+              <div className="seccion-separador">{t("comun.lineas.impuestos")}</div>
               <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
-              <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
-              <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
+              <QInput label={t("comun.lineas.pctIva")} {...uiProps("tipoIva")} soloLectura />
+              <QInput label={t("comun.lineas.pctIrpf")} {...uiProps("tipoIrpf")} />
             </>
           )}
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={cambiar} deshabilitado={!valido}>
-            Cambiar
+            {t("comun.botones.cambiar")}
           </QBoton>
         </div>
       </div>
