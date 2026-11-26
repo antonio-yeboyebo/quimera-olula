@@ -3,6 +3,10 @@
  * Una rama por módulo; las plantillas llevan `{{dato}}`.
  */
 export const es = {
+    albaran_venta: {
+        errorAlCrearMovimientoDeLote: "Error al crear movimiento de lote",
+        errorAlBorrarMovimientoDeLote: "Error al borrar movimiento de lote",
+    },
     comun: {
         almacen: "Almacén",
         articulo: "Artículo",

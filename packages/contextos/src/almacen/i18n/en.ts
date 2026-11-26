@@ -2,6 +2,10 @@ import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
 import type { es } from "./es.ts";
 
 export const en: Traduccion<typeof es> = {
+    albaran_venta: {
+        errorAlCrearMovimientoDeLote: "Error creating batch movement",
+        errorAlBorrarMovimientoDeLote: "Error deleting batch movement",
+    },
     comun: {
         almacen: "Warehouse",
         articulo: "Item",
