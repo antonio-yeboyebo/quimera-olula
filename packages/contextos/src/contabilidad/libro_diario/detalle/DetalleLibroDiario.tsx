@@ -18,6 +18,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabCriterios } from "./TabCriterios.tsx";
 import { TabResultado } from "./TabResultado.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleLibroDiario = ({
     id,
@@ -26,6 +27,7 @@ export const DetalleLibroDiario = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleLibroDiarioInicial,
@@ -58,7 +60,7 @@ export const DetalleLibroDiario = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("libro_diario.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -80,7 +82,7 @@ export const DetalleLibroDiario = ({
                 <Tabs
                     children={[
                         <Tab
-                            label="Criterios"
+                            label={t("libro_diario.criterios")}
                             key="tab-criterios"
                             children={
                                 <TabCriterios
@@ -90,7 +92,7 @@ export const DetalleLibroDiario = ({
                             }
                         />,
                         <Tab
-                            label="Resultado"
+                            label={t("libro_diario.resultado")}
                             key="tab-resultado"
                             children={
                                 <TabResultado

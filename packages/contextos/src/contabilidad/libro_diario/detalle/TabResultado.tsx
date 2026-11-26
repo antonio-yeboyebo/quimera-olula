@@ -15,9 +15,11 @@ import {
     CABECERAS_LIBRO_DIARIO,
     celdasFilaLibroDiario,
     nombreFicheroLibroDiario,
+    textoCabeceraLibroDiario,
 } from "../dominio.ts";
 import { getReportLibroDiario } from "../infraestructura.ts";
 import "./TabResultado.css";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 /** Resultado agrupado por el servidor: (mes,) asiento y debajo sus partidas. */
 const TablaAgrupada = ({
@@ -36,7 +38,7 @@ const TablaAgrupada = ({
             <thead>
                 <tr>
                     {cabeceras.map((cabecera) => (
-                        <th key={cabecera}>{cabecera}</th>
+                        <th key={cabecera}>{textoCabeceraLibroDiario(cabecera)}</th>
                     ))}
                 </tr>
             </thead>
@@ -68,21 +70,21 @@ const TablaAgrupada = ({
 };
 
 const COLUMNAS_BASE: MetaTabla<LineaLibroDiario> = [
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "asientoNumero", cabecera: "Asiento", tipo: "numero" },
-    { id: "conceptoAsiento", cabecera: "Concepto asiento" },
-    { id: "codigoSubcuenta", cabecera: "Subcuenta" },
-    { id: "concepto", cabecera: "Concepto partida" },
-    { id: "debe", cabecera: "Debe", tipo: "moneda" },
-    { id: "haber", cabecera: "Haber", tipo: "moneda" },
+    { id: "fecha", get cabecera() { return tContabilidad("libro_diario.fecha"); }, tipo: "fecha" },
+    { id: "asientoNumero", get cabecera() { return tContabilidad("libro_diario.asiento"); }, tipo: "numero" },
+    { id: "conceptoAsiento", get cabecera() { return tContabilidad("libro_diario.conceptoAsiento"); } },
+    { id: "codigoSubcuenta", get cabecera() { return tContabilidad("libro_diario.subcuenta"); } },
+    { id: "concepto", get cabecera() { return tContabilidad("libro_diario.conceptoPartida"); } },
+    { id: "debe", get cabecera() { return tContabilidad("libro_diario.debe"); }, tipo: "moneda" },
+    { id: "haber", get cabecera() { return tContabilidad("libro_diario.haber"); }, tipo: "moneda" },
 ];
 
 const COLUMNAS_IVA: MetaTabla<LineaLibroDiario> = [
-    { id: "baseImponible", cabecera: "Base", tipo: "moneda" },
-    { id: "codigoSerie", cabecera: "Serie" },
-    { id: "factura", cabecera: "Factura", tipo: "numero" },
-    { id: "iva", cabecera: "% IVA", tipo: "numero" },
-    { id: "recargo", cabecera: "% R.E.", tipo: "numero" },
+    { id: "baseImponible", get cabecera() { return tContabilidad("libro_diario.base"); }, tipo: "moneda" },
+    { id: "codigoSerie", get cabecera() { return tContabilidad("libro_diario.serie"); } },
+    { id: "factura", get cabecera() { return tContabilidad("libro_diario.factura"); }, tipo: "numero" },
+    { id: "iva", get cabecera() { return tContabilidad("libro_diario.iva"); }, tipo: "numero" },
+    { id: "recargo", get cabecera() { return tContabilidad("libro_diario.rE"); }, tipo: "numero" },
 ];
 
 const importe = (valor: number): string =>
@@ -100,6 +102,7 @@ export const TabResultado = ({
     resultado: ResultadoLibroDiario | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [calculando, setCalculando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -139,18 +142,18 @@ export const TabResultado = ({
         <div className="TabResultado">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={ocupado}>
-                    {calculando ? "Calculando…" : "Calcular"}
+                    {calculando ? t("libro_diario.calculando") : t("libro_diario.calcular")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={descargar}
                     deshabilitado={ocupado}
                 >
-                    Descargar PDF
+                    {t("libro_diario.descargarPdf")}
                 </QBoton>
             </div>
 
-            {!resultado && <p>Pulsa «Calcular» para obtener el libro.</p>}
+            {!resultado && <p>{t("libro_diario.pulsaCalcularParaObtenerElLibro")}</p>}
 
             {resultado && informe.resumenMensual && (
                 <div className="resumen-mensual">
@@ -159,10 +162,10 @@ export const TabResultado = ({
                             <caption>{periodo.titulo}</caption>
                             <thead>
                                 <tr>
-                                    <th>Subcuenta</th>
-                                    <th>Descripción</th>
-                                    <th>Debe</th>
-                                    <th>Haber</th>
+                                    <th>{t("libro_diario.subcuenta")}</th>
+                                    <th>{t("libro_diario.descripcion")}</th>
+                                    <th>{t("libro_diario.debe")}</th>
+                                    <th>{t("libro_diario.haber")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -181,7 +184,7 @@ export const TabResultado = ({
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colSpan={2}>Total periodo</td>
+                                    <td colSpan={2}>{t("libro_diario.totalPeriodo")}</td>
                                     <td className="importe">
                                         {importe(periodo.totalDebe)}
                                     </td>
@@ -190,7 +193,7 @@ export const TabResultado = ({
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>Acumulado diario</td>
+                                    <td colSpan={2}>{t("libro_diario.acumuladoDiario")}</td>
                                     <td className="importe">
                                         {importe(periodo.acumuladoDebe)}
                                     </td>
@@ -225,10 +228,10 @@ export const TabResultado = ({
                         <table className="tabla-totales-mes">
                             <thead>
                                 <tr>
-                                    <th>Mes</th>
-                                    <th>Debe</th>
-                                    <th>Haber</th>
-                                    <th>Descuadre</th>
+                                    <th>{t("libro_diario.mes")}</th>
+                                    <th>{t("libro_diario.debe")}</th>
+                                    <th>{t("libro_diario.haber")}</th>
+                                    <th>{t("libro_diario.descuadre")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -252,9 +255,7 @@ export const TabResultado = ({
 
                     {resultado.totales && (
                         <p className="totales-diario">
-                            Totales: debe {importe(resultado.totales.debe)} ·
-                            haber {importe(resultado.totales.haber)} ·
-                            descuadre {importe(resultado.totales.descuadre)}
+                            {t("libro_diario.totalesDebeValorHaberValor2Descuadre", { valor: importe(resultado.totales.debe), valor2: importe(resultado.totales.haber), valor3: importe(resultado.totales.descuadre) })}
                         </p>
                     )}
                 </>

@@ -20,6 +20,7 @@ import {
     TipoFilaLibroDiario,
 } from "./diseño.ts";
 import { ASCENDENTE, NO_ORDENAR } from "./dominio.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.LIBRO_DIARIO;
@@ -383,14 +384,14 @@ export const getResultadoLibroDiario: GetResultadoLibroDiario = async (id) =>
     RestAPI.getItem<ResultadoLibroDiario, ResultadoLibroDiarioApi>(
         urls.LIBRO_DIARIO_DATOS(id),
         resultadoDesdeApi,
-        "Error al calcular el libro diario"
+        tContabilidad("libro_diario.errorAlCalcularElLibroDiario")
     );
 
 export const postLibroDiario: PostLibroDiario = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoLibroDiarioAApi(nuevo),
-        "Error al crear el libro diario"
+        tContabilidad("libro_diario.errorAlCrearElLibroDiario")
     );
     return String(respuesta.id);
 };
@@ -399,16 +400,16 @@ export const patchLibroDiario: PatchLibroDiario = async (informe, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${informe.id}`,
         cambiosLibroDiarioAApi(cambios, informe),
-        "Error al guardar el libro diario"
+        tContabilidad("libro_diario.errorAlGuardarElLibroDiario")
     );
 };
 
 export const deleteLibroDiario: DeleteLibroDiario = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el libro diario");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("libro_diario.errorAlBorrarElLibroDiario"));
 };
 
 export const getReportLibroDiario: GetReportLibroDiario = async (id) =>
     RestAPI.blob(
         urls.LIBRO_DIARIO_REPORT(id),
-        "Error al descargar el PDF del libro diario"
+        tContabilidad("libro_diario.errorAlDescargarElPdfDel")
     );

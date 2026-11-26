@@ -10,6 +10,7 @@ import { FormModelo } from "@olula/lib/dominio.js";
 import { useFocus } from "@olula/lib/useFocus.ts";
 import { LibroDiario } from "../diseño.ts";
 import { admiteOpcionesDeDetalle } from "../dominio.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type Informe = Pick<LibroDiario, "todosAsientos" | "todasSubcuentas" | "resumenMensual">;
 
@@ -30,59 +31,59 @@ export const CamposLibroDiario = ({
 
     return (
         <>
-            <QInput label="Descripción" {...uiProps("descripcion")} ref={refDescripcion} />
+            <QInput label={tContabilidad("libro_diario.descripcion")} {...uiProps("descripcion")} ref={refDescripcion} />
             <FilaFormulario>
-                <QInput label="Ejercicio" {...uiProps("ejercicioId")} />
-                <FechaInforme label="Desde fecha" {...uiProps("fechaDesde")} />
-                <FechaInforme label="Hasta fecha" {...uiProps("fechaHasta")} />
+                <QInput label={tContabilidad("libro_diario.ejercicio")} {...uiProps("ejercicioId")} />
+                <FechaInforme label={tContabilidad("libro_diario.desdeFecha")} {...uiProps("fechaDesde")} />
+                <FechaInforme label={tContabilidad("libro_diario.hastaFecha")} {...uiProps("fechaHasta")} />
             </FilaFormulario>
             <FilaFormulario>
-                <QCheckbox label="Todos los asientos" {...uiProps("todosAsientos")} />
+                <QCheckbox label={tContabilidad("libro_diario.todosLosAsientos")} {...uiProps("todosAsientos")} />
                 <QInput
-                    label="Desde asiento Nº"
+                    label={tContabilidad("libro_diario.desdeAsientoN")}
                     {...uiProps("asientoDesde")}
                     soloLectura={informe.todosAsientos}
                     opcional
                 />
                 <QInput
-                    label="Hasta asiento Nº"
+                    label={tContabilidad("libro_diario.hastaAsientoN")}
                     {...uiProps("asientoHasta")}
                     soloLectura={informe.todosAsientos}
                     opcional
                 />
             </FilaFormulario>
             <FilaFormulario>
-                <QCheckbox label="Todas las subcuentas" {...uiProps("todasSubcuentas")} />
+                <QCheckbox label={tContabilidad("libro_diario.todasLasSubcuentas")} {...uiProps("todasSubcuentas")} />
                 <QInput
-                    label="Desde subcuenta Nº"
+                    label={tContabilidad("libro_diario.desdeSubcuentaN")}
                     {...uiProps("subcuentaDesde")}
                     soloLectura={informe.todasSubcuentas}
                     opcional
                 />
                 <QInput
-                    label="Hasta subcuenta Nº"
+                    label={tContabilidad("libro_diario.hastaSubcuentaN")}
                     {...uiProps("subcuentaHasta")}
                     soloLectura={informe.todasSubcuentas}
                     opcional
                 />
             </FilaFormulario>
             <FilaFormulario>
-                <QCheckbox label="Resumen mensual" {...uiProps("resumenMensual")} />
+                <QCheckbox label={tContabilidad("libro_diario.resumenMensual")} {...uiProps("resumenMensual")} />
                 <QCheckbox
-                    label="Datos de I.V.A."
+                    label={tContabilidad("libro_diario.datosDeIVA")}
                     {...uiProps("datosIva")}
                     soloLectura={!conDetalle}
                 />
                 <QCheckbox
-                    label="Agrupar por meses"
+                    label={tContabilidad("libro_diario.agruparPorMeses")}
                     {...uiProps("agruparMeses")}
                     soloLectura={!conDetalle}
                 />
             </FilaFormulario>
             {([1, 2, 3] as const).map((n) => (
                 <FilaFormulario key={n}>
-                    <CriterioOrdenInforme label={`Criterio ${n}`} {...uiProps(`orden${n}`)} />
-                    <SentidoOrdenInforme label={`Orden ${n}`} {...uiProps(`tipoOrden${n}`)} />
+                    <CriterioOrdenInforme label={tContabilidad("libro_diario.criterioN", { n })} {...uiProps(`orden${n}`)} />
+                    <SentidoOrdenInforme label={tContabilidad("libro_diario.ordenN", { n })} {...uiProps(`tipoOrden${n}`)} />
                 </FilaFormulario>
             ))}
         </>
