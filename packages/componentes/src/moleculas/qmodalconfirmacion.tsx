@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { ContextoError } from "@olula/lib/contexto.js";
 import { PropsWithChildren, useContext, useRef, useState } from "react";
 import { iconoAccionBoton } from "../atomos/icono_accion.ts";
@@ -26,7 +27,7 @@ export const QModalConfirmacion = ({
   onCerrar,
   onAceptar,
   labelAceptar,
-  labelCancelar = "Cancelar",
+  labelCancelar,
   mostrarCancelar = true,
   pantallaCompletaMovil = false,
   destructivo,
@@ -34,10 +35,11 @@ export const QModalConfirmacion = ({
 }: PropsWithChildren<QModalConfirmacionProps>) => {
   // «Borrar línea», «Eliminar asociación»…: el botón que confirma va en rojo y
   // dice lo que hace («Borrar»), salvo que la pantalla indique otra cosa.
+  const t = useTComponentes();
   const esBorrado = iconoAccionBoton(titulo) === "eliminar";
   const botonDestructivo = destructivo ?? esBorrado;
   const textoAceptar =
-    labelAceptar ?? (esBorrado ? titulo.trim().split(/\s+/)[0] : "Aceptar");
+    labelAceptar ?? (esBorrado ? titulo.trim().split(/\s+/)[0] : t("comun.aceptar"));
   const { intentar } = useContext(ContextoError);
   const [guardando, setGuardando] = useState(false);
   const bloqueadoRef = useRef(false);
@@ -84,11 +86,11 @@ export const QModalConfirmacion = ({
             onClick={cancelar}
             deshabilitado={guardando}
           >
-            {labelCancelar}
+            {labelCancelar ?? t("comun.cancelar")}
           </QBoton>
         )}
         <QBoton onClick={aceptar} deshabilitado={guardando} destructivo={botonDestructivo}>
-          {guardando ? "Procesando..." : textoAceptar}
+          {guardando ? t("comun.procesando") : textoAceptar}
         </QBoton>
       </div>
     </QModal>

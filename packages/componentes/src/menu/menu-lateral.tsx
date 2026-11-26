@@ -1,3 +1,4 @@
+import { nombreMenu, useTComponentes } from "../i18n/textos.ts";
 import { disponibleEnSaas, ElementoMenu, ElementoMenuHijo, pluginsActivos } from "@olula/lib/menu.ts";
 import { puedeAlguna } from "@olula/lib/dominio.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
@@ -41,6 +42,8 @@ const Resaltado = ({ texto, filtro }: { texto: string; filtro: string }) => {
 };
 
 export const MenuLateral = () => {
+  // Nombres de las entradas en el idioma activo (repinta al cambiarlo).
+  useTComponentes();
   const control = useMenuControl();
   const esMovil = useEsMovil();
   const { menu, urlActual, favoritos, recientes } = usePantallasMenu();
@@ -112,7 +115,7 @@ export const MenuLateral = () => {
         onClick={cerrarEnMovil}
       >
         <QIcono nombre={icono} tamaño="sm" />
-        <span className="menu-fila-texto">{p.nombre}</span>
+        <span className="menu-fila-texto">{nombreMenu(p.nombre)}</span>
         {p.grupo && <span className="menu-fila-grupo">{p.grupo}</span>}
       </Link>
     </li>
@@ -132,7 +135,7 @@ export const MenuLateral = () => {
           >
             <QIcono nombre={g.icono} tamaño="md" />
             <span className="menu-grupo-nombre">
-              <Resaltado texto={g.nombre} filtro={filtro} />
+              <Resaltado texto={nombreMenu(g.nombre)} filtro={filtro} />
             </span>
           </Link>
         </li>
@@ -152,7 +155,7 @@ export const MenuLateral = () => {
         >
           <QIcono nombre={g.icono} tamaño="md" />
           <span className="menu-grupo-nombre">
-            <Resaltado texto={g.nombre} filtro={filtro} />
+            <Resaltado texto={nombreMenu(g.nombre)} filtro={filtro} />
           </span>
           {actual && !abierto && (
             <span className="menu-grupo-punto" title="Contiene la pantalla actual" />
@@ -174,7 +177,7 @@ export const MenuLateral = () => {
                     aria-current={i.url === urlActual ? "page" : undefined}
                     onClick={cerrarEnMovil}
                   >
-                    <Resaltado texto={i.nombre} filtro={filtro} />
+                    <Resaltado texto={nombreMenu(i.nombre)} filtro={filtro} />
                   </Link>
                   <button
                     type="button"
@@ -285,8 +288,8 @@ export const MenuLateral = () => {
             to={g.url}
             className="menu-carril-boton"
             data-actual={contieneActual(g) || undefined}
-            aria-label={g.nombre}
-            title={g.nombre}
+            aria-label={nombreMenu(g.nombre)}
+            title={nombreMenu(g.nombre)}
           >
             <QIcono nombre={g.icono} tamaño="md" />
           </Link>
@@ -297,9 +300,9 @@ export const MenuLateral = () => {
             className="menu-carril-boton"
             data-actual={contieneActual(g) || undefined}
             data-abierto={flyout?.grupo === g.nombre || undefined}
-            aria-label={g.nombre}
+            aria-label={nombreMenu(g.nombre)}
             aria-expanded={flyout?.grupo === g.nombre}
-            title={g.nombre}
+            title={nombreMenu(g.nombre)}
             onClick={(e) =>
               setFlyout(
                 flyout?.grupo === g.nombre
@@ -325,10 +328,10 @@ export const MenuLateral = () => {
         <div
           className="menu-flyout"
           role="dialog"
-          aria-label={grupoFlyout.nombre}
+          aria-label={nombreMenu(grupoFlyout.nombre)}
           style={{ top: flyout.top }}
         >
-          <span className="menu-flyout-titulo">{grupoFlyout.nombre}</span>
+          <span className="menu-flyout-titulo">{nombreMenu(grupoFlyout.nombre)}</span>
           <ul>
             {grupoFlyout.items.map((i) => (
               <li key={i.url}>
@@ -337,7 +340,7 @@ export const MenuLateral = () => {
                   className="menu-pantalla"
                   aria-current={i.url === urlActual ? "page" : undefined}
                 >
-                  {i.nombre}
+                  {nombreMenu(i.nombre)}
                   {control.favoritos.includes(i.url) && (
                     <QIcono nombre="estrella_rellena" tamaño="xs" />
                   )}

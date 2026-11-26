@@ -10,6 +10,7 @@ import { QAvatar } from "../atomos/qavatar.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
 import { estaAutentificado } from "../plantilla/autenticacion";
 import { useMenuControl } from "../plantilla/useMenuControl";
+import { nombreMenu, useTComponentes } from "../i18n/textos.ts";
 import { elementoMiCuenta } from "./mi_cuenta.ts";
 
 // Tipo exportado para que las apps puedan usarlo en sus factories
@@ -84,6 +85,8 @@ export const MenuUsuarioBase = (props: {
   procesarElementos?: ProcesoElementosFn;
 }) => {
   const { menuAbierto, cerrarMenu } = useMenuControl();
+  // «Mi cuenta», «Cerrar sesión»… en el idioma activo (repinta al cambiarlo).
+  useTComponentes();
   const usuarioId = usuarioConectado();
   const usuario = useNombreUsuario(usuarioId);
 
@@ -112,7 +115,7 @@ export const MenuUsuarioBase = (props: {
       return (
         <li key={elemento.nombre}>
           <Link to={elemento.url} onClick={() => cerrarMenu("usuario")}>
-            {icono} {elemento.nombre}
+            {icono} {nombreMenu(elemento.nombre)}
           </Link>
         </li>
       );
@@ -126,7 +129,7 @@ export const MenuUsuarioBase = (props: {
     return (
       <details key={elemento.nombre} open>
         <summary>
-          {icono} {elemento.nombre}
+          {icono} {nombreMenu(elemento.nombre)}
         </summary>
         <hr />
         <ul>{subelementos}</ul>

@@ -150,3 +150,10 @@ export const registrarTraducciones = <R extends Textos>(
 
     return { ns, t, useT };
 };
+
+/**
+ * Texto de una clave que se compone en ejecución (p. ej. el nombre de una entrada de menú):
+ * si no hay traducción, `porDefecto`. Para claves fijas usa el `t` tipado del namespace.
+ */
+export const textoSiExiste = (ns: string, clave: string, porDefecto: string): string =>
+    i18n.exists(clave, { ns }) ? traductor(ns)(clave) : porDefecto;

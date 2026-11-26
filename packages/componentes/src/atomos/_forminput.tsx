@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { formatearMoneda, formatearNumero } from "@olula/lib/dominio.ts";
@@ -105,6 +106,7 @@ export const FormInput = ({
   onEnterKeyUp,
   evaluarCambio,
 }: InputProps) => {
+  const t = useTComponentes();
   const evaluarCambioRef = useRef(evaluarCambio);
   useLayoutEffect(() => {
     evaluarCambioRef.current = evaluarCambio;
@@ -230,7 +232,7 @@ export const FormInput = ({
             type="button"
             className="hora-limpiar"
             onClick={manejarLimpiar}
-            aria-label="Limpiar hora"
+            aria-label={t("campos.limpiarHora")}
             tabIndex={-1}
           >
             ×

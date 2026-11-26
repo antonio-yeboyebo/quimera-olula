@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
@@ -117,6 +118,7 @@ export const Listado = <T extends Entidad>({
   formatosDescarga,
   widgets,
 }: ListadoProps<T>) => {
+  const t = useTComponentes();
   // Sin widgets propios, el maestro principal los ofrece igualmente si su
   // pantalla tiene un recurso agregable en el servidor (los crea el usuario).
   const enMaestroPrincipal = useEnMaestroPrincipal();
@@ -460,7 +462,7 @@ export const Listado = <T extends Entidad>({
                 deshabilitado={descargando}
                 onClick={handleDescarga}
               >
-                {descargando ? "Exportando…" : "Exportar"}
+                {descargando ? t("listado.exportando") : t("listado.exportar")}
               </QBoton>
             </div>
           )}
@@ -494,8 +496,8 @@ export const Listado = <T extends Entidad>({
                   setDensidad(densidad === "comoda" ? "compacta" : "comoda")
                 }
                 aria-pressed={densidad === "compacta"}
-                aria-label="Vista compacta"
-                title="Vista compacta"
+                aria-label={t("listado.vistaCompacta")}
+                title={t("listado.vistaCompacta")}
               >
                 <QIcono nombre="densidad" tamaño="sm" />
               </button>

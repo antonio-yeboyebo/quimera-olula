@@ -1,3 +1,5 @@
+import { localeActual } from "@olula/lib/i18n/i18n.ts";
+import { useTComponentes } from "../../i18n/textos.ts";
 import { ClausulaFiltro, Entidad, TipoInput } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
@@ -308,6 +310,7 @@ export const MaestroFiltrosActivoControlado = ({
   onFiltroChanged,
   contar,
 }: MaestroFiltrosActivoControladoProps) => {
+  const t = useTComponentes();
   const valoresAplicados = useMemo(
     () => filtroToValores(filtro, metaFiltro),
     [filtro, metaFiltro]
@@ -431,7 +434,9 @@ export const MaestroFiltrosActivoControlado = ({
   const chips = chipsFiltro(filtro, filtroInicial, metaFiltro, valoresAplicados);
   const activos = chips.filter((chip) => chip.quitable).length;
   const textoAplicar =
-    recuento === null ? "Aplicar" : `Aplicar (${recuento.toLocaleString("es-ES")})`;
+    recuento === null
+      ? t("filtros.aplicar")
+      : t("filtros.aplicarRecuento", { recuento: recuento.toLocaleString(localeActual()) });
 
   return (
     <div className="MaestroFiltrosControlado" ref={refContenedor}>
@@ -443,12 +448,12 @@ export const MaestroFiltrosActivoControlado = ({
         onClick={abierto ? cancelar : abrir}
       >
         <QIcono nombre="filtro" tamaño="sm" />
-        Filtros
+        {t("filtros.filtros")}
         {activos > 0 && <span className="filtros-contador">{activos}</span>}
       </button>
 
       {chips.length > 0 && (
-        <ul className="filtros-chips" aria-label="Filtros activos">
+        <ul className="filtros-chips" aria-label={t("filtros.activos")}>
           {chips.map((chip) => (
             <li key={chip.id} className="filtros-chip" title={`${chip.etiqueta}: ${chip.texto}`}>
               <span className="filtros-chip-etiqueta">{chip.etiqueta}</span>
@@ -456,7 +461,7 @@ export const MaestroFiltrosActivoControlado = ({
               {chip.quitable && (
                 <button
                   type="button"
-                  aria-label={`Quitar filtro ${chip.etiqueta}`}
+                  aria-label={t("filtros.quitar", { etiqueta: chip.etiqueta })}
                   onClick={() => quitar(chip.id)}
                 >
                   ×
@@ -467,7 +472,7 @@ export const MaestroFiltrosActivoControlado = ({
           {activos > 0 && (
             <li>
               <button type="button" className="filtros-limpiar" onClick={limpiarTodo}>
-                Limpiar
+                {t("filtros.limpiar")}
               </button>
             </li>
           )}
@@ -477,10 +482,10 @@ export const MaestroFiltrosActivoControlado = ({
       {abierto && (
         <>
           <div className="filtros-fondo" onClick={cancelar} />
-          <div className="filtros-panel" role="dialog" aria-label="Filtros">
+          <div className="filtros-panel" role="dialog" aria-label={t("filtros.filtros")}>
             <header className="filtros-panel-cabecera">
-              <span>Filtros</span>
-              <button type="button" onClick={cancelar} aria-label="Cerrar filtros">
+              <span>{t("filtros.filtros")}</span>
+              <button type="button" onClick={cancelar} aria-label={t("filtros.cerrar")}>
                 <QIcono nombre="cerrar" tamaño="sm" />
               </button>
             </header>
@@ -497,11 +502,11 @@ export const MaestroFiltrosActivoControlado = ({
             </quimera-formulario>
             <footer>
               <button type="button" className="filtros-limpiar" onClick={limpiarTodo}>
-                Limpiar todo
+                {t("filtros.limpiarTodo")}
               </button>
               <span className="filtros-panel-hueco" />
               <QBoton variante="borde" onClick={cancelar}>
-                Cancelar
+                {t("comun.cancelar")}
               </QBoton>
               <QBoton onClick={aplicar}>
                 {textoAplicar}

@@ -1,3 +1,6 @@
+import { localeActual } from "@olula/lib/i18n/i18n.ts";
+import { tLib } from "@olula/lib/i18n/textos.ts";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 import { ContenidoConEnlace } from "./qenlace_ficha.tsx";
 import { etiquetaEnlace } from "./url_enlace.ts";
 import { Entidad, Orden, Paginacion } from "@olula/lib/diseño.ts";
@@ -99,9 +102,9 @@ const fila = <T extends Entidad>(entidad: Entidad, metaTabla: MetaTabla<T>) => {
     } else if (tipo === "fechahora" && typeof datos === "object") {
       datos = formatearFechaHora(datos as Date);
     } else if (tipo === "numero" && typeof datos === "number") {
-      datos = datos.toLocaleString("es-ES");
+      datos = datos.toLocaleString(localeActual());
     } else if (tipo === "booleano" && typeof datos === "boolean") {
-      datos = datos ? "Sí" : "No";
+      datos = datos ? tLib("si") : tLib("no");
     }
 
     const href = enlace?.(entidad as T) ?? null;
@@ -147,8 +150,11 @@ const paginacionControlador = (
   return (
     <quimera-tabla-paginacion>
       <span className="paginacion-rango">
-        {desde.toLocaleString("es-ES")}–{hasta.toLocaleString("es-ES")} de{" "}
-        {totalEntidades.toLocaleString("es-ES")}
+        {tComponentes("listado.rango", {
+          desde: desde.toLocaleString(localeActual()),
+          hasta: hasta.toLocaleString(localeActual()),
+          total: totalEntidades.toLocaleString(localeActual()),
+        })}
       </span>
       <QBoton
         deshabilitado={pagina === 1 || totalPaginas === 0}
@@ -228,6 +234,8 @@ export const QTabla = <T extends Entidad>({
   onPaginacion,
   totalEntidades = 0,
 }: QTablaProps<T>) => {
+  // Repinta (paginación, Sí/No) al cambiar de idioma.
+  useTComponentes();
   // Detectar si hay anchos específicos
   const tieneAnchosFijos = metaTabla.some((col) => col.ancho);
 

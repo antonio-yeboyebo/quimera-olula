@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { useState } from "react";
 import { iconoAccionBoton } from "../atomos/icono_accion.ts";
 import { QBoton } from "../atomos/qboton.tsx";
@@ -37,6 +38,7 @@ export const QuimeraAcciones = ({
   acciones: (Accion | false)[];
   vertical?: boolean;
 }) => {
+  const t = useTComponentes();
   const [activo, setActivo] = useState(false);
 
   const handleAccionesClick = () => {
@@ -101,9 +103,9 @@ export const QuimeraAcciones = ({
               onClick={handleAccionesClick}
               variante="borde"
               props={{
-                "aria-label": "Más acciones",
+                "aria-label": t("acciones.mas"),
                 "aria-expanded": activo,
-                title: "Más acciones",
+                title: t("acciones.mas"),
               }}
             >
               <QIcono nombre="mas_opciones" tamaño="sm" />

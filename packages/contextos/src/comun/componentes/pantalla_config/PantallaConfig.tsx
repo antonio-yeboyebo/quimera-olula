@@ -1,5 +1,6 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { ReactNode } from "react";
+import { useTComun } from "../../i18n/index.ts";
 import "./PantallaConfig.css";
 
 interface PantallaConfigProps {
@@ -24,17 +25,20 @@ export const PantallaConfig = ({
     cambiada = false,
     guardando = false,
     children,
-}: PantallaConfigProps) => (
+}: PantallaConfigProps) => {
+    const t = useTComun();
+    return (
     <div className="PantallaConfig">
         <h2>{titulo}</h2>
         {descripcion && <p className="descripcion-config">{descripcion}</p>}
-        {children ?? <p className="sin-opciones">Todavía no hay opciones en este apartado.</p>}
+        {children ?? <p className="sin-opciones">{t("pantallaConfig.sinOpciones")}</p>}
         {onGuardar && (
             <div className="botones">
                 <QBoton deshabilitado={!cambiada || guardando} onClick={onGuardar}>
-                    {guardando ? "Guardando…" : "Guardar"}
+                    {guardando ? t("pantallaConfig.guardando") : t("pantallaConfig.guardar")}
                 </QBoton>
             </div>
         )}
     </div>
-);
+    );
+};

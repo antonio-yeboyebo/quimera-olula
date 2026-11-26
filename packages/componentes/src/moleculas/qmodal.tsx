@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { PropsWithChildren, useEffect, useId, useRef } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
@@ -31,6 +32,7 @@ export const QModal = ({
   mostrarBotonCerrar = true,
   children,
 }: PropsWithChildren<QModalProps>) => {
+  const t = useTComponentes();
   const refModal = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const cerradoPorEstadoRef = useRef(false);
@@ -127,7 +129,7 @@ export const QModal = ({
                   tamaño="mediano"
                   variante="texto"
                   tipo="submit"
-                  props={{ "aria-label": "Cerrar modal", title: "Cerrar" }}
+                  props={{ "aria-label": t("modal.cerrar"), title: t("comun.cerrar") }}
                 >
                   <QIcono nombre="cerrar" tamaño="sm" />
                 </QBoton>

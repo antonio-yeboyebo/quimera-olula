@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import "./_forminput.css";
 import {
   Etiqueta,
@@ -49,6 +50,7 @@ export const QInput = ({
   decimales,
   ...props
 }: QInputProps) => {
+  const t = useTComponentes();
   const { editandoHandlers } = useEditando();
 
   if (soloLectura) {
@@ -78,7 +80,7 @@ export const QInput = ({
                 <EnlaceFicha
                   href={urlEnlace(enlace, valor)!}
                   className="enlace-solo-lectura"
-                  etiqueta={`Abrir ${label ?? "ficha"} ${valor}`}
+                  etiqueta={`${t("campos.abrir", { que: label ?? t("campos.ficha") })} ${valor}`}
                 />
               )}
             </span>

@@ -6,6 +6,7 @@ import { Outlet } from "react-router";
 
 // import { Entidad } from "@olula/lib/diseño.ts";
 import { QBoton } from "../atomos/qboton.tsx";
+import { tComponentes } from "../i18n/textos.ts";
 import { QModal } from "../moleculas/qmodal.tsx";
 import { Plantilla } from "../plantilla/Plantilla.tsx";
 import { Slot } from "../slot/Slot.tsx";
@@ -35,7 +36,7 @@ export const Vista = ({ children }: PropsWithChildren<object>) => {
             descripcion: limite.mensaje,
             accion: accionErrorLimite(limite) ?? undefined,
           }
-          : { nombre: apiError.nombre ?? "Error", descripcion });
+          : { nombre: apiError.nombre ?? tComponentes("comun.error"), descripcion });
         if (onError) {
           onError(error);
         }

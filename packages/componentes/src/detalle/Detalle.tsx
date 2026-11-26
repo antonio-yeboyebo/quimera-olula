@@ -1,3 +1,4 @@
+import { nombreMenu, tComponentes, useTComponentes } from "../i18n/textos.ts";
 import { Entidad } from "@olula/lib/diseño.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { PropsWithChildren, ReactNode, useContext, useEffect } from "react";
@@ -32,12 +33,14 @@ const Titulo = ({ titulo }: { titulo: ReactNode }) => {
 /** Nombre de la pantalla actual en el menú (para "‹ Facturas" en móvil). */
 const useNombrePantalla = () => {
   const { menu } = useContext(FactoryCtx);
+  const t = useTComponentes();
   const pantallas = aplanarMenu(menu, () => true);
   const url = urlActiva(
     pantallas.map((p) => p.url),
     window.location.pathname
   );
-  return pantallas.find((p) => p.url === url)?.nombre ?? "Volver";
+  const nombre = pantallas.find((p) => p.url === url)?.nombre;
+  return nombre ? nombreMenu(nombre) : t("comun.volver");
 };
 
 interface DetalleProps<T extends Entidad> {
@@ -108,7 +111,7 @@ export function Detalle<T extends Entidad>({
           </div>
           {cerrarDetalle && (
             <QBoton
-              props={{ className: "detalle-cerrar", "aria-label": "Cerrar detalle" }}
+              props={{ className: "detalle-cerrar", "aria-label": tComponentes("detalle.cerrar") }}
               onClick={cerrarDetalle}
               variante="texto"
               tamaño="pequeño"

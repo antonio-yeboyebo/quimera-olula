@@ -1,10 +1,6 @@
-type ModoListado = "tabla" | "tarjetas" | "kanban";
+import { useTComponentes } from "../i18n/textos.ts";
 
-const etiquetas: Record<ModoListado, string> = {
-  tarjetas: "Tarjetas",
-  tabla: "Tabla",
-  kanban: "Kanban",
-};
+type ModoListado = "tabla" | "tarjetas" | "kanban";
 
 /** Control segmentado para elegir el modo de vista del listado. */
 export const SelectorModo = <M extends ModoListado>({
@@ -15,8 +11,10 @@ export const SelectorModo = <M extends ModoListado>({
   modos: M[];
   modo: M;
   onCambio: (modo: M) => void;
-}) => (
-  <div className="selector-modo" role="group" aria-label="Modo de vista">
+}) => {
+  const t = useTComponentes();
+  return (
+  <div className="selector-modo" role="group" aria-label={t("listado.modoVista")}>
     {modos.map((opcion) => (
       <button
         key={opcion}
@@ -24,8 +22,9 @@ export const SelectorModo = <M extends ModoListado>({
         aria-pressed={opcion === modo}
         onClick={() => opcion !== modo && onCambio(opcion)}
       >
-        {etiquetas[opcion]}
+        {t(`listado.modos.${opcion}`)}
       </button>
     ))}
   </div>
-);
+  );
+};
