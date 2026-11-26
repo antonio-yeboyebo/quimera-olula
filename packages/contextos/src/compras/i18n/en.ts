@@ -314,6 +314,40 @@ export const en: Traduccion<typeof es> = {
             importeTotal: "Total amount",
             medio: "Average delivery note",
         },
+        borrar: {
+            titulo: "Delete delivery note",
+            mensaje: "Are you sure you want to delete the delivery note {{codigo}}?",
+            avisoLineaPedido: " The quantity received on the source order will be adjusted.",
+        },
+        crear: {
+            titulo: "Create purchase delivery note",
+        },
+        detalle: {
+            facturar: "Invoice",
+            avisoLineaPedido: "This line comes from an order: changing the quantity adjusts what was received on that order.",
+        },
+        facturar: {
+            titulo: "Invoice delivery note",
+            mensaje: "Invoice the delivery note {{codigo}}?",
+            generadaTitulo: "Invoice created",
+            generada: "Invoice {{codigo}} has been created.",
+            irFactura: "Go to invoice {{codigo}}",
+        },
+        errores: {
+            obtener: "Error getting the delivery note",
+            obtenerLista: "Error getting the delivery notes",
+            crear: "Error creating the delivery note",
+            albaranarPedidos: "Error creating delivery notes from the orders",
+            guardar: "Error saving the delivery note",
+            borrar: "Error deleting the delivery note",
+            report: "Error getting the delivery note report",
+            obtenerLineas: "Error getting the delivery note lines",
+            obtenerLinea: "Error getting the line",
+            crearLineas: "Error creating the delivery note lines",
+            nuevaLinea: "Error calculating the new delivery note line",
+            actualizarLinea: "Error updating the line",
+            borrarLineas: "Error deleting the delivery note lines",
+        },
     },
     factura: {
         maestro: {

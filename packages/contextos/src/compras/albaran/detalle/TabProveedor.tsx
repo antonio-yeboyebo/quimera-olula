@@ -7,6 +7,7 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Albaran } from "../diseño.ts";
 import { albaranFacturado } from "../dominio.ts";
 import "./TabProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const TabProveedor = ({
     form,
@@ -15,6 +16,7 @@ export const TabProveedor = ({
     form: HookModelo<Albaran>;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { uiProps, modelo } = form;
     const puedeCambiarProveedor = !albaranFacturado(modelo);
 
@@ -27,18 +29,18 @@ export const TabProveedor = ({
                     descripcion={modelo.nombreProveedor}
                     deshabilitado={true}
                 />
-                <QInput label="Id Fiscal" {...uiProps("idFiscal")} />
+                <QInput label={t("comun.campos.idFiscal")} {...uiProps("idFiscal")} />
                 {puedeCambiarProveedor && (
                     <div className="TabProveedor-accion">
                         <BotonCambiar
-                            titulo="Cambiar proveedor"
+                            titulo={t("comun.cambioProveedor.titulo")}
                             onClick={() => publicar("cambio_proveedor_solicitado")}
                         />
                     </div>
                 )}
-                <QInput label="Nº proveedor" {...uiProps("numeroProveedor")} />
-                <QDate label="Fecha" {...uiProps("fecha")} />
-                <QInput label="Hora" {...uiProps("hora")} />
+                <QInput label={t("comun.campos.numeroProveedor")} {...uiProps("numeroProveedor")} />
+                <QDate label={t("comun.campos.fecha")} {...uiProps("fecha")} />
+                <QInput label={t("comun.campos.hora")} {...uiProps("hora")} />
             </quimera-formulario>
         </div>
     );

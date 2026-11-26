@@ -7,6 +7,7 @@ import { Albaran, LineaAlbaran } from "../../diseño.ts";
 import { albaranFacturado } from "../../dominio.ts";
 import { EstadoDetalleAlbaran } from "../diseño.ts";
 import { LineasLista } from "./LineasLista.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const LineasAlbaran = ({
     albaran,
@@ -19,22 +20,23 @@ export const LineasAlbaran = ({
     estado: EstadoDetalleAlbaran;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const activa = lineas.activo;
     const editable = !albaranFacturado(albaran);
 
     const acciones = [
         {
-            texto: "Nueva",
+            texto: t("comun.botones.nueva"),
             onClick: () => publicar("alta_linea_solicitada"),
         },
         {
-            texto: "Editar",
+            texto: t("comun.botones.editar"),
             onClick: () => publicar("cambio_linea_solicitado"),
             deshabilitado: !activa,
         },
         {
             icono: "eliminar",
-            texto: "Borrar",
+            texto: t("comun.botones.borrar"),
             advertencia: true,
             onClick: () => publicar("baja_linea_solicitada"),
             deshabilitado: !activa,

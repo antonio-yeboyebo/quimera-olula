@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { Albaran } from "../diseño.ts";
 
 export const FacturarAlbaran = ({
@@ -11,6 +12,7 @@ export const FacturarAlbaran = ({
     albaran: Albaran;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const facturar_ = useCallback(
         async () => publicar("facturado_confirmado"),
         [publicar]
@@ -27,8 +29,8 @@ export const FacturarAlbaran = ({
         <QModalConfirmacion
             nombre="facturarAlbaranCompra"
             abierto={true}
-            titulo="Facturar albarán"
-            mensaje={`¿Facturar el albarán ${albaran.codigo}?`}
+            titulo={t("albaran.facturar.titulo")}
+            mensaje={t("albaran.facturar.mensaje", { codigo: albaran.codigo })}
             onCerrar={cancelar}
             onAceptar={facturar}
         />

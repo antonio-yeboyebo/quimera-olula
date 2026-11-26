@@ -315,6 +315,40 @@ export const es = {
             importeTotal: "Importe total",
             medio: "Albarán medio",
         },
+        borrar: {
+            titulo: "Borrar albarán",
+            mensaje: "¿Está seguro de que desea borrar el albarán {{codigo}}?",
+            avisoLineaPedido: " Se reajustará lo recibido del pedido de origen.",
+        },
+        crear: {
+            titulo: "Crear albarán de compra",
+        },
+        detalle: {
+            facturar: "Facturar",
+            avisoLineaPedido: "Esta línea viene de un pedido: cambiar la cantidad reajusta lo recibido de ese pedido.",
+        },
+        facturar: {
+            titulo: "Facturar albarán",
+            mensaje: "¿Facturar el albarán {{codigo}}?",
+            generadaTitulo: "Factura generada",
+            generada: "Se ha generado la factura {{codigo}}.",
+            irFactura: "Ir a la factura {{codigo}}",
+        },
+        errores: {
+            obtener: "Error al obtener el albarán",
+            obtenerLista: "Error al obtener los albaranes",
+            crear: "Error al crear el albarán",
+            albaranarPedidos: "Error al albaranar los pedidos",
+            guardar: "Error al guardar el albarán",
+            borrar: "Error al borrar el albarán",
+            report: "Error al obtener el report del albarán",
+            obtenerLineas: "Error al obtener las líneas del albarán",
+            obtenerLinea: "Error al obtener la línea",
+            crearLineas: "Error al crear las líneas del albarán",
+            nuevaLinea: "Error al calcular la nueva línea del albarán",
+            actualizarLinea: "Error al actualizar la línea",
+            borrarLineas: "Error al borrar las líneas del albarán",
+        },
     },
     factura: {
         maestro: {

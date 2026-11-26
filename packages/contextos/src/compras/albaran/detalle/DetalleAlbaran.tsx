@@ -29,6 +29,7 @@ import { TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
 import { TabProveedor } from "./TabProveedor.tsx";
 import { TotalesDocumento } from "#/compras/comun/componentes/TotalesDocumento.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const DetalleAlbaran = ({
     id,
@@ -37,6 +38,7 @@ export const DetalleAlbaran = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleAlbaranInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -68,17 +70,17 @@ export const DetalleAlbaran = ({
     };
 
     const accionesAlbaran = [
-        { texto: "Imprimir", onClick: imprimir },
-        { texto: "Documentos relacionados", onClick: () => emitir("traza_solicitada") },
+        { texto: t("comun.botones.imprimir"), onClick: imprimir },
+        { texto: t("comun.botones.documentosRelacionados"), onClick: () => emitir("traza_solicitada") },
         {
-            texto: "Facturar",
+            texto: t("albaran.detalle.facturar"),
             onClick: () => emitir("facturado_solicitado"),
             deshabilitado: albaranFacturado(albaran),
             principal: true,
         },
         {
             icono: "eliminar",
-            texto: "Borrar",
+            texto: t("comun.botones.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             advertencia: true,
             deshabilitado: albaranFacturado(albaran),
@@ -103,7 +105,7 @@ export const DetalleAlbaran = ({
                     children={[
                         <Tab
                             key="tab-lineas"
-                            label="Líneas"
+                            label={t("comun.documento.pestanas.lineas")}
                             children={
                                 <LineasAlbaran
                                     albaran={albaran}
@@ -115,17 +117,17 @@ export const DetalleAlbaran = ({
                         />,
                         <Tab
                             key="tab-proveedor"
-                            label="Proveedor"
+                            label={t("comun.documento.pestanas.proveedor")}
                             children={<TabProveedor form={formModelo} publicar={emitir} />}
                         />,
                         <Tab
                             key="tab-datos"
-                            label="Datos"
+                            label={t("comun.documento.pestanas.datos")}
                             children={<TabDatos form={formModelo} publicar={emitir} />}
                         />,
                         <Tab
                             key="tab-observaciones"
-                            label="Observaciones"
+                            label={t("comun.campos.observaciones")}
                             children={<TabObservaciones form={formModelo} />}
                         />,
                     ]}
