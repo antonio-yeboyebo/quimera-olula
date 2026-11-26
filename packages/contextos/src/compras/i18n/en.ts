@@ -514,4 +514,47 @@ export const en: Traduccion<typeof es> = {
             albaranar: "Error creating the delivery note from the order",
         },
     },
+    articulo: {
+        maestro: {
+            titulo: "Items",
+            nuevo: "New Item",
+            familia: "Family",
+            soloComprables: "Purchasable only",
+            sinStock: "No stock",
+        },
+        crear: {
+            titulo: "Create item",
+        },
+        detalle: {
+            verEnAlmacen: "View in warehouse",
+            general: "General",
+            compras: "Purchasing",
+            preciosProveedor: "Prices by supplier",
+        },
+        precios: {
+            nuevo: "New",
+            marcarPorDefecto: "Set as default",
+            nuevoTitulo: "New supplier for the item",
+            cambiarTitulo: "Price from {{proveedor}}",
+            borrarTitulo: "Remove supplier from the item",
+            borrarMensaje: "Are you sure you want to remove \"{{proveedor}}\" from this item?",
+        },
+        errores: {
+            obtener: "Error getting the item",
+            obtenerLista: "Error getting the items",
+            crear: "Error creating the item",
+            guardar: "Error saving the item",
+        },
+    },
+    articuloProveedor: {
+        errores: {
+            proveedoresArticulo: "Error getting the item's suppliers",
+            articulosProveedor: "Error getting the supplier's items",
+            obtener: "Error getting the supplier price",
+            crear: "Error creating the supplier price",
+            guardar: "Error saving the supplier price",
+            borrar: "Error deleting the supplier price",
+            porDefecto: "Error setting the default supplier",
+        },
+    },
 };

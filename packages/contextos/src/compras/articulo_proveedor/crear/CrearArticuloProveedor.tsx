@@ -10,6 +10,7 @@ import { useCallback, useMemo } from "react";
 import { metaNuevoArticuloProveedor, nuevoArticuloProveedorVacio } from "../dominio.ts";
 import { postArticuloProveedor } from "../infraestructura.ts";
 import "./CrearArticuloProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearArticuloProveedor = ({
   articuloId,
@@ -18,6 +19,7 @@ export const CrearArticuloProveedor = ({
   articuloId: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const inicial = useMemo(
     () => nuevoArticuloProveedorVacio(articuloId),
     [articuloId]
@@ -44,21 +46,21 @@ export const CrearArticuloProveedor = ({
     <QModal
       abierto={true}
       nombre="crear_articulo_proveedor"
-      titulo="Nuevo proveedor del artículo"
+      titulo={t("articulo.precios.nuevoTitulo")}
       onCerrar={cancelar}
     >
       <div className="CrearArticuloProveedor">
         <quimera-formulario>
           <Proveedor {...uiProps("proveedorId", "proveedor")} />
           <Divisa {...uiProps("divisaId")} />
-          <QInput label="Coste" {...uiProps("coste")} />
-          <QInput label="% Dto." {...uiProps("dto")} />
-          <QInput label="Ref. proveedor" {...uiProps("refProveedor")} />
+          <QInput label={t("proveedor.articulos.coste")} {...uiProps("coste")} />
+          <QInput label={t("proveedor.articulos.dto")} {...uiProps("dto")} />
+          <QInput label={t("proveedor.articulos.refProveedor")} {...uiProps("refProveedor")} />
         </quimera-formulario>
       </div>
       <div className="botones maestro-botones">
         <QBoton onClick={crear} deshabilitado={!valido}>
-          Crear
+          {t("comun.botones.crear")}
         </QBoton>
       </div>
     </QModal>

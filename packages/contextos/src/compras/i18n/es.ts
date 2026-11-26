@@ -515,4 +515,47 @@ export const es = {
             albaranar: "Error al albaranar el pedido",
         },
     },
+    articulo: {
+        maestro: {
+            titulo: "Artículos",
+            nuevo: "Nuevo Artículo",
+            familia: "Familia",
+            soloComprables: "Solo comprables",
+            sinStock: "Sin stock",
+        },
+        crear: {
+            titulo: "Crear artículo",
+        },
+        detalle: {
+            verEnAlmacen: "Ver en almacén",
+            general: "General",
+            compras: "Compras",
+            preciosProveedor: "Precios por proveedor",
+        },
+        precios: {
+            nuevo: "Nuevo",
+            marcarPorDefecto: "Marcar por defecto",
+            nuevoTitulo: "Nuevo proveedor del artículo",
+            cambiarTitulo: "Precio de {{proveedor}}",
+            borrarTitulo: "Borrar proveedor del artículo",
+            borrarMensaje: "¿Está seguro de que desea quitar a \"{{proveedor}}\" de este artículo?",
+        },
+        errores: {
+            obtener: "Error al obtener el artículo",
+            obtenerLista: "Error al obtener los artículos",
+            crear: "Error al crear el artículo",
+            guardar: "Error al guardar el artículo",
+        },
+    },
+    articuloProveedor: {
+        errores: {
+            proveedoresArticulo: "Error al obtener los proveedores del artículo",
+            articulosProveedor: "Error al obtener los artículos del proveedor",
+            obtener: "Error al obtener el precio de proveedor",
+            crear: "Error al crear el precio de proveedor",
+            guardar: "Error al guardar el precio de proveedor",
+            borrar: "Error al borrar el precio de proveedor",
+            porDefecto: "Error al marcar el proveedor por defecto",
+        },
+    },
 } as const;

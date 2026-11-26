@@ -10,8 +10,10 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postArticulo } from "../infraestructura.ts";
 import { metaNuevoArticulo, nuevoArticuloInicial } from "./crear.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearArticulo = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCompras();
   const inicial = useMemo(nuevoArticuloInicial, []);
 
   const formulario = useModelo(metaNuevoArticulo, inicial);
@@ -35,18 +37,18 @@ export const CrearArticulo = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="crearArticulo"
-      titulo="Crear artículo"
+      titulo={t("articulo.crear.titulo")}
       onCerrar={cancelar}
     >
       <div className="CrearArticulo">
         <quimera-formulario>
-          <QInput label="Referencia" {...uiProps("id")} ref={focus} />
-          <QInput label="Descripción" {...uiProps("descripcion")} />
+          <QInput label={t("comun.campos.referencia")} {...uiProps("id")} ref={focus} />
+          <QInput label={t("comun.campos.descripcion")} {...uiProps("descripcion")} />
           <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Crear
+            {t("comun.botones.crear")}
           </QBoton>
         </div>
       </div>

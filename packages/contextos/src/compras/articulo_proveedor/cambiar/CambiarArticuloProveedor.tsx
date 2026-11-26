@@ -10,6 +10,7 @@ import { ArticuloProveedor } from "../diseño.ts";
 import { metaArticuloProveedor } from "../dominio.ts";
 import { patchArticuloProveedor } from "../infraestructura.ts";
 import "./CambiarArticuloProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CambiarArticuloProveedor = ({
   precio,
@@ -18,6 +19,7 @@ export const CambiarArticuloProveedor = ({
   precio: ArticuloProveedor;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const { modelo, uiProps, valido } = useModelo(metaArticuloProveedor, precio);
 
   const cambiar_ = useCallback(async () => {
@@ -41,25 +43,25 @@ export const CambiarArticuloProveedor = ({
     <QModal
       abierto={true}
       nombre="cambiar_articulo_proveedor"
-      titulo={`Precio de ${precio.proveedor}`}
+      titulo={t("articulo.precios.cambiarTitulo", { proveedor: precio.proveedor })}
       onCerrar={cancelar}
     >
       <div className="CambiarArticuloProveedor">
         <quimera-formulario>
           <QInput
-            label="Proveedor"
+            label={t("comun.campos.proveedor")}
             nombre="proveedor"
             valor={precio.proveedor}
             soloLectura
           />
           <Divisa {...uiProps("divisaId")} />
-          <QInput label="Coste" {...uiProps("coste")} />
-          <QInput label="% Dto." {...uiProps("dto")} />
-          <QInput label="Ref. proveedor" {...uiProps("refProveedor")} />
+          <QInput label={t("proveedor.articulos.coste")} {...uiProps("coste")} />
+          <QInput label={t("proveedor.articulos.dto")} {...uiProps("dto")} />
+          <QInput label={t("proveedor.articulos.refProveedor")} {...uiProps("refProveedor")} />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={cambiar} deshabilitado={!valido}>
-            Guardar
+            {t("comun.botones.guardar")}
           </QBoton>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
@@ -66,7 +67,7 @@ export const getArticulo: GetArticulo = async (id) =>
     await RestAPI.getItem<Articulo, ArticuloApi>(
         `${baseUrl}/${id}`,
         articuloDesdeApi,
-        "Error al obtener el artículo"
+        tCompras("articulo.errores.obtener")
     );
 
 export const getArticulos: GetArticulos = async (criteria) =>
@@ -74,7 +75,7 @@ export const getArticulos: GetArticulos = async (criteria) =>
         baseUrl,
         { ...criteria, filtro: filtroArticulosCompra(criteria.filtro) },
         articuloDesdeApi,
-        "Error al obtener los artículos"
+        tCompras("articulo.errores.obtenerLista")
     );
 
 export const postArticulo: PostArticulo = async (articulo) =>
@@ -85,14 +86,14 @@ export const postArticulo: PostArticulo = async (articulo) =>
             descripcion: articulo.descripcion ?? "",
             ...(articulo.grupoIvaProductoId ? { grupo_iva_producto_id: articulo.grupoIvaProductoId } : {}),
         },
-        "Error al crear el artículo"
+        tCompras("articulo.errores.crear")
     ).then((respuesta) => String(respuesta.id));
 
 export const patchArticulo: PatchArticulo = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosArticuloAApi(cambios),
-        "Error al guardar el artículo"
+        tCompras("articulo.errores.guardar")
     );
 };
 

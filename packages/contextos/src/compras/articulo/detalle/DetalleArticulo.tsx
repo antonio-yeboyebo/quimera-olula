@@ -16,6 +16,7 @@ import "./DetalleArticulo.css";
 import { getMaquina } from "./maquina.ts";
 import { TabCompras } from "./TabCompras.tsx";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 const titulo = (articulo: Articulo) => articulo.descripcion;
 
@@ -26,6 +27,7 @@ export const DetalleArticulo = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const { ctx, emitir } = useMaquina(
     getMaquina,
     contextoDetalleArticuloInicial,
@@ -55,7 +57,7 @@ export const DetalleArticulo = ({
 
   const acciones = [
     {
-      texto: "Ver en almacén",
+      texto: t("articulo.detalle.verEnAlmacen"),
       onClick: () => navigate(`/almacen/articulo?id=${articulo.id}`),
     },
   ];
@@ -76,12 +78,12 @@ export const DetalleArticulo = ({
           children={[
             <Tab
               key="tab-general"
-              label="General"
+              label={t("articulo.detalle.general")}
               children={<TabGeneral form={form} articuloId={articulo.id} />}
             />,
             <Tab
               key="tab-compras"
-              label="Compras"
+              label={t("articulo.detalle.compras")}
               children={
                 <TabCompras
                   form={form}

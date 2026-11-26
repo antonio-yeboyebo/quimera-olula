@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { ArticuloProveedor } from "../diseño.ts";
 import { deleteArticuloProveedor } from "../infraestructura.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const BorrarArticuloProveedor = ({
   precio,
@@ -12,6 +13,7 @@ export const BorrarArticuloProveedor = ({
   precio: ArticuloProveedor;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const borrar_ = useCallback(async () => {
     await deleteArticuloProveedor(precio.id);
     publicar("precio_borrado", precio.id);
@@ -28,8 +30,8 @@ export const BorrarArticuloProveedor = ({
     <QModalConfirmacion
       nombre="confirmarBorrarArticuloProveedor"
       abierto={true}
-      titulo="Borrar proveedor del artículo"
-      mensaje={`¿Está seguro de que desea quitar a "${precio.proveedor}" de este artículo?`}
+      titulo={t("articulo.precios.borrarTitulo")}
+      mensaje={t("articulo.precios.borrarMensaje", { proveedor: precio.proveedor })}
       onCerrar={cancelar}
       onAceptar={borrar}
     />
