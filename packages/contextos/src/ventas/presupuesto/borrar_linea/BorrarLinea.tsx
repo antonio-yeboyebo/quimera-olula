@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { LineaPresupuesto } from "../diseño.ts";
 import { deleteLinea } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarLinea = ({
   presupuestoId,
@@ -14,6 +15,7 @@ export const BorrarLinea = ({
   publicar: EmitirEvento;
   linea: LineaPresupuesto;
 }) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     await deleteLinea(presupuestoId, linea.id);
     publicar("linea_borrada", linea.id);
@@ -30,8 +32,8 @@ export const BorrarLinea = ({
     <QModalConfirmacion
       nombre="confirmarBorrarLinea"
       abierto={true}
-      titulo="Borrar línea"
-      mensaje="¿Está seguro de que desea borrar esta línea?"
+      titulo={t("documento.borrarLinea.titulo")}
+      mensaje={t("documento.borrarLinea.mensaje")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

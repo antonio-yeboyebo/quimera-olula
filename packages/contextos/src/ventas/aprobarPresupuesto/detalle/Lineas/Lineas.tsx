@@ -9,6 +9,7 @@ import { metaLinea } from "../../dominio.ts";
 import { EstadoAprobarPresupuesto } from "../diseño.ts";
 import { AccionesLinea } from "./AccionesLinea.tsx";
 import "./Lineas.css";
+import { useTVentas } from "../../../i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // Fila de línea
@@ -77,38 +78,41 @@ export const Lineas = ({
   lineas: ListaSeleccionable<Linea>;
   estado: EstadoAprobarPresupuesto;
   publicar: EmitirEvento;
-}) => (
-  <div className="LineasAprobar">
-    <table>
-      <thead>
-        <tr>
-          <th>Artículo</th>
-          <th className="num">Aprobada</th>
-          <th className="num">A aprobar</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {lineas.lista.map((linea) => (
-          <FilaLinea
-            key={linea.id}
-            linea={linea}
-            presupuestoId={presupuestoId}
-            publicar={publicar}
-          />
-        ))}
-      </tbody>
-    </table>
+}) => {
+  const t = useTVentas();
+  return (
+    <div className="LineasAprobar">
+      <table>
+        <thead>
+          <tr>
+            <th>{t("presupuesto.aprobarParcial.articulo")}</th>
+            <th className="num">{t("presupuesto.aprobarParcial.aprobada")}</th>
+            <th className="num">{t("presupuesto.aprobarParcial.aAprobar")}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {lineas.lista.map((linea) => (
+            <FilaLinea
+              key={linea.id}
+              linea={linea}
+              presupuestoId={presupuestoId}
+              publicar={publicar}
+            />
+          ))}
+        </tbody>
+      </table>
 
-    <QModalConfirmacion
-      nombre="aprobarPresupuesto"
-      abierto={estado === "CONFIRMANDO_APROBACION"}
-      titulo="Confirmar"
-      mensaje="¿Está seguro de que desea generar el pedido?"
-      labelAceptar="Aceptar"
-      mostrarCancelar={true}
-      onCerrar={() => publicar("aprobacion_cancelada")}
-      onAceptar={() => publicar("aprobacion_confirmada")}
-    />
-  </div>
-);
+      <QModalConfirmacion
+        nombre="aprobarPresupuesto"
+        abierto={estado === "CONFIRMANDO_APROBACION"}
+        titulo={t("presupuesto.aprobarParcial.confirmar")}
+        mensaje={t("presupuesto.aprobarParcial.confirmarMensaje")}
+        labelAceptar={t("presupuesto.aprobarParcial.aceptar")}
+        mostrarCancelar={true}
+        onCerrar={() => publicar("aprobacion_cancelada")}
+        onAceptar={() => publicar("aprobacion_confirmada")}
+      />
+    </div>
+  );
+};

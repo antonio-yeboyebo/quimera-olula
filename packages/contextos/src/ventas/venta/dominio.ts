@@ -2,6 +2,7 @@ import { ConfigWidgets } from "@olula/componentes/index.js";
 import { Direccion } from "@olula/lib/diseño.js";
 import { formatearFechaDate, MetaCampo, MetaModelo, plugin } from "@olula/lib/dominio.ts";
 import { CambioClienteVenta, ClienteVenta, ConTipoArticulo, LineaVenta, ModeloNuevaLinea, NuevaLineaVenta, NuevaVenta, NuevaVentaClienteNoRegistrado, TipoArticuloLinea, Venta } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 export const direccionVacia = (): Direccion => ({
     nombre_via: "",
@@ -385,37 +386,41 @@ export const datosClaveDocumentoVenta = (
     const grupo = documento.grupo_iva_negocio_id ?? "";
 
     return [
-        { etiqueta: "Fecha", valor: documento.fecha ? formatearFechaDate(new Date(documento.fecha)) : "—" },
-        { etiqueta: "Cliente", valor: documento.cliente?.nombre_cliente?.trim() || "—" },
-        { etiqueta: "CIF/NIF", valor: documento.cliente?.id_fiscal?.trim() || "—" },
+        { etiqueta: tVentas("documento.datosClave.fecha"), valor: documento.fecha ? formatearFechaDate(new Date(documento.fecha)) : "—" },
+        { etiqueta: tVentas("documento.datosClave.cliente"), valor: documento.cliente?.nombre_cliente?.trim() || "—" },
+        { etiqueta: tVentas("documento.datosClave.idFiscal"), valor: documento.cliente?.id_fiscal?.trim() || "—" },
         ...(grupoIvaNegocioEnDocumento()
-            ? [{ etiqueta: "Grupo IVA negocio", valor: (grupo && descripcionGrupoIvaNegocio(grupo)) || grupo || "—" }]
+            ? [{ etiqueta: tVentas("documento.datosClave.grupoIvaNegocio"), valor: (grupo && descripcionGrupoIvaNegocio(grupo)) || grupo || "—" }]
             : []),
-        { etiqueta: "Serie", valor: documento.serie_id || "—" },
+        { etiqueta: tVentas("documento.datosClave.serie"), valor: documento.serie_id || "—" },
     ];
 };
 
 /** Medidas de un documento de venta que se ofrecen al personalizar widgets. */
-const camposWidgetsVenta: ConfigWidgets["campos"] = [
-    { id: "total", etiqueta: "Total", formato: "moneda" },
-    { id: "neto", etiqueta: "Base imponible", formato: "moneda" },
-    { id: "total_iva", etiqueta: "IVA", formato: "moneda" },
-    { id: "total_irpf", etiqueta: "IRPF", formato: "moneda" },
-    { id: "total_recargo", etiqueta: "Recargo de equivalencia", formato: "moneda" },
+const camposWidgetsVenta = (): ConfigWidgets["campos"] => [
+    { id: "total", etiqueta: tVentas("documento.widgets.total"), formato: "moneda" },
+    { id: "neto", etiqueta: tVentas("documento.widgets.baseImponible"), formato: "moneda" },
+    { id: "total_iva", etiqueta: tVentas("documento.widgets.iva"), formato: "moneda" },
+    { id: "total_irpf", etiqueta: tVentas("documento.widgets.irpf"), formato: "moneda" },
+    { id: "total_recargo", etiqueta: tVentas("documento.widgets.recargo"), formato: "moneda" },
 ];
 
-/** Widgets por defecto de un maestro de documentos de venta. */
+/**
+ * Widgets por defecto de un maestro de documentos de venta, con los textos en el
+ * idioma activo: se llama al pintar el maestro (`useMemo(() => widgetsX(), [t])`).
+ * Los widgets que guarda el usuario se guardan con sus títulos y no se traducen.
+ */
 export const widgetsDocumentoVenta = (
     recurso: string,
     textos: { plural: string; total: string; medio: string }
 ): ConfigWidgets => ({
     recurso,
     titulo: textos.plural,
-    campos: camposWidgetsVenta,
+    campos: camposWidgetsVenta(),
     widgets: [
-        { id: "documentos", titulo: textos.plural, operacion: "conteo", formato: "numero", pie: "Recuento" },
-        { id: "total", titulo: textos.total, operacion: "suma", campo: "total", formato: "moneda", pie: "Suma del total" },
-        { id: "neto", titulo: "Base imponible", operacion: "suma", campo: "neto", formato: "moneda", pie: "Suma de la base" },
-        { id: "medio", titulo: textos.medio, operacion: "promedio", campo: "total", formato: "moneda", pie: "Media del total" },
+        { id: "documentos", titulo: textos.plural, operacion: "conteo", formato: "numero", pie: tVentas("documento.widgets.recuento") },
+        { id: "total", titulo: textos.total, operacion: "suma", campo: "total", formato: "moneda", pie: tVentas("documento.widgets.sumaTotal") },
+        { id: "neto", titulo: tVentas("documento.widgets.baseImponible"), operacion: "suma", campo: "neto", formato: "moneda", pie: tVentas("documento.widgets.sumaBase") },
+        { id: "medio", titulo: textos.medio, operacion: "promedio", campo: "total", formato: "moneda", pie: tVentas("documento.widgets.mediaTotal") },
     ],
 });

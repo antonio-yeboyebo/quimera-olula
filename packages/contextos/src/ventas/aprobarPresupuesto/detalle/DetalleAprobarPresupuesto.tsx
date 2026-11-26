@@ -8,10 +8,12 @@ import "./DetalleAprobarPresupuesto.css";
 import { contextoVacio, hayPendiente, puedeAprobar } from "./dominio.ts";
 import { Lineas } from "./Lineas/Lineas.tsx";
 import { getMaquina } from "./maquina.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 type UrlPorId = (id: string) => string;
 
 export const DetalleAprobarPresupuesto = () => {
+  const t = useTVentas();
   const params = useParams();
   const navigate = useNavigate();
   const presupuestoId = params.id;
@@ -48,15 +50,17 @@ export const DetalleAprobarPresupuesto = () => {
     <div className="AprobarPresupuesto">
       <div className="aprobar-bloque">
         <h2>
-          Aprobar Presupuesto: {presupuesto.cliente.nombre_cliente} -{" "}
-          {presupuesto.codigo}
+          {t("presupuesto.aprobarParcial.titulo", {
+            cliente: presupuesto.cliente.nombre_cliente,
+            codigo: presupuesto.codigo,
+          })}
         </h2>
         <div className="botones maestro-botones">
           <QBoton
             onClick={() => emitir("todas_las_lineas_aprobadas")}
             deshabilitado={!hayPendiente(lineas)}
           >
-            Aprobar todo
+            {t("presupuesto.aprobarParcial.aprobarTodo")}
           </QBoton>
           <QBoton
             onClick={() => emitir("aprobacion_solicitada")}
@@ -64,7 +68,7 @@ export const DetalleAprobarPresupuesto = () => {
               !puedeAprobar({ presupuesto, lineas }) || estado !== "LISTO"
             }
           >
-            Generar pedido
+            {t("presupuesto.aprobarParcial.generarPedido")}
           </QBoton>
         </div>
 
@@ -80,11 +84,11 @@ export const DetalleAprobarPresupuesto = () => {
         <QModal
           nombre="pedidoCreado"
           abierto={true}
-          titulo="Pedido generado"
+          titulo={t("presupuesto.aprobar.pedidoGenerado")}
           onCerrar={() => emitir("pedido_creado_cerrado")}
         >
           <p>
-            Pedido <strong>{pedidoCreado.codigo}</strong> generado correctamente.
+            {t("presupuesto.aprobarParcial.pedidoGeneradoCodigo", { codigo: pedidoCreado.codigo })}
           </p>
           <div className="botones maestro-botones">
             <QBoton
@@ -93,10 +97,10 @@ export const DetalleAprobarPresupuesto = () => {
                 presupuestoId && navigate(urlPresupuesto(presupuestoId))
               }
             >
-              Volver al presupuesto
+              {t("presupuesto.aprobarParcial.volverAlPresupuesto")}
             </QBoton>
             <QBoton onClick={() => navigate(urlPedido(pedidoCreado.id))}>
-              Ir al pedido {pedidoCreado.codigo}
+              {t("presupuesto.aprobar.irAlPedido", { codigo: pedidoCreado.codigo })}
             </QBoton>
           </div>
         </QModal>

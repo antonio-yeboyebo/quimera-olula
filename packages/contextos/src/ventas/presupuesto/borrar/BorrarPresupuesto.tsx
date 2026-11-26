@@ -3,6 +3,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Presupuesto } from "../diseño.ts";
 import { borrarPresupuesto } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarPresupuesto = ({
   publicar,
@@ -11,6 +12,7 @@ export const BorrarPresupuesto = ({
   publicar: (evento: string, payload?: unknown) => void;
   presupuesto: Presupuesto;
 }) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     if (presupuesto.id) {
       await borrarPresupuesto(presupuesto.id);
@@ -29,8 +31,8 @@ export const BorrarPresupuesto = ({
     <QModalConfirmacion
       nombre="confirmarBorrarPresupuesto"
       abierto={true}
-      titulo="Confirmar borrar"
-      mensaje="¿Está seguro de que desea borrar este presupuesto?"
+      titulo={t("documento.detalle.confirmarBorrar")}
+      mensaje={t("presupuesto.borrar.mensaje")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

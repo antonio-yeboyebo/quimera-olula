@@ -1,8 +1,14 @@
 /**
  * Textos del contexto Ventas (namespace `ventas`). Referencia: español.
- * Piloto: solo Clientes (`cliente`) y lo de `ventas/comun` que usa su ficha.
+ * `comun` y `cliente` están aquí; cada otro módulo tiene su fichero en `es/` (y su
+ * traducción, con las mismas claves, en `en/`).
  */
+import { documento } from "./es/documento.ts";
+import { presupuesto } from "./es/presupuesto.ts";
+
 export const es = {
+    documento,
+    presupuesto,
     comun: {
         agente: "Agente",
         seleccionarContacto: "Seleccionar contacto",

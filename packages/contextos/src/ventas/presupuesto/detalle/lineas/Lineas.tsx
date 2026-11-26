@@ -5,6 +5,7 @@ import { LineaPresupuesto, Presupuesto } from "../../diseño.ts";
 import { CambiarLinea } from "../../cambiar_linea/CambiarLinea.tsx";
 import { LineasLista } from "./LineasLista.tsx";
 import { aprobado } from "../../dominio.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const Lineas = ({
   presupuesto,
@@ -17,19 +18,20 @@ export const Lineas = ({
   estadoPresupuesto: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const acciones = [
     {
-      texto: "Nueva",
+      texto: t("documento.lineas.nueva"),
       onClick: () => publicar("alta_linea_solicitada"),
     },
     {
-      texto: "Editar",
+      texto: t("documento.lineas.editar"),
       onClick: () => publicar("cambio_linea_solicitado"),
       deshabilitado: !lineaActiva,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => publicar("baja_linea_solicitada"),
       deshabilitado: !lineaActiva,

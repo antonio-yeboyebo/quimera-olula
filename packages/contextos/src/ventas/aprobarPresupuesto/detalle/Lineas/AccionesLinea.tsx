@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { LineaAprobarPresupuesto } from "../../diseño.ts";
 import { patchCerrarLineaPresupuesto } from "../../infraestructura.ts";
 import "./AccionesLinea.css";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const AccionesLinea = ({
   linea,
@@ -15,11 +16,12 @@ export const AccionesLinea = ({
   presupuestoId: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const { intentar } = useContext(ContextoError);
 
   // El nombre accesible y el título visual comparten el mismo texto para que
   // el estado (no solo el color) llegue también a lectores de pantalla.
-  const etiquetaCandado = linea.cerrada ? "Abrir línea" : "Cerrar línea";
+  const etiquetaCandado = linea.cerrada ? t("presupuesto.aprobarParcial.abrirLinea") : t("presupuesto.aprobarParcial.cerrarLinea");
 
   const toggleCerrada = async () => {
     if (!linea.id) return;

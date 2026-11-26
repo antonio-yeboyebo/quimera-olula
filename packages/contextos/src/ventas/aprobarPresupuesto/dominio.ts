@@ -1,6 +1,7 @@
 import { Orden } from "@olula/lib/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { LineaAprobarPresupuesto, LineaPedidoPatch } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 /** Orden con el que el servidor devuelve las líneas de esta pantalla. */
 export const ordenLineas: Orden = ["referencia", "ASC", "id", "ASC"];
@@ -17,7 +18,7 @@ export const metaLinea: MetaModelo<LineaAprobarPresupuesto> = {
             positivo: true,
             validacion: (linea) =>
                 Number(linea.a_aprobar) > pendienteDeLinea(linea)
-                    ? "No puede aprobar más de la cantidad pendiente"
+                    ? tVentas("presupuesto.aprobarParcial.masDeLoPendiente")
                     : true,
         },
     },

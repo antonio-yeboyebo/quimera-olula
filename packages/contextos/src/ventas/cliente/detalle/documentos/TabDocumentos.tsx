@@ -31,7 +31,7 @@ import { MetaTabla } from "@olula/componentes/index.js";
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { puede } from "@olula/lib/dominio.ts";
 import { useState } from "react";
-import { useTVentas } from "../../../i18n/index.ts";
+import { tVentas, useTVentas } from "../../../i18n/index.ts";
 
 
 /** El cliente ya es el de la ficha: sus columnas sobran. */
@@ -50,20 +50,21 @@ const cargarPedidos = conCriteria(getPedidos);
 const cargarAlbaranes = conCriteria(getAlbaranes);
 const cargarFacturas = conCriteria(getFacturas);
 
-const metaPresupuestos = sinCliente(metaTablaPresupuesto);
-const metaPedidos = sinCliente(getMetaTablaPedido());
-const metaAlbaranes = sinCliente([
+// Funciones: las cabeceras salen en el idioma activo al pintar la pestaña.
+const metaPresupuestos = () => sinCliente(metaTablaPresupuesto());
+const metaPedidos = () => sinCliente(getMetaTablaPedido());
+const metaAlbaranes = () => sinCliente([
   {
     id: "estado",
-    cabecera: "Estado",
+    cabecera: tVentas("documento.maestro.estado"),
     render: (albaran: Albaran) => <EtiquetaEstado {...etiquetaEstadoAlbaran(albaran)} />,
   },
   ...metaTablaAlbaran,
 ] as MetaTabla<Albaran>);
-const metaFacturas = sinCliente([
+const metaFacturas = () => sinCliente([
   {
     id: "estadoExpedicion",
-    cabecera: "Estado",
+    cabecera: tVentas("documento.maestro.estado"),
     render: (factura: Factura) => <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />,
   },
   ...metaTablaFactura,
@@ -162,28 +163,28 @@ export const TabDocumentos = ({ clienteId }: { clienteId: string }) => {
     puede("ventas.presupuesto.leer") && (
       <Tab key="tab-presupuestos" label={t("cliente.documentos.presupuestos")} children={
         <DocumentosTercero<Presupuesto> className="PresupuestosCliente" cargar={cargarPresupuestos}
-          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaPresupuestos}
+          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaPresupuestos()}
           tarjeta={TarjetaMaestroPresupuesto} Detalle={DetallePresupuesto} />
       } />
     ),
     puede("ventas.pedido.leer") && (
       <Tab key="tab-pedidos" label={t("cliente.documentos.pedidos")} children={
         <DocumentosTercero<Pedido> className="PedidosCliente" cargar={cargarPedidos}
-          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaPedidos}
+          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaPedidos()}
           tarjeta={TarjetaPedido} Detalle={DetallePedido} />
       } />
     ),
     puede("ventas.albaran.leer") && (
       <Tab key="tab-albaranes" label={t("cliente.documentos.albaranes")} children={
         <DocumentosTercero<Albaran> className="AlbaranesCliente" cargar={cargarAlbaranes}
-          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaAlbaranes}
+          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaAlbaranes()}
           tarjeta={TarjetaAlbaran} Detalle={DetalleAlbaran} />
       } />
     ),
     puede("ventas.factura.leer") && (
       <Tab key="tab-facturas" label={t("cliente.documentos.facturas")} children={
         <DocumentosTercero<Factura> className="FacturasCliente" cargar={cargarFacturas}
-          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaFacturas}
+          filtro={porCliente(clienteId)} orden={orden} metaTabla={metaFacturas()}
           tarjeta={TarjetaFactura} Detalle={DetalleFactura} />
       } />
     ),

@@ -32,6 +32,7 @@ import { getMaquina } from "./maquina.ts";
 import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatosBase as TabDatos } from "./TabDatosBase.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const DetallePresupuesto = ({
   id,
@@ -40,6 +41,7 @@ export const DetallePresupuesto = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const navigate = useNavigate();
   const presupuestoId = id ?? params.id;
@@ -79,7 +81,7 @@ export const DetallePresupuesto = ({
   const { estado, lineaActiva, pedidoCreado } = ctx;
 
   const titulo = (presupuesto: Presupuesto) =>
-    tituloDocumentoVenta(presupuesto, "Nuevo Presupuesto");
+    tituloDocumentoVenta(presupuesto, t("presupuesto.maestro.nuevo"));
 
   const imprimir = useCallback(async () => {
     const blob = await getReportPresupuesto(ctx.presupuesto.id);
@@ -89,29 +91,29 @@ export const DetallePresupuesto = ({
   const acciones = useMemo(
     () => [
       {
-        texto: "Aprobar",
+        texto: t("presupuesto.detalle.aprobar"),
         onClick: parcial
           ? () => navigate(`/ventas/aprobar-presupuesto/${ctx.presupuesto.id}`)
           : () => emitir("aprobacion_solicitada", ctx.presupuesto),
         deshabilitado: aprobado(ctx.presupuesto),
       },
       {
-        texto: "Imprimir",
+        texto: t("documento.detalle.imprimir"),
         onClick: imprimir,
       },
       {
-        texto: "Documentos relacionados",
+        texto: t("documento.detalle.documentosRelacionados"),
         onClick: () => emitir("traza_solicitada"),
       },
       {
         icono: "eliminar",
-        texto: "Borrar",
+        texto: t("documento.detalle.borrar"),
         advertencia: true,
         onClick: () => emitir("borrar_solicitado"),
         deshabilitado: aprobado(ctx.presupuesto),
       },
     ],
-    [parcial, navigate, emitir, imprimir, ctx.presupuesto]
+    [parcial, navigate, emitir, imprimir, ctx.presupuesto, t]
   );
 
   if (!ctx.presupuesto.id) return;
@@ -138,7 +140,7 @@ export const DetallePresupuesto = ({
       </div>
 
       <Tabs>
-        <Tab label="Líneas">
+        <Tab label={t("documento.detalle.pestanas.lineas")}>
           <Lineas
             presupuesto={ctx.presupuesto}
             lineaActiva={lineaActiva}
@@ -147,7 +149,7 @@ export const DetallePresupuesto = ({
           />
         </Tab>
 
-        <Tab label="Cliente">
+        <Tab label={t("documento.detalle.pestanas.cliente")}>
           <TabCliente
             presupuesto={presupuesto}
             estado={estado}
@@ -155,7 +157,7 @@ export const DetallePresupuesto = ({
           />
         </Tab>
 
-        <Tab label="Datos">
+        <Tab label={t("documento.detalle.pestanas.datos")}>
           <TabDatos
             presupuesto={presupuesto}
             estado={estado}
@@ -163,7 +165,7 @@ export const DetallePresupuesto = ({
           />
         </Tab>
 
-        <Tab label="Observaciones">
+        <Tab label={t("documento.detalle.pestanas.observaciones")}>
           <TabObservaciones presupuesto={presupuesto} />
         </Tab>
       </Tabs>

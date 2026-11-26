@@ -1,7 +1,11 @@
 import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
+import { documento } from "./en/documento.ts";
+import { presupuesto } from "./en/presupuesto.ts";
 import type { es } from "./es.ts";
 
 export const en: Traduccion<typeof es> = {
+    documento,
+    presupuesto,
     comun: {
         agente: "Sales agent",
         seleccionarContacto: "Select contact",
