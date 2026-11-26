@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Cuenta } from "../diseño.ts";
 import { etiquetaCuenta } from "../dominio.ts";
 import { deleteCuenta } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarCuenta = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarCuenta = ({
     cuenta: Cuenta;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteCuenta(cuenta.id);
         publicar("cuenta_borrada", cuenta);
@@ -29,8 +31,8 @@ export const BorrarCuenta = ({
         <QModalConfirmacion
             nombre="borrarCuenta"
             abierto={true}
-            titulo="Borrar cuenta"
-            mensaje={`¿Confirma borrar ${etiquetaCuenta(cuenta)}? Solo es posible si no tiene subcuentas asociadas.`}
+            titulo={t("cuenta.borrarCuenta")}
+            mensaje={t("cuenta.confirmaBorrarCuentaSoloEsPosible", { cuenta: etiquetaCuenta(cuenta) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
