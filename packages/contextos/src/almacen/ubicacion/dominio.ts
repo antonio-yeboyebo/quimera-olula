@@ -1,16 +1,17 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { EstadoActividadUbicacion, NuevaUbicacion, Ubicacion } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const estadosUbicacion: { valor: EstadoActividadUbicacion; descripcion: string }[] = [
-    { valor: "ACTIVA", descripcion: "Activa" },
-    { valor: "BLOQUEADA", descripcion: "Bloqueada" },
+    { valor: "ACTIVA", get descripcion() { return tAlmacen("ubicacion.activa"); } },
+    { valor: "BLOQUEADA", get descripcion() { return tAlmacen("ubicacion.bloqueada"); } },
 ];
 
 export const descripcionEstadoUbicacion = (estado: string): string =>
     estadosUbicacion.find((e) => e.valor === estado)?.descripcion ?? estado;
 
 export const descripcionCaraUbicacion = (cara: string | null): string =>
-    cara === "IZQUIERDA" ? "Izquierda" : cara === "DERECHA" ? "Derecha" : "";
+    cara === "IZQUIERDA" ? tAlmacen("ubicacion.izquierda") : cara === "DERECHA" ? tAlmacen("ubicacion.derecha") : "";
 
 const sinTexto = (s: string | null | undefined) => !s || s.trim() === "";
 
@@ -31,12 +32,12 @@ const esEntero = (n: number | null): n is number => n !== null && Number.isInteg
  */
 export const validarPosicionUbicacion = (u: CamposPosicion): string | true => {
     if (!sinTexto(u.pasilloId)) {
-        if (!esEntero(u.modulo) || u.modulo <= 0) return "El módulo debe ser un entero mayor que 0";
-        if (!esEntero(u.nivel) || u.nivel < 0) return "El nivel debe ser un entero mayor o igual que 0";
-        if (!esEntero(u.hueco) || u.hueco < 1) return "El hueco debe ser un entero mayor o igual que 1";
+        if (!esEntero(u.modulo) || u.modulo <= 0) return tAlmacen("ubicacion.elModuloDebeSerUnEntero");
+        if (!esEntero(u.nivel) || u.nivel < 0) return tAlmacen("ubicacion.elNivelDebeSerUnEntero");
+        if (!esEntero(u.hueco) || u.hueco < 1) return tAlmacen("ubicacion.elHuecoDebeSerUnEntero");
         return true;
     }
-    if (sinTexto(u.codigo)) return "El código es obligatorio";
+    if (sinTexto(u.codigo)) return tAlmacen("ubicacion.elCodigoEsObligatorio");
     return true;
 };
 

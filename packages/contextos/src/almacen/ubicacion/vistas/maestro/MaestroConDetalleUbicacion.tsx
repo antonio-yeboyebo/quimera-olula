@@ -14,6 +14,7 @@ import { CrearUbicacion } from "../crear/CrearUbicacion.tsx";
 import { DetalleUbicacion } from "../detalle/DetalleUbicacion.tsx";
 import { metaTablaUbicacion } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 const metaFiltroUbicacion: MetaFiltro = {
     almacen: filtroAlmacen(),
@@ -21,6 +22,7 @@ const metaFiltroUbicacion: MetaFiltro = {
 };
 
 export const MaestroConDetalleUbicacion = () => {
+    const t = useTAlmacen();
     const { id, criteria } = getUrlParams();
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -40,7 +42,7 @@ export const MaestroConDetalleUbicacion = () => {
             <MaestroDetalle<Ubicacion>
                 Maestro={
                     <>
-                        <h2>Ubicaciones</h2>
+                        <h2>{t("ubicacion.ubicaciones")}</h2>
                         <Listado<Ubicacion>
                             metaTabla={metaTablaUbicacion}
                             metaFiltro={metaFiltroUbicacion}
@@ -52,7 +54,7 @@ export const MaestroConDetalleUbicacion = () => {
                             seleccionada={ctx.ubicaciones.activo}
                             renderAcciones={() => (
                                 <div className="maestro-botones">
-                                    <QBoton onClick={() => emitir("crear")}>Nueva</QBoton>
+                                    <QBoton onClick={() => emitir("crear")}>{t("ubicacion.nueva")}</QBoton>
                                 </div>
                             )}
                             onSeleccion={(payload) => emitir("ubicacion_seleccionada", payload)}

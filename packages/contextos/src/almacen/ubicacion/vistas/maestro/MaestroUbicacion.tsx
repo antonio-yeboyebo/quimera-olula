@@ -12,8 +12,10 @@ import { CrearUbicacion } from "../crear/CrearUbicacion.tsx";
 import { DetalleUbicacion } from "../detalle/DetalleUbicacion.tsx";
 import { metaTablaUbicacion } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const MaestroUbicacion = () => {
+  const t = useTAlmacen();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -35,9 +37,9 @@ export const MaestroUbicacion = () => {
         layout="TABLA"
         Maestro={
           <>
-            <h2>Ubicaciones</h2>
+            <h2>{t("ubicacion.ubicaciones")}</h2>
             <div className="maestro-botones">
-              <QBoton onClick={() => emitir("crear")}>Nueva</QBoton>
+              <QBoton onClick={() => emitir("crear")}>{t("ubicacion.nueva")}</QBoton>
             </div>
             <Listado<Ubicacion>
               metaTabla={metaTablaUbicacion}
