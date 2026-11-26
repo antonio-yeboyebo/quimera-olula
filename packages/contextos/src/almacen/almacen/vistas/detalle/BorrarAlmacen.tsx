@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { useContext } from "react";
 import { Almacen } from "../../diseño.ts";
 import { deleteAlmacen } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const BorrarAlmacen = ({
   publicar,
@@ -13,6 +14,7 @@ export const BorrarAlmacen = ({
   almacen: Almacen;
   activo: boolean;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const borrar = async () => {
@@ -26,8 +28,8 @@ export const BorrarAlmacen = ({
     <QModalConfirmacion
       nombre="confirmarBorrarAlmacen"
       abierto={activo}
-      titulo="Confirmar borrado"
-      mensaje="¿Está seguro de que desea borrar esta almacen?"
+      titulo={t("almacen.confirmarBorrado")}
+      mensaje={t("almacen.estaSeguroDeQueDeseaBorrar")}
       onCerrar={() => publicar("borrado_cancelado")}
       onAceptar={borrar}
     />

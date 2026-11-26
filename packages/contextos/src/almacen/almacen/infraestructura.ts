@@ -10,6 +10,7 @@ import {
     PatchAlmacen,
     PostAlmacen
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrlAlmacen = `/almacen/almacen`;
 
@@ -45,7 +46,7 @@ export const getAlmacenes: GetAlmacenes = async (
 };
 
 export const postAlmacen: PostAlmacen = async (almacen) => {
-    return await RestAPI.post(baseUrlAlmacen, almacen, "Error al guardar Almacen").then(
+    return await RestAPI.post(baseUrlAlmacen, almacen, tAlmacen("almacen.errorAlGuardarAlmacen")).then(
         (respuesta) => respuesta.id
     );
 };
@@ -55,11 +56,11 @@ export const patchAlmacen: PatchAlmacen = async (id, almacen) => {
     const almacenSinNulls = Object.fromEntries(
         Object.entries(apiAlmacen).map(([k, v]) => [k, v === null ? "" : v])
     );
-    await RestAPI.patch(`${baseUrlAlmacen}/${id}`, almacenSinNulls, "Error al guardar Almacen");
+    await RestAPI.patch(`${baseUrlAlmacen}/${id}`, almacenSinNulls, tAlmacen("almacen.errorAlGuardarAlmacen"));
 };
 
 export const deleteAlmacen: DeleteAlmacen = async (id) => {
-    await RestAPI.delete(`${baseUrlAlmacen}/${id}`, "Error al borrar Almacen");
+    await RestAPI.delete(`${baseUrlAlmacen}/${id}`, tAlmacen("almacen.errorAlBorrarAlmacen"));
 };
 
 
