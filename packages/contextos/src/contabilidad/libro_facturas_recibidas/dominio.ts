@@ -7,6 +7,7 @@ import {
     LibroFacturasRecibidas,
     NuevoLibroFacturasRecibidas,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export { ejercicioActual };
 
@@ -15,7 +16,7 @@ export const etiquetaLibroFacturasRecibidas = (
 ): string =>
     informe.descripcion
         ? `${informe.descripcion} — ${informe.ejercicioId}`
-        : `Facturas recibidas ${informe.ejercicioId}`;
+        : tContabilidad("libro_facturas_recibidas.facturasRecibidasEjercicioid", { ejercicioId: informe.ejercicioId });
 
 export const libroFacturasRecibidasVacio = (): LibroFacturasRecibidas => ({
     id: "",
@@ -55,7 +56,7 @@ export const nombreFicheroLibroFacturasRecibidas = (
     informe: Pick<LibroFacturasRecibidas, "descripcion" | "ejercicioId">
 ): string => {
     const base = (
-        informe.descripcion || `facturas recibidas ${informe.ejercicioId}`
+        informe.descripcion || tContabilidad("libro_facturas_recibidas.facturasRecibidasEjercicioid2", { ejercicioId: informe.ejercicioId })
     )
         .toLowerCase()
         .normalize("NFD")

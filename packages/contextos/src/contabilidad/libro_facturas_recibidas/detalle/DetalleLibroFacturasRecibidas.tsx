@@ -17,6 +17,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabCriterios } from "./TabCriterios.tsx";
 import { TabResultado } from "./TabResultado.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleLibroFacturasRecibidas = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleLibroFacturasRecibidas = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleLibroFacturasRecibidasInicial,
@@ -56,7 +58,7 @@ export const DetalleLibroFacturasRecibidas = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("libro_facturas_recibidas.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -78,7 +80,7 @@ export const DetalleLibroFacturasRecibidas = ({
                 <Tabs
                     children={[
                         <Tab
-                            label="Criterios"
+                            label={t("libro_facturas_recibidas.criterios")}
                             key="tab-criterios"
                             children={
                                 <TabCriterios
@@ -88,7 +90,7 @@ export const DetalleLibroFacturasRecibidas = ({
                             }
                         />,
                         <Tab
-                            label="Resultado"
+                            label={t("libro_facturas_recibidas.resultado")}
                             key="tab-resultado"
                             children={
                                 <TabResultado
