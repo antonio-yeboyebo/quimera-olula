@@ -7,6 +7,7 @@ import { useCallback, useState } from "react";
 import { FormaPago, PlazoFormaPago } from "../diseño.ts";
 import { errorPlazos, nuevoPlazo, totalAplazado } from "../dominio.ts";
 import { patchFormaPago } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Tabla de plazos de Eneboo `formaspago.ui` (`plazos.ui`): se editan todos a
@@ -19,6 +20,7 @@ export const EditarPlazosFormaPago = ({
     formaPago: FormaPago;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const [plazos, setPlazos] = useState<PlazoFormaPago[]>(
         formaPago.plazos.length > 0 ? formaPago.plazos : [nuevoPlazo([])]
     );
@@ -48,21 +50,21 @@ export const EditarPlazosFormaPago = ({
         <QModal
             abierto={true}
             nombre="editarPlazosFormaPago"
-            titulo={`Plazos de ${formaPago.id}`}
+            titulo={t("forma_pago.plazosDeId", { id: formaPago.id })}
             onCerrar={cancelar}
         >
             <div className="EditarPlazosFormaPago">
                 {plazos.map((plazo, i) => (
                     <quimera-formulario key={`plazo-${i}`}>
                         <QInput
-                            label="Días aplazados"
+                            label={t("forma_pago.diasAplazados")}
                             nombre={`dias_${i}`}
                             tipo="entero"
                             valor={String(plazo.dias)}
                             onChange={(valor) => cambiarPlazo(i, "dias", valor)}
                         />
                         <QInput
-                            label="% Aplazado"
+                            label={t("forma_pago.aplazado")}
                             nombre={`aplazado_${i}`}
                             tipo="decimal"
                             decimales={2}
@@ -70,18 +72,18 @@ export const EditarPlazosFormaPago = ({
                             onChange={(valor) => cambiarPlazo(i, "aplazado", valor)}
                         />
                         <QBoton variante="borde" advertencia onClick={() => quitarPlazo(i)}>
-                            Quitar
+                            {t("forma_pago.quitar")}
                         </QBoton>
                     </quimera-formulario>
                 ))}
-                <p>Total aplazado: {totalAplazado(plazos)} %</p>
+                <p>{t("forma_pago.totalAplazadoValor", { valor: totalAplazado(plazos) })}</p>
                 {error && <p className="error">{error}</p>}
                 <div className="botones maestro-botones">
                     <QBoton variante="borde" onClick={anadirPlazo}>
-                        Añadir plazo
+                        {t("forma_pago.anadirPlazo")}
                     </QBoton>
                     <QBoton onClick={guardar} deshabilitado={!!error}>
-                        Guardar
+                        {t("forma_pago.guardar")}
                     </QBoton>
                 </div>
             </div>

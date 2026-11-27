@@ -14,6 +14,7 @@ import { CamposFormaPago } from "./CamposFormaPago.tsx";
 import { contextoDetalleFormaPagoInicial, guardarFormaPago } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { PlazosFormaPago } from "./PlazosFormaPago.tsx";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `formaspago.ui`. */
 export const DetalleFormaPago = ({
@@ -23,6 +24,7 @@ export const DetalleFormaPago = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleFormaPagoInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -48,12 +50,12 @@ export const DetalleFormaPago = ({
 
     const acciones = [
         {
-            texto: "Editar plazos",
+            texto: t("forma_pago.editarPlazos"),
             onClick: () => emitir("edicion_de_plazos_solicitada"),
             deshabilitado: !autorizado,
         },
         {
-            texto: "Borrar",
+            texto: t("forma_pago.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !autorizado,
             advertencia: true,
@@ -73,7 +75,7 @@ export const DetalleFormaPago = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={formaPago.id} soloLectura />
+                    <QInput label={t("forma_pago.codigo")} nombre="id" valor={formaPago.id} soloLectura />
                     <CamposFormaPago uiProps={formModelo.uiProps} />
                 </quimera-formulario>
                 <PlazosFormaPago plazos={formaPago.plazos} />
