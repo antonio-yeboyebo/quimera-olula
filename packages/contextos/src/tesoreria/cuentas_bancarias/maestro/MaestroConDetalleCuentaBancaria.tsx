@@ -12,17 +12,19 @@ import { DetalleCuentaBancaria } from "../detalle/DetalleCuentaBancaria.js";
 import { CuentaBancaria } from "../diseño.js";
 import "./MaestroConDetalleCuentaBancaria.css";
 import { getMaquina } from "./maquina.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 const metaTablaCuentaBancaria: MetaTabla<CuentaBancaria> = [
-    { id: 'descripcion', cabecera: 'Descripción' },
+    { id: 'descripcion', get cabecera() { return tTesoreria("cuentas_bancarias.descripcion"); } },
     { id: 'iban', cabecera: 'IBAN' },
     { id: 'bic', cabecera: 'BIC' },
-    { id: 'codigoCuenta', cabecera: 'Cód. Cuenta' },
-    { id: 'paisId', cabecera: 'País' },
+    { id: 'codigoCuenta', get cabecera() { return tTesoreria("cuentas_bancarias.codCuenta"); } },
+    { id: 'paisId', get cabecera() { return tTesoreria("cuentas_bancarias.pais"); } },
 ];
 
 export const MaestroConDetalleCuentaBancaria = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -47,7 +49,7 @@ export const MaestroConDetalleCuentaBancaria = () => {
             <MaestroDetalle<CuentaBancaria>
                 Maestro={
                     <>
-                        <h2>Cuentas bancarias</h2>
+                        <h2>{t("cuentas_bancarias.cuentasBancarias")}</h2>
                         <Listado<CuentaBancaria>
                             metaTabla={metaTablaCuentaBancaria}
                             criteria={cuentas.criteria}
@@ -58,7 +60,7 @@ export const MaestroConDetalleCuentaBancaria = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_cuenta_solicitada")}>
-                                        Nueva cuenta
+                                        {t("cuentas_bancarias.nuevaCuenta")}
                                     </QBoton>
                                 </div>
                             )}

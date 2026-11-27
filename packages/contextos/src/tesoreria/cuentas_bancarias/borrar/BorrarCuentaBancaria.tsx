@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { CuentaBancaria } from "../diseño.js";
 import { deleteCuentaBancaria } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const BorrarCuentaBancaria = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarCuentaBancaria = ({
     cuenta: CuentaBancaria;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const borrar_ = useCallback(
         async () => {
             await deleteCuentaBancaria(cuenta.id);
@@ -31,8 +33,8 @@ export const BorrarCuentaBancaria = ({
         <QModalConfirmacion
             nombre="borrarCuentaBancaria"
             abierto={true}
-            titulo="Borrar cuenta bancaria"
-            mensaje={`¿Está seguro de que desea borrar la cuenta ${cuenta.descripcion || cuenta.iban || cuenta.codigoCuenta}?`}
+            titulo={t("cuentas_bancarias.borrarCuentaBancaria")}
+            mensaje={t("cuentas_bancarias.estaSeguroDeQueDeseaBorrar", { valor: cuenta.descripcion || cuenta.iban || cuenta.codigoCuenta })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -11,6 +11,7 @@ import {
     PatchCuentaBancaria,
     PostCuentaBancaria,
 } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface CuentaBancariaApi {
     id: string;
@@ -91,7 +92,7 @@ export const postCuentaBancaria: PostCuentaBancaria = async (nueva) => {
     const respuesta = await RestAPI.post<NuevaCuentaBancariaApi>(
         baseUrl,
         nuevaCuentaBancariaAApi(nueva),
-        "Error al crear cuenta bancaria",
+        tTesoreria("cuentas_bancarias.errorAlCrearCuentaBancaria"),
     );
     return respuesta.id;
 };
@@ -100,13 +101,13 @@ export const patchCuentaBancaria: PatchCuentaBancaria = async (id, cambios) => {
     await RestAPI.patch<CambiosCuentaBancariaApi>(
         `${baseUrl}/${id}`,
         cambiosCuentaBancariaAApi(cambios),
-        "Error al actualizar cuenta bancaria",
+        tTesoreria("cuentas_bancarias.errorAlActualizarCuentaBancaria"),
     );
 };
 
 export const deleteCuentaBancaria: DeleteCuentaBancaria = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar cuenta bancaria",
+        tTesoreria("cuentas_bancarias.errorAlEliminarCuentaBancaria"),
     );
 };
