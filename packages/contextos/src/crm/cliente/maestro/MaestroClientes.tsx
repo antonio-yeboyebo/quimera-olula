@@ -12,8 +12,10 @@ import { metaTablaCliente } from "./maestro.ts";
 import "./MaestroClientes.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaCliente } from "./TarjetaCliente.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroClientes = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroClientes = () => {
       <MaestroDetalle<Cliente>
         Maestro={
           <>
-            <h2>Clientes</h2>
+            <h2>{t("cliente.clientes")}</h2>
 
             <Listado<Cliente>
               metaTabla={metaTablaCliente}
@@ -41,7 +43,7 @@ export const MaestroClientes = () => {
                 ...getMetaFiltroDefecto(metaTablaCliente),
                 agente_id: {
                   id: "agente_id",
-                  label: "Agente",
+                  label: t("cliente.agente"),
                   filtro: (v) => (v ? ["agente_id", "=", v as string] : null),
                   render: (valor, onChange) => (
                     <Agente

@@ -10,6 +10,7 @@ import { NuevaOportunidadVenta } from "../oportunidadventa/crear/diseño.ts";
 import { OportunidadVenta } from "../oportunidadventa/diseño.ts";
 import { oportunidadDesdeAPI, OportunidadVentaAPI } from "../oportunidadventa/infraestructura.ts";
 import { Cliente, DeleteCliente, GetCliente, GetClientes, PatchCliente } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const UrlsCrm = new UrlsCrmClass();
 const UrlsVentas = new UrlsVentasClass();
@@ -52,10 +53,10 @@ export const patchCliente: PatchCliente = async (id, cliente) =>
       observaciones: cliente.observaciones,
       grupo_id: cliente.grupo_id,
     },
-  }, "Error al guardar cliente");
+  }, tCrm("cliente.errorAlGuardarCliente"));
 
 export const deleteCliente: DeleteCliente = async (id) =>
-  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${id}`, "Error al borrar cliente");
+  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${id}`, tCrm("cliente.errorAlBorrarCliente"));
 
 export const getOportunidadesVentaCliente = async (
   clienteId: string,
@@ -86,7 +87,7 @@ export const vincularContactoCliente = async (contactoId: string, clienteId: str
     contacto_id: contactoId,
   };
   try {
-    await RestAPI.patch(`${UrlsCrm.CLIENTE}/${clienteId}/vincular_contacto`, payload, "Error al vincular contacto");
+    await RestAPI.patch(`${UrlsCrm.CLIENTE}/${clienteId}/vincular_contacto`, payload, tCrm("cliente.errorAlVincularContacto"));
   } catch (error) {
     const fallo = error as QError;
     if (fallo?.estado === 409) {
@@ -100,7 +101,7 @@ export const desvincularContactoCliente = async (contactoId: string, clienteId: 
   const payload = {
     contacto_id: contactoId,
   };
-  await RestAPI.patch(`${UrlsCrm.CLIENTE}/${clienteId}/desvincular_contacto`, payload, "Error al desvincular contacto");
+  await RestAPI.patch(`${UrlsCrm.CLIENTE}/${clienteId}/desvincular_contacto`, payload, tCrm("cliente.errorAlDesvincularContacto"));
 };
 
 export const getAccionesCliente = async (clienteId: string) => {
