@@ -2,6 +2,7 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { Criteria } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { getCuentasBancarias } from "#/tesoreria/cuentas_bancarias/infraestructura.ts";
+import { tTesoreria } from "../../i18n/index.ts";
 
 interface CuentaBancariaSelectProps {
   valor?: string;
@@ -14,7 +15,7 @@ interface CuentaBancariaSelectProps {
 export const CuentaBancariaSelect = ({
   valor,
   nombre = "cuenta_pago_id",
-  label = "Cuenta bancaria",
+  label = tTesoreria("comun.cuentaBancaria"),
   deshabilitado = false,
   onChange,
   ...props

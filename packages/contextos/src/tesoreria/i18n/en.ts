@@ -1,0 +1,40 @@
+import type { Traduccion } from "@olula/lib/i18n/i18n.ts";
+import type { es } from "./es.ts";
+
+export const en: Traduccion<typeof es> = {
+    comun: {
+        seBorraraValorDelValor2Del: "{{valor}} of {{valor2}} on receipt {{codigo}} will be deleted, together with its accounting entry.",
+        laDevolucion: "The return",
+        elPago: "The payment",
+        elReciboVuelveAlEstadoQue: "The receipt goes back to its previous status.",
+        anularUltimoPagoODevolucion: "Cancel last payment or return",
+        anular: "Cancel",
+        laFechaDeVencimientoDebeSer: "The due date must be on or after the issue date",
+        soloSePuedeBajarElImporte: "The amount can only be lowered: the difference goes to a new receipt",
+        editarReciboCodigo: "Edit receipt {{codigo}}",
+        fechaDeVencimiento: "Due date",
+        cuentaDeDomiciliacion: "Direct debit account",
+        sinCuenta: "(no account)",
+        importe: "Amount",
+        guardar: "Save",
+        subcuenta: "Subaccount",
+        enviaElDinero: "Sends the money",
+        recibeElDinero: "Receives the money",
+        referencia: "Reference",
+        cuentaBancaria: "Bank account",
+        conectarBanco: "Connect bank",
+        errorDelBanco: "Bank error",
+        textoCodigoCode: "{{texto}} (code {{code}})",
+    },
+    estados: {
+        emitido: "Issued",
+        pagado: "Paid",
+        devuelto: "Returned",
+        agrupado: "Grouped",
+        remesado: "Remitted",
+        emitida: "Issued",
+        pagada: "Paid",
+        recibos: "Receipts",
+        nominas: "Payslips",
+    },
+};

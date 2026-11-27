@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * TES-02/TES-06: confirma el borrado del último pago o devolución de un
@@ -19,6 +20,7 @@ export const AnularUltimoMovimientoRecibo = ({
   fecha: Date | null;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const anular_ = useCallback(
     async () => publicar("anulacion_pago_confirmada"),
     [publicar]
@@ -32,21 +34,20 @@ export const AnularUltimoMovimientoRecibo = ({
   const [anular, cancelar] = useForm(anular_, cancelar_);
 
   const mensaje = [
-    `Se borrará ${tipo.toLowerCase().startsWith("devol") ? "la devolución" : "el pago"}` +
-      ` del ${fecha?.toLocaleDateString() ?? ""} del recibo ${codigo}, con su asiento contable.`,
+    t("comun.seBorraraValorDelValor2Del", { valor: tipo.toLowerCase().startsWith("devol") ? t("comun.laDevolucion") : t("comun.elPago"), valor2: fecha?.toLocaleDateString() ?? "", codigo }),
     "",
-    "El recibo vuelve al estado que tenía antes.",
+    t("comun.elReciboVuelveAlEstadoQue"),
   ].join("\n");
 
   return (
     <QModalConfirmacion
       nombre="anular_ultimo_movimiento_recibo"
       abierto={true}
-      titulo="Anular último pago o devolución"
+      titulo={t("comun.anularUltimoPagoODevolucion")}
       mensaje={mensaje}
       onCerrar={cancelar}
       onAceptar={anular}
-      labelAceptar="Anular"
+      labelAceptar={t("comun.anular")}
     />
   );
 };

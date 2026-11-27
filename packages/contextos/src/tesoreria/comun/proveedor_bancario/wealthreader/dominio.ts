@@ -1,3 +1,4 @@
+import { tTesoreria } from "../../../i18n/index.ts";
 export const ORIGEN_WIDGET_WEALTH_READER = "https://widget.wealthreader.com";
 export const URL_SCRIPT_WEALTH_READER = `${ORIGEN_WIDGET_WEALTH_READER}/js/load.js`;
 
@@ -21,8 +22,8 @@ export const interpretarMensajeWealthReader = (datos: unknown): MensajeWealthRea
     try {
         const mensaje = JSON.parse(datos) as { error?: { code?: unknown; message?: unknown } };
         if (!mensaje?.error) return { tipo: "otro" };
-        const texto = typeof mensaje.error.message === "string" ? mensaje.error.message : "Error del banco";
-        return { tipo: "error", texto: mensaje.error.code ? `${texto} (código ${mensaje.error.code})` : texto };
+        const texto = typeof mensaje.error.message === "string" ? mensaje.error.message : tTesoreria("comun.errorDelBanco");
+        return { tipo: "error", texto: mensaje.error.code ? tTesoreria("comun.textoCodigoCode", { texto, code: String(mensaje.error.code) }) : texto };
     } catch {
         return { tipo: "otro" };
     }

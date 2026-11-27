@@ -8,6 +8,7 @@ import {
     URL_SCRIPT_WEALTH_READER,
     interpretarMensajeWealthReader,
 } from "./dominio.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 declare global {
     interface Window {
@@ -32,6 +33,7 @@ export const ConectarWealthReader = ({
     onCompletado,
     onCancelado,
 }: ConectarProveedorBancarioProps) => {
+    const t = useTTesoreria();
     const [aviso, setAviso] = useState<string | null>(null);
     // El widget puede repetir el mensaje: la conexión se completa una sola vez.
     const completado = useRef(false);
@@ -68,7 +70,7 @@ export const ConectarWealthReader = ({
     }, []);
 
     return (
-        <QModal abierto={true} nombre="conectarWealthReader" titulo="Conectar banco" onCerrar={onCancelado}>
+        <QModal abierto={true} nombre="conectarWealthReader" titulo={t("comun.conectarBanco")} onCerrar={onCancelado}>
             <div className="ConectarWealthReader">
                 {aviso && <QAviso variante="advertencia">{aviso}</QAviso>}
                 <iframe

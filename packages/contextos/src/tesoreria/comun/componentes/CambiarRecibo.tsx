@@ -7,6 +7,7 @@ import { useModelo } from "@olula/lib/useModelo.js";
 import { useEffect, useMemo, useState } from "react";
 
 import { CambiosRecibo } from "../recibo.ts";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 export type ReciboEditable = {
     codigo: string;
@@ -29,7 +30,7 @@ const metaCambios = (recibo: ReciboEditable): MetaModelo<CambiosRecibo> => ({
             validacion: (m) =>
                 !recibo.fechaEmision || m.fecha_vencimiento >= recibo.fechaEmision
                     ? true
-                    : "La fecha de vencimiento debe ser igual o posterior a la de emisión",
+                    : tTesoreria("comun.laFechaDeVencimientoDebeSer"),
         },
         cuenta_domiciliacion_id: {},
         importe: {
@@ -38,7 +39,7 @@ const metaCambios = (recibo: ReciboEditable): MetaModelo<CambiosRecibo> => ({
             validacion: (m) =>
                 m.importe === recibo.importe || (m.importe > 0 && m.importe < recibo.importe)
                     ? true
-                    : "Solo se puede bajar el importe: la diferencia pasa a un recibo nuevo",
+                    : tTesoreria("comun.soloSePuedeBajarElImporte"),
         },
     },
     editable: (_, campo) => campo !== "importe" || recibo.importeEditable,
@@ -58,6 +59,7 @@ export const CambiarRecibo = ({
     getCuentas: () => Promise<Opcion[]>;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const [cuentas, setCuentas] = useState<Opcion[]>([]);
 
     useEffect(() => {
@@ -85,22 +87,22 @@ export const CambiarRecibo = ({
         <QModal
             abierto={true}
             nombre="cambiar_recibo"
-            titulo={`Editar recibo ${recibo.codigo}`}
+            titulo={t("comun.editarReciboCodigo", { codigo: recibo.codigo })}
             onCerrar={() => publicar("cambio_recibo_cancelado")}
         >
             <div className="CambiarRecibo">
                 <quimera-formulario>
-                    <QDate label="Fecha de vencimiento" {...uiProps("fecha_vencimiento")} />
+                    <QDate label={t("comun.fechaDeVencimiento")} {...uiProps("fecha_vencimiento")} />
                     <QSelect
-                        label="Cuenta de domiciliación"
+                        label={t("comun.cuentaDeDomiciliacion")}
                         {...uiProps("cuenta_domiciliacion_id")}
-                        opciones={[{ valor: "", descripcion: "(sin cuenta)" }, ...cuentas]}
+                        opciones={[{ valor: "", descripcion: t("comun.sinCuenta") }, ...cuentas]}
                     />
-                    <QInput label="Importe" {...uiProps("importe")} />
+                    <QInput label={t("comun.importe")} {...uiProps("importe")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={guardar} deshabilitado={!valido}>
-                        Guardar
+                        {t("comun.guardar")}
                     </QBoton>
                 </div>
             </div>

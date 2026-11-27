@@ -1,6 +1,7 @@
 import { formatearMoneda } from "@olula/lib/dominio.ts";
 import { ibanLegible } from "../banca.ts";
 import "./TransferenciaBancaria.css";
+import { tTesoreria } from "../../i18n/index.ts";
 
 export type ParteTransferencia = {
     nombre: string;
@@ -25,23 +26,23 @@ export const TransferenciaBancaria = ({
     referencia?: string;
 }) => (
     <dl className="TransferenciaBancaria">
-        <dt>Envía el dinero</dt>
+        <dt>{tTesoreria("comun.enviaElDinero")}</dt>
         <dd>
             <strong>{envia.nombre}</strong>
             {envia.iban && <span className="iban">{ibanLegible(envia.iban)}</span>}
         </dd>
-        <dt>Recibe el dinero</dt>
+        <dt>{tTesoreria("comun.recibeElDinero")}</dt>
         <dd>
             <strong>{recibe.nombre}</strong>
             {recibe.iban && <span className="iban">{ibanLegible(recibe.iban)}</span>}
         </dd>
-        <dt>Importe</dt>
+        <dt>{tTesoreria("comun.importe")}</dt>
         <dd>
             <strong>{formatearMoneda(importe, "EUR")}</strong>
         </dd>
         {referencia && (
             <>
-                <dt>Referencia</dt>
+                <dt>{tTesoreria("comun.referencia")}</dt>
                 <dd>{referencia}</dd>
             </>
         )}

@@ -3,6 +3,7 @@ import { Criteria, Filtro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { Subcuenta as SubcuentaContable } from "#/contabilidad/subcuenta/diseño.ts";
 import { getSubcuentas } from "#/contabilidad/subcuenta/infraestructura.ts";
+import { tTesoreria } from "../../i18n/index.ts";
 
 /** El valor es el código de la subcuenta, no su id: tesorería guarda y envía
  * códigos (el servidor los resuelve en el ejercicio de la fecha del asiento). */
@@ -36,7 +37,7 @@ export const Subcuenta = ({
     valor,
     descripcion = "",
     nombre = "codigo_subcuenta",
-    label = "Subcuenta",
+    label = tTesoreria("comun.subcuenta"),
     onChange,
     ...props
 }: SubcuentaProps) => {
