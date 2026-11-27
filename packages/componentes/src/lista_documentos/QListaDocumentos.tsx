@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { QListaDocumentosProps } from "./diseño.ts";
 import "./QListaDocumentos.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export const QListaDocumentos = ({
   vinculoTipo,
@@ -18,6 +19,7 @@ export const QListaDocumentos = ({
   refreshCounter,
   onError,
 }: QListaDocumentosProps) => {
+  const t = useTComponentes();
   const [documentos, setDocumentos] = useState<DocumentoGenerico[]>([]);
   const [cargando, setCargando] = useState(false);
   const [ordenActual, setOrdenActual] = useState<[string, "ASC" | "DESC"]>([
@@ -52,7 +54,7 @@ export const QListaDocumentos = ({
         setDocumentos(resultado.datos);
       } catch (error) {
         const err =
-          error instanceof Error ? error : new Error("Error desconocido");
+          error instanceof Error ? error : new Error(t("ui.listaDocumentos.errorDesconocido"));
         onError?.(err);
         console.error("Error cargando documentos:", err);
       } finally {
@@ -82,7 +84,7 @@ export const QListaDocumentos = ({
       const err =
         error instanceof Error
           ? error
-          : new Error("Error descargando documento");
+          : new Error(t("ui.listaDocumentos.errorDescargandoDocumento"));
       onError?.(err);
       console.error("Error descargando documento:", err);
     }
@@ -96,7 +98,7 @@ export const QListaDocumentos = ({
       setRecargas((n) => n + 1);
     } catch (error) {
       const err =
-        error instanceof Error ? error : new Error("Error borrando documento");
+        error instanceof Error ? error : new Error(t("ui.listaDocumentos.errorBorrandoDocumento"));
       onError?.(err);
       console.error("Error borrando documento:", err);
       throw err;
@@ -116,34 +118,34 @@ export const QListaDocumentos = ({
   const metaTabla: MetaTabla<DocumentoGenerico> = [
     {
       id: "nombre",
-      cabecera: "Nombre",
+      cabecera: t("ui.listaDocumentos.nombre"),
       prioridad: "alta",
       esTitulo: true,
       ancho: "40%",
     },
     {
       id: "fechaSubida",
-      cabecera: "Fecha",
+      cabecera: t("ui.listaDocumentos.fecha"),
       tipo: "fecha",
       prioridad: "media",
       ancho: "15%",
     },
     {
       id: "horaSubida",
-      cabecera: "Hora",
+      cabecera: t("ui.listaDocumentos.hora"),
       tipo: "hora",
       prioridad: "media",
       ancho: "15%",
     },
     {
       id: "id",
-      cabecera: "Acciones",
+      cabecera: t("ui.listaDocumentos.acciones"),
       prioridad: "alta",
       ancho: "15%",
       render: (doc) => (
         <div className="QListaDocumentos-acciones">
           <QBoton tamaño="pequeño" onClick={() => handleDescargar(doc)}>
-            Descargar
+            {t("ui.listaDocumentos.descargar")}
           </QBoton>
           <QBoton
             tamaño="pequeño"
@@ -151,7 +153,7 @@ export const QListaDocumentos = ({
             destructivo
             onClick={() => setDocumentoAEliminar(doc)}
           >
-            Eliminar
+            {t("ui.listaDocumentos.eliminar")}
           </QBoton>
         </div>
       ),
@@ -162,18 +164,18 @@ export const QListaDocumentos = ({
     <QModalConfirmacion
       nombre="eliminarDocumento"
       abierto={true}
-      titulo="Eliminar documento"
-      mensaje={`¿Está seguro de que desea eliminar el documento ${documentoAEliminar.nombre}?`}
+      titulo={t("ui.listaDocumentos.eliminarDocumento")}
+      mensaje={t("ui.listaDocumentos.estaSeguroDeQueDeseaEliminar", { nombre: documentoAEliminar.nombre })}
       onCerrar={() => setDocumentoAEliminar(null)}
       onAceptar={handleEliminar}
-      labelAceptar="Eliminar"
+      labelAceptar={t("ui.listaDocumentos.eliminar")}
     />
   );
 
   if (documentos.length === 0 && !cargando) {
     return (
       <div className="QListaDocumentos">
-        <p className="QListaDocumentos-sin-datos">No hay documentos adjuntos</p>
+        <p className="QListaDocumentos-sin-datos">{t("ui.listaDocumentos.noHayDocumentosAdjuntos")}</p>
         {modalEliminar}
       </div>
     );

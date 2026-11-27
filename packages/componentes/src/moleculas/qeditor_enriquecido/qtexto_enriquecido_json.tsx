@@ -6,6 +6,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
 import "./qeditor_enriquecido.css";
+import { useTComponentes } from "../../i18n/textos.ts";
 
 const DOC_VACIO: JSONContent = {
   type: "doc",
@@ -28,6 +29,7 @@ export const QTextEnriquecidoJSON = ({
   valor,
   className,
 }: QTextEnriquecidoJSONProps) => {
+  const t = useTComponentes();
   const clases = ["quimera-texto-enriquecido-json", className]
     .filter(Boolean)
     .join(" ");
@@ -53,7 +55,7 @@ export const QTextEnriquecidoJSON = ({
     editable: false,
     editorProps: {
       attributes: {
-        "aria-label": "Vista de texto enriquecido",
+        "aria-label": t("ui.moleculas.vistaDeTextoEnriquecido"),
       },
     },
   });

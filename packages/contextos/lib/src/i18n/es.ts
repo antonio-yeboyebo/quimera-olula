@@ -20,4 +20,32 @@ export const es = {
         ibanRequerido: "El IBAN es requerido",
         ibanNoValido: "El IBAN no es válido",
     },
+    // <generado: textos extraídos del código>
+    gen: {
+        api: {
+            errorAlGuardarDocumento: "Error al guardar documento",
+            errorAlCrearCarpeta: "Error al crear carpeta",
+            errorAlBorrarDocumento: "Error al borrar documento",
+        },
+        voz: {
+            permisoDeMicrofonoDenegado: "Permiso de micrófono denegado",
+            elNavegadorNoPermiteElReconocimiento: "El navegador no permite el reconocimiento de voz",
+            noSeHaEncontradoMicrofono: "No se ha encontrado micrófono",
+            noSeHaDetectadoVoz: "No se ha detectado voz",
+            errorDeRed: "Error de red",
+        },
+        controlesPantalla: {
+            eseElementoYaNoEstaEn: "Ese elemento ya no está en pantalla.",
+            noHePodidoHacerlo: "No he podido hacerlo.",
+        },
+        erroresLimite: {
+            hasLlegadoAlLimiteDeTu: "Has llegado al límite de tu plan",
+            tuEmpresaEstaEnSoloLectura: "Tu empresa está en solo lectura",
+            moduloNoIncluidoEnTuPlan: "Módulo no incluido en tu plan",
+        },
+        useModelo: {
+            error: "Error",
+        },
+    },
+    // </generado>
 } as const;

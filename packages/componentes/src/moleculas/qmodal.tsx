@@ -43,9 +43,9 @@ export const QModal = ({
   useControlPantalla("modal", () => ({
     describir: () => ({ tipo: "modal", id: "", titulo: titulo ?? nombre }),
     ejecutar: (accion) => {
-      if (accion !== "cerrar" || bloquearCierre) return { ok: false, mensaje: "Esta ventana no se puede cerrar así." };
+      if (accion !== "cerrar" || bloquearCierre) return { ok: false, mensaje: t("ui.moleculas.estaVentanaNoSePuedeCerrar") };
       onCerrar();
-      return { ok: true, mensaje: "Cerrado." };
+      return { ok: true, mensaje: t("ui.moleculas.cerrado") };
     },
   }), abierto);
 

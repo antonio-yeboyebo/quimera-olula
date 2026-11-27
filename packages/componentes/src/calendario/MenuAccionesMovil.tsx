@@ -5,6 +5,7 @@ import { QIcono } from "../atomos/qicono.tsx";
 import "./MenuAccionesMovil.css";
 import { SelectorModo } from "./SelectorModo.tsx";
 import { ModoCalendario } from "./tipos.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 interface MenuAccionesMovilProps {
   modoAnio: boolean;
@@ -33,6 +34,7 @@ export function MenuAccionesMovil({
   playground,
   onAbrirPlayground,
 }: MenuAccionesMovilProps) {
+  const t = useTComponentes();
   const [abierto, setAbierto] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const ignoreNextClick = useRef(false);
@@ -344,7 +346,7 @@ export function MenuAccionesMovil({
               {mostrarCambioModo && !onCambioModoVista && (
                 <div className="menu-acciones-fila" key={"modo"}>
                   <QBoton onClick={handleCambioModo} variante={"texto"}>
-                    {modoAnio ? "Modo Mes" : "Modo Año"}
+                    {modoAnio ? t("ui.calendario.modoMes") : t("ui.calendario.modoAno")}
                   </QBoton>
                 </div>
               )}
@@ -385,7 +387,7 @@ export function MenuAccionesMovil({
     <>
       <button
         id="boton-menu-acciones-movil"
-        aria-label={abierto ? "Cerrar menú acciones" : "Abrir menú acciones"}
+        aria-label={abierto ? t("ui.calendario.cerrarMenuAcciones") : t("ui.calendario.abrirMenuAcciones")}
         className="boton-menu-lateral"
         onClick={toggleMenu}
         type="button"

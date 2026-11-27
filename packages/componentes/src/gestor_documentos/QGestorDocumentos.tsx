@@ -11,6 +11,7 @@ import {
 import { superaTamanioMaximo } from "./dominio.ts";
 import { getMaquinaGestorDocumentos } from "./maquina.ts";
 import "./QGestorDocumentos.css";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 
 export interface QGestorDocumentosProps {
   vinculoTipo: string;
@@ -26,7 +27,7 @@ export interface QGestorDocumentosProps {
 export const QGestorDocumentos = ({
   vinculoTipo,
   vinculoId,
-  tipoDocumento = "Documento",
+  tipoDocumento = tComponentes("ui.gestorDocumentos.documento"),
   tamanioMaximoBytes,
   archivosIniciales,
   onDocumentoSubido,
@@ -34,6 +35,7 @@ export const QGestorDocumentos = ({
   onError,
 }: QGestorDocumentosProps) => {
   // Memoizar callbacks para evitar cambios referenciales innecesarios
+  const t = useTComponentes();
   const handleDocumentoSubido = useCallback(
     () => onDocumentoSubido?.(),
     [onDocumentoSubido]
@@ -117,7 +119,7 @@ export const QGestorDocumentos = ({
 
             if (!subidoAlguno) {
               throw new Error(
-                "Ningún archivo se ha subido: todos superan el tamaño máximo permitido"
+                t("ui.gestorDocumentos.ningunArchivoSeHaSubidoTodos")
               );
             }
           });
@@ -125,7 +127,7 @@ export const QGestorDocumentos = ({
           handleDocumentoSubido();
         } catch (error) {
           handleError(
-            error instanceof Error ? error : new Error("Error desconocido")
+            error instanceof Error ? error : new Error(t("ui.gestorDocumentos.errorDesconocido"))
           );
           emitir("subida_cancelada");
         }
@@ -149,7 +151,7 @@ export const QGestorDocumentos = ({
         )}
       {ctx.estado === "subiendo" && (
         <div className="QGestorDocumentos-subiendo">
-          <p>Subiendo archivos...</p>
+          <p>{t("ui.gestorDocumentos.subiendoArchivos")}</p>
         </div>
       )}
     </div>

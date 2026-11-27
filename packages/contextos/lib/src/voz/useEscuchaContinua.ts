@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { tLib } from "../i18n/textos.ts";
 
 // Tipos mínimos de la Web Speech API (no vienen en lib.dom). Locales en vez de los
 // globales de speech-recognition.d.ts: este hook se compila también desde otros
@@ -59,9 +60,9 @@ export interface UseEscuchaContinua {
 // Errores tras los que no tiene sentido reintentar en bucle: el usuario tiene que
 // hacer algo (dar permiso, conectar un micro).
 const ERRORES_FATALES: Record<string, string> = {
-    "not-allowed": "Permiso de micrófono denegado",
-    "service-not-allowed": "El navegador no permite el reconocimiento de voz",
-    "audio-capture": "No se ha encontrado micrófono",
+    get "not-allowed"() { return tLib("gen.voz.permisoDeMicrofonoDenegado"); },
+    get "service-not-allowed"() { return tLib("gen.voz.elNavegadorNoPermiteElReconocimiento"); },
+    get "audio-capture"() { return tLib("gen.voz.noSeHaEncontradoMicrofono"); },
 };
 
 // "no-speech" (silencio) y "aborted" (lo hemos parado nosotros) no son fallos reales.

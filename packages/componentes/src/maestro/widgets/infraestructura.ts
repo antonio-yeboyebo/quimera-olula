@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { Filtro } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { DefinicionWidget, OrigenWidgets, RecursoAgregable } from "./diseño.ts";
+import { tComponentes } from "../../i18n/textos.ts";
 
 type WidgetsUsuarioApi = {
   pantalla: string;
@@ -22,11 +23,11 @@ export const guardarWidgetsUsuario = (
   RestAPI.patch<{ widgets: DefinicionWidget[] }>(
     url(pantalla),
     { widgets },
-    "Error al guardar los widgets"
+    tComponentes("ui.maestro.errorAlGuardarLosWidgets")
   );
 
 export const restaurarWidgetsUsuario = (pantalla: string) =>
-  RestAPI.delete(url(pantalla), "Error al restaurar los widgets");
+  RestAPI.delete(url(pantalla), tComponentes("ui.maestro.errorAlRestaurarLosWidgets"));
 
 // El registro de recursos no cambia mientras la app está abierta: una sola
 // petición por sesión, compartida por todos los maestros.

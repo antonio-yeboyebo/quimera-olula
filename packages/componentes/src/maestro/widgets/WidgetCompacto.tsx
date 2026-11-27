@@ -2,6 +2,7 @@ import { COLORES_SERIE } from "../../tema/colores_graficos.ts";
 import { DefinicionWidget, PuntoWidget } from "./diseño.ts";
 import { formatearValorWidget } from "./dominio.ts";
 import "./WidgetCompacto.css";
+import { tComponentes } from "../../i18n/textos.ts";
 
 type WidgetCompactoProps = {
   widget: DefinicionWidget;
@@ -47,7 +48,7 @@ const periodo = (puntos: PuntoWidget[]) =>
 /** Anillo con las mayores y el resto del total como «Otros». */
 const Anillo = ({ puntos, total }: { puntos: PuntoWidget[]; total: number }) => {
   const suma = puntos.reduce((s, p) => s + p.valor, 0);
-  const partes = [...puntos, ...(total > suma ? [{ clave: "__otros", etiqueta: "Otros", valor: total - suma }] : [])];
+  const partes = [...puntos, ...(total > suma ? [{ clave: "__otros", etiqueta: tComponentes("ui.maestro.otros"), valor: total - suma }] : [])];
   const base = Math.max(total, suma) || 1;
   let acumulado = 0;
   return (
@@ -127,7 +128,7 @@ export const WidgetCompacto = ({ widget, valor, puntos, pie, cargando }: WidgetC
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.min(porcentaje, 100)}
-          aria-label={`${porcentaje} % del objetivo`}
+          aria-label={tComponentes("ui.maestro.porcentajeDelObjetivo", { porcentaje })}
         >
           <div style={{ width: `${Math.min(porcentaje, 100)}%`, background: COLORES_SERIE[0] }} />
         </div>

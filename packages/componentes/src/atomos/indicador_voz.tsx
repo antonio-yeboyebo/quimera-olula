@@ -1,5 +1,6 @@
 import type { EstadoFlujoVoz } from "@olula/lib/voz/useFlujoVoz.ts";
 import "./indicador_voz.css";
+import { tComponentes } from "../i18n/textos.ts";
 
 interface IndicadorVozProps {
     estado: EstadoFlujoVoz;
@@ -9,9 +10,9 @@ interface IndicadorVozProps {
 
 const etiquetas: Record<EstadoFlujoVoz, string> = {
     inactivo: "",
-    hablando: "Hablando...",
-    escuchando: "Escuchando...",
-    confirmando: "Confirmando...",
+    get hablando() { return tComponentes("ui.atomos.hablando"); },
+    get escuchando() { return tComponentes("ui.atomos.escuchando"); },
+    get confirmando() { return tComponentes("ui.atomos.confirmando"); },
 };
 
 export const IndicadorVoz = ({ estado, textoReconocido, interino }: IndicadorVozProps) => {

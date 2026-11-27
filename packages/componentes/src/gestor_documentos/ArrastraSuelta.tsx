@@ -2,8 +2,10 @@ import { QBoton, QIcono } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useCallback, useRef, useState } from "react";
 import "./ArrastraSuelta.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export const ArrastraSuelta = ({ emitir }: { emitir: EmitirEvento }) => {
+  const t = useTComponentes();
   const [arrastrado, setArrastrado] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -67,10 +69,10 @@ export const ArrastraSuelta = ({ emitir }: { emitir: EmitirEvento }) => {
           <div className="ArrastraSuelta-icono">
             <QIcono nombre="subir" tamaño="xl" />
           </div>
-          <p className="ArrastraSuelta-titulo">Arrastra archivos aquí</p>
-          <p className="ArrastraSuelta-subtitulo">o</p>
+          <p className="ArrastraSuelta-titulo">{t("ui.gestorDocumentos.arrastraArchivosAqui")}</p>
+          <p className="ArrastraSuelta-subtitulo">{t("ui.gestorDocumentos.o")}</p>
           <QBoton onClick={() => inputRef.current?.click()}>
-            Seleccionar archivos
+            {t("ui.gestorDocumentos.seleccionarArchivos")}
           </QBoton>
         </div>
       </div>

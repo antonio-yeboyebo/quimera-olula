@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { parsearNumeroVoz } from "./parsearNumeroVoz.ts";
 import { useSintesisVoz } from "./useSintesisVoz.ts";
 import { reservarVoz } from "./voz_ocupada.ts";
+import { tLib } from "../i18n/textos.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getWindowSpeechRecognition = (): (new () => any) | null => {
@@ -114,9 +115,9 @@ const escucharUnaVez = (
                 reject(new Error("cancelado"));
             } else {
                 const mensajes: Record<string, string> = {
-                    "no-speech": "No se ha detectado voz",
-                    "audio-capture": "No se ha encontrado micrófono",
-                    "not-allowed": "Permiso de micrófono denegado",
+                    "no-speech": tLib("gen.voz.noSeHaDetectadoVoz"),
+                    "audio-capture": tLib("gen.voz.noSeHaEncontradoMicrofono"),
+                    "not-allowed": tLib("gen.voz.permisoDeMicrofonoDenegado"),
                 };
                 reject(new Error(mensajes[event.error] ?? `Error STT: ${event.error}`));
             }

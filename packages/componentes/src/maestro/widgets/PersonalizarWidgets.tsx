@@ -27,6 +27,7 @@ import { getRecursosAgregables } from "./infraestructura.ts";
 import "./PersonalizarWidgets.css";
 import { useTotalesWidgets } from "./useTotalesWidgets.ts";
 import { WidgetCompacto } from "./WidgetCompacto.tsx";
+import { useTComponentes } from "../../i18n/textos.ts";
 
 type PersonalizarWidgetsProps = {
   config: ConfigWidgets;
@@ -46,6 +47,7 @@ export const PersonalizarWidgets = ({
   onRestaurar,
   onCerrar,
 }: PersonalizarWidgetsProps) => {
+  const tx = useTComponentes();
   const [borrador, setBorrador] = useState(widgets);
   const [titulo, setTitulo] = useState("");
   const sinMedidas = config.campos.length === 0;
@@ -96,7 +98,7 @@ export const PersonalizarWidgets = ({
   const campo = config.campos.find((c) => c.id === campoId);
   const formato = formatoElegido ?? campo?.formato ?? "numero";
   const propuesto = nuevoWidget(
-    titulo || "Nuevo widget",
+    titulo || tx("ui.maestro.nuevoWidget"),
     operacion,
     campo,
     borrador,
@@ -135,7 +137,7 @@ export const PersonalizarWidgets = ({
       await accion();
       onCerrar();
     } catch {
-      setError("No se ha podido guardar. Inténtalo de nuevo.");
+      setError(tx("ui.maestro.noSeHaPodidoGuardarIntentalo"));
       setGuardando(false);
     }
   };
@@ -143,21 +145,21 @@ export const PersonalizarWidgets = ({
   return (
     <QModal
       nombre="personalizar-widgets"
-      titulo={`Widgets de ${config.titulo}`}
+      titulo={tx("ui.maestro.widgetsDeTitulo", { titulo: config.titulo })}
       abierto={true}
       onCerrar={onCerrar}
       pantallaCompletaMovil
     >
       <div className="personalizar-widgets">
         <p className="personalizar-widgets-ayuda">
-          Se calculan sobre los filtros activos del listado.
+          {tx("ui.maestro.seCalculanSobreLosFiltrosActivos")}
         </p>
 
         <section aria-labelledby="widgets-visibles">
-          <h3 id="widgets-visibles">Visibles</h3>
+          <h3 id="widgets-visibles">{tx("ui.maestro.visibles")}</h3>
           {borrador.length === 0 && (
             <p className="personalizar-widgets-vacio">
-              No hay widgets. Añade alguno abajo.
+              {tx("ui.maestro.noHayWidgetsAnadeAlgunoAbajo")}
             </p>
           )}
           <ul className="personalizar-widgets-lista">
@@ -173,12 +175,12 @@ export const PersonalizarWidgets = ({
                 </div>
                 {idsPorDefecto.has(widget.id) && (
                   <span className="personalizar-widgets-defecto">
-                    Por defecto
+                    {tx("ui.maestro.porDefecto")}
                   </span>
                 )}
                 <button
                   type="button"
-                  aria-label={`Subir ${widget.titulo}`}
+                  aria-label={tx("ui.maestro.subirTitulo", { titulo: widget.titulo })}
                   disabled={indice === 0}
                   onClick={() => mover(indice, -1)}
                 >
@@ -186,7 +188,7 @@ export const PersonalizarWidgets = ({
                 </button>
                 <button
                   type="button"
-                  aria-label={`Bajar ${widget.titulo}`}
+                  aria-label={tx("ui.maestro.bajarTitulo", { titulo: widget.titulo })}
                   disabled={indice === borrador.length - 1}
                   onClick={() => mover(indice, 1)}
                 >
@@ -194,7 +196,7 @@ export const PersonalizarWidgets = ({
                 </button>
                 <button
                   type="button"
-                  aria-label={`Quitar ${widget.titulo}`}
+                  aria-label={tx("ui.maestro.quitarTitulo", { titulo: widget.titulo })}
                   onClick={() =>
                     setBorrador(borrador.filter((w) => w.id !== widget.id))
                   }
@@ -210,9 +212,9 @@ export const PersonalizarWidgets = ({
           aria-labelledby="widget-nuevo"
           className="personalizar-widgets-nuevo"
         >
-          <h3 id="widget-nuevo">Nuevo widget</h3>
+          <h3 id="widget-nuevo">{tx("ui.maestro.nuevoWidget")}</h3>
           <QSelect
-            label="Tipo"
+            label={tx("ui.maestro.tipo")}
             nombre="tipo_widget"
             valor={tipo}
             opciones={tiposWidget}
@@ -220,10 +222,10 @@ export const PersonalizarWidgets = ({
           />
           {necesitaAgrupar && (
             <QSelect
-              label={tipo === "temporal" ? "Por meses de" : "Agrupar por"}
+              label={tipo === "temporal" ? tx("ui.maestro.porMesesDe") : tx("ui.maestro.agruparPor")}
               nombre="agrupar_widget"
               valor={agruparValido ?? ""}
-              placeholder="Sin dimensiones disponibles"
+              placeholder={tx("ui.maestro.sinDimensionesDisponibles")}
               opciones={opcionesAgrupar.map((d) => ({
                 valor: d.id,
                 descripcion: d.descripcion,
@@ -233,7 +235,7 @@ export const PersonalizarWidgets = ({
           )}
           {tipo === "objetivo" && (
             <QInput
-              label="Meta"
+              label={tx("ui.maestro.meta")}
               nombre="meta_widget"
               tipo="decimal"
               valor={meta}
@@ -241,14 +243,14 @@ export const PersonalizarWidgets = ({
             />
           )}
           <QInput
-            label="Título"
+            label={tx("ui.maestro.titulo")}
             nombre="titulo_widget"
             valor={titulo}
             maxLength={60}
             onChange={(valor) => setTitulo(valor)}
           />
           <QSelect
-            label="Cálculo"
+            label={tx("ui.maestro.calculo")}
             nombre="operacion_widget"
             valor={operacion}
             opciones={
@@ -263,7 +265,7 @@ export const PersonalizarWidgets = ({
           {operacion !== "conteo" && (
             <>
               <QSelect
-                label="Campo"
+                label={tx("ui.maestro.campo")}
                 nombre="campo_widget"
                 valor={campoId}
                 opciones={config.campos.map((c) => ({
@@ -277,7 +279,7 @@ export const PersonalizarWidgets = ({
                 }}
               />
               <QSelect
-                label="Formato"
+                label={tx("ui.maestro.formato")}
                 nombre="formato_widget"
                 valor={formato}
                 opciones={formatosWidget}
@@ -289,7 +291,7 @@ export const PersonalizarWidgets = ({
           )}
 
           <div className="personalizar-widgets-previa">
-            <span>Vista previa</span>
+            <span>{tx("ui.maestro.vistaPrevia")}</span>
             <WidgetCompacto
               widget={propuesto}
               valor={valores[propuesto.id]}
@@ -304,11 +306,11 @@ export const PersonalizarWidgets = ({
             deshabilitado={!titulo.trim() || lleno || incompleto}
             onClick={anadir}
           >
-            Añadir al panel
+            {tx("ui.maestro.anadirAlPanel")}
           </QBoton>
           {lleno && (
             <p className="personalizar-widgets-vacio">
-              Como máximo {MAX_WIDGETS} widgets.
+              {tx("ui.maestro.comoMaximoMaxWidgetsWidgets", { MAX_WIDGETS })}
             </p>
           )}
         </section>
@@ -325,17 +327,17 @@ export const PersonalizarWidgets = ({
             deshabilitado={guardando}
             onClick={() => ejecutar(onRestaurar)}
           >
-            Restaurar por defecto
+            {tx("ui.maestro.restaurarPorDefecto")}
           </QBoton>
           <div>
             <QBoton variante="borde" onClick={onCerrar}>
-              Cancelar
+              {tx("ui.maestro.cancelar")}
             </QBoton>
             <QBoton
               deshabilitado={guardando}
               onClick={() => ejecutar(() => onGuardar(borrador))}
             >
-              Guardar
+              {tx("ui.maestro.guardar")}
             </QBoton>
           </div>
         </footer>

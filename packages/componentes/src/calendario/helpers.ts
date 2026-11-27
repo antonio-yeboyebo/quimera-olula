@@ -1,4 +1,5 @@
 import { DatoBase } from './tipos';
+import { tComponentes } from "../i18n/textos.ts";
 
 export const esHoy = (fecha: Date) => fecha.toDateString() === new Date().toDateString();
 
@@ -77,8 +78,8 @@ export const getSemanasDelMes = (fecha: Date, inicioSemana: 'lunes' | 'domingo' 
 
 export const getDiasSemana = (inicioSemana: 'lunes' | 'domingo' = 'lunes') =>
   inicioSemana === 'lunes'
-    ? ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
-    : ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    ? [tComponentes("ui.calendario.lun"), tComponentes("ui.calendario.mar"), tComponentes("ui.calendario.mie"), tComponentes("ui.calendario.jue"), tComponentes("ui.calendario.vie"), tComponentes("ui.calendario.sab"), tComponentes("ui.calendario.dom")]
+    : [tComponentes("ui.calendario.dom"), tComponentes("ui.calendario.lun"), tComponentes("ui.calendario.mar"), tComponentes("ui.calendario.mie"), tComponentes("ui.calendario.jue"), tComponentes("ui.calendario.vie"), tComponentes("ui.calendario.sab")];
 
 // Helpers para modo semana
 export const getSemanaActual = (fecha: Date, inicioSemana: 'lunes' | 'domingo' = 'lunes') => {

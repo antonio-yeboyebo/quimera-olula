@@ -2,6 +2,7 @@ import { QGestorDocumentos, QModal } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useCallback } from "react";
 import "./AnadirDocumento.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 /**
  * Modal de alta de documentos dentro del árbol documental.
@@ -31,6 +32,7 @@ export const AnadirDocumento = ({
   tamanioMaximoBytes,
   publicar,
 }: AnadirDocumentoProps) => {
+  const t = useTComponentes();
   const handleDocumentoSubido = useCallback(() => {
     publicar("documento_anadido");
   }, [publicar]);
@@ -44,14 +46,14 @@ export const AnadirDocumento = ({
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Añadir documento"
+      titulo={t("ui.arbolDocumentos.anadirDocumento")}
       onCerrar={cancelar}
     >
       <div className={"AnadirDocumento"}>
         <QGestorDocumentos
           vinculoTipo={vinculoTipo}
           vinculoId={vinculoId}
-          tipoDocumento="Documento"
+          tipoDocumento={t("ui.arbolDocumentos.documento")}
           archivosIniciales={archivosIniciales}
           tamanioMaximoBytes={tamanioMaximoBytes}
           onDocumentoSubido={handleDocumentoSubido}

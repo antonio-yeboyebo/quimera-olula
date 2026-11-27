@@ -13,6 +13,7 @@ import {
 import { ComponentType, Fragment, ReactNode, useState } from "react";
 import { QBoton } from "./qboton.tsx";
 import "./qtabla.css";
+import { tComponentes } from "../i18n/textos.ts";
 
 type TipoColumna =
   | "texto"
@@ -110,7 +111,7 @@ const a_string = (
   } else if (tipo === "numero" && typeof valor === "number") {
     formateado = valor.toLocaleString("es-ES");
   } else if (typeof valor === "boolean") {
-    formateado = valor ? "Sí" : "No";
+    formateado = valor ? tComponentes("ui.atomos.si") : tComponentes("ui.atomos.no");
   } else if (
     tipo === "fechahora" &&
     valor !== null &&
@@ -124,7 +125,7 @@ const a_string = (
   } else if (typeof valor === "undefined" || valor === null) {
     formateado = "";
   } else {
-    throw new Error(`Tipo de dato desconocido: ${tipo} para valor ${valor}`);
+    throw new Error(tComponentes("ui.atomos.tipoDeDatoDesconocidoTipoPara", { tipo, valor: String(valor) }));
   }
 
   return formateado;
@@ -232,7 +233,7 @@ const Paginador = (
   return (
     <quimera-tabla-paginacion>
       <span className="paginacion-rango">
-        {desde.toLocaleString("es-ES")}–{hasta.toLocaleString("es-ES")} de{" "}
+        {desde.toLocaleString("es-ES")}–{hasta.toLocaleString("es-ES")}{" "}{tComponentes("ui.atomos.de")}{" "}
         {totalEntidades.toLocaleString("es-ES")}
       </span>
       <QBoton

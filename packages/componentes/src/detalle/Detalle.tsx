@@ -69,6 +69,7 @@ export function Detalle<T extends Entidad>({
   className,
   cerrarDetalle,
 }: PropsWithChildren<DetalleProps<T>>) {
+  const t = useTComponentes();
   const nombrePantalla = useNombrePantalla();
 
   useEffect(() => {
@@ -84,7 +85,7 @@ export function Detalle<T extends Entidad>({
   }, [id, entidad, cargar, setEntidad]);
 
   if (!entidad) {
-    return <>No se ha encontrado la entidad con Id: {id}</>;
+    return <>{t("ui.detalle.noSeHaEncontradoLaEntidad", { id })}</>;
   }
 
   if (!id) {

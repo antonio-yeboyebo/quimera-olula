@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import "./qseccion.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 type QSeccionProps = {
     /** Etiqueta pequeña que aparece sobre la sección (opcional). */
@@ -54,6 +55,7 @@ export const QSeccion = ({
     guardadoDeshabilitado = false,
     soloLectura = false,
 }: QSeccionProps) => {
+    const t = useTComponentes();
     const [activa, setActiva] = useState(false);
     const refContenedor = useRef<HTMLDivElement>(null);
 
@@ -119,13 +121,13 @@ export const QSeccion = ({
                     {editor}
                     <div className="qseccion__botones">
                         <QBoton variante="texto" onClick={handleCancelar}>
-                            Cancelar
+                            {t("ui.moleculas.cancelar")}
                         </QBoton>
                         <QBoton
                             onClick={handleGuardar}
                             deshabilitado={guardadoDeshabilitado}
                         >
-                            Guardar
+                            {t("ui.moleculas.guardar")}
                         </QBoton>
                     </div>
                 </>

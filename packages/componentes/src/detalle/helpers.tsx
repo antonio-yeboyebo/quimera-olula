@@ -2,6 +2,7 @@ import { Entidad } from "@olula/lib/diseño.ts";
 import { QInput } from "../atomos/qinput.tsx";
 import { QSelect } from "../atomos/qselect.tsx";
 import { CampoFormularioGenerico } from "./FormularioGenerico.tsx";
+import { tComponentes } from "../i18n/textos.ts";
 
 export const renderSelect = (
   campo: CampoFormularioGenerico,
@@ -11,7 +12,7 @@ export const renderSelect = (
     nombre: campo.nombre,
     label: campo.etiqueta,
     placeholder:
-      campo.placeholder ?? `Selecciona un/a ${campo.etiqueta.toLowerCase()}`,
+      campo.placeholder ?? tComponentes("ui.detalle.seleccionaUnATolowercase", { toLowerCase: campo.etiqueta.toLowerCase() }),
     valor: entidad[campo.nombre] as string,
     opcional: !campo.requerido,
     deshabilitado: campo.soloLectura,
@@ -36,7 +37,7 @@ export const renderInput = (
     label: campo.etiqueta,
     placeholder:
       campo.placeholder ??
-      `Introduce el valor de ${campo.etiqueta.toLowerCase()}`,
+      tComponentes("ui.detalle.introduceElValorDeTolowercase", { toLowerCase: campo.etiqueta.toLowerCase() }),
     valor: entidad[campo.nombre] as string,
     condensado: campo.condensado,
     opcional: !campo.requerido,

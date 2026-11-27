@@ -10,6 +10,7 @@ import {
   RecursoAgregable,
   TipoWidget,
 } from "./diseño.ts";
+import { tComponentes } from "../../i18n/textos.ts";
 
 /** Parámetro `metricas` del servidor: `suma:total`, `conteo`... */
 export const metricaWidget = (widget: DefinicionWidget): string =>
@@ -48,11 +49,11 @@ export const agruparPorFiltro = (
 };
 
 const pies: Record<OperacionWidget, string> = {
-  suma: "Suma",
-  conteo: "Recuento",
-  promedio: "Media",
-  minimo: "Mínimo",
-  maximo: "Máximo",
+  get suma() { return tComponentes("ui.maestro.suma"); },
+  get conteo() { return tComponentes("ui.maestro.recuento"); },
+  get promedio() { return tComponentes("ui.maestro.media"); },
+  get minimo() { return tComponentes("ui.maestro.minimo"); },
+  get maximo() { return tComponentes("ui.maestro.maximo"); },
 };
 
 export const pieWidget = (
@@ -73,16 +74,16 @@ export const operacionesWidget: {
   valor: OperacionWidget;
   descripcion: string;
 }[] = [
-  { valor: "suma", descripcion: "Suma" },
-  { valor: "promedio", descripcion: "Media" },
-  { valor: "conteo", descripcion: "Recuento" },
-  { valor: "maximo", descripcion: "Máximo" },
-  { valor: "minimo", descripcion: "Mínimo" },
+  { valor: "suma", get descripcion() { return tComponentes("ui.maestro.suma"); } },
+  { valor: "promedio", get descripcion() { return tComponentes("ui.maestro.media"); } },
+  { valor: "conteo", get descripcion() { return tComponentes("ui.maestro.recuento"); } },
+  { valor: "maximo", get descripcion() { return tComponentes("ui.maestro.maximo"); } },
+  { valor: "minimo", get descripcion() { return tComponentes("ui.maestro.minimo"); } },
 ];
 
 export const formatosWidget: { valor: FormatoWidget; descripcion: string }[] = [
-  { valor: "moneda", descripcion: "Importe (€)" },
-  { valor: "numero", descripcion: "Número" },
+  { valor: "moneda", get descripcion() { return tComponentes("ui.maestro.importe"); } },
+  { valor: "numero", get descripcion() { return tComponentes("ui.maestro.numero"); } },
 ];
 
 /** Widget nuevo a partir de lo elegido en el panel de personalización. */
@@ -113,11 +114,11 @@ export const nuevoWidget = (
 };
 
 export const tiposWidget: { valor: TipoWidget; descripcion: string }[] = [
-  { valor: "tarjeta", descripcion: "Tarjeta (un valor)" },
-  { valor: "temporal", descripcion: "Evolución por meses" },
-  { valor: "circular", descripcion: "Reparto (anillo)" },
-  { valor: "ranking", descripcion: "Los 3 primeros" },
-  { valor: "objetivo", descripcion: "Objetivo (barra de progreso)" },
+  { valor: "tarjeta", get descripcion() { return tComponentes("ui.maestro.tarjetaUnValor"); } },
+  { valor: "temporal", get descripcion() { return tComponentes("ui.maestro.evolucionPorMeses"); } },
+  { valor: "circular", get descripcion() { return tComponentes("ui.maestro.repartoAnillo"); } },
+  { valor: "ranking", get descripcion() { return tComponentes("ui.maestro.los3Primeros"); } },
+  { valor: "objetivo", get descripcion() { return tComponentes("ui.maestro.objetivoBarraDeProgreso"); } },
 ];
 
 export const esAgrupado = (widget: DefinicionWidget): boolean =>
@@ -190,7 +191,7 @@ export const puntosWidget = (
         ? etiquetaMes(año, mes)
         : nombre
           ? String(nombre)
-          : clave || "Sin valor";
+          : clave || tComponentes("ui.maestro.sinValor");
     return { clave, etiqueta, valor: Number(grupo[alias] ?? 0) };
   });
   return widget.tipo === "temporal" ? mesesSeguidos(puntos.reverse()) : puntos;

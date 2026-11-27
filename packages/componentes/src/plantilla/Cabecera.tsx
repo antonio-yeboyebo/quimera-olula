@@ -1,4 +1,4 @@
-import { useTComponentes } from "../i18n/textos.ts";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 import { OlulaWordmark } from "@olula/componentes/tema/Olula.jsx";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import {
@@ -36,7 +36,7 @@ export type CabeceraProps = {
 
 export const CabeceraBase = ({
   logoSrc = "/olula-wordmark.svg",
-  logoAlt = "Olula | Inicio",
+  logoAlt = tComponentes("ui.plantilla.olulaInicio"),
   Logo = () =>
     OlulaWordmark({
       color: "#ffffff",
@@ -104,7 +104,7 @@ export const CabeceraBase = ({
           >
             <QIcono nombre="buscar" tamaño="sm" />
             <span className="boton-busqueda-texto">{t("cabecera.irAPantalla")}</span>
-            <span className="boton-busqueda-texto-movil">Buscar</span>
+            <span className="boton-busqueda-texto-movil">{t("ui.plantilla.buscar")}</span>
             <kbd>Ctrl K</kbd>
           </button>
         )}
@@ -123,8 +123,8 @@ export const CabeceraBase = ({
             id="boton-modo-voz"
             className={modoVoz ? "activo" : ""}
             aria-pressed={modoVoz}
-            aria-label={modoVoz ? "Desactivar modo voz" : "Activar modo voz"}
-            title={modoVoz ? "Modo voz activo — di «Oye Olula». Pulsa para desactivarlo" : "Activar modo voz («Oye Olula»)"}
+            aria-label={modoVoz ? t("ui.plantilla.desactivarModoVoz") : t("ui.plantilla.activarModoVoz")}
+            title={modoVoz ? t("ui.plantilla.modoVozActivoDiOyeOlula") : t("ui.plantilla.activarModoVozOyeOlula")}
             onClick={() => setModoVoz(!modoVoz)}
           >
             {/* 16 px: mismo tamaño que los QIcono "sm" del asistente y del usuario */}
@@ -135,7 +135,7 @@ export const CabeceraBase = ({
           <>
             <button
               id="boton-asistente"
-              aria-label="Abrir asistente"
+              aria-label={t("ui.plantilla.abrirAsistente")}
               onClick={() => solicitarTogglePanelLateral("asistente")}
             ></button>
             <label htmlFor="boton-asistente" id="etiqueta-asistente-abierto">

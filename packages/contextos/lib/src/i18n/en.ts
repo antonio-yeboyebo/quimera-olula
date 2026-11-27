@@ -22,4 +22,32 @@ export const en: Traduccion<typeof es> = {
         ibanRequerido: "The IBAN is required",
         ibanNoValido: "The IBAN is not valid",
     },
+    // <generado: textos extraídos del código>
+    gen: {
+        api: {
+            errorAlGuardarDocumento: "Error saving document",
+            errorAlCrearCarpeta: "Error creating folder",
+            errorAlBorrarDocumento: "Error deleting document",
+        },
+        voz: {
+            permisoDeMicrofonoDenegado: "Microphone permission denied",
+            elNavegadorNoPermiteElReconocimiento: "The browser does not allow speech recognition",
+            noSeHaEncontradoMicrofono: "No microphone found",
+            noSeHaDetectadoVoz: "No speech detected",
+            errorDeRed: "Network error",
+        },
+        controlesPantalla: {
+            eseElementoYaNoEstaEn: "That element is no longer on screen.",
+            noHePodidoHacerlo: "I could not do it.",
+        },
+        erroresLimite: {
+            hasLlegadoAlLimiteDeTu: "You have reached your plan's limit",
+            tuEmpresaEstaEnSoloLectura: "Your company is read-only",
+            moduloNoIncluidoEnTuPlan: "Module not included in your plan",
+        },
+        useModelo: {
+            error: "Error",
+        },
+    },
+    // </generado>
 };

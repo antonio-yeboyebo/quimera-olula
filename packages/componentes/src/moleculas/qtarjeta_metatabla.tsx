@@ -13,6 +13,7 @@ import { ReactNode, isValidElement, useMemo } from "react";
 import { MetaColumna, MetaTabla, obtenerCols } from "../atomos/qtablacontrolada.tsx";
 import { QTarjetaGenerica } from "./qtarjeta_generica.tsx";
 import "./qtarjeta_metatabla.css";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 
 type Prioridad = "alta" | "media" | "baja";
 
@@ -76,11 +77,11 @@ const formatearValor = (
   }
 
   if (tipo === "booleano" && typeof valor === "boolean") {
-    return valor ? "Sí" : "No";
+    return valor ? tComponentes("ui.moleculas.si") : tComponentes("ui.moleculas.no");
   }
 
   if (typeof valor === "boolean") {
-    return valor ? "Sí" : "No";
+    return valor ? tComponentes("ui.moleculas.si") : tComponentes("ui.moleculas.no");
   }
 
   if (typeof valor === "number") {
@@ -200,6 +201,7 @@ export const QTarjetaMetatabla = <T extends Entidad>({
   mostrarTodosInicialmente = false,
   placeholderVacio = "—",
 }: QTarjetaMetatablaProps<T>) => {
+  const t = useTComponentes();
   const cols = obtenerCols(metaTabla);
 
   const renderCampo = (
@@ -265,7 +267,7 @@ export const QTarjetaMetatabla = <T extends Entidad>({
         columnasResto.length > 0 && (
           <section
             className="qtarjeta-metatabla-detalle"
-            aria-label="Campos adicionales"
+            aria-label={t("ui.moleculas.camposAdicionales")}
           >
             {columnasResto.map((columna) => renderCampo(columna, true))}
           </section>

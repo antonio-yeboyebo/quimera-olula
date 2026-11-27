@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export type OpcionCampo = [string, string];
 
@@ -54,6 +55,7 @@ const InputControlado = ({
   valorEntidad: string;
   validador?: (valor: string) => boolean;
 }) => {
+  const t = useTComponentes();
   const [valido, setValido] = useState<boolean>(true);
 
   const onInput = (valor: string) => {
@@ -67,7 +69,7 @@ const InputControlado = ({
 
   return (
     <label>
-      {campo.etiqueta + " " + (valido ? "OK" : "(Inválido)")} :
+      {campo.etiqueta + " " + (valido ? "OK" : t("ui.detalle.invalido"))} :
       <input
         type="text"
         value={valorEntidad || ""}
@@ -88,6 +90,7 @@ const InputNoControlado = ({
   valorEntidad: string;
   validador?: (valor: string) => boolean;
 }) => {
+  const t = useTComponentes();
   const [valor, setValor] = useState<string | undefined>(undefined);
   const [valido, setValido] = useState<boolean>(true);
 
@@ -103,7 +106,7 @@ const InputNoControlado = ({
 
   return (
     <label>
-      {prefijoCambiado + campo.etiqueta + " " + (valido ? "OK" : "(Inválido)")}{" "}
+      {prefijoCambiado + campo.etiqueta + " " + (valido ? "OK" : t("ui.detalle.invalido"))}{" "}
       :
       <input
         type="text"
@@ -150,6 +153,7 @@ const InputNumericoControlado = ({
   valorEntidad: number;
   validador?: (valor: number) => boolean;
 }) => {
+  const t = useTComponentes();
   const [valido, setValido] = useState<boolean>(true);
 
   const onInput = (valor: number) => {
@@ -163,7 +167,7 @@ const InputNumericoControlado = ({
 
   return (
     <label>
-      {campo.etiqueta + " " + (valido ? "OK" : "(Inválido)")} :
+      {campo.etiqueta + " " + (valido ? "OK" : t("ui.detalle.invalido"))} :
       <input
         type="text"
         value={valorEntidad || ""}
@@ -186,6 +190,7 @@ const InputNumericoNoControlado = ({
   valorEntidad: number;
   validador?: (valor: number) => boolean;
 }) => {
+  const t = useTComponentes();
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [valido, setValido] = useState<boolean>(true);
 
@@ -201,7 +206,7 @@ const InputNumericoNoControlado = ({
 
   return (
     <label>
-      {prefijoCambiado + campo.etiqueta + " " + (valido ? "OK" : "(Inválido)")}{" "}
+      {prefijoCambiado + campo.etiqueta + " " + (valido ? "OK" : t("ui.detalle.invalido"))}{" "}
       :
       <input
         type="text"
@@ -231,6 +236,7 @@ export const InputSelect = ({
   valorEntidad: string;
   onCampoCambiado?: (campo: string, valor: string) => void;
 }) => {
+  const t = useTComponentes();
   const [valor, setValor] = useState<string>(valorEntidad || "");
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -244,7 +250,7 @@ export const InputSelect = ({
       {campo.etiqueta}:
       <select value={valor} onChange={onChange}>
         <option value="" disabled>
-          Seleccione una opción
+          {t("ui.detalle.seleccioneUnaOpcion")}
         </option>
         {(campo.opciones ?? []).map(([valorOpcion, etiquetaOpcion]) => (
           <option key={valorOpcion} value={valorOpcion}>

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ClausulaFiltro } from "./diseño.ts";
+import { tLib } from "./i18n/textos.ts";
 
 /**
  * Registro de los controles de la pantalla actual que se pueden manejar por voz (o
@@ -96,11 +97,11 @@ export const describirPantalla = (): DescripcionControl[] =>
 
 export const ejecutarAccionPantalla = ({ control, accion, parametros }: AccionPantalla): ResultadoAccionPantalla => {
     const destino = controles.get(control);
-    if (!destino) return { ok: false, mensaje: "Ese elemento ya no está en pantalla." };
+    if (!destino) return { ok: false, mensaje: tLib("gen.controlesPantalla.eseElementoYaNoEstaEn") };
     try {
         return destino.ejecutar(accion, parametros ?? {});
     } catch {
-        return { ok: false, mensaje: "No he podido hacerlo." };
+        return { ok: false, mensaje: tLib("gen.controlesPantalla.noHePodidoHacerlo") };
     }
 };
 

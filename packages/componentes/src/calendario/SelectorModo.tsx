@@ -1,6 +1,7 @@
 import React from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import { ModoCalendario } from "./tipos.ts";
+import { tComponentes } from "../i18n/textos.ts";
 
 interface SelectorModoProps {
   modoActual?: ModoCalendario;
@@ -11,9 +12,9 @@ interface SelectorModoProps {
 }
 
 const MODOS: Array<{ modo: ModoCalendario; label: string; icono: string }> = [
-  { modo: "semana", label: "Semana", icono: "📊" },
-  { modo: "mes", label: "Mes", icono: "📆" },
-  { modo: "anio", label: "Año", icono: "🗓️" },
+  { modo: "semana", get label() { return tComponentes("ui.calendario.semana"); }, icono: "📊" },
+  { modo: "mes", get label() { return tComponentes("ui.calendario.mes"); }, icono: "📆" },
+  { modo: "anio", get label() { return tComponentes("ui.calendario.ano"); }, icono: "🗓️" },
 ];
 
 export const SelectorModo: React.FC<SelectorModoProps> = ({

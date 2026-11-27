@@ -10,6 +10,7 @@ import { QBoton } from "../../atomos/qboton.tsx";
 import { QIcono } from "../../atomos/qicono.tsx";
 import { QModal } from "../qmodal.tsx";
 import "./qeditor_enriquecido.css";
+import { tComponentes, useTComponentes } from "../../i18n/textos.ts";
 
 export type { JSONContent } from "@tiptap/react";
 
@@ -39,9 +40,10 @@ export const QEditorEnriquecido = ({
   className,
   deshabilitado = false,
   mostrarBarra = true,
-  marcadorPosicion = "Escribe aqui...",
+  marcadorPosicion = tComponentes("ui.moleculas.escribeAqui"),
   onChange,
 }: QEditorEnriquecidoProps) => {
+  const t = useTComponentes();
   const [modalEnlaceAbierto, setModalEnlaceAbierto] = useState(false);
   const [etiquetaEnlace, setEtiquetaEnlace] = useState("");
   const [urlEnlace, setUrlEnlace] = useState("https://");
@@ -76,7 +78,7 @@ export const QEditorEnriquecido = ({
     editable: !deshabilitado,
     editorProps: {
       attributes: {
-        "aria-label": "Editor de texto enriquecido",
+        "aria-label": t("ui.moleculas.editorDeTextoEnriquecido"),
         spellcheck: "true",
       },
     },
@@ -160,7 +162,7 @@ export const QEditorEnriquecido = ({
           <div
             className="qeditor-toolbar"
             role="toolbar"
-            aria-label="Herramientas de texto"
+            aria-label={t("ui.moleculas.herramientasDeTexto")}
           >
             <button
               type="button"
@@ -200,8 +202,8 @@ export const QEditorEnriquecido = ({
               className={`qeditor-boton ${editor.isActive("link") ? "activo" : ""}`}
               onClick={abrirModalEnlace}
               disabled={deshabilitado}
-              title="Enlace"
-              aria-label="Enlace"
+              title={t("ui.moleculas.enlace")}
+              aria-label={t("ui.moleculas.enlace")}
             >
               <QIcono nombre="enlace" tamaño="sm" />
             </button>
@@ -211,8 +213,8 @@ export const QEditorEnriquecido = ({
               className={`qeditor-boton ${editor.isActive({ textAlign: "left" }) ? "activo" : ""}`}
               onClick={() => editor.chain().focus().setTextAlign("left").run()}
               disabled={deshabilitado}
-              title="Alinear izquierda"
-              aria-label="Alinear izquierda"
+              title={t("ui.moleculas.alinearIzquierda")}
+              aria-label={t("ui.moleculas.alinearIzquierda")}
             >
               <QIcono nombre="alinear_izquierda" tamaño="sm" />
             </button>
@@ -223,8 +225,8 @@ export const QEditorEnriquecido = ({
                 editor.chain().focus().setTextAlign("center").run()
               }
               disabled={deshabilitado}
-              title="Alinear centro"
-              aria-label="Alinear centro"
+              title={t("ui.moleculas.alinearCentro")}
+              aria-label={t("ui.moleculas.alinearCentro")}
             >
               <QIcono nombre="alinear_centro" tamaño="sm" />
             </button>
@@ -233,8 +235,8 @@ export const QEditorEnriquecido = ({
               className={`qeditor-boton ${editor.isActive({ textAlign: "right" }) ? "activo" : ""}`}
               onClick={() => editor.chain().focus().setTextAlign("right").run()}
               disabled={deshabilitado}
-              title="Alinear derecha"
-              aria-label="Alinear derecha"
+              title={t("ui.moleculas.alinearDerecha")}
+              aria-label={t("ui.moleculas.alinearDerecha")}
             >
               <QIcono nombre="alinear_derecha" tamaño="sm" />
             </button>
@@ -246,8 +248,8 @@ export const QEditorEnriquecido = ({
               disabled={
                 deshabilitado || !editor.can().chain().focus().undo().run()
               }
-              title="Deshacer"
-              aria-label="Deshacer"
+              title={t("ui.moleculas.deshacer")}
+              aria-label={t("ui.moleculas.deshacer")}
             >
               <QIcono nombre="deshacer" tamaño="sm" />
             </button>
@@ -258,8 +260,8 @@ export const QEditorEnriquecido = ({
               disabled={
                 deshabilitado || !editor.can().chain().focus().redo().run()
               }
-              title="Rehacer"
-              aria-label="Rehacer"
+              title={t("ui.moleculas.rehacer")}
+              aria-label={t("ui.moleculas.rehacer")}
             >
               <QIcono nombre="rehacer" tamaño="sm" />
             </button>
@@ -272,22 +274,22 @@ export const QEditorEnriquecido = ({
 
       <QModal
         nombre="qeditor-enlace"
-        titulo="Insertar enlace"
+        titulo={t("ui.moleculas.insertarEnlace")}
         abierto={modalEnlaceAbierto}
         onCerrar={() => setModalEnlaceAbierto(false)}
       >
         <div className="qeditor-modal-enlace">
           <label>
-            Etiqueta
+            {t("ui.moleculas.etiqueta")}
             <input
               type="text"
               value={etiquetaEnlace}
               onChange={(e) => setEtiquetaEnlace(e.target.value)}
-              placeholder="Texto visible"
+              placeholder={t("ui.moleculas.textoVisible")}
             />
           </label>
           <label>
-            URL
+            {t("ui.moleculas.url")}
             <input
               type="url"
               value={urlEnlace}
@@ -300,9 +302,9 @@ export const QEditorEnriquecido = ({
               variante="borde"
               onClick={() => setModalEnlaceAbierto(false)}
             >
-              Cancelar
+              {t("ui.moleculas.cancelar")}
             </QBoton>
-            <QBoton onClick={aplicarEnlace}>Guardar enlace</QBoton>
+            <QBoton onClick={aplicarEnlace}>{t("ui.moleculas.guardarEnlace")}</QBoton>
           </div>
         </div>
       </QModal>

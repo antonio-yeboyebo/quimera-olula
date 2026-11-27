@@ -19,6 +19,7 @@ import { getMaquinaArbolDocumentos } from "./maquina.ts";
 import { NodoArbolItem } from "./NodoArbolItem.tsx";
 import { useSeleccionArchivosMovil } from "./useSeleccionArchivosMovil.ts";
 import "./QArbolDocumentos.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export interface QArbolDocumentosProps {
   tipoObjeto: string;
@@ -35,6 +36,7 @@ export const QArbolDocumentos = ({
   onDescargar,
   onError,
 }: QArbolDocumentosProps) => {
+  const t = useTComponentes();
   const handleError = useCallback(
     (error: Error) => onError?.(error),
     [onError]
@@ -100,11 +102,11 @@ export const QArbolDocumentos = ({
         });
       } catch (error) {
         handleError(
-          error instanceof Error ? error : new Error("Error desconocido")
+          error instanceof Error ? error : new Error(t("ui.arbolDocumentos.errorDesconocido"))
         );
       }
     },
-    [intentar, onDescargar, handleError]
+    [intentar, onDescargar, handleError, t]
   );
 
   // Sirve para documentos y para carpetas: borrar una carpeta se lleva su
@@ -145,7 +147,7 @@ export const QArbolDocumentos = ({
     <div className="QArbolDocumentos">
       {ctx.estado === "cargando" && (
         <div className="QArbolDocumentos-cargando">
-          <p>Cargando árbol de documentos...</p>
+          <p>{t("ui.arbolDocumentos.cargandoArbolDeDocumentos")}</p>
         </div>
       )}
       {ctx.estado !== "cargando" && (
@@ -181,7 +183,7 @@ export const QArbolDocumentos = ({
       />
       {ctx.estado === "cargado" && ctx.nodos.length === 0 && (
         <div className="QArbolDocumentos-vacio">
-          <p>No hay documentos</p>
+          <p>{t("ui.arbolDocumentos.noHayDocumentos")}</p>
         </div>
       )}
       {ctx.estado !== "cargando" && ctx.nodos.length > 0 && (

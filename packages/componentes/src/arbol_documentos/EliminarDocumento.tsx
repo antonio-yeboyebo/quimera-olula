@@ -6,6 +6,7 @@ import {
 } from "@olula/lib/api/documentos.ts";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useCallback } from "react";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 
 /**
  * Modal de confirmación de borrado de un nodo del árbol documental.
@@ -28,22 +29,21 @@ export interface EliminarDocumentoProps {
 
 const mensajeDe = (nodo: NodoArbol): string => {
   if (!esCarpetaArbol(nodo)) {
-    return `¿Está seguro de que desea eliminar el documento ${nodo.nombre}?`;
+    return tComponentes("ui.arbolDocumentos.estaSeguroDeQueDeseaEliminar", { nombre: nodo.nombre });
   }
 
   const vacia = nodo.contenido.length === 0;
 
   return vacia
-    ? `¿Está seguro de que desea eliminar la carpeta ${nodo.nombre}?`
-    : `¿Está seguro de que desea eliminar la carpeta ${nodo.nombre} ` +
-        `y todo su contenido? Se eliminarán también las subcarpetas y los ` +
-        `documentos que contenga.`;
+    ? tComponentes("ui.arbolDocumentos.estaSeguroDeQueDeseaEliminar2", { nombre: nodo.nombre })
+    : tComponentes("ui.arbolDocumentos.estaSeguroDeQueDeseaEliminar3", { nombre: nodo.nombre });
 };
 
 export const EliminarDocumento = ({
   nodo,
   publicar,
 }: EliminarDocumentoProps) => {
+  const t = useTComponentes();
   const esCarpeta = esCarpetaArbol(nodo);
 
   const eliminar = useCallback(async () => {
@@ -60,11 +60,11 @@ export const EliminarDocumento = ({
     <QModalConfirmacion
       nombre="eliminarDocumento"
       abierto={true}
-      titulo={esCarpeta ? "Eliminar carpeta" : "Eliminar documento"}
+      titulo={esCarpeta ? t("ui.arbolDocumentos.eliminarCarpeta") : t("ui.arbolDocumentos.eliminarDocumento")}
       mensaje={mensajeDe(nodo)}
       onCerrar={cancelar}
       onAceptar={eliminar}
-      labelAceptar="Eliminar"
+      labelAceptar={t("ui.arbolDocumentos.eliminar")}
     />
   );
 };

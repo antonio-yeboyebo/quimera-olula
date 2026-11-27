@@ -1,3 +1,4 @@
+import { tLib } from "./i18n/textos.ts";
 /**
  * Errores de límites del plan (SaaS). El backend los marca con un prefijo entre
  * corchetes en el texto del error:
@@ -51,9 +52,9 @@ export const analizarErrorLimite = (texto?: string | null): ErrorLimite | null =
 /** Título del aviso según el tipo de error. */
 export const tituloErrorLimite = (e: ErrorLimite): string => {
     switch (e.tipo) {
-        case "limite": return "Has llegado al límite de tu plan";
-        case "solo_lectura": return "Tu empresa está en solo lectura";
-        default: return "Módulo no incluido en tu plan";
+        case "limite": return tLib("gen.erroresLimite.hasLlegadoAlLimiteDeTu");
+        case "solo_lectura": return tLib("gen.erroresLimite.tuEmpresaEstaEnSoloLectura");
+        default: return tLib("gen.erroresLimite.moduloNoIncluidoEnTuPlan");
     }
 };
 

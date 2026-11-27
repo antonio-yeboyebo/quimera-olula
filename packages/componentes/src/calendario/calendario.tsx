@@ -18,6 +18,7 @@ import { CalendarioConfig, DatoBase } from "./tipos.ts";
 import { ConfigTeclado, useNavegacionTeclado } from "./useNavegacionTeclado.ts";
 import { useSeleccionFechas } from "./useSeleccionFechas.ts";
 import { useControladoDeEstadoCalendario } from "./usoControladoDeEstadoCalendario.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export interface CalendarioProps<T extends DatoBase> {
   calendarioId?: string;
@@ -66,6 +67,7 @@ export function Calendario<T extends DatoBase>({
   onSeleccionCambio,
 }: CalendarioProps<T>) {
   // --- Experiencia móvil integrada ---
+  const t = useTComponentes();
   const esMovil = useIsMobile(640);
   const esTablet = useIsMobile(1120);
 
@@ -276,7 +278,7 @@ export function Calendario<T extends DatoBase>({
       {cargando && (
         <div className="calendario-cargando">
           <QIcono nombre="cargando" />
-          Cargando datos...
+          {t("ui.calendario.cargandoDatos")}
         </div>
       )}
 

@@ -5,6 +5,8 @@ import { describirValorFiltro } from "../maestro/maestroFiltros/dominio.ts";
 import { SelectorModo } from "../maestro/SelectorModo.tsx";
 import { QModalConfirmacion } from "../moleculas/qmodalconfirmacion.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
+import { ArrastraSuelta } from "../gestor_documentos/ArrastraSuelta.tsx";
+import { getDiasSemana } from "../calendario/helpers.ts";
 import { nombreMenu } from "./textos.ts";
 
 afterEach(async () => {
@@ -48,6 +50,15 @@ describe("componentes traducidos", () => {
         await cambiarIdioma("en");
         expect(nombreMenu("Clientes")).toBe("Customers");
         expect(nombreMenu("Mi cuenta")).toBe("My account");
-        expect(nombreMenu("Tesorería")).toBe("Tesorería");
+        expect(nombreMenu("Pantalla sin traducir")).toBe("Pantalla sin traducir");
+    });
+
+    test("gestor de documentos y calendario en el idioma activo", async () => {
+        render(<ArrastraSuelta emitir={async () => undefined} />);
+        expect(screen.getByText("Arrastra archivos aquí")).toBeInTheDocument();
+        await act(() => cambiarIdioma("en"));
+        expect(screen.getByText("Drag files here")).toBeInTheDocument();
+        expect(screen.getByText("Select files")).toBeInTheDocument();
+        expect(getDiasSemana()).toEqual(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
     });
 });
