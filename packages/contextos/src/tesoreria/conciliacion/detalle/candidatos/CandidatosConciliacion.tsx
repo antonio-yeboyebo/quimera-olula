@@ -21,6 +21,7 @@ import {
 import "./CandidatosConciliacion.css";
 import { SeleccionCandidatos } from "./SeleccionCandidatos.js";
 import { TarjetaCandidato } from "./TarjetaCandidato.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 /**
  * Candidatos para conciliar a mano, en una sola lista ordenada por fecha descendente:
@@ -57,6 +58,7 @@ export const CandidatosConciliacion = ({
     bloqueo: BloqueoConciliarMovimiento;
     publicar: EmitirEvento;
 }) => {
+    const tx = useTTesoreria();
     const [textoLocal, setTextoLocal] = useState(texto);
     const [tipos, setTipos] = useState<TipoFiltroCandidato[]>([]);
 
@@ -77,14 +79,14 @@ export const CandidatosConciliacion = ({
             <div className="botones">
                 <QBoton variante="borde" deshabilitado={bloqueo.bloqueado}
                     onClick={() => publicar("asiento_solicitado")}>
-                    Asiento manual
+                    {tx("conciliacion.asientoManual")}
                 </QBoton>
                 <QBoton variante="texto" onClick={() => publicar("ignorar_solicitado")}>
-                    Ignorar movimiento
+                    {tx("conciliacion.ignorarMovimiento")}
                 </QBoton>
             </div>
 
-            <h4>Buscar candidatos</h4>
+            <h4>{tx("conciliacion.buscarCandidatos")}</h4>
             <div className="filtros-candidatos">
                 {FILTROS_CANDIDATO.map(({ tipo, etiqueta }) => (
                     <QCheckbox
@@ -100,7 +102,7 @@ export const CandidatosConciliacion = ({
             <div id="buscador-candidatos">
                 <QInput
                     label=""
-                    placeholder="Buscar por recibo, factura, tercero, NIF, remesa o asiento"
+                    placeholder={tx("conciliacion.buscarPorReciboFacturaTerceroNif")}
                     nombre="textoCandidatos"
                     valor={textoLocal}
                     onChange={(valor) => setTextoLocal(valor)}
@@ -108,7 +110,7 @@ export const CandidatosConciliacion = ({
                     condensado
                 />
                 <QBoton tamaño="pequeño" variante="borde" onClick={buscar}>
-                    Buscar
+                    {tx("conciliacion.buscar")}
                 </QBoton>
             </div>
 
@@ -120,8 +122,8 @@ export const CandidatosConciliacion = ({
             {lista.length === 0 ? (
                 <p className="sin-candidatos">
                     {tipos.length > 0
-                        ? "No hay candidatos de los tipos marcados."
-                        : "No hay recibos, remesas ni partidas contables candidatas."}
+                        ? tx("conciliacion.noHayCandidatosDeLosTipos")
+                        : tx("conciliacion.noHayRecibosRemesasNiPartidas")}
                 </p>
             ) : (
                 <ul className="lista-candidatos">

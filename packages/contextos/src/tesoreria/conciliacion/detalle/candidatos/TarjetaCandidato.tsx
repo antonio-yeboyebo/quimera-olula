@@ -15,6 +15,7 @@ import {
     urlRecibo,
     urlRemesa,
 } from "../../dominio.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 const diasTexto = (dias: number): string => ` (${dias > 0 ? "+" : ""}${dias})`;
 
@@ -47,7 +48,7 @@ export const TarjetaCandidato = ({
     return (
         <li className={`tarjeta-candidato tarjeta-candidato-${candidato.clase}`}>
             <div className="tarjeta-candidato-casilla"
-                title={admite ? "Conciliar junto a otros candidatos" : "Un parcial no se suma a otros candidatos"}>
+                title={admite ? tTesoreria("conciliacion.conciliarJuntoAOtrosCandidatos") : tTesoreria("conciliacion.unParcialNoSeSumaA")}>
                 <QCheckbox
                     label=""
                     nombre={`seleccion-${candidato.id}`}
@@ -69,7 +70,7 @@ export const TarjetaCandidato = ({
             <small className="tarjeta-candidato-fecha">{fecha}</small>
             <div className="tarjeta-candidato-accion">
                 <QBoton tamaño="pequeño" variante="borde" ancho enlace={ver}>
-                    Ver
+                    {tTesoreria("conciliacion.ver")}
                 </QBoton>
             </div>
         </li>
@@ -97,7 +98,7 @@ const contenidoTarjeta = (
         case "recibo": {
             const r = candidato.recibo;
             return {
-                titulo: <>{r.codigo}{r.facturaCodigo && <small>Factura {r.facturaCodigo}</small>}</>,
+                titulo: <>{r.codigo}{r.facturaCodigo && <small>{tTesoreria("conciliacion.facturaFacturacodigo", { facturaCodigo: r.facturaCodigo })}</small>}</>,
                 detalle: r.tercero,
                 importe: r.importe,
                 fecha: formatearFechaDate(r.fechaVencimiento) + diasTexto(r.diasDiferencia),
@@ -106,7 +107,7 @@ const contenidoTarjeta = (
                 accion: r.encaje === "menor" ? null : (
                     <QBoton tamaño="pequeño" ancho deshabilitado={bloqueado}
                         onClick={() => publicar("candidato_solicitado", r)}>
-                        {esConciliacionParcial(r.tipoConciliacion) ? "Parcial" : "Conciliar"}
+                        {esConciliacionParcial(r.tipoConciliacion) ? tTesoreria("conciliacion.parcial") : tTesoreria("conciliacion.conciliar")}
                     </QBoton>
                 ),
             };
@@ -115,15 +116,15 @@ const contenidoTarjeta = (
             const r = candidato.remesa;
             const parcial = r.tipoConciliacion === "cobro_parcial_remesa";
             const recibos = esIngresoMovimientoBancario(movimiento)
-                ? `${r.recibos.length} recibos pendientes`
-                : `${r.recibos.length} ${esRemesaDeNominas(r) ? "nóminas" : "recibos"}`;
+                ? tTesoreria("conciliacion.lengthRecibosPendientes", { length: r.recibos.length })
+                : `${r.recibos.length} ${esRemesaDeNominas(r) ? tTesoreria("conciliacion.nominas") : tTesoreria("conciliacion.recibos")}`;
             const propuestos = !parcial
                 ? ""
                 : r.reciboIdsPropuestos.length === 0
-                    ? " · sin combinación que cuadre"
-                    : ` · ${r.reciboIdsPropuestos.length} propuestos${r.propuestaAmbigua ? " (puede haber otras)" : ""}`;
+                    ? tTesoreria("conciliacion.sinCombinacionQueCuadre")
+                    : tTesoreria("conciliacion.lengthPropuestosValor", { length: r.reciboIdsPropuestos.length, valor: r.propuestaAmbigua ? tTesoreria("conciliacion.puedeHaberOtras") : "" });
             return {
-                titulo: <>Remesa {r.id}<small>{formatearFechaDate(r.fecha)}</small></>,
+                titulo: <>{tTesoreria("conciliacion.remesa")}{" "}{r.id}<small>{formatearFechaDate(r.fecha)}</small></>,
                 detalle: recibos + propuestos,
                 importe: r.importePendiente,
                 fecha: formatearFechaDate(r.fechaCargo) + diasTexto(r.diasDiferencia),
@@ -131,7 +132,7 @@ const contenidoTarjeta = (
                 accion: (
                     <QBoton tamaño="pequeño" ancho deshabilitado={bloqueado}
                         onClick={() => publicar("remesa_solicitada", r)}>
-                        {parcial ? "Parcial" : "Conciliar"}
+                        {parcial ? tTesoreria("conciliacion.parcial") : tTesoreria("conciliacion.conciliar")}
                     </QBoton>
                 ),
             };
@@ -139,7 +140,7 @@ const contenidoTarjeta = (
         case "partida": {
             const p = candidato.partida;
             return {
-                titulo: <>Asiento {p.numeroAsiento ?? `#${p.idasiento}`}</>,
+                titulo: <>{tTesoreria("conciliacion.asiento")}{" "}{p.numeroAsiento ?? `#${p.idasiento}`}</>,
                 detalle: p.descripcion,
                 importe: p.importe,
                 fecha: formatearFechaDate(p.fecha),
@@ -148,7 +149,7 @@ const contenidoTarjeta = (
                     <QBoton tamaño="pequeño" ancho deshabilitado={!importePartidaCoincide(p, movimiento)}
                         onClick={() => publicar("asiento_vinculado_confirmado",
                             { idasiento: p.idasiento, importe: p.importe })}>
-                        Vincular
+                        {tTesoreria("conciliacion.vincular")}
                     </QBoton>
                 ),
             };

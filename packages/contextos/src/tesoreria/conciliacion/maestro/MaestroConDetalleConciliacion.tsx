@@ -34,12 +34,13 @@ import { ConciliarAutomaticamenteMovimientos } from "./ConciliarAutomaticamenteM
 import { ResumenConciliacionAutomatica } from "./ResumenConciliacionAutomatica.js";
 import { SincronizarMovimientoBancario } from "./SincronizarMovimientoBancario.js";
 import { PanelCuadreBancario } from "./PanelCuadreBancario.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 /** Sin filtro de cuenta bancaria: va en la URL y se cambia con el selector de la cabecera. */
 const metaFiltro: MetaFiltro = {
     estado: {
         id: "estado",
-        label: "Estado",
+        get label() { return tTesoreria("conciliacion.estado"); },
         tipo: "multiseleccion",
         opciones: opcionesEstadoMovimientoBancario,
         filtro: filtroEstadoMovimientoBancario,
@@ -47,18 +48,18 @@ const metaFiltro: MetaFiltro = {
     },
     fecha: {
         id: "fecha",
-        label: "Fecha",
+        get label() { return tTesoreria("conciliacion.fecha"); },
         tipo: "intervalo_fechas",
         filtro: (v) => filtroFechas("fecha", v),
     },
     concepto: {
         id: "concepto",
-        label: "Concepto",
+        get label() { return tTesoreria("conciliacion.concepto"); },
         filtro: (v) => (v ? ["concepto", "~", v as string] : null),
     },
     contraparte: {
         id: "contraparte",
-        label: "Contraparte",
+        get label() { return tTesoreria("conciliacion.contraparte"); },
         filtro: (v) => (v ? ["contraparte", "~", v as string] : null),
     },
 };
@@ -96,6 +97,7 @@ export const ConciliacionCuentaBancaria = () => {
  */
 const MaestroConDetalleConciliacion = ({ cuentaBancoId }: { cuentaBancoId: string }) => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(criteriaMovimientosPendientes, []);
     const navigate = useNavigate();
 
@@ -199,7 +201,7 @@ const MaestroConDetalleConciliacion = ({ cuentaBancoId }: { cuentaBancoId: strin
                 Maestro={
                     <>
                         <div className="CabeceraConciliacion">
-                            <h2>Conciliación bancaria</h2>
+                            <h2>{t("conciliacion.conciliacionBancaria")}</h2>
                             <CuentaBancariaSelect
                                 nombre="cuenta_conciliacion"
                                 label=""
@@ -211,12 +213,12 @@ const MaestroConDetalleConciliacion = ({ cuentaBancoId }: { cuentaBancoId: strin
                         <PanelCuadreBancario cuentaBancoId={cuentaBancoId} version={versionCuadre} />
                         {etiquetaCuadre && (
                             <div className="FiltroCuadreActivo">
-                                <span>Mostrando: <strong>{etiquetaCuadre}</strong></span>
+                                <span>{t("conciliacion.mostrando")}{" "}<strong>{etiquetaCuadre}</strong></span>
                                 <QBoton
                                     variante="borde"
                                     onClick={() => emitir("filtro_cuadre_limpiado", criteriaBase)}
                                 >
-                                    Ver todos
+                                    {t("conciliacion.verTodos")}
                                 </QBoton>
                             </div>
                         )}
@@ -237,14 +239,14 @@ const MaestroConDetalleConciliacion = ({ cuentaBancoId }: { cuentaBancoId: strin
                                         deshabilitado={estado !== "INICIAL"}
                                     >
                                         {estado === "CONCILIANDO_AUTOMATICAMENTE"
-                                            ? "Conciliando…"
-                                            : "Conciliar automáticamente"}
+                                            ? t("conciliacion.conciliando")
+                                            : t("conciliacion.conciliarAutomaticamente")}
                                     </QBoton>
                                     <QBoton
                                         onClick={() => emitir("sincronizacion_solicitada")}
                                         deshabilitado={estado !== "INICIAL"}
                                     >
-                                        {estado === "SINCRONIZANDO" ? "Sincronizando…" : "Sincronizar"}
+                                        {estado === "SINCRONIZANDO" ? t("conciliacion.sincronizando") : t("conciliacion.sincronizar")}
                                     </QBoton>
                                 </div>
                             )}

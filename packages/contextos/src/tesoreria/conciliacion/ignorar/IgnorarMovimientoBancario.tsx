@@ -6,6 +6,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { MovimientoBancario } from "../diseño.js";
 import { metaMotivoIgnorarMovimiento, motivoIgnorarVacio } from "./dominio.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * El motivo (comisión, traspaso...) es opcional. La llamada a la API
@@ -19,6 +20,7 @@ export const IgnorarMovimientoBancario = ({
     movimiento: MovimientoBancario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { modelo, uiProps } = useModelo(metaMotivoIgnorarMovimiento, motivoIgnorarVacio);
 
     const ignorar_ = async () => publicar("ignorar_confirmado", modelo.motivo);
@@ -27,16 +29,16 @@ export const IgnorarMovimientoBancario = ({
     const [ignorar, cancelar] = useForm(ignorar_, cancelar_);
 
     return (
-        <QModal abierto={true} nombre="ignorarMovimientoBancario" titulo="Ignorar movimiento" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="ignorarMovimientoBancario" titulo={t("conciliacion.ignorarMovimiento")} onCerrar={cancelar}>
             <p>
-                {`"${movimiento.concepto}" no liquidará ningún recibo (comisión, traspaso...). `}
-                Puedes indicar opcionalmente el motivo.
+                {t("conciliacion.conceptoNoLiquidaraNingunReciboComision", { concepto: movimiento.concepto })}
+                {t("conciliacion.puedesIndicarOpcionalmenteElMotivo")}
             </p>
             <quimera-formulario>
-                <QTextArea label="Motivo" {...uiProps("motivo")} />
+                <QTextArea label={t("conciliacion.motivo")} {...uiProps("motivo")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={ignorar}>Ignorar</QBoton>
+                <QBoton onClick={ignorar}>{t("conciliacion.ignorar")}</QBoton>
             </div>
         </QModal>
     );

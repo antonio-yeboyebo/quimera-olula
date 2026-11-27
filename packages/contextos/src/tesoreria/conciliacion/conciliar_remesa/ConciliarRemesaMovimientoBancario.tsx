@@ -14,6 +14,7 @@ import {
     importeRecibosRemesa,
 } from "../dominio.js";
 import "./ConciliarRemesaMovimientoBancario.css";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Conciliación con una remesa de cobro: el usuario confirma qué recibos
@@ -33,6 +34,7 @@ export const ConciliarRemesaMovimientoBancario = ({
     remesa: RemesaCandidata;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const [reciboIds, setReciboIds] = useState<string[]>(remesa.reciboIdsPropuestos);
 
     const conciliar_ = async () => publicar("conciliacion_remesa_confirmada", reciboIds);
@@ -50,34 +52,34 @@ export const ConciliarRemesaMovimientoBancario = ({
     const cuadra = cuadraRemesa(movimiento, remesa, reciboIds);
     const todos = reciboIds.length === remesa.recibos.length;
     const dePago = esConciliacionRemesaPago(remesa.tipoConciliacion);
-    const lineas = esRemesaDeNominas(remesa) ? "nóminas" : "recibos";
+    const lineas = esRemesaDeNominas(remesa) ? t("conciliacion.nominas") : t("conciliacion.recibos");
 
     return (
         <QModal abierto={true} nombre="conciliarRemesaMovimientoBancario"
-            titulo={`Remesa ${remesa.id}`} onCerrar={cancelar}>
+            titulo={t("conciliacion.remesaId", { id: remesa.id })} onCerrar={cancelar}>
             <div className="ConciliarRemesaMovimientoBancario">
                 {dePago ? (
                     <p>
-                        {`Remesa de pago con fecha de pago el ${formatearFechaDate(remesa.fechaCargo)} · `}
-                        {`${remesa.recibos.length} ${lineas} por ${formatearMoneda(remesa.total, divisa)}. `}
-                        Se paga entera con el cargo.
+                        {t("conciliacion.remesaDePagoConFechaDe", { fechaCargo: formatearFechaDate(remesa.fechaCargo) })}
+                        {t("conciliacion.lengthLineasPorTotal", { length: remesa.recibos.length, lineas, total: formatearMoneda(remesa.total, divisa) })}
+                        {t("conciliacion.sePagaEnteraConElCargo")}
                     </p>
                 ) : (
                     <p>
-                        {`Cargo el ${formatearFechaDate(remesa.fechaCargo)} · ${remesa.recibos.length} recibos pendientes por `}
+                        {t("conciliacion.cargoElFechacargoLengthRecibosPendientes", { fechaCargo: formatearFechaDate(remesa.fechaCargo), length: remesa.recibos.length })}
                         {formatearMoneda(remesa.importePendiente, divisa)}
-                        {`. Marca los recibos que paga el movimiento de ${formatearMoneda(importeMovimiento, divisa)}.`}
+                        {t("conciliacion.marcaLosRecibosQuePagaEl", { importeMovimiento: formatearMoneda(importeMovimiento, divisa) })}
                     </p>
                 )}
 
                 {remesa.tipoConciliacion === "cobro_parcial_remesa" && remesa.reciboIdsPropuestos.length === 0 && (
                     <QAviso variante="advertencia">
-                        No se ha encontrado ninguna combinación de recibos que cuadre con el importe: elígelos a mano.
+                        {t("conciliacion.noSeHaEncontradoNingunaCombinacion")}
                     </QAviso>
                 )}
                 {remesa.propuestaAmbigua && (
                     <QAviso variante="advertencia">
-                        Puede haber otras combinaciones de recibos por el mismo importe: comprueba que la propuesta es la buena.
+                        {t("conciliacion.puedeHaberOtrasCombinacionesDeRecibos")}
                     </QAviso>
                 )}
 
@@ -86,7 +88,7 @@ export const ConciliarRemesaMovimientoBancario = ({
                         <li key={recibo.reciboId}>
                             <QCheckbox
                                 nombre={`recibo-remesa-${recibo.reciboId}`}
-                                label={`${recibo.codigo} · ${recibo.tercero ?? (dePago ? "—" : "Sin cliente")}`}
+                                label={`${recibo.codigo} · ${recibo.tercero ?? (dePago ? "—" : t("conciliacion.sinCliente"))}`}
                                 valor={reciboIds.includes(recibo.reciboId)}
                                 onChange={(valor) => marcar(recibo.reciboId, valor === "true")}
                                 soloLectura={dePago}
@@ -98,14 +100,14 @@ export const ConciliarRemesaMovimientoBancario = ({
                 </ul>
 
                 <p className={cuadra ? "resumen-remesa" : "resumen-remesa descuadre"}>
-                    {`${reciboIds.length} ${lineas} por ${formatearMoneda(seleccionado, divisa)}`}
+                    {t("conciliacion.cuantosLineasPor", { length: reciboIds.length, lineas, total: formatearMoneda(seleccionado, divisa) })}
                     {cuadra
-                        ? todos ? " · la remesa quedará pagada." : " · la remesa seguirá emitida con el resto."
-                        : ` · faltan ${formatearMoneda(Math.round((importeMovimiento - seleccionado) * 100) / 100, divisa)} para cuadrar.`}
+                        ? todos ? t("conciliacion.laRemesaQuedaraPagada") : t("conciliacion.laRemesaSeguiraEmitidaConEl")
+                        : t("conciliacion.faltanValorParaCuadrar", { valor: formatearMoneda(Math.round((importeMovimiento - seleccionado) * 100) / 100, divisa) })}
                 </p>
 
                 <div className="botones maestro-botones">
-                    <QBoton onClick={conciliar} deshabilitado={!cuadra}>Conciliar</QBoton>
+                    <QBoton onClick={conciliar} deshabilitado={!cuadra}>{t("conciliacion.conciliar")}</QBoton>
                 </div>
             </div>
         </QModal>

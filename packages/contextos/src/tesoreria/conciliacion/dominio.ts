@@ -14,6 +14,7 @@ import {
     TipoFiltroCandidato,
     TipoReciboMovimiento,
 } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 export const movimientoBancarioVacio: MovimientoBancario = {
     id: "",
@@ -61,10 +62,10 @@ export const ESTADOS_MOVIMIENTO_BANCARIO_DEFECTO: EstadoMovimientoBancario[] = [
 ];
 
 export const ETIQUETA_ESTADO_MOVIMIENTO_BANCARIO: Record<EstadoMovimientoBancario, string> = {
-    pendiente: "Pendiente",
-    candidatos: "Candidatos",
-    conciliado: "Conciliado",
-    ignorado: "Ignorado",
+    get pendiente() { return tTesoreria("conciliacion.pendiente"); },
+    get candidatos() { return tTesoreria("conciliacion.candidatos"); },
+    get conciliado() { return tTesoreria("conciliacion.conciliado"); },
+    get ignorado() { return tTesoreria("conciliacion.ignorado"); },
 };
 
 type VarianteEtiqueta = "exito" | "error" | "advertencia" | "primario" | "gris";
@@ -91,7 +92,7 @@ export const varianteEstadoMovimientoBancario = (estado: EstadoMovimientoBancari
 
 export const opcionesEstadoMovimientoBancario = ESTADOS_MOVIMIENTO_BANCARIO.map((estado) => ({
     valor: estado,
-    descripcion: etiquetaEstadoMovimientoBancario(estado),
+    get descripcion() { return etiquetaEstadoMovimientoBancario(estado); },
 }));
 
 const comoLista = (valor: unknown): string[] =>
@@ -124,7 +125,7 @@ export const filtroCuentaBanco = (cuentaBancoId: string): ClausulaFiltro =>
 
 /** Nombre de la cuenta a mostrar: el del banco, o el de la cuenta bancaria de la empresa si se asoció. */
 export const cuentaMovimientoBancario = (movimiento: MovimientoBancario): string =>
-    movimiento.nombreCuenta || movimiento.descripcionCuentaBanco || "Cuenta sin identificar";
+    movimiento.nombreCuenta || movimiento.descripcionCuentaBanco || tTesoreria("conciliacion.cuentaSinIdentificar");
 
 /**
  * Resumen del resultado de conciliación para mostrar en la lista.
@@ -132,7 +133,7 @@ export const cuentaMovimientoBancario = (movimiento: MovimientoBancario): string
  */
 export const reciboAsociadoMovimientoBancario = (movimiento: MovimientoBancario): string => {
     if (movimiento.numItemsConciliacion === 0) return "—";
-    return movimiento.numItemsConciliacion === 1 ? "1 ítem" : `${movimiento.numItemsConciliacion} ítems`;
+    return movimiento.numItemsConciliacion === 1 ? tTesoreria("conciliacion.t1Item") : tTesoreria("conciliacion.numitemsconciliacionItems", { numItemsConciliacion: movimiento.numItemsConciliacion });
 };
 
 const RUTA_RECIBO: Record<TipoReciboMovimiento, string> = {
@@ -152,16 +153,16 @@ export const tipoReciboConciliacion = (tipo: TipoConciliacion | null): TipoRecib
     (tipo && TIPO_RECIBO_CONCILIACION[tipo]) ?? null;
 
 const ETIQUETA_TIPO_CONCILIACION: Record<TipoConciliacion, string> = {
-    cobrar_recibo_venta: "Cobro de recibo",
-    pagar_recibo_compra: "Pago de recibo",
-    cobro_parcial_venta: "Cobro parcial",
-    pago_parcial_compra: "Pago parcial",
-    asiento_manual: "Asiento manual",
-    asiento_vinculado: "Asiento vinculado",
-    cuota_prestamo: "Cuota de préstamo",
-    cobrar_remesa: "Cobro de remesa",
-    cobro_parcial_remesa: "Cobro parcial de remesa",
-    pagar_remesa: "Pago de remesa",
+    get cobrar_recibo_venta() { return tTesoreria("conciliacion.cobroDeRecibo"); },
+    get pagar_recibo_compra() { return tTesoreria("conciliacion.pagoDeRecibo"); },
+    get cobro_parcial_venta() { return tTesoreria("conciliacion.cobroParcial"); },
+    get pago_parcial_compra() { return tTesoreria("conciliacion.pagoParcial"); },
+    get asiento_manual() { return tTesoreria("conciliacion.asientoManual"); },
+    get asiento_vinculado() { return tTesoreria("conciliacion.asientoVinculado"); },
+    get cuota_prestamo() { return tTesoreria("conciliacion.cuotaDePrestamo"); },
+    get cobrar_remesa() { return tTesoreria("conciliacion.cobroDeRemesa"); },
+    get cobro_parcial_remesa() { return tTesoreria("conciliacion.cobroParcialDeRemesa"); },
+    get pagar_remesa() { return tTesoreria("conciliacion.pagoDeRemesa"); },
 };
 
 export const etiquetaTipoConciliacion = (tipo: TipoConciliacion): string => ETIQUETA_TIPO_CONCILIACION[tipo];
@@ -372,11 +373,11 @@ export const listaCandidatosConciliacion = (
     .sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
 
 export const FILTROS_CANDIDATO: { tipo: TipoFiltroCandidato; etiqueta: string }[] = [
-    { tipo: "cobro", etiqueta: "Cobro" },
-    { tipo: "pago", etiqueta: "Pago" },
-    { tipo: "remesa_cobro", etiqueta: "Remesa de cobros" },
-    { tipo: "remesa_pago", etiqueta: "Remesa de pagos" },
-    { tipo: "asiento", etiqueta: "Asiento" },
+    { tipo: "cobro", get etiqueta() { return tTesoreria("conciliacion.cobro"); } },
+    { tipo: "pago", get etiqueta() { return tTesoreria("conciliacion.pago"); } },
+    { tipo: "remesa_cobro", get etiqueta() { return tTesoreria("conciliacion.remesaDeCobros"); } },
+    { tipo: "remesa_pago", get etiqueta() { return tTesoreria("conciliacion.remesaDePagos"); } },
+    { tipo: "asiento", get etiqueta() { return tTesoreria("conciliacion.asiento"); } },
 ];
 
 const tipoFiltroCandidato = (candidato: CandidatoListaConciliacion): TipoFiltroCandidato => {
@@ -494,38 +495,38 @@ export const bloqueoConciliarMovimientoBancario = (movimiento: MovimientoBancari
     if (!movimiento.cuentaBancoId) {
         return {
             bloqueado: true,
-            motivo: "Asocia la cuenta en Tesorería / Conexiones bancarias para poder conciliar este movimiento.",
+            motivo: tTesoreria("conciliacion.asociaLaCuentaEnTesoreriaConexiones"),
         };
     }
     if (movimiento.pendiente) {
         return {
             bloqueado: true,
-            motivo: "El banco todavía no ha confirmado este movimiento; espera a la próxima sincronización.",
+            motivo: tTesoreria("conciliacion.elBancoTodaviaNoHaConfirmado"),
         };
     }
     if (movimiento.eliminadoEnBanco) {
         return {
             bloqueado: true,
-            motivo: "El banco ya no devuelve este movimiento; no se puede conciliar.",
+            motivo: tTesoreria("conciliacion.elBancoYaNoDevuelveEste"),
         };
     }
     return { bloqueado: false, motivo: null };
 };
 
 const ETIQUETA_ORIGEN: Record<OrigenConciliacionMovimiento, string> = {
-    determinista: "Automática (reglas)",
-    ia: "Automática (IA)",
-    manual: "Manual",
+    get determinista() { return tTesoreria("conciliacion.automaticaReglas"); },
+    get ia() { return tTesoreria("conciliacion.automaticaIa"); },
+    get manual() { return tTesoreria("conciliacion.manual"); },
 };
 
 export const etiquetaOrigenConciliacion = (origen: OrigenConciliacionMovimiento | null): string =>
     origen ? ETIQUETA_ORIGEN[origen] : "—";
 
 const textoRecibo = (item: ItemConciliacion): string =>
-    item.recibo ? `recibo ${item.recibo.codigo}` : "recibo";
+    item.recibo ? tTesoreria("conciliacion.reciboCodigo", { codigo: item.recibo.codigo }) : tTesoreria("conciliacion.recibo");
 
 const textoRemesa = (item: ItemConciliacion): string =>
-    item.remesa ? `remesa ${item.remesa.id}` : "remesa";
+    item.remesa ? tTesoreria("conciliacion.remesaId", { id: item.remesa.id }) : tTesoreria("conciliacion.remesaSola");
 
 /**
  * Qué deshace el servidor al desconciliar cada ítem (ver `deshacer` de cada
@@ -534,38 +535,31 @@ const textoRemesa = (item: ItemConciliacion): string =>
 export const consecuenciaDesconciliarItem = (item: ItemConciliacion): string => {
     switch (item.tipo) {
         case "cobrar_recibo_venta":
-            return `Se anulará el cobro del ${textoRecibo(item)} y volverá a quedar pendiente de cobro.`;
+            return tTesoreria("conciliacion.seAnularaElCobroDelItem", { item: textoRecibo(item) });
         case "pagar_recibo_compra":
-            return `Se anulará el pago del ${textoRecibo(item)} y volverá a quedar pendiente de pago.`;
+            return tTesoreria("conciliacion.seAnularaElPagoDelItem", { item: textoRecibo(item) });
         case "cobro_parcial_venta":
-            return `Se anulará el cobro parcial del ${textoRecibo(item)} y se volverá a unir con el recibo `
-                + "que se generó por el resto: quedará un único recibo pendiente por el importe original.";
+            return tTesoreria("conciliacion.seAnularaElCobroParcialDel", { item: textoRecibo(item) });
         case "pago_parcial_compra":
-            return `Se anulará el pago parcial del ${textoRecibo(item)} y se volverá a unir con el recibo `
-                + "que se generó por el resto: quedará un único recibo pendiente por el importe original.";
+            return tTesoreria("conciliacion.seAnularaElPagoParcialDel", { item: textoRecibo(item) });
         case "cobrar_remesa":
-            return `Se deshará el cobro de la ${textoRemesa(item)}: sus recibos volverán a quedar pendientes de cobro. `
-                + "Solo es posible si es el último cobro registrado en la remesa.";
+            return tTesoreria("conciliacion.seDesharaElCobroDeLa", { item: textoRemesa(item) });
         case "cobro_parcial_remesa": {
             const recibos = reciboIdsConciliacionRemesa(item);
-            const cuantos = recibos ? `los ${recibos.length} recibos cobrados` : "los recibos cobrados";
-            return `Se deshará el cobro parcial de la ${textoRemesa(item)}: ${cuantos} volverán a quedar pendientes. `
-                + "Solo es posible si es el último cobro registrado en la remesa.";
+            const cuantos = recibos ? tTesoreria("conciliacion.losLengthRecibosCobrados", { length: recibos.length }) : tTesoreria("conciliacion.losRecibosCobrados");
+            return tTesoreria("conciliacion.seDesharaElCobroParcialDe", { item: textoRemesa(item), cuantos });
         }
         case "pagar_remesa": {
-            const que = item.remesa && esRemesaDeNominas(item.remesa) ? "sus nóminas" : "sus recibos";
-            return `Se deshará el pago de la ${textoRemesa(item)} de pago y se borrará su asiento: `
-                + `${que} seguirán en la remesa, pendientes de pago.`;
+            const que = item.remesa && esRemesaDeNominas(item.remesa) ? tTesoreria("conciliacion.susNominas") : tTesoreria("conciliacion.susRecibos");
+            return tTesoreria("conciliacion.seDesharaElPagoDeLa", { item: textoRemesa(item), que });
         }
         case "asiento_manual":
-            return "Se borrará el asiento contable que se generó al conciliar.";
+            return tTesoreria("conciliacion.seBorraraElAsientoContableQue");
         case "asiento_vinculado":
-            return "Se desvinculará el asiento contable, que no se borra: su partida volverá a quedar "
-                + "sin movimiento bancario.";
+            return tTesoreria("conciliacion.seDesvincularaElAsientoContableQue");
         case "cuota_prestamo": {
             const contrato = item.cuota?.contrato ? ` ${item.cuota.contrato}` : "";
-            return `Se borrará el asiento de la cuota del préstamo${contrato} y la cuota volverá a quedar `
-                + "pendiente de contabilizar.";
+            return tTesoreria("conciliacion.seBorraraElAsientoDeLa", { contrato });
         }
     }
 };
@@ -574,7 +568,7 @@ export const consecuenciaDesconciliarItem = (item: ItemConciliacion): string => 
 export const mensajeDesconciliarMovimientoBancario = (conciliacion: Conciliacion | null): string => {
     const items = conciliacion?.items ?? [];
     const consecuencias = items.length === 0
-        ? ["Se deshará todo lo que se generó al conciliar el movimiento (pagos, asientos...)."]
+        ? [tTesoreria("conciliacion.seDesharaTodoLoQueSe")]
         : items.length === 1
             ? [consecuenciaDesconciliarItem(items[0])]
             : items.map((item) => `• ${consecuenciaDesconciliarItem(item)}`);
@@ -582,7 +576,6 @@ export const mensajeDesconciliarMovimientoBancario = (conciliacion: Conciliacion
     return [
         ...consecuencias,
         "",
-        "El movimiento volverá a quedar pendiente de conciliar. Si el banco ya no lo devuelve, "
-        + "desaparecerá de la lista tras desconciliarlo.",
+        tTesoreria("conciliacion.elMovimientoVolveraAQuedarPendiente"),
     ].join("\n");
 };

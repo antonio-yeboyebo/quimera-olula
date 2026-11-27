@@ -14,6 +14,7 @@ import {
     metaDatosAsientoMovimiento,
     paramsAsiento,
 } from "./dominio.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Conciliación de tipo asiento manual: pide la subcuenta de contrapartida y el
@@ -28,6 +29,7 @@ export const ConciliarAsientoMovimientoBancario = ({
     movimiento: MovimientoBancario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const inicial = useMemo(() => datosAsientoVacios(movimiento.concepto), [movimiento.concepto]);
     const { modelo, uiProps, valido } = useModelo(metaDatosAsientoMovimiento, inicial);
 
@@ -40,21 +42,21 @@ export const ConciliarAsientoMovimientoBancario = ({
     const importe = formatearMoneda(Math.abs(movimiento.importe), movimiento.divisa ?? "EUR");
 
     return (
-        <QModal abierto={true} nombre="conciliarAsientoMovimientoBancario" titulo="Asiento manual" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="conciliarAsientoMovimientoBancario" titulo={t("conciliacion.asientoManual")} onCerrar={cancelar}>
             <p>
-                {`Se generará un asiento de ${importe} con la fecha del movimiento: la subcuenta del banco `}
-                {entra ? "al debe y la contrapartida al haber." : "al haber y la contrapartida al debe."}
+                {t("conciliacion.seGeneraraUnAsientoDeImporte", { importe })}
+                {entra ? t("conciliacion.alDebeYLaContrapartidaAl") : t("conciliacion.alHaberYLaContrapartidaAl")}
             </p>
             <quimera-formulario>
                 <Subcuenta
-                    label="Subcuenta de contrapartida"
+                    label={t("conciliacion.subcuentaDeContrapartida")}
                     ejercicioId={ejercicioDelMovimiento(movimiento)}
                     {...uiProps("codigoSubcuenta")}
                 />
-                <QInput label="Concepto" {...uiProps("concepto")} />
+                <QInput label={t("conciliacion.concepto")} {...uiProps("concepto")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={conciliar} deshabilitado={!valido}>Generar asiento</QBoton>
+                <QBoton onClick={conciliar} deshabilitado={!valido}>{t("conciliacion.generarAsiento")}</QBoton>
             </div>
         </QModal>
     );

@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useContext, useEffect } from "react";
 import { postSincronizarMovimientoBancario } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Lanza `/movimiento_bancario/sincronizar` de la cuenta bancaria al montarse. El padre
@@ -20,6 +21,7 @@ export const SincronizarMovimientoBancario = ({
     cuentaBancoId: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
 
     useEffect(() => {
@@ -37,5 +39,5 @@ export const SincronizarMovimientoBancario = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <QCargando visible={true} mensaje="Sincronizando movimientos..." />;
+    return <QCargando visible={true} mensaje={t("conciliacion.sincronizandoMovimientos")} />;
 };

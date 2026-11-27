@@ -23,14 +23,16 @@ import {
     varianteEstadoMovimientoBancario,
 } from "../dominio.js";
 import "./TabConciliacion.css";
+import { tTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 const TIPOS_COBRO: TipoConciliacion[] = ["cobrar_recibo_venta", "cobro_parcial_venta"];
 
 const etiquetaTercero = (tipo: TipoConciliacion): string =>
-    TIPOS_COBRO.includes(tipo) ? "Cliente" : "Proveedor";
+    TIPOS_COBRO.includes(tipo) ? tTesoreria("conciliacion.cliente") : tTesoreria("conciliacion.proveedor");
 
 const etiquetaFechaPago = (tipo: TipoConciliacion): string =>
-    TIPOS_COBRO.includes(tipo) ? "Fecha de cobro" : "Fecha de pago";
+    TIPOS_COBRO.includes(tipo) ? tTesoreria("conciliacion.fechaDeCobro") : tTesoreria("conciliacion.fechaDePago");
 
 const EnlaceItem = ({ url, children }: { url: string | null; children: string }) =>
     url ? (
@@ -46,15 +48,15 @@ const ItemReciboConciliado = ({ item, divisa }: { item: ItemConciliacion; divisa
         <div className="item-recibo-conciliado">
             <p className="tipo-item-recibo">{etiquetaTipoConciliacion(item.tipo)}</p>
             <quimera-formulario>
-                <QInput nombre="ir-codigo" label="Código" soloLectura valor={recibo.codigo} />
+                <QInput nombre="ir-codigo" label={tTesoreria("conciliacion.codigo")} soloLectura valor={recibo.codigo} />
                 <QInput nombre="ir-tercero" label={etiquetaTercero(item.tipo)} soloLectura valor={recibo.tercero ?? "—"} />
-                <QInput nombre="ir-importe" label="Importe" soloLectura valor={formatearMoneda(recibo.importe, divisa)} />
-                <QInput nombre="ir-fecha-emision" label="Fecha emisión" soloLectura
+                <QInput nombre="ir-importe" label={tTesoreria("conciliacion.importe")} soloLectura valor={formatearMoneda(recibo.importe, divisa)} />
+                <QInput nombre="ir-fecha-emision" label={tTesoreria("conciliacion.fechaEmision")} soloLectura
                     valor={recibo.fechaEmision ? formatearFechaDate(recibo.fechaEmision) : "—"} />
                 <QInput nombre="ir-fecha-cobro" label={etiquetaFechaPago(item.tipo)} soloLectura
                     valor={recibo.fechaCobro ? formatearFechaDate(recibo.fechaCobro) : "—"} />
             </quimera-formulario>
-            <EnlaceItem url={urlReciboConciliacion(item)}>Ver recibo</EnlaceItem>
+            <EnlaceItem url={urlReciboConciliacion(item)}>{tTesoreria("conciliacion.verRecibo")}</EnlaceItem>
         </div>
     );
 };
@@ -64,22 +66,22 @@ const ItemRemesaConciliada = ({ item, divisa }: { item: ItemConciliacion; divisa
     if (!remesa) return null;
     const recibos = reciboIdsConciliacionRemesa(item);
     const dePago = esConciliacionRemesaPago(item.tipo);
-    const lineas = esRemesaDeNominas(remesa) ? "Nóminas pagadas" : "Recibos pagados";
+    const lineas = esRemesaDeNominas(remesa) ? tTesoreria("conciliacion.nominasPagadas") : tTesoreria("conciliacion.recibosPagados");
     return (
         <div className="item-recibo-conciliado">
             <p className="tipo-item-recibo">{etiquetaTipoConciliacion(item.tipo)}</p>
             <quimera-formulario>
-                <QInput nombre="ir-remesa" label="Remesa" soloLectura valor={remesa.id} />
-                <QInput nombre="ir-fecha-cargo" label={dePago ? "Fecha de pago" : "Fecha de cargo"} soloLectura
+                <QInput nombre="ir-remesa" label={tTesoreria("conciliacion.remesa")} soloLectura valor={remesa.id} />
+                <QInput nombre="ir-fecha-cargo" label={dePago ? tTesoreria("conciliacion.fechaDePago") : tTesoreria("conciliacion.fechaDeCargo")} soloLectura
                     valor={formatearFechaDate(remesa.fechaCargo)} />
-                <QInput nombre="ir-total-remesa" label="Total remesa" soloLectura
+                <QInput nombre="ir-total-remesa" label={tTesoreria("conciliacion.totalRemesa")} soloLectura
                     valor={formatearMoneda(remesa.total, divisa)} />
                 <QInput nombre="ir-recibos-remesa" label={lineas} soloLectura
-                    valor={recibos ? `${recibos.length} de ${remesa.numRecibos}`
-                        : dePago ? `${remesa.numRecibos}` : "Todos los pendientes"} />
-                <QInput nombre="ir-estado-remesa" label="Estado remesa" soloLectura valor={remesa.estado} />
+                    valor={recibos ? tTesoreria("conciliacion.cuantosDe", { length: recibos.length, numRecibos: remesa.numRecibos })
+                        : dePago ? `${remesa.numRecibos}` : tTesoreria("conciliacion.todosLosPendientes")} />
+                <QInput nombre="ir-estado-remesa" label={tTesoreria("conciliacion.estadoRemesa")} soloLectura valor={textoEstado(remesa.estado)} />
             </quimera-formulario>
-            <EnlaceItem url={urlRemesaConciliacion(item)}>Ver remesa</EnlaceItem>
+            <EnlaceItem url={urlRemesaConciliacion(item)}>{tTesoreria("conciliacion.verRemesa")}</EnlaceItem>
         </div>
     );
 };
@@ -97,19 +99,18 @@ const ItemAsientoManualConciliado = ({
             <p className="tipo-item-recibo">{etiquetaTipoConciliacion(item.tipo)}</p>
             <quimera-formulario>
                 {contrapartida ? (
-                    <Subcuenta nombre="am-subcuenta" label="Subcuenta de contrapartida" soloLectura
+                    <Subcuenta nombre="am-subcuenta" label={tTesoreria("conciliacion.subcuentaDeContrapartida")} soloLectura
                         ejercicioId={ejercicioDelMovimiento(movimiento)} valor={contrapartida} />
                 ) : (
-                    <QInput nombre="am-subcuenta" label="Subcuenta de contrapartida" soloLectura valor="—" />
+                    <QInput nombre="am-subcuenta" label={tTesoreria("conciliacion.subcuentaDeContrapartida")} soloLectura valor="—" />
                 )}
             </quimera-formulario>
             {contrapartidaEsSubcuentaBanco(item, movimiento.subcuentaBancoId) && (
                 <QAviso variante="error">
-                    Subcuenta errónea: la contrapartida <strong>{contrapartida}</strong> es la propia
-                    subcuenta del banco. Desconcilia y reconcilia con la subcuenta correcta.
+                    {tTesoreria("conciliacion.subcuentaErroneaLaContrapartida")}{" "}<strong>{contrapartida}</strong>{" "}{tTesoreria("conciliacion.esLaPropiaSubcuentaDelBanco")}
                 </QAviso>
             )}
-            <EnlaceItem url={urlAsientoConciliacion(item)}>Ver asiento</EnlaceItem>
+            <EnlaceItem url={urlAsientoConciliacion(item)}>{tTesoreria("conciliacion.verAsiento")}</EnlaceItem>
         </div>
     );
 };
@@ -121,14 +122,14 @@ const ItemAsientoVinculadoConciliado = ({ item, divisa }: { item: ItemConciliaci
         <div className="item-recibo-conciliado">
             <p className="tipo-item-recibo">{etiquetaTipoConciliacion(item.tipo)}</p>
             <quimera-formulario>
-                <QInput nombre="av-numero" label="Número de asiento" soloLectura
+                <QInput nombre="av-numero" label={tTesoreria("conciliacion.numeroDeAsiento")} soloLectura
                     valor={asiento?.numero ?? `#${String(item.params.idasiento ?? "—")}`} />
-                <QInput nombre="av-fecha" label="Fecha" soloLectura
+                <QInput nombre="av-fecha" label={tTesoreria("conciliacion.fecha")} soloLectura
                     valor={asiento ? formatearFechaDate(asiento.fecha) : "—"} />
-                <QInput nombre="av-importe" label="Importe" soloLectura
+                <QInput nombre="av-importe" label={tTesoreria("conciliacion.importe")} soloLectura
                     valor={asiento ? formatearMoneda(asiento.importe, divisa) : "—"} />
             </quimera-formulario>
-            <EnlaceItem url={urlAsientoConciliacion(item)}>Ver asiento</EnlaceItem>
+            <EnlaceItem url={urlAsientoConciliacion(item)}>{tTesoreria("conciliacion.verAsiento")}</EnlaceItem>
         </div>
     );
 };
@@ -140,11 +141,11 @@ const ItemCuotaConciliada = ({ item, divisa }: { item: ItemConciliacion; divisa:
         <div className="item-recibo-conciliado">
             <p className="tipo-item-recibo">{etiquetaTipoConciliacion(item.tipo)}</p>
             <quimera-formulario>
-                <QInput nombre="cp-contrato" label="Contrato" soloLectura valor={cuota.contrato ?? "—"} />
-                <QInput nombre="cp-fecha" label="Fecha cuota" soloLectura valor={formatearFechaDate(cuota.fecha)} />
-                <QInput nombre="cp-total" label="Total cuota" soloLectura valor={formatearMoneda(cuota.total, divisa)} />
+                <QInput nombre="cp-contrato" label={tTesoreria("conciliacion.contrato")} soloLectura valor={cuota.contrato ?? "—"} />
+                <QInput nombre="cp-fecha" label={tTesoreria("conciliacion.fechaCuota")} soloLectura valor={formatearFechaDate(cuota.fecha)} />
+                <QInput nombre="cp-total" label={tTesoreria("conciliacion.totalCuota")} soloLectura valor={formatearMoneda(cuota.total, divisa)} />
             </quimera-formulario>
-            <EnlaceItem url={urlAsientoConciliacion(item)}>Ver asiento</EnlaceItem>
+            <EnlaceItem url={urlAsientoConciliacion(item)}>{tTesoreria("conciliacion.verAsiento")}</EnlaceItem>
         </div>
     );
 };
@@ -173,7 +174,7 @@ export const SeccionEstadoConciliacion = ({
         <div className="TabConciliacion">
             {movimiento.requiereRevision && (
                 <QAviso variante="advertencia">
-                    Este movimiento requiere revisión manual.
+                    {tTesoreria("conciliacion.esteMovimientoRequiereRevisionManual")}
                 </QAviso>
             )}
 
@@ -188,7 +189,7 @@ export const SeccionEstadoConciliacion = ({
                     <div id="recibo-asociado">
                         <div>
                             <span className="etiqueta-recibo">
-                                {"Conciliación"}
+                                {tTesoreria("conciliacion.conciliacion")}
                                 {movimiento.probabilidad !== null && ` · ${movimiento.probabilidad} %`}
                             </span>
                             <span className="valor-recibo">{reciboAsociadoMovimientoBancario(movimiento)}</span>
@@ -235,17 +236,17 @@ export const SeccionEstadoConciliacion = ({
                         </div>
                     )}
                     <quimera-formulario>
-                        <QInput label="Origen" nombre="origenConciliacion" soloLectura
+                        <QInput label={tTesoreria("conciliacion.origen")} nombre="origenConciliacion" soloLectura
                             valor={etiquetaOrigenConciliacion(movimiento.origenConciliacion)} />
-                        <QInput label="Conciliado por" {...uiProps("conciliadoPor")} />
-                        <QInput label="Conciliado el" {...uiProps("conciliadoEn")} />
+                        <QInput label={tTesoreria("conciliacion.conciliadoPor")} {...uiProps("conciliadoPor")} />
+                        <QInput label={tTesoreria("conciliacion.conciliadoEl")} {...uiProps("conciliadoEn")} />
                         {movimiento.justificacion && (
-                            <QInput label="Justificación" {...uiProps("justificacion")} />
+                            <QInput label={tTesoreria("conciliacion.justificacion")} {...uiProps("justificacion")} />
                         )}
                     </quimera-formulario>
                     <div className="botones">
                         <QBoton variante="borde" onClick={() => publicar("desconciliar_solicitado")}>
-                            Desconciliar
+                            {tTesoreria("conciliacion.desconciliar")}
                         </QBoton>
                     </div>
                 </div>
@@ -254,10 +255,10 @@ export const SeccionEstadoConciliacion = ({
             {movimiento.estado === "ignorado" && (
                 <div className="movimiento-ignorado">
                     <quimera-formulario>
-                        <QInput label="Motivo" {...uiProps("justificacion")} />
+                        <QInput label={tTesoreria("conciliacion.motivo")} {...uiProps("justificacion")} />
                     </quimera-formulario>
                     <div className="botones">
-                        <QBoton variante="borde" onClick={() => publicar("reactivar_solicitado")}>Reactivar</QBoton>
+                        <QBoton variante="borde" onClick={() => publicar("reactivar_solicitado")}>{tTesoreria("conciliacion.reactivar")}</QBoton>
                     </div>
                 </div>
             )}

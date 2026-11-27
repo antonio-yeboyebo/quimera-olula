@@ -3,6 +3,7 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useContext, useEffect } from "react";
 import { postConciliarAutomaticamente } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Lanza `/movimiento_bancario/conciliar_automaticamente` sobre los movimientos de la
@@ -17,6 +18,7 @@ export const ConciliarAutomaticamenteMovimientos = ({
     cuentaBancoId: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
 
     useEffect(() => {
@@ -34,5 +36,5 @@ export const ConciliarAutomaticamenteMovimientos = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <QCargando visible={true} mensaje="Conciliando movimientos..." />;
+    return <QCargando visible={true} mensaje={t("conciliacion.conciliandoMovimientos")} />;
 };

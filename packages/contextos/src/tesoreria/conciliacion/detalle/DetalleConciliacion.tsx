@@ -19,6 +19,7 @@ import { getMaquina } from "./maquina.js";
 import { SeccionEstadoConciliacion } from "./SeccionEstadoConciliacion.js";
 import { TabConciliacion } from "./TabConciliacion.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Detalle de un movimiento bancario.
@@ -45,6 +46,7 @@ export const DetalleConciliacion = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleConciliacionInicial,
@@ -65,7 +67,7 @@ export const DetalleConciliacion = ({
 
     if (!ctx.movimiento.id) return null;
 
-    const titulo = (m: MovimientoBancario) => m.concepto || `Movimiento ${m.id}`;
+    const titulo = (m: MovimientoBancario) => m.concepto || t("conciliacion.movimientoId", { id: m.id });
 
     const puedeConciliar =
         movimiento.estado === "pendiente" || movimiento.estado === "candidatos";
@@ -86,7 +88,7 @@ export const DetalleConciliacion = ({
                     </strong>
                 </div>
                 <Tabs children={[
-                    <Tab label="Conciliación"
+                    <Tab label={t("conciliacion.conciliacion")}
                         key="tab-conciliacion"
                         children={
                             <div className="DetalleConciliacion-conciliacion">
@@ -111,7 +113,7 @@ export const DetalleConciliacion = ({
                             </div>
                         }
                     />,
-                    <Tab label="General"
+                    <Tab label={t("conciliacion.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} movimiento={ctx.movimiento} />}
                     />,
