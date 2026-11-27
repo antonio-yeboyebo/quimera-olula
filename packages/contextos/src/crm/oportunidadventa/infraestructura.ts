@@ -17,6 +17,7 @@ import {
     PatchOportunidadVenta,
     PostOportunidadVenta,
 } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const UrlsCrm = new UrlsCrmClass();
 const UrlsVentas = new UrlsVentasClass();
@@ -44,7 +45,7 @@ export const postOportunidadVenta: PostOportunidadVenta = async (oportunidad) =>
     const oportunidadAPI = {
         ...oportunidad,
     }
-    return await RestAPI.post(UrlsCrm.OPORTUNIDAD_VENTA, oportunidadAPI, "Error al guardar oportunidad de venta").then((respuesta) => respuesta.id);
+    return await RestAPI.post(UrlsCrm.OPORTUNIDAD_VENTA, oportunidadAPI, tCrm("oportunidadventa.errorAlGuardarOportunidadDeVenta")).then((respuesta) => respuesta.id);
 };
 
 export const patchOportunidadVenta: PatchOportunidadVenta = async (id, oportunidad) => {
@@ -52,11 +53,11 @@ export const patchOportunidadVenta: PatchOportunidadVenta = async (id, oportunid
         ...oportunidad,
         fecha_cierre: oportunidad.fecha_cierre?.toISOString().slice(0, 10),
     }
-    await RestAPI.patch(`${UrlsCrm.OPORTUNIDAD_VENTA}/${id}`, oportunidadAPI, "Error al guardar oportunidad de venta");
+    await RestAPI.patch(`${UrlsCrm.OPORTUNIDAD_VENTA}/${id}`, oportunidadAPI, tCrm("oportunidadventa.errorAlGuardarOportunidadDeVenta"));
 };
 
 export const deleteOportunidadVenta: DeleteOportunidadVenta = async (id) =>
-    await RestAPI.delete(`${UrlsCrm.OPORTUNIDAD_VENTA}/${id}`, "Error al borrar oportunidad de venta");
+    await RestAPI.delete(`${UrlsCrm.OPORTUNIDAD_VENTA}/${id}`, tCrm("oportunidadventa.errorAlBorrarOportunidadDeVenta"));
 
 export const getEstadosOportunidadVenta = async (filtro: Filtro, orden: Orden): Promise<EstadoOportunidad[]> => {
     const q = criteriaQuery(filtro, orden);
@@ -86,14 +87,14 @@ export const getPresupuestosOportunidad = async (oportunidadId: string): Respues
 
 export const crearPresupuestoOportunidad = async (oportunidadId: string, cliente_id: string): Promise<string> => {
     if (!cliente_id) {
-        throw new Error("No se puede crear presupuesto sin cliente");
+        throw new Error(tCrm("oportunidadventa.noSePuedeCrearPresupuestoSin"));
     }
 
     const direcciones = await getDirecciones(cliente_id);
     const direccionFacturacion = direcciones.find((direccion) => direccion.dir_facturacion) ?? direcciones[0];
 
     if (!direccionFacturacion) {
-        throw new Error("El cliente no tiene direcciones disponibles");
+        throw new Error(tCrm("oportunidadventa.elClienteNoTieneDireccionesDisponibles"));
     }
 
     const direccion = await getDireccion(cliente_id, direccionFacturacion.id);
@@ -107,5 +108,5 @@ export const crearPresupuestoOportunidad = async (oportunidadId: string, cliente
         empresa_id: empresaActual(),
     };
 
-    return await RestAPI.post(UrlsVentas.PRESUPUESTO, nuevoPresupuesto, "Error al crear presupuesto").then((respuesta) => respuesta.id);
+    return await RestAPI.post(UrlsVentas.PRESUPUESTO, nuevoPresupuesto, tCrm("oportunidadventa.errorAlCrearPresupuesto")).then((respuesta) => respuesta.id);
 }

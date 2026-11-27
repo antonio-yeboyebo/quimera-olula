@@ -4,6 +4,7 @@ import { pipe } from "@olula/lib/funcional.js";
 import { OportunidadVenta } from "../diseño.ts";
 import { getOportunidadVenta, patchOportunidadVenta } from "../infraestructura.ts";
 import { ContextoDetalleOportunidad, EstadoDetalleOportunidad } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 const onChangeOportunidad = (oportunidad: OportunidadVenta, campo: string, _: unknown, otros?: Record<string, unknown>) => {
     if (campo === "estado_id" && otros) {
@@ -18,7 +19,7 @@ const onChangeOportunidad = (oportunidad: OportunidadVenta, campo: string, _: un
 const tieneOrigen = (oportunidad: OportunidadVenta) => {
     return oportunidad.cliente_id || oportunidad.tarjeta_id || oportunidad.contacto_id
         ? true
-        : "Debe indicar cliente, tarjeta o contacto";
+        : tCrm("oportunidadventa.debeIndicarClienteTarjetaOContacto");
 };
 
 export const oportunidadVentaVacia: OportunidadVenta = {

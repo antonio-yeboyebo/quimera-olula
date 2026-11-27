@@ -7,6 +7,7 @@ import {
 } from "../comun/config_visual.ts";
 import { OportunidadVenta } from "../diseño.ts";
 import "./TarjetaOportunidadVentaKanban.css";
+import { tCrm } from "../../i18n/index.ts";
 
 type EstadoVencimiento = {
   clase: "vencida" | "hoy" | "manana" | "proxima" | "normal";
@@ -32,17 +33,17 @@ const getEstadoVencimiento = (
     const diasVencida = Math.abs(dias);
     return {
       clase: "vencida",
-      texto: `Vencida hace ${diasVencida} día${diasVencida === 1 ? "" : "s"}`,
+      texto: tCrm("oportunidadventa.vencidaHace", { count: diasVencida }),
     };
   }
 
-  if (dias === 0) return { clase: "hoy", texto: "Vence hoy" };
-  if (dias === 1) return { clase: "manana", texto: "Vence mañana" };
+  if (dias === 0) return { clase: "hoy", texto: tCrm("oportunidadventa.venceHoy") };
+  if (dias === 1) return { clase: "manana", texto: tCrm("oportunidadventa.venceManana") };
   if (dias <= getConfigVisualOportunidad().diasVencePronto) {
-    return { clase: "proxima", texto: `Vence en ${dias} días` };
+    return { clase: "proxima", texto: tCrm("oportunidadventa.venceEnDiasDias", { dias }) };
   }
 
-  return { clase: "normal", texto: `Vence en ${dias} días` };
+  return { clase: "normal", texto: tCrm("oportunidadventa.venceEnDiasDias", { dias }) };
 };
 
 export const TarjetaOportunidadVentaKanban = (
@@ -115,7 +116,7 @@ export const TarjetaOportunidadVentaKanban = (
             variante="advertencia"
             className="tarjeta-kanban-acciones-pendientes"
           >
-            {`${accionesPendientes} acciones pendientes`}
+            {tCrm("oportunidadventa.accionesPendientes", { count: accionesPendientes })}
           </QEtiqueta>
         </div>
       )}

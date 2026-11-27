@@ -7,6 +7,7 @@ import {
     crearMapaProbabilidadEstados,
     obtenerTotalesOportunidadesPorEstado,
 } from "../dominio.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const crearColumnasKanbanOportunidad = (
     estados: EstadoOportunidad[]
@@ -71,12 +72,12 @@ export const enriquecerColumnasKanbanOportunidad = (
                 createElement(
                     "div",
                     { className: "qkanban-resumen-total" },
-                    createElement("strong", null, `Total: ${formatearMoneda(totalImporte, "EUR")}`)
+                    createElement("strong", null, tCrm("oportunidadventa.totalTotalimporte", { totalImporte: formatearMoneda(totalImporte, "EUR") }))
                 ),
                 createElement(
                     "div",
                     { className: "qkanban-resumen-ponderado" },
-                    `Ponderado: ${formatearMoneda(totalPrevision, "EUR")}`
+                    tCrm("oportunidadventa.ponderadoTotalprevision", { totalPrevision: formatearMoneda(totalPrevision, "EUR") })
                 )
             ),
         };

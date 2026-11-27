@@ -8,8 +8,10 @@ import {
   modeloWidgetPrevisionInicial,
 } from "./dominio.ts";
 import "./WidgetPrevisionOportunidades.css";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const WidgetPrevisionOportunidades = () => {
+  const t = useTCrm();
   const [modelo, setModelo] = useState<ModeloWidgetPrevision>(
     modeloWidgetPrevisionInicial
   );
@@ -46,22 +48,22 @@ export const WidgetPrevisionOportunidades = () => {
   );
 
   if (modelo.estado === "cargando") {
-    return <div>Cargando previsión de oportunidades...</div>;
+    return <div>{t("oportunidadventa.cargandoPrevisionDeOportunidades")}</div>;
   }
 
   if (modelo.oportunidadesAbiertas === 0) {
     return (
       <div className="widget-prevision-oportunidades">
-        <h3 className="widget-prevision-oportunidades__titulo">CRM</h3>
-        <div>No tienes oportunidades abiertas</div>
+        <h3 className="widget-prevision-oportunidades__titulo">{t("oportunidadventa.crm")}</h3>
+        <div>{t("oportunidadventa.noTienesOportunidadesAbiertas")}</div>
       </div>
     );
   }
   return (
     <div className="widget-prevision-oportunidades">
-      <h3 className="widget-prevision-oportunidades__titulo">Oportunidades</h3>
+      <h3 className="widget-prevision-oportunidades__titulo">{t("oportunidadventa.oportunidades")}</h3>
       <div className="widget-prevision-oportunidades__valor">
-        Prevision de ventas potencial <strong>{textoPrevision}</strong>
+        {t("oportunidadventa.previsionDeVentasPotencial")}{" "}<strong>{textoPrevision}</strong>
       </div>
 
       <div className="widget-prevision-oportunidades__serie" role="list">
@@ -99,7 +101,7 @@ export const WidgetPrevisionOportunidades = () => {
           className="widget-prevision-oportunidades__enlace"
           to={modelo.urlVer}
         >
-          Ver
+          {t("oportunidadventa.ver")}
         </Link>
       </div>
     </div>

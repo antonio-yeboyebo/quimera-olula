@@ -6,6 +6,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { OportunidadVenta } from "../../diseño.ts";
 import "./TabDatos.css";
+import { tCrm } from "../../../i18n/index.ts";
 
 export const TabDatos = ({
   oportunidad,
@@ -20,7 +21,7 @@ export const TabDatos = ({
   return (
     <div className="TabDatos">
       <quimera-formulario>
-        <QInput label="Descripción" {...uiProps("descripcion")} />
+        <QInput label={tCrm("oportunidadventa.descripcion")} {...uiProps("descripcion")} />
 
         {tieneCliente && (
           <Cliente
@@ -32,7 +33,7 @@ export const TabDatos = ({
 
         {tieneTarjeta && (
           <LeadSelector
-            label="Lead"
+            label={tCrm("oportunidadventa.lead")}
             valor={modelo.tarjeta_id ?? ""}
             descripcion={modelo.nombre_cliente ?? modelo.nombre_tarjeta ?? ""}
             onChange={() => null}
@@ -42,7 +43,7 @@ export const TabDatos = ({
 
         {tieneContacto && (
           <ContactoSelector
-            label="Contacto"
+            label={tCrm("oportunidadventa.contacto")}
             valor={modelo.contacto_id ?? ""}
             descripcion={modelo.nombre_contacto ?? ""}
             onChange={() => null}
@@ -50,11 +51,11 @@ export const TabDatos = ({
           />
         )}
 
-        <EstadoOportunidad label="Estado" {...uiProps("estado_id")} />
+        <EstadoOportunidad label={tCrm("oportunidadventa.estado")} {...uiProps("estado_id")} />
 
-        <QInput label="Probabilidad (%)" {...uiProps("probabilidad")} />
-        <QInput label="Fecha Cierre" {...uiProps("fecha_cierre")} />
-        <QInput label="Total" {...uiProps("importe")} />
+        <QInput label={tCrm("oportunidadventa.probabilidad")} {...uiProps("probabilidad")} />
+        <QInput label={tCrm("oportunidadventa.fechaCierre")} {...uiProps("fecha_cierre")} />
+        <QInput label={tCrm("oportunidadventa.total")} {...uiProps("importe")} />
       </quimera-formulario>
     </div>
   );

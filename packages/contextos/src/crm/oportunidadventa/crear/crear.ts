@@ -1,10 +1,11 @@
 import { MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { NuevaOportunidadVenta } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 const tieneOrigen = (oportunidad: NuevaOportunidadVenta) => {
     return oportunidad.cliente_id || oportunidad.tarjeta_id || oportunidad.contacto_id
         ? true
-        : "Debe indicar cliente, tarjeta o contacto";
+        : tCrm("oportunidadventa.debeIndicarClienteTarjetaOContacto");
 };
 
 export const nuevaOportunidadVentaVacia: NuevaOportunidadVenta = {

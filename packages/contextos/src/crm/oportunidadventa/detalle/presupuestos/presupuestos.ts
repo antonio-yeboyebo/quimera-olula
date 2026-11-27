@@ -4,11 +4,12 @@ import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { accionesListaEntidades, ProcesarListaEntidades } from "@olula/lib/ListaEntidades.js";
 import { getPresupuestosOportunidad } from "../../infraestructura.ts";
 import { ContextoPresupuestosOportunidad, EstadoPresupuestosOportunidad } from "./diseño.ts";
+import { tCrm } from "../../../i18n/index.ts";
 
 export const metaTablaPresupuesto: MetaTabla<Presupuesto> = [
-    { id: "codigo", cabecera: "Código" },
-    { id: "nombre_cliente", cabecera: "Cliente" },
-    { id: "total", cabecera: "Total", tipo: "moneda" },
+    { id: "codigo", get cabecera() { return tCrm("oportunidadventa.codigo"); } },
+    { id: "nombre_cliente", get cabecera() { return tCrm("oportunidadventa.cliente"); } },
+    { id: "total", get cabecera() { return tCrm("oportunidadventa.total"); }, tipo: "moneda" },
 ];
 
 type ProcesarPresupuestos = ProcesarContexto<EstadoPresupuestosOportunidad, ContextoPresupuestosOportunidad>;

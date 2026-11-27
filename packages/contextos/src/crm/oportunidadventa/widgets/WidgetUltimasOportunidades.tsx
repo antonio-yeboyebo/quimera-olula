@@ -7,8 +7,10 @@ import {
   ModeloWidgetUltimasOportunidades,
   modeloWidgetUltimasOportunidadesInicial,
 } from "./dominio_ultimas_oportunidades.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const WidgetUltimasOportunidades = () => {
+  const t = useTCrm();
   const [modelo, setModelo] = useState<ModeloWidgetUltimasOportunidades>(
     modeloWidgetUltimasOportunidadesInicial
   );
@@ -36,23 +38,23 @@ export const WidgetUltimasOportunidades = () => {
   }, []);
 
   if (modelo.estado === "cargando") {
-    return <div>Cargando oportunidades que requieren atención...</div>;
+    return <div>{t("oportunidadventa.cargandoOportunidadesQueRequierenAtencio")}</div>;
   }
 
   return (
     <div className="widget-crm-lista">
       <div className="widget-crm-lista__cabecera">
         <h3 className="widget-crm-lista__titulo">
-          Oportunidades que requieren atención
+          {t("oportunidadventa.oportunidadesQueRequierenAtencion")}
         </h3>
         <div className="widget-crm-lista__subtitulo">
-          Priorizadas por vencimiento y urgencia comercial
+          {t("oportunidadventa.priorizadasPorVencimientoYUrgenciaComerc")}
         </div>
       </div>
 
       {modelo.oportunidades.length === 0 ? (
         <div className="widget-crm-lista__vacio">
-          No hay oportunidades urgentes ahora mismo
+          {t("oportunidadventa.noHayOportunidadesUrgentesAhoraMismo")}
         </div>
       ) : (
         <div className="widget-crm-lista__lista">
@@ -70,7 +72,7 @@ export const WidgetUltimasOportunidades = () => {
 
       <div className="widget-crm-lista__acciones">
         <Link className="widget-crm-lista__enlace" to={modelo.urlVer}>
-          Ver todas
+          {t("oportunidadventa.verTodas")}
         </Link>
       </div>
     </div>
