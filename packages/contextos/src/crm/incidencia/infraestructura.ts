@@ -3,6 +3,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
 import { DeleteIncidencia, GetIncidencia, GetIncidencias, Incidencia, PatchIncidencia, PostIncidencia } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const baseUrlIncidencia = new ApiUrls().INCIDENCIA;
 
@@ -34,7 +35,7 @@ export const postIncidencia: PostIncidencia = async (incidencia) => {
         fecha: incidencia.fecha?.toISOString().slice(0, 10),
     };
 
-    return await RestAPI.post(baseUrlIncidencia, incidenciaAPI, "Error al guardar Incidencia").then(
+    return await RestAPI.post(baseUrlIncidencia, incidenciaAPI, tCrm("incidencia.errorAlGuardarIncidencia")).then(
         (respuesta) => respuesta.id
     );
 };
@@ -49,11 +50,11 @@ export const patchIncidencia: PatchIncidencia = async (id, incidencia) => {
         Object.entries(incidenciaAPI).map(([k, v]) => [k, v === null ? "" : v])
     );
 
-    await RestAPI.patch(`${baseUrlIncidencia}/${id}`, IncidenciaSinNulls, "Error al guardar Incidencia");
+    await RestAPI.patch(`${baseUrlIncidencia}/${id}`, IncidenciaSinNulls, tCrm("incidencia.errorAlGuardarIncidencia"));
 };
 
 export const deleteIncidencia: DeleteIncidencia = async (id) => {
-    await RestAPI.delete(`${baseUrlIncidencia}/${id}`, "Error al borrar Incidencia");
+    await RestAPI.delete(`${baseUrlIncidencia}/${id}`, tCrm("incidencia.errorAlBorrarIncidencia"));
 }
 
 export const getAccionesIncidencia = async (incidenciaId: string) => {

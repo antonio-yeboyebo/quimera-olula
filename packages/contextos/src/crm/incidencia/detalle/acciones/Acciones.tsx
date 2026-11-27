@@ -16,12 +16,14 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useState } from "react";
 import { Incidencia } from "../../diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../../i18n/index.ts";
 
 export const Acciones = ({
   incidencia,
 }: {
   incidencia: HookModelo<Incidencia>;
 }) => {
+  const t = useTCrm();
   const [cargando, setCargando] = useState(false);
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -77,19 +79,19 @@ export const Acciones = ({
         renderAcciones={() => (
           <div className="maestro-botones">
             <QBoton onClick={() => emitir("creacion_de_accion_solicitada")}>
-              Nueva
+              {t("incidencia.nueva")}
             </QBoton>
             <QBoton
               onClick={() => emitir("edicion_accion_solicitada")}
               deshabilitado={!ctx.acciones.activo}
             >
-              Editar
+              {t("incidencia.editar")}
             </QBoton>
             <QuimeraAcciones
               vertical
               acciones={[
                 {
-                  texto: "Borrar",
+                  texto: t("incidencia.borrar"),
                   onClick: () => emitir("borrado_accion_solicitado"),
                   deshabilitado: !ctx.acciones.activo,
                   advertencia: true,
@@ -107,7 +109,7 @@ export const Acciones = ({
       <QModal
         nombre="editarAccion"
         abierto={ctx.estado === "EDITANDO" && Boolean(ctx.acciones.activo?.id)}
-        titulo="Editar acción"
+        titulo={t("incidencia.editarAccion")}
         onCerrar={() => publicarDetalle("accion_deseleccionada")}
         mostrarBotonCerrar={false}
         mostrarCabecera={false}
