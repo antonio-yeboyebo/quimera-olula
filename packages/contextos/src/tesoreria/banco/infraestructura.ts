@@ -15,6 +15,7 @@ import {
     PostSucursal,
     Sucursal,
 } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().BANCO;
 
@@ -121,31 +122,31 @@ export const getBanco: GetBanco = async (id) =>
     RestAPI.getItem<Banco, BancoApi>(urlBanco(id), bancoDesdeApi);
 
 export const postBanco: PostBanco = async (nuevo) => {
-    const respuesta = await RestAPI.post(baseUrl, nuevoBancoAApi(nuevo), "Error al crear el banco");
+    const respuesta = await RestAPI.post(baseUrl, nuevoBancoAApi(nuevo), tTesoreria("banco.errorAlCrearElBanco"));
     return String(respuesta.id);
 };
 
 export const patchBanco: PatchBanco = async (id, cambios) => {
-    await RestAPI.patch(urlBanco(id), cambiosBancoAApi(cambios), "Error al guardar el banco");
+    await RestAPI.patch(urlBanco(id), cambiosBancoAApi(cambios), tTesoreria("banco.errorAlGuardarElBanco"));
 };
 
 export const deleteBanco: DeleteBanco = async (id) => {
-    await RestAPI.delete(urlBanco(id), "Error al borrar el banco");
+    await RestAPI.delete(urlBanco(id), tTesoreria("banco.errorAlBorrarElBanco"));
 };
 
 export const postSucursal: PostSucursal = async (bancoId, nueva) => {
     const respuesta = await RestAPI.post(
-        urlSucursales(bancoId), cambiosSucursalAApi(nueva), "Error al crear la sucursal"
+        urlSucursales(bancoId), cambiosSucursalAApi(nueva), tTesoreria("banco.errorAlCrearLaSucursal")
     );
     return String(respuesta.id);
 };
 
 export const patchSucursal: PatchSucursal = async (bancoId, sucursalId, cambios) => {
     await RestAPI.patch(
-        urlSucursal(bancoId, sucursalId), cambiosSucursalAApi(cambios), "Error al guardar la sucursal"
+        urlSucursal(bancoId, sucursalId), cambiosSucursalAApi(cambios), tTesoreria("banco.errorAlGuardarLaSucursal")
     );
 };
 
 export const deleteSucursal: DeleteSucursal = async (bancoId, sucursalId) => {
-    await RestAPI.delete(urlSucursal(bancoId, sucursalId), "Error al borrar la sucursal");
+    await RestAPI.delete(urlSucursal(bancoId, sucursalId), tTesoreria("banco.errorAlBorrarLaSucursal"));
 };

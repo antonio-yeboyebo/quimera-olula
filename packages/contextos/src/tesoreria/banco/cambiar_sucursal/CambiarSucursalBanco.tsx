@@ -8,6 +8,7 @@ import { CamposSucursal } from "../crear_sucursal/CamposSucursal.tsx";
 import { Banco, NuevaSucursal, Sucursal } from "../diseño.ts";
 import { cambiosSucursal, etiquetaSucursal, metaSucursal } from "../dominio.ts";
 import { patchSucursal } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const CambiarSucursalBanco = ({
     banco,
@@ -18,6 +19,7 @@ export const CambiarSucursalBanco = ({
     sucursal: Sucursal;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const inicial = useMemo((): NuevaSucursal => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, ...datos } = sucursal;
@@ -42,7 +44,7 @@ export const CambiarSucursalBanco = ({
         <QModal
             abierto={true}
             nombre="cambiarSucursalBanco"
-            titulo={`Sucursal ${etiquetaSucursal(sucursal)}`}
+            titulo={t("banco.sucursalSucursal", { sucursal: etiquetaSucursal(sucursal) })}
             onCerrar={cancelar}
         >
             <div className="CambiarSucursalBanco">
@@ -51,7 +53,7 @@ export const CambiarSucursalBanco = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={guardar} deshabilitado={!valido}>
-                        Guardar
+                        {t("banco.guardar")}
                     </QBoton>
                 </div>
             </div>

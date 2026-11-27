@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { Banco } from "../diseño.ts";
+import { tTesoreria } from "../../i18n/index.ts";
 
 export type EstadoMaestroBanco = "INICIAL" | "CREANDO";
 
@@ -13,10 +14,10 @@ export type ContextoMaestroBanco = {
 };
 
 export const metaTablaBanco: MetaTabla<Banco> = [
-    { id: "id", cabecera: "Nº de entidad" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "nombreProveedor", cabecera: "Acreedor" },
-    { id: "bicDefecto", cabecera: "BIC por defecto" },
+    { id: "id", get cabecera() { return tTesoreria("banco.nDeEntidad"); } },
+    { id: "nombre", get cabecera() { return tTesoreria("banco.nombre"); } },
+    { id: "nombreProveedor", get cabecera() { return tTesoreria("banco.acreedor"); } },
+    { id: "bicDefecto", get cabecera() { return tTesoreria("banco.bicPorDefecto"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -30,8 +31,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroBanco: MetaFiltro = {
-    id: filtroTexto("id", "Nº de entidad"),
-    nombre: filtroTexto("nombre", "Nombre"),
+    get id() { return filtroTexto("id", tTesoreria("banco.nDeEntidad")); },
+    get nombre() { return filtroTexto("nombre", tTesoreria("banco.nombre")); },
 };
 
 export const criteriaBancosDefecto = (): Criteria => ({
