@@ -135,5 +135,16 @@ export const es = {
         "Informe Cuentas Anuales": "Informe Cuentas Anuales",
         "Informe Estado de cambios en el patrimonio neto": "Informe Estado de cambios en el patrimonio neto",
         "Regularización de IVA": "Regularización de IVA",
+        // Tesorería
+        "Tesorería": "Tesorería",
+        "Remesas de cobro": "Remesas de cobro",
+        "Remesas de pago": "Remesas de pago",
+        "Mandatos": "Mandatos",
+        "Recibos de cobro": "Recibos de cobro",
+        "Recibos de pago": "Recibos de pago",
+        "Conexiones bancarias": "Conexiones bancarias",
+        "Cuentas bancarias": "Cuentas bancarias",
+        "Formas de Pago": "Formas de Pago",
+        "Bancos": "Bancos",
     },
 } as const;

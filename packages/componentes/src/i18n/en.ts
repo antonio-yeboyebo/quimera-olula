@@ -136,5 +136,16 @@ export const en: Traduccion<typeof es> = {
         "Informe Cuentas Anuales": "Annual accounts report",
         "Informe Estado de cambios en el patrimonio neto": "Statement of changes in equity report",
         "Regularización de IVA": "VAT settlement",
+        // Tesorería
+        "Tesorería": "Treasury",
+        "Remesas de cobro": "Collection remittances",
+        "Remesas de pago": "Payment remittances",
+        "Mandatos": "Mandates",
+        "Recibos de cobro": "Collection receipts",
+        "Recibos de pago": "Payment receipts",
+        "Conexiones bancarias": "Bank connections",
+        "Cuentas bancarias": "Bank accounts",
+        "Formas de Pago": "Payment methods",
+        "Bancos": "Banks",
     },
 };
