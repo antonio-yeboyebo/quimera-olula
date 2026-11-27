@@ -5,10 +5,11 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MovimientoRemesa, Remesa } from "../../diseño.js";
 import { remesaConPago, remesaPagable } from "../../dominio.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 const metaTablaPagos: MetaTabla<MovimientoRemesa> = [
-  { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-  { id: "tipo", cabecera: "Tipo" },
+  { id: "fecha", get cabecera() { return tTesoreria("remesa.fecha"); }, tipo: "fecha" },
+  { id: "tipo", get cabecera() { return tTesoreria("remesa.tipo"); } },
 ];
 
 export const PagosRemesa = ({
@@ -32,14 +33,14 @@ export const PagosRemesa = ({
       renderAcciones={() => (
         <div className="maestro-botones">
           {remesaPagable(remesa) && (
-            <QBoton onClick={() => publicar("pago_solicitado")}>Pagar</QBoton>
+            <QBoton onClick={() => publicar("pago_solicitado")}>{tTesoreria("remesa.pagar")}</QBoton>
           )}
           {remesaConPago(remesa) && (
             <QBoton
               advertencia
               onClick={() => publicar("deshacer_pago_solicitado")}
             >
-              Deshacer pago
+              {tTesoreria("remesa.deshacerPago")}
             </QBoton>
           )}
         </div>

@@ -11,6 +11,7 @@ import {
     ReciboDeRemesa,
     Remesa,
 } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 interface MovimientoRemesaApi {
     id: string;
@@ -82,7 +83,7 @@ export const getRemesa: GetRemesa = async (id) => {
     return await RestAPI.getItem<Remesa, RemesaApi>(
         `${baseUrl}/${id}`,
         remesaDesdeApi,
-        "Error al obtener la remesa de cobro"
+        tTesoreria("remesa.errorAlObtenerLaRemesaDe")
     );
 };
 
@@ -91,7 +92,7 @@ export const getRemesas: GetRemesas = async (criteria) => {
         baseUrl,
         criteria,
         remesaDesdeApi,
-        "Error al obtener las remesas de cobro"
+        tTesoreria("remesa.errorAlObtenerLasRemesasDe")
     );
 };
 
@@ -99,7 +100,7 @@ export const postRemesa: PostRemesa = async (nueva) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         { cuenta_id: nueva.cuentaId, recibo_ids: nueva.reciboIds },
-        "Error al crear la remesa de cobro"
+        tTesoreria("remesa.errorAlCrearLaRemesaDe")
     );
 
     return String(respuesta.id);
@@ -109,14 +110,14 @@ export const pagarRemesa: PagarRemesa = async (id, fecha) => {
     await RestAPI.post(
         `${baseUrl}/${id}/pagar`,
         { fecha },
-        "Error al pagar la remesa de cobro"
+        tTesoreria("remesa.errorAlPagarLaRemesaDe")
     );
 };
 
 export const deshacerPagoRemesa: DeshacerPagoRemesa = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}/pago`,
-        "Error al deshacer el pago de la remesa de cobro"
+        tTesoreria("remesa.errorAlDeshacerElPagoDe")
     );
 };
 
@@ -137,7 +138,7 @@ export const getDomiciliacionesRemesa = async (
 ): Promise<AvisoDomiciliacion[]> => {
     const respuesta = await RestAPI.get<{
         datos: { recibo_id: string; codigo: string; cliente_id: string; nombre_cliente: string; aviso: string }[];
-    }>(`${baseUrl}/${id}/domiciliaciones?formato=${formato}`, "Error al comprobar las domiciliaciones");
+    }>(`${baseUrl}/${id}/domiciliaciones?formato=${formato}`, tTesoreria("remesa.errorAlComprobarLasDomiciliaciones"));
     return respuesta.datos.map((a) => ({
         reciboId: a.recibo_id,
         codigo: a.codigo,
@@ -155,5 +156,5 @@ export const getFicheroRemesa = async (
     RestAPI.blob(
         `${baseUrl}/${id}/fichero?formato=${opciones.formato}` +
         `&agrupar_por_cliente=${opciones.agruparPorCliente}&incluir_lineas=${opciones.incluirLineas}`,
-        "Error al generar el fichero de la remesa"
+        tTesoreria("remesa.errorAlGenerarElFicheroDe")
     );

@@ -11,25 +11,27 @@ import { Remesa } from "../diseño.js";
 import { varianteEstadoRemesa } from "../dominio.js";
 import "./MaestroConDetalleRemesa.css";
 import { getMaquina } from "./maquina.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 const metaTablaRemesa: MetaTabla<Remesa> = [
     { id: 'id', cabecera: 'ID' },
-    { id: 'fecha', cabecera: 'Fecha', tipo: 'fecha' },
-    { id: 'fechaCargo', cabecera: 'F. Cargo', tipo: 'fecha' },
-    { id: 'cuentaId', cabecera: 'Cuenta' },
-    { id: 'descripcionCuenta', cabecera: 'Descripción cuenta' },
+    { id: 'fecha', get cabecera() { return tTesoreria("remesa.fecha"); }, tipo: 'fecha' },
+    { id: 'fechaCargo', get cabecera() { return tTesoreria("remesa.fCargo"); }, tipo: 'fecha' },
+    { id: 'cuentaId', get cabecera() { return tTesoreria("remesa.cuenta"); } },
+    { id: 'descripcionCuenta', get cabecera() { return tTesoreria("remesa.descripcionCuenta"); } },
     {
         id: 'estado',
-        cabecera: 'Estado',
+        get cabecera() { return tTesoreria("remesa.estado"); },
         render: (remesa: Remesa) => (
             <QEtiqueta variante={varianteEstadoRemesa(remesa.estado)}>
-                {remesa.estado}
+                {textoEstado(remesa.estado)}
             </QEtiqueta>
         ),
     },
     {
         id: 'total',
-        cabecera: 'Total',
+        get cabecera() { return tTesoreria("remesa.total"); },
         tipo: 'moneda',
         divisa: (r: Remesa) => r.divisaId,
     },
@@ -37,6 +39,7 @@ const metaTablaRemesa: MetaTabla<Remesa> = [
 
 export const MaestroConDetalleRemesa = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -61,7 +64,7 @@ export const MaestroConDetalleRemesa = () => {
             <MaestroDetalle<Remesa>
                 Maestro={
                     <>
-                        <h2>Remesas de cobro</h2>
+                        <h2>{t("remesa.remesasDeCobro")}</h2>
                         <Listado<Remesa>
                             metaTabla={metaTablaRemesa}
                             criteria={remesas.criteria}
@@ -94,7 +97,7 @@ const TarjetaRemesa = (remesa: Remesa) => {
                 {formatearMoneda(remesa.total, remesa.divisaId)}
             </div>
             <QEtiqueta variante={varianteEstadoRemesa(remesa.estado)}>
-                {remesa.estado}
+                {textoEstado(remesa.estado)}
             </QEtiqueta>
         </div>
     );

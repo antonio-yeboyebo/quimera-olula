@@ -3,6 +3,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { Remesa } from "../../diseño.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 export const DeshacerPagoRemesa = ({
   remesa,
@@ -11,6 +12,7 @@ export const DeshacerPagoRemesa = ({
   remesa: Remesa;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const deshacer_ = useCallback(
     async () => publicar("deshacer_pago_confirmado"),
     [publicar]
@@ -24,20 +26,20 @@ export const DeshacerPagoRemesa = ({
   const [deshacer, cancelar] = useForm(deshacer_, cancelar_);
 
   const mensaje = [
-    `Se eliminará el pago de la remesa de cobro ${remesa.id}.`,
+    t("remesa.seEliminaraElPagoDeLa", { id: remesa.id }),
     "",
-    "Según la configuración, sus recibos pueden volver a su estado anterior.",
+    t("remesa.segunLaConfiguracionSusRecibosPueden"),
   ].join("\n");
 
   return (
     <QModalConfirmacion
       nombre="deshacer_pago_remesa"
       abierto={true}
-      titulo="Deshacer pago"
+      titulo={t("remesa.deshacerPago")}
       mensaje={mensaje}
       onCerrar={cancelar}
       onAceptar={deshacer}
-      labelAceptar="Deshacer"
+      labelAceptar={t("remesa.deshacer")}
     />
   );
 };
