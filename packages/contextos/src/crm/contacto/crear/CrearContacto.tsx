@@ -8,8 +8,10 @@ import { useCallback } from "react";
 import { getContacto, postContacto } from "../infraestructura.ts";
 import "./CrearContacto.css";
 import { metaNuevoContacto, nuevoContactoVacio } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearContacto = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevoContacto,
     nuevoContactoVacio
@@ -31,22 +33,22 @@ export const CrearContacto = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nuevo Contacto"
+      titulo={t("contacto.nuevoContacto")}
       onCerrar={cancelar}
     >
       <div className="CrearContacto">
         <quimera-formulario>
-          <QInput label="Nombre" {...uiProps("nombre")} />
-          <QInput label="Email" {...uiProps("email")} />
-          <QInput label="Teléfono" {...uiProps("telefono1")} />
+          <QInput label={t("contacto.nombre")} {...uiProps("nombre")} />
+          <QInput label={t("contacto.email")} {...uiProps("email")} />
+          <QInput label={t("contacto.telefono")} {...uiProps("telefono1")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Crear
+            {t("contacto.crear")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("contacto.cancelar")}
           </QBoton>
         </div>
       </div>

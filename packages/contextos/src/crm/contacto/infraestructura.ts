@@ -18,6 +18,7 @@ import {
   PatchContacto,
   PostContacto,
 } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 
 const baseUrlContactos = new ApiUrls().CONTACTO;
@@ -63,16 +64,16 @@ export const getContactos: GetContactos = async (filtro, orden, paginacion) => {
 };
 
 export const patchContacto: PatchContacto = async (id, contacto) =>
-  await RestAPI.patch(`${baseUrlContactos}/${id}`, contacto, "Error al guardar contacto");
+  await RestAPI.patch(`${baseUrlContactos}/${id}`, contacto, tCrm("contacto.errorAlGuardarContacto"));
 
 export const postContacto: PostContacto = async (contacto) => {
-  return await RestAPI.post(baseUrlContactos, contactoToAPI(contacto as Contacto), "Error al guardar contacto").then(
+  return await RestAPI.post(baseUrlContactos, contactoToAPI(contacto as Contacto), tCrm("contacto.errorAlGuardarContacto")).then(
     (respuesta) => respuesta.id
   );
 };
 
 export const deleteContacto: DeleteContacto = async (id) =>
-  await RestAPI.delete(`${baseUrlContactos}/${id}`, "Error al borrar contacto");
+  await RestAPI.delete(`${baseUrlContactos}/${id}`, tCrm("contacto.errorAlBorrarContacto"));
 
 
 export const getOportunidadesVentaContacto = async (

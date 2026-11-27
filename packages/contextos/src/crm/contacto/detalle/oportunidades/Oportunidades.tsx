@@ -16,12 +16,14 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Contacto } from "../../diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../../i18n/index.ts";
 
 export const Oportunidades = ({
   contacto,
 }: {
   contacto: HookModelo<Contacto>;
 }) => {
+  const t = useTCrm();
   const [cargando, setCargando] = useState(false);
   const criteriaInicial = useMemo(
     () => ({
@@ -96,16 +98,16 @@ export const Oportunidades = ({
           <QuimeraAcciones
             acciones={[
               {
-                texto: "Nueva",
+                texto: t("contacto.nueva"),
                 onClick: () => emitir("creacion_de_oportunidad_solicitada"),
               },
               {
-                texto: "Editar",
+                texto: t("contacto.editar"),
                 onClick: () => emitir("edicion_oportunidad_solicitada"),
                 deshabilitado: !ctx.oportunidades.activo,
               },
               {
-                texto: "Borrar",
+                texto: t("contacto.borrar"),
                 onClick: () => emitir("borrado_oportunidad_solicitado"),
                 deshabilitado: !ctx.oportunidades.activo,
               },
@@ -125,7 +127,7 @@ export const Oportunidades = ({
         abierto={
           ctx.estado === "EDITANDO" && Boolean(ctx.oportunidades.activo?.id)
         }
-        titulo="Editar oportunidad"
+        titulo={t("contacto.editarOportunidad")}
         onCerrar={() => publicarDetalle("oportunidad_deseleccionada")}
         mostrarBotonCerrar={false}
         mostrarCabecera={false}

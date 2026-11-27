@@ -12,6 +12,7 @@ import {
 } from "../../../cliente/infraestructura.ts";
 import { Contacto } from "../../diseño.ts";
 import { getClientesPorContacto } from "../../infraestructura.ts";
+import { useTCrm } from "../../../i18n/index.ts";
 
 interface Props {
   seleccionada?: Cliente | null;
@@ -26,6 +27,7 @@ export const TabClientesAcciones = ({
   contacto,
   estado,
 }: Props) => {
+  const t = useTCrm();
   const contactoId = contacto.modelo.id;
   const [clienteSeleccionado, setClienteSeleccionado] = useState<{
     valor: string;
@@ -74,19 +76,19 @@ export const TabClientesAcciones = ({
   return (
     <div className="TabClientesAcciones maestro-botones">
       <QBoton onClick={() => emitir("VINCULAR_SOLICITADO")}>
-        Asociar cliente
+        {t("contacto.asociarCliente")}
       </QBoton>
       <QBoton
         onClick={() => emitir("DESVINCULAR_SOLICITADO")}
         deshabilitado={!seleccionada}
       >
-        Desvincular cliente
+        {t("contacto.desvincularCliente")}
       </QBoton>
 
       <QModal
         nombre="asociarCliente"
         abierto={estado === "vincular_cliente"}
-        titulo="Asociar cliente"
+        titulo={t("contacto.asociarCliente")}
         onCerrar={() => {
           setClienteSeleccionado(null);
           emitir("CANCELAR_VINCULACION");
@@ -96,12 +98,12 @@ export const TabClientesAcciones = ({
           valor={clienteSeleccionado?.valor || ""}
           descripcion={clienteSeleccionado?.descripcion || ""}
           nombre="cliente_id"
-          label="Seleccionar cliente"
+          label={t("contacto.seleccionarCliente")}
           onChange={(cliente) => setClienteSeleccionado(cliente)}
         />
         <div className="botones">
           <QBoton onClick={onAsociar} deshabilitado={!clienteSeleccionado}>
-            Guardar
+            {t("contacto.guardar")}
           </QBoton>
           <QBoton
             tipo="reset"
@@ -111,7 +113,7 @@ export const TabClientesAcciones = ({
               emitir("CANCELAR_VINCULACION");
             }}
           >
-            Cancelar
+            {t("contacto.cancelar")}
           </QBoton>
         </div>
       </QModal>
@@ -119,8 +121,8 @@ export const TabClientesAcciones = ({
       <QModalConfirmacion
         nombre="confirmarDesvincularCliente"
         abierto={estado === "desvincular_cliente"}
-        titulo="Confirmar desvincular"
-        mensaje="¿Está seguro de que desea desvincular este cliente?"
+        titulo={t("contacto.confirmarDesvincular")}
+        mensaje={t("contacto.estaSeguroDeQueDeseaDesvincular")}
         onCerrar={() => emitir("CANCELAR_DESVINCULACION")}
         onAceptar={onDesvincular}
       />

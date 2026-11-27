@@ -9,6 +9,7 @@ import { Cliente } from "../../../cliente/diseño.ts";
 import { Contacto } from "../../diseño.ts";
 import { getClientesPorContacto } from "../../infraestructura.ts";
 import { TabClientesAcciones } from "./TabClientesAcciones.tsx";
+import { useTCrm } from "../../../i18n/index.ts";
 
 type Estado = "lista" | "vincular_cliente" | "desvincular_cliente";
 
@@ -22,6 +23,7 @@ export const TabClientes = ({
 }: {
   contacto: HookModelo<Contacto>;
 }) => {
+  const t = useTCrm();
   const clientes = useLista<Cliente>([]);
   const [cargando, setCargando] = useState(true);
   const [estado, setEstado] = useState<Estado>("lista");
@@ -71,9 +73,9 @@ export const TabClientes = ({
   const emitir = useMaquina(maquina, estado, setEstado);
 
   const metaTablaCliente: MetaTabla<Cliente> = [
-    { id: "id", cabecera: "Id" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "email", cabecera: "Email" },
+    { id: "id", cabecera: t("contacto.id") },
+    { id: "nombre", cabecera: t("contacto.nombre") },
+    { id: "email", cabecera: t("contacto.email") },
   ];
 
   return (
