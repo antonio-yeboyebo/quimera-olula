@@ -1,5 +1,6 @@
 import { formatearMoneda, plugin } from "@olula/lib/dominio.ts";
 import { CobroOnline, EstadoCobroOnline, ReembolsoPasarela } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 const SIN_PASARELA = ["", "inactivo", "noconfigurado"];
 
@@ -9,11 +10,11 @@ export const pasarelaPagoActiva = (): boolean =>
     !SIN_PASARELA.includes(plugin("stripe").toLowerCase());
 
 export const TEXTO_ESTADO: Record<EstadoCobroOnline, string> = {
-    pendiente: "Pendiente de pago",
-    pagado: "Pagado",
-    cancelado: "Cancelado",
-    caducado: "Caducado",
-    reembolsado: "Reembolsado",
+    get pendiente() { return tTesoreria("cobro_online.pendienteDePago"); },
+    get pagado() { return tTesoreria("cobro_online.pagado"); },
+    get cancelado() { return tTesoreria("cobro_online.cancelado"); },
+    get caducado() { return tTesoreria("cobro_online.caducado"); },
+    get reembolsado() { return tTesoreria("cobro_online.reembolsado"); },
 };
 
 export const VARIANTE_ESTADO: Record<EstadoCobroOnline, "exito" | "advertencia" | "neutro" | "error"> = {
@@ -26,18 +27,18 @@ export const VARIANTE_ESTADO: Record<EstadoCobroOnline, "exito" | "advertencia" 
 
 /** Qué tiene que revisar alguien, por cada incidencia que deja el webhook. */
 export const TEXTO_INCIDENCIA: Record<string, string> = {
-    pagado_tras_cancelar: "El cliente pagó después de cancelarse el cobro: hay que devolverle el dinero.",
-    recibo_ya_pagado: "El recibo ya estaba pagado por otro medio: revisa si hay que devolver el pago con tarjeta.",
-    recibo_no_apuntado: "No se pudo marcar el recibo como pagado: apúntalo a mano.",
-    importe_distinto: "Lo cobrado no coincide con lo pendiente: los recibos no se han tocado.",
-    cuenta_no_configurada: "La credencial de Stripe no indica la cuenta de los cobros: el recibo no se ha marcado como pagado.",
-    reembolso: "Se ha devuelto el dinero en Stripe; el recibo sigue pagado en Olula.",
-    reembolso_sin_pago: "Stripe ha notificado un reembolso de un cobro que no constaba como pagado.",
-    disputa: "El cliente ha disputado el cargo con su banco.",
+    get pagado_tras_cancelar() { return tTesoreria("cobro_online.elClientePagoDespuesDeCancelarse"); },
+    get recibo_ya_pagado() { return tTesoreria("cobro_online.elReciboYaEstabaPagadoPor"); },
+    get recibo_no_apuntado() { return tTesoreria("cobro_online.noSePudoMarcarElRecibo"); },
+    get importe_distinto() { return tTesoreria("cobro_online.loCobradoNoCoincideConLo"); },
+    get cuenta_no_configurada() { return tTesoreria("cobro_online.laCredencialDeStripeNoIndica"); },
+    get reembolso() { return tTesoreria("cobro_online.seHaDevueltoElDineroEn"); },
+    get reembolso_sin_pago() { return tTesoreria("cobro_online.stripeHaNotificadoUnReembolsoDe"); },
+    get disputa() { return tTesoreria("cobro_online.elClienteHaDisputadoElCargo"); },
 };
 
 export const textoIncidencia = (incidencia: string): string =>
-    TEXTO_INCIDENCIA[incidencia] ?? `Incidencia: ${incidencia}`;
+    TEXTO_INCIDENCIA[incidencia] ?? tTesoreria("cobro_online.incidenciaIncidencia", { incidencia });
 
 export const conIncidencia = (cobros: CobroOnline[]): CobroOnline[] =>
     cobros.filter((c) => c.incidencia);
@@ -48,8 +49,6 @@ export const enlaceVigente = (cobros: CobroOnline[]): CobroOnline | null =>
 
 /** Texto de la casilla del modal de devolver un recibo cobrado con tarjeta. */
 export const textoReembolsoPasarela = (r: ReembolsoPasarela): string =>
-    `Reembolsar también ${formatearMoneda(r.importe, r.divisaId)} en Stripe` +
-    (r.modo === "test" ? " (modo test)" : "") +
-    (r.total ? "" : ", la parte de este recibo en el cobro con tarjeta de la factura");
+    tTesoreria("cobro_online.reembolsarTambienImporteEnStripeValor", { importe: formatearMoneda(r.importe, r.divisaId), valor: (r.modo === "test" ? tTesoreria("cobro_online.modoTest") : ""), valor2: (r.total ? "" : tTesoreria("cobro_online.laParteDeEsteReciboEn")) });
 
 export const emailValido = (email: string): boolean => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
