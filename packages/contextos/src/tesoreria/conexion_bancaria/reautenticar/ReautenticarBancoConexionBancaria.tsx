@@ -7,6 +7,7 @@ import {
     patchReautenticarConexionBancaria,
     postIniciarConexionBancaria,
 } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Reautenticación de una conexión existente: pide al backend los datos para
@@ -22,6 +23,7 @@ export const ReautenticarBancoConexionBancaria = ({
     conexion: ConexionBancaria;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const [inicio, setInicio] = useState<DatosInicioConexionBancaria | null>(null);
 
@@ -33,7 +35,7 @@ export const ReautenticarBancoConexionBancaria = ({
             async () => {
                 const resultado = await postIniciarConexionBancaria(conexion.id);
                 if (!proveedorBancarioUI(resultado.proveedor)) {
-                    throw new Error(`Proveedor bancario no soportado: "${resultado.proveedor}"`);
+                    throw new Error(t("conexion_bancaria.proveedorBancarioNoSoportadoProveedor", { proveedor: resultado.proveedor }));
                 }
                 if (vigente) setInicio(resultado);
             },

@@ -10,6 +10,7 @@ import {
     tiposProductoSinLeer,
 } from "../../dominio.js";
 import "./ProductosConexionBancaria.css";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 /**
  * Tipos de producto que se leen del banco (el proveedor cobra por producto
@@ -29,8 +30,7 @@ export const ProductosConexionBancaria = ({
     return (
         <div className="ProductosConexionBancaria">
             <p>
-                Se sincronizan los productos activos de estos tipos. Puedes desactivar un producto
-                concreto en sus pestañas para dejar de leerlo.
+                {tTesoreria("conexion_bancaria.seSincronizanLosProductosActivosDe")}
             </p>
             <quimera-formulario>
                 {TIPOS_PRODUCTO_BANCARIO.map((tipo) => (
@@ -48,9 +48,9 @@ export const ProductosConexionBancaria = ({
             </quimera-formulario>
             {sinLeer.length > 0 && (
                 <QAviso variante="advertencia">
-                    {`Todavía no se han leído ${sinLeer.map(etiquetaTipoProducto).join(", ").toLowerCase()} del banco.`}
+                    {tTesoreria("conexion_bancaria.todaviaNoSeHanLeidoTolowercase", { toLowerCase: sinLeer.map(etiquetaTipoProducto).join(", ").toLowerCase() })}
                     <QBoton tamaño="pequeño" variante="borde" onClick={() => publicar("reautenticacion_solicitada")}>
-                        Leer el banco
+                        {tTesoreria("conexion_bancaria.leerElBanco")}
                     </QBoton>
                 </QAviso>
             )}

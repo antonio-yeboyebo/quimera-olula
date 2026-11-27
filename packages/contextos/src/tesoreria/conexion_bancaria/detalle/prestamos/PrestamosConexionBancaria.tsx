@@ -5,6 +5,7 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto, formatearMoneda } from "@olula/lib/dominio.ts";
 import { PrestamoBancario } from "../../diseño.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 /**
  * Préstamos leídos del banco. Sus cuotas se contabilizan al conciliar el cargo
@@ -21,7 +22,7 @@ export const PrestamosConexionBancaria = ({
     const metaTabla: MetaTabla<PrestamoBancario> = [
         {
             id: "nombre",
-            cabecera: "Préstamo",
+            cabecera: tTesoreria("conexion_bancaria.prestamo"),
             render: (p) => (
                 <div>
                     <div>{p.nombre}</div>
@@ -31,24 +32,24 @@ export const PrestamosConexionBancaria = ({
         },
         {
             id: "capitalPendiente",
-            cabecera: "Pendiente",
+            cabecera: tTesoreria("conexion_bancaria.pendiente"),
             render: (p) => (p.capitalPendiente !== null ? formatearMoneda(p.capitalPendiente, p.divisa ?? "EUR") : "-"),
         },
         {
             id: "cuota",
-            cabecera: "Cuota",
+            cabecera: tTesoreria("conexion_bancaria.cuota"),
             render: (p) => (p.cuota !== null ? formatearMoneda(p.cuota, p.divisa ?? "EUR") : "-"),
         },
         {
             id: "codigoSubcuentaCapital",
-            cabecera: "Subcuentas",
+            cabecera: tTesoreria("conexion_bancaria.subcuentas"),
             render: (p) => (p.codigoSubcuentaCapital && p.codigoSubcuentaIntereses
                 ? `${p.codigoSubcuentaCapital} / ${p.codigoSubcuentaIntereses}`
-                : <QEtiqueta variante="advertencia">Sin configurar</QEtiqueta>),
+                : <QEtiqueta variante="advertencia">{tTesoreria("conexion_bancaria.sinConfigurar")}</QEtiqueta>),
         },
         {
             id: "cuotasSinContabilizar",
-            cabecera: "Sin contabilizar",
+            cabecera: tTesoreria("conexion_bancaria.sinContabilizar"),
             render: (p) => String(p.cuotasSinContabilizar),
         },
         {
@@ -58,10 +59,10 @@ export const PrestamosConexionBancaria = ({
                 <div className="maestro-botones">
                     <QBoton tamaño="pequeño" variante="borde"
                         onClick={() => publicar("cuotas_prestamo_solicitadas", p)}>
-                        Cuotas
+                        {tTesoreria("conexion_bancaria.cuotas")}
                     </QBoton>
                     <QBoton tamaño="pequeño" onClick={() => publicar("configurar_prestamo_solicitado", p)}>
-                        Subcuentas
+                        {tTesoreria("conexion_bancaria.subcuentas")}
                     </QBoton>
                 </div>
             ),

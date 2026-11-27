@@ -18,6 +18,7 @@ import { ReautenticarBancoConexionBancaria } from "../reautenticar/ReautenticarB
 import "./MaestroConDetalleConexionBancaria.css";
 import { getMaquina } from "./maquina.js";
 import { TarjetasSaldosConexionBancaria } from "./TarjetasSaldosConexionBancaria.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 const metaTablaConexionBancaria = (emitir: EmitirEvento): MetaTabla<ConexionBancaria> => [
     {
@@ -37,18 +38,18 @@ const metaTablaConexionBancaria = (emitir: EmitirEvento): MetaTabla<ConexionBanc
             />
         ),
     },
-    { id: 'institucionNombre', cabecera: 'Institución', render: (c: ConexionBancaria) => nombreInstitucion(c) },
+    { id: 'institucionNombre', cabecera: tTesoreria("conexion_bancaria.institucion"), render: (c: ConexionBancaria) => nombreInstitucion(c) },
     {
         id: 'estadoTexto',
-        cabecera: 'Estado',
+        cabecera: tTesoreria("conexion_bancaria.estado"),
         render: (c: ConexionBancaria) => (
-            c.estado === 'requiere_reautenticacion' ? 'Requiere reautenticación' : 'Activa'
+            c.estado === 'requiere_reautenticacion' ? tTesoreria("conexion_bancaria.requiereReautenticacion") : tTesoreria("conexion_bancaria.activa")
         ),
     },
-    { id: 'cuentas', cabecera: 'Cuentas', render: (c: ConexionBancaria) => c.cuentas.length },
+    { id: 'cuentas', cabecera: tTesoreria("conexion_bancaria.cuentas"), render: (c: ConexionBancaria) => c.cuentas.length },
     {
         id: 'ultimaSincronizacion',
-        cabecera: 'Última sincronización',
+        cabecera: tTesoreria("conexion_bancaria.ultimaSincronizacion"),
         render: (c: ConexionBancaria) => (c.ultimaSincronizacion ? formatearFechaHora(c.ultimaSincronizacion) : '-'),
     },
     {
@@ -63,7 +64,7 @@ const metaTablaConexionBancaria = (emitir: EmitirEvento): MetaTabla<ConexionBanc
                     emitir("reautenticar_conexion_solicitada", c.id);
                 }}
             >
-                Reautenticar
+                {tTesoreria("conexion_bancaria.reautenticar")}
             </QBoton>
         ) : null),
     },
@@ -81,6 +82,7 @@ const metaTablaConexionBancaria = (emitir: EmitirEvento): MetaTabla<ConexionBanc
  */
 export const MaestroConDetalleConexionBancaria = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -108,7 +110,7 @@ export const MaestroConDetalleConexionBancaria = () => {
             <MaestroDetalle<ConexionBancaria>
                 Maestro={
                     <>
-                        <h2>Conexiones bancarias</h2>
+                        <h2>{t("conexion_bancaria.conexionesBancarias")}</h2>
                         <TarjetasSaldosConexionBancaria
                             refrescarClave={conexiones.total + refresco}
                             onReautenticar={(conexionId) => emitir("reautenticar_conexion_solicitada", conexionId)}
@@ -124,7 +126,7 @@ export const MaestroConDetalleConexionBancaria = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("conectar_banco_solicitado")}>
-                                        Conectar banco
+                                        {t("conexion_bancaria.conectarBanco")}
                                     </QBoton>
                                 </div>
                             )}
@@ -161,10 +163,10 @@ const TarjetaConexionBancaria = (conexion: ConexionBancaria) => {
         <div className="tarjeta-conexion-bancaria" key={conexion.id}>
             <div className="tarjeta-conexion-bancaria-institucion">{nombreInstitucion(conexion)}</div>
             <div className={`tarjeta-conexion-bancaria-estado estado-${conexion.estado}`}>
-                {conexion.estado === 'requiere_reautenticacion' ? 'Requiere reautenticación' : 'Activa'}
+                {conexion.estado === 'requiere_reautenticacion' ? tTesoreria("conexion_bancaria.requiereReautenticacion") : tTesoreria("conexion_bancaria.activa")}
             </div>
             <div className="tarjeta-conexion-bancaria-cuentas">
-                {conexion.cuentas.length} cuenta{conexion.cuentas.length === 1 ? '' : 's'}
+                {conexion.cuentas.length}{" "}{tTesoreria("conexion_bancaria.cuenta")}{conexion.cuentas.length === 1 ? '' : 's'}
             </div>
         </div>
     );

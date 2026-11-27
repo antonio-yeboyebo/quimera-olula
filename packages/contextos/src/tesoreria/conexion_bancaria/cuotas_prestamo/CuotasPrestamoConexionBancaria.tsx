@@ -4,6 +4,7 @@ import { QModal } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { formatearMoneda } from "@olula/lib/dominio.ts";
 import { AmortizacionPrestamo, PrestamoBancario } from "../diseño.js";
+import { tTesoreria } from "../../i18n/index.ts";
 
 const SIN_ORDEN = ["", ""];
 
@@ -17,29 +18,29 @@ export const CuotasPrestamoConexionBancaria = ({
 }) => {
     const divisa = prestamo.divisa ?? "EUR";
     const metaTabla: MetaTabla<AmortizacionPrestamo> = [
-        { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-        { id: "capital", cabecera: "Capital", render: (a) => formatearMoneda(a.capital, divisa) },
-        { id: "intereses", cabecera: "Intereses", render: (a) => formatearMoneda(a.intereses, divisa) },
-        { id: "total", cabecera: "Total", render: (a) => formatearMoneda(a.total, divisa) },
+        { id: "fecha", cabecera: tTesoreria("conexion_bancaria.fecha"), tipo: "fecha" },
+        { id: "capital", cabecera: tTesoreria("conexion_bancaria.capital"), render: (a) => formatearMoneda(a.capital, divisa) },
+        { id: "intereses", cabecera: tTesoreria("conexion_bancaria.intereses"), render: (a) => formatearMoneda(a.intereses, divisa) },
+        { id: "total", cabecera: tTesoreria("conexion_bancaria.total"), render: (a) => formatearMoneda(a.total, divisa) },
         {
             id: "capitalPendiente",
-            cabecera: "Capital pendiente",
+            cabecera: tTesoreria("conexion_bancaria.capitalPendiente"),
             render: (a) => (a.capitalPendiente !== null ? formatearMoneda(a.capitalPendiente, divisa) : "-"),
         },
         {
             id: "asientoId",
-            cabecera: "Estado",
+            cabecera: tTesoreria("conexion_bancaria.estado"),
             render: (a) => (a.programada
-                ? <QEtiqueta variante="gris">Programada</QEtiqueta>
+                ? <QEtiqueta variante="gris">{tTesoreria("conexion_bancaria.programada")}</QEtiqueta>
                 : a.asientoId !== null
-                    ? <QEtiqueta variante="exito">Contabilizada</QEtiqueta>
-                    : <QEtiqueta variante="advertencia">Sin contabilizar</QEtiqueta>),
+                    ? <QEtiqueta variante="exito">{tTesoreria("conexion_bancaria.contabilizada")}</QEtiqueta>
+                    : <QEtiqueta variante="advertencia">{tTesoreria("conexion_bancaria.sinContabilizar")}</QEtiqueta>),
         },
     ];
 
     return (
         <QModal abierto={true} nombre="cuotasPrestamoConexionBancaria"
-            titulo={`Cuotas del préstamo ${prestamo.contrato ?? prestamo.nombre}`}
+            titulo={tTesoreria("conexion_bancaria.cuotasDelPrestamoValor", { valor: prestamo.contrato ?? prestamo.nombre })}
             onCerrar={() => publicar("cuotas_prestamo_cerradas")}>
             <QTabla<AmortizacionPrestamo>
                 metaTabla={metaTabla}

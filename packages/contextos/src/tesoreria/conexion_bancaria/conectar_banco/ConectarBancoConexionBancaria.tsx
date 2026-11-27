@@ -6,6 +6,7 @@ import { proveedorBancarioUI } from "../../comun/proveedor_bancario/registro.js"
 import { DatosInicioConexionBancaria, TipoProductoBancario } from "../diseño.js";
 import { postConexionBancaria, postIniciarConexionBancaria } from "../infraestructura.js";
 import { ElegirProductosConexionBancaria } from "./ElegirProductosConexionBancaria.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Pide al backend los datos para iniciar una conexión nueva y delega en la UI
@@ -26,6 +27,7 @@ export const ConectarBancoConexionBancaria = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const [inicio, setInicio] = useState<DatosInicioConexionBancaria | null>(null);
     const eligeTipos = Boolean(proveedorBancarioUI(proveedorBancario() ?? "")?.eligeTiposProducto);
@@ -40,7 +42,7 @@ export const ConectarBancoConexionBancaria = ({
             async () => {
                 const resultado = await postIniciarConexionBancaria(undefined, tipos ?? undefined);
                 if (!proveedorBancarioUI(resultado.proveedor)) {
-                    throw new Error(`Proveedor bancario no soportado: "${resultado.proveedor}"`);
+                    throw new Error(t("conexion_bancaria.proveedorBancarioNoSoportadoProveedor", { proveedor: resultado.proveedor }));
                 }
                 if (vigente) setInicio(resultado);
             },

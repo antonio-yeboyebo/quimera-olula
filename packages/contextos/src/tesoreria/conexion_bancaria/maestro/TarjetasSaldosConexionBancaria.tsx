@@ -5,6 +5,7 @@ import { ResumenSaldosConexionBancaria, SaldoCuentaConexionBancaria } from "../d
 import { getSaldosConexionBancaria } from "../infraestructura.js";
 import { paletaBancoEspana } from "./colores_bancos_es.js";
 import "./TarjetasSaldosConexionBancaria.css";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 const DIVISA_DEFECTO = "EUR";
 
@@ -55,7 +56,7 @@ const TarjetaCuenta = ({
                         />
                     </span>
                     <span className="tarjeta-banco-nombre">
-                        {cuenta.institucionNombre ?? "Banco"}
+                        {cuenta.institucionNombre ?? tTesoreria("conexion_bancaria.banco")}
                     </span>
                 </div>
                 {alerta === "reauth" && onReautenticar ? (
@@ -64,11 +65,11 @@ const TarjetaCuenta = ({
                         className="tarjeta-banco-alerta tarjeta-banco-alerta--accion"
                         onClick={() => onReautenticar(cuenta.conexionId)}
                     >
-                        Reautenticar
+                        {tTesoreria("conexion_bancaria.reautenticar")}
                     </button>
                 ) : alerta && (
                     <span className="tarjeta-banco-alerta">
-                        {alerta === "reauth" ? "Reautenticar" : "Error"}
+                        {alerta === "reauth" ? tTesoreria("conexion_bancaria.reautenticar") : tTesoreria("conexion_bancaria.error")}
                     </span>
                 )}
             </header>
@@ -77,11 +78,11 @@ const TarjetaCuenta = ({
             <p className="tarjeta-banco-cuenta">{cuenta.nombre}</p>
 
             <div className="tarjeta-banco-saldo">
-                <span className="tarjeta-banco-saldo-etiqueta">Disponible</span>
+                <span className="tarjeta-banco-saldo-etiqueta">{tTesoreria("conexion_bancaria.disponible")}</span>
                 <span className="tarjeta-banco-saldo-valor">{saldo}</span>
                 {contableDistinto && (
                     <span className="tarjeta-banco-saldo-contable">
-                        Contable {formatearSaldo(cuenta.saldoActual, cuenta.divisa)}
+                        {tTesoreria("conexion_bancaria.contableValor", { valor: formatearSaldo(cuenta.saldoActual, cuenta.divisa) })}
                     </span>
                 )}
             </div>
@@ -123,6 +124,7 @@ export const TarjetasSaldosConexionBancaria = ({
     /** Si se indica, la alerta "Reautenticar" de una cuenta abre la reautenticación de su conexión. */
     onReautenticar?: (conexionId: string) => void;
 }) => {
+    const t = useTTesoreria();
     const [resumen, setResumen] = useState<ResumenSaldosConexionBancaria | null>(null);
 
     useEffect(() => {
@@ -162,14 +164,14 @@ export const TarjetasSaldosConexionBancaria = ({
             <div className="tarjetas-saldos-resumen">
                 {resumen.totalDisponible !== null && (
                     <TarjetaResumen
-                        titulo="Total disponible"
+                        titulo={t("conexion_bancaria.totalDisponible")}
                         valor={formatearSaldo(resumen.totalDisponible, divisa)}
                         icono="tarjeta"
                     />
                 )}
                 {resumen.totalActual !== null && resumen.totalActual !== resumen.totalDisponible && (
                     <TarjetaResumen
-                        titulo="Total contable"
+                        titulo={t("conexion_bancaria.totalContable")}
                         valor={formatearSaldo(resumen.totalActual, divisa)}
                         icono="fichero"
                     />
