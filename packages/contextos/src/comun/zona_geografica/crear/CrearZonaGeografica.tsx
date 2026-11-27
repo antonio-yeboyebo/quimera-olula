@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposZonaGeografica } from "../detalle/CamposZonaGeografica.tsx";
 import { metaNuevoZonaGeografica, nuevoZonaGeograficaVacio } from "../dominio.ts";
 import { postZonaGeografica } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const CrearZonaGeografica = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTComun();
     const inicial = useMemo(nuevoZonaGeograficaVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoZonaGeografica, inicial);
@@ -27,15 +29,15 @@ export const CrearZonaGeografica = ({ publicar }: { publicar: EmitirEvento }) =>
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearZonaGeografica" titulo="Nueva zona geográfica" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearZonaGeografica" titulo={t("zonaGeografica.nuevaZonaGeografica")} onCerrar={cancelar}>
             <div className="CrearZonaGeografica">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("zonaGeografica.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposZonaGeografica uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("zonaGeografica.crear")}
                     </QBoton>
                 </div>
             </div>

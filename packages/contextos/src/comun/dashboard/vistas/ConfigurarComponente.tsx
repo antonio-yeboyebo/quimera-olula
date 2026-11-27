@@ -31,6 +31,7 @@ import { DIMENSIONES_GEOGRAFICAS } from "../geografia.ts";
 import { useRecursos } from "../useRecursos.ts";
 import { Componente } from "./componentes/Componente.tsx";
 import "./ConfigurarComponente.css";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 const SIN_PERIODO = "__todo";
 const SIN_COMPARAR = "__no";
@@ -69,6 +70,7 @@ export const ConfigurarComponente = ({
   onGuardar: (componente: ComponenteDashboard) => void;
   onCancelar: () => void;
 }) => {
+  const t = useTComun();
   const recursos = useRecursos();
   const [borrador, setBorrador] = useState(componente);
   const definicion = definicionTipo(borrador.tipo);
@@ -112,7 +114,7 @@ export const ConfigurarComponente = ({
   return (
     <QModal
       nombre="configurar-componente"
-      titulo={`${componente.consultas.length || sinDatos(componente.tipo) ? "Configurar" : "Añadir"}: ${definicion.nombre}`}
+      titulo={`${componente.consultas.length || sinDatos(componente.tipo) ? t("dashboard.configurar") : t("dashboard.anadir")}: ${definicion.nombre}`}
       abierto={true}
       onCerrar={onCancelar}
       anchoEstable
@@ -120,7 +122,7 @@ export const ConfigurarComponente = ({
       <div className="configurar-componente">
         <div className="configurar-componente-formulario">
           <QInput
-            label="Título"
+            label={t("dashboard.titulo")}
             nombre="titulo_componente"
             valor={borrador.titulo}
             maxLength={80}
@@ -129,7 +131,7 @@ export const ConfigurarComponente = ({
 
           {borrador.tipo === "texto" && (
             <QTextArea
-              label="Texto"
+              label={t("dashboard.texto")}
               nombre="texto_componente"
               valor={borrador.opciones.texto ?? ""}
               onChange={(texto) => cambiar({ opciones: { ...borrador.opciones, texto } })}
@@ -163,8 +165,8 @@ export const ConfigurarComponente = ({
           )}
         </div>
 
-        <div className="configurar-componente-vista-previa" aria-label="Vista previa">
-          <span className="configurar-componente-etiqueta">Vista previa con datos reales</span>
+        <div className="configurar-componente-vista-previa" aria-label={t("dashboard.vistaPrevia")}>
+          <span className="configurar-componente-etiqueta">{t("dashboard.vistaPreviaConDatosReales")}</span>
           <div
             className="configurar-componente-marco"
             style={{ height: `${Math.min(borrador.h, 10) * ALTO_FILA_DASHBOARD}px` }}
@@ -176,10 +178,10 @@ export const ConfigurarComponente = ({
 
       <footer className="configurar-componente-pie">
         <QBoton variante="borde" onClick={onCancelar}>
-          Cancelar
+          {t("dashboard.cancelar")}
         </QBoton>
         <QBoton deshabilitado={problema !== null} onClick={() => onGuardar(borrador)}>
-          {componente.consultas.length || sinDatos(componente.tipo) ? "Aplicar" : "Añadir"}
+          {componente.consultas.length || sinDatos(componente.tipo) ? t("dashboard.aplicar") : t("dashboard.anadir")}
         </QBoton>
       </footer>
     </QModal>
@@ -236,7 +238,7 @@ const FormularioDatos = ({
   return (
     <>
       <QSelect
-        label="Datos de"
+        label={tComun("dashboard.datosDe")}
         nombre="recurso_componente"
         valor={consulta.recurso}
         opciones={recursos.map((r) => opcion(r.id, r.descripcion.split(" (")[0].replace(/\.$/, "")))}
@@ -248,7 +250,7 @@ const FormularioDatos = ({
 
       {tipo === "tabla" ? (
         <fieldset className="configurar-componente-columnas">
-          <legend>Columnas</legend>
+          <legend>{tComun("dashboard.columnas")}</legend>
           {[...categorias, ...fechas, ...(recurso?.medidas ?? [])].map((c) => (
             <QCheckbox
               key={c.id}
@@ -262,7 +264,7 @@ const FormularioDatos = ({
       ) : (
         <div className="configurar-componente-fila">
           <QSelect
-            label="Medir"
+            label={tComun("dashboard.medir")}
             nombre="operacion_componente"
             valor={operacion}
             opciones={OPERACIONES.filter((o) => o.conCampo ? (recurso?.medidas.length ?? 0) > 0 : true).map((o) => opcion(o.valor, o.descripcion))}
@@ -270,7 +272,7 @@ const FormularioDatos = ({
           />
           {OPERACIONES.find((o) => o.valor === operacion)?.conCampo && (
             <QSelect
-              label="Campo"
+              label={tComun("dashboard.campo")}
               nombre="campo_componente"
               valor={campo ?? ""}
               opciones={(recurso?.medidas ?? []).map((m) => opcion(m.id, m.descripcion))}
@@ -283,14 +285,14 @@ const FormularioDatos = ({
       {tipo === "temporal" && (
         <div className="configurar-componente-fila">
           <QSelect
-            label="Eje temporal"
+            label={tComun("dashboard.ejeTemporal")}
             nombre="eje_componente"
             valor={dimension ?? ""}
             opciones={fechas.map((d) => opcion(d.id, d.descripcion))}
             onChange={(o) => o && onConsulta({ agrupar: `${o.valor}:${granularidad ?? "mes"}` })}
           />
           <QSelect
-            label="Agrupar por"
+            label={tComun("dashboard.agruparPor")}
             nombre="granularidad_componente"
             valor={granularidad ?? "mes"}
             opciones={GRANULARIDADES.map((g) => opcion(g.valor, g.descripcion))}
@@ -301,23 +303,23 @@ const FormularioDatos = ({
 
       {tipo === "mapa" && (
         <QSelect
-          label="Situar por"
+          label={tComun("dashboard.situarPor")}
           nombre="nivel_mapa_componente"
           valor={dimension ?? ""}
-          placeholder="Este dato no tiene provincia"
+          placeholder={tComun("dashboard.esteDatoNoTieneProvincia")}
           opciones={categorias
             .filter((d) => d.id in DIMENSIONES_GEOGRAFICAS)
-            .map((d) => opcion(d.id, d.id === "provincia" ? "Provincia" : "Comunidad autónoma"))}
+            .map((d) => opcion(d.id, d.id === "provincia" ? tComun("dashboard.provincia") : tComun("dashboard.comunidadAutonoma")))}
           onChange={(o) => o && onConsulta({ agrupar: o.valor })}
         />
       )}
 
       {agrupaPorCategoria && (
         <QSelect
-          label="Agrupar por"
+          label={tComun("dashboard.agruparPor")}
           nombre="dimension_componente"
           valor={dimension ?? ""}
-          placeholder="Elige una dimensión"
+          placeholder={tComun("dashboard.eligeUnaDimension")}
           opciones={categorias.map((d) => opcion(d.id, d.descripcion))}
           onChange={(o) => o && onConsulta({ agrupar: o.valor, orden: undefined })}
         />
@@ -326,10 +328,10 @@ const FormularioDatos = ({
       {fechas.length > 0 && (
         <div className="configurar-componente-fila">
           <QSelect
-            label="Periodo"
+            label={tComun("dashboard.periodo")}
             nombre="periodo_componente"
             valor={rango ?? SIN_PERIODO}
-            opciones={[opcion(SIN_PERIODO, "Todas las fechas"), ...RANGOS_PERIODO.map((r) => opcion(r.valor, r.descripcion))]}
+            opciones={[opcion(SIN_PERIODO, tComun("dashboard.todasLasFechas")), ...RANGOS_PERIODO.map((r) => opcion(r.valor, r.descripcion))]}
             onChange={(o) =>
               o && onConsulta({
                 periodo: o.valor === SIN_PERIODO ? undefined : `${dimensionPeriodo ?? fechas[0].id}:${o.valor}`,
@@ -338,7 +340,7 @@ const FormularioDatos = ({
           />
           {fechas.length > 1 && rango && (
             <QSelect
-              label="Según"
+              label={tComun("dashboard.segun")}
               nombre="dimension_periodo_componente"
               valor={dimensionPeriodo ?? ""}
               opciones={fechas.map((d) => opcion(d.id, d.descripcion))}
@@ -350,13 +352,13 @@ const FormularioDatos = ({
 
       {compara && rango && (
         <QSelect
-          label="Comparar con"
+          label={tComun("dashboard.compararCon")}
           nombre="comparar_componente"
           valor={consulta.comparar ?? SIN_COMPARAR}
           opciones={[
-            opcion(SIN_COMPARAR, "No comparar"),
-            opcion("periodo_anterior", "Periodo anterior"),
-            opcion("año_anterior", "Mismo periodo del año anterior"),
+            opcion(SIN_COMPARAR, tComun("dashboard.noComparar")),
+            opcion("periodo_anterior", tComun("dashboard.periodoAnterior")),
+            opcion("año_anterior", tComun("dashboard.mismoPeriodoDelAnoAnterior")),
           ]}
           onChange={(o) =>
             o && onConsulta({
@@ -368,7 +370,7 @@ const FormularioDatos = ({
 
       {(agrupaPorCategoria || tipo === "tabla") && (
         <QInput
-          label={tipo === "tabla" ? "Filas" : "Cuántos mostrar"}
+          label={tipo === "tabla" ? tComun("dashboard.filas") : tComun("dashboard.cuantosMostrar")}
           nombre="limite_componente"
           tipo="entero"
           valor={String(consulta.limite ?? 10)}
@@ -381,13 +383,13 @@ const FormularioDatos = ({
 
       {tipo === "tabla" && columnas.length > 0 && (
         <QSelect
-          label="Ordenar por"
+          label={tComun("dashboard.ordenarPor")}
           nombre="orden_componente"
           valor={consulta.orden ?? ""}
-          placeholder="Orden por defecto"
+          placeholder={tComun("dashboard.ordenPorDefecto")}
           opciones={columnas.flatMap((c) => [
-            opcion(`${c}:desc`, `${c} (mayor primero)`),
-            opcion(`${c}:asc`, `${c} (menor primero)`),
+            opcion(`${c}:desc`, tComun("dashboard.cMayorPrimero", { c })),
+            opcion(`${c}:asc`, tComun("dashboard.cMenorPrimero", { c })),
           ])}
           onChange={(o) => onConsulta({ orden: o?.valor || undefined })}
         />
@@ -395,7 +397,7 @@ const FormularioDatos = ({
 
       {tipo === "objetivo" && (
         <QInput
-          label="Meta"
+          label={tComun("dashboard.meta")}
           nombre="meta_componente"
           tipo="decimal"
           valor={meta ? String(meta) : ""}
@@ -405,10 +407,10 @@ const FormularioDatos = ({
 
       {tipo !== "tabla" && (
         <QSelect
-          label="Formato"
+          label={tComun("dashboard.formato")}
           nombre="formato_componente"
           valor={formato ?? formatoPorDefecto(consulta.metricas)}
-          opciones={[opcion("moneda", "Importe (€)"), opcion("numero", "Número")]}
+          opciones={[opcion("moneda", tComun("dashboard.importe")), opcion("numero", tComun("dashboard.numero"))]}
           onChange={(o) => o && onOpciones({ formato: o.valor as FormatoValor })}
         />
       )}
@@ -443,24 +445,24 @@ const FormularioEmbudo = ({
   return (
     <>
       <QSelect
-        label="Circuito"
+        label={tComun("dashboard.circuito")}
         nombre="circuito_componente"
         valor={circuito}
         opciones={Object.entries(CIRCUITOS).map(([id, c]) => opcion(id, c.nombre))}
         onChange={(o) => o && rehacer(o.valor, metricas, rango)}
       />
       <QSelect
-        label="Medir"
+        label={tComun("dashboard.medir")}
         nombre="metrica_embudo_componente"
         valor={metricas}
-        opciones={[opcion("conteo", "Número de documentos"), opcion("suma:total", "Importe total")]}
+        opciones={[opcion("conteo", tComun("dashboard.numeroDeDocumentos")), opcion("suma:total", tComun("dashboard.importeTotal"))]}
         onChange={(o) => o && rehacer(circuito, o.valor, rango)}
       />
       <QSelect
-        label="Periodo"
+        label={tComun("dashboard.periodo")}
         nombre="periodo_embudo_componente"
         valor={rango ?? SIN_PERIODO}
-        opciones={[opcion(SIN_PERIODO, "Todas las fechas"), ...RANGOS_PERIODO.map((r) => opcion(r.valor, r.descripcion))]}
+        opciones={[opcion(SIN_PERIODO, tComun("dashboard.todasLasFechas")), ...RANGOS_PERIODO.map((r) => opcion(r.valor, r.descripcion))]}
         onChange={(o) =>
           o && rehacer(circuito, metricas, o.valor === SIN_PERIODO ? undefined : (o.valor as typeof rango))
         }

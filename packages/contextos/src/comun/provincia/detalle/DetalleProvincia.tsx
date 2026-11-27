@@ -12,6 +12,7 @@ import { etiquetaProvincia, metaProvincia, REGLA_PROVINCIA } from "../dominio.ts
 import { CamposProvincia } from "./CamposProvincia.tsx";
 import { contextoDetalleProvinciaInicial, guardarProvincia } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `provincias.ui`. */
 export const DetalleProvincia = ({
@@ -21,6 +22,7 @@ export const DetalleProvincia = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleProvinciaInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -44,7 +46,7 @@ export const DetalleProvincia = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("provincia.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede(REGLA_PROVINCIA),
             advertencia: true,
@@ -64,7 +66,7 @@ export const DetalleProvincia = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Identificador" nombre="id" valor={provincia.id} soloLectura />
+                    <QInput label={t("provincia.identificador")} nombre="id" valor={provincia.id} soloLectura />
                     <CamposProvincia uiProps={formModelo.uiProps} nombrePais={provincia.nombrePais} />
                 </quimera-formulario>
             </div>

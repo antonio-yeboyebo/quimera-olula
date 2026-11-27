@@ -2,6 +2,7 @@ import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { QInput } from "@olula/componentes/index.js";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabGeneral.css";
+import { tComun } from "../../i18n/index.ts";
 
 /**
  * Tab General: formulario de edición de la memoria del asistente.
@@ -24,8 +25,8 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Título" {...uiProps("titulo")} />
-                <QTextArea label="Contenido" rows={12} {...uiProps("contenido")} />
+                <QInput label={tComun("iaMemoria.titulo")} {...uiProps("titulo")} />
+                <QTextArea label={tComun("iaMemoria.contenido")} rows={12} {...uiProps("contenido")} />
             </quimera-formulario>
         </div>
     );

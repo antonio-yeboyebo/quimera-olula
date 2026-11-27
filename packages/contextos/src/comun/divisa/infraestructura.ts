@@ -10,6 +10,7 @@ import {
     PatchDivisa,
     PostDivisa,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 const baseUrl = ApiUrls.COMUN_DIVISA;
 
@@ -70,14 +71,14 @@ export const getDivisasMaestro: GetDivisasMaestro = async (criteria) =>
 export const getDivisa: GetDivisa = async (id) => RestAPI.getItem<Divisa, DivisaApi>(urlDivisa(id), divisaDesdeApi);
 
 export const postDivisa: PostDivisa = async (nueva) => {
-    const respuesta = await RestAPI.post(baseUrl, nuevaDivisaAApi(nueva), "Error al crear la divisa");
+    const respuesta = await RestAPI.post(baseUrl, nuevaDivisaAApi(nueva), tComun("divisas.errorAlCrearLaDivisa"));
     return String(respuesta.id);
 };
 
 export const patchDivisa: PatchDivisa = async (id, cambios) => {
-    await RestAPI.patch(urlDivisa(id), cambiosDivisaAApi(cambios), "Error al guardar la divisa");
+    await RestAPI.patch(urlDivisa(id), cambiosDivisaAApi(cambios), tComun("divisas.errorAlGuardarLaDivisa"));
 };
 
 export const deleteDivisa: DeleteDivisa = async (id) => {
-    await RestAPI.delete(urlDivisa(id), "Error al borrar la divisa");
+    await RestAPI.delete(urlDivisa(id), tComun("divisas.errorAlBorrarLaDivisa"));
 };

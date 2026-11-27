@@ -12,6 +12,7 @@ import { SelectorProgramacion } from "../componentes/SelectorProgramacion.js";
 import { postIaTareaProgramada } from "../infraestructura.js";
 import "./CrearIaTareaProgramada.css";
 import { metaNuevaIaTareaProgramada, nuevaIaTareaProgramadaVacia } from "./crear.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Modal de alta de tarea programada de IA.
@@ -27,6 +28,7 @@ export const CrearIaTareaProgramada = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { modelo: tarea, uiProps, valido, set } = useModelo(
         metaNuevaIaTareaProgramada,
         nuevaIaTareaProgramadaVacia
@@ -55,12 +57,12 @@ export const CrearIaTareaProgramada = ({
         <QModal
             abierto={true}
             nombre="crearIaTareaProgramada"
-            titulo="Nueva tarea programada"
+            titulo={t("tareaProgramadaIa.nuevaTareaProgramada")}
             onCerrar={cancelar}
         >
             <div className="CrearIaTareaProgramada">
                 <quimera-formulario>
-                    <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
+                    <QInput label={t("tareaProgramadaIa.nombre")} {...uiProps("nombre")} ref={focus} />
                     <SelectorIaFlujo {...uiProps("iaFlujoId")} />
                     <SelectorProgramacion
                         valor={expresionCronProps.valor as string}
@@ -74,7 +76,7 @@ export const CrearIaTareaProgramada = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("tareaProgramadaIa.crear")}
                     </QBoton>
                 </div>
             </div>

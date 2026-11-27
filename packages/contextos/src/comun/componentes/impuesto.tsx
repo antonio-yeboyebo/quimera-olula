@@ -1,6 +1,7 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { obtenerDatosSelector } from "@olula/lib/infraestructura.ts";
 import { useEffect, useState } from "react";
+import { tComun } from "../i18n/index.ts";
 
 interface ImpuestoProps {
     valor: string;
@@ -13,7 +14,7 @@ interface ImpuestoProps {
 /** Selector del maestro de impuestos (`impuestos`): código, descripción y porcentaje de IVA. */
 export const Impuesto = ({
     valor,
-    label = "Impuesto",
+    label = tComun("componentes.impuesto"),
     nombre = "impuesto_id",
     opcional,
     onChange,

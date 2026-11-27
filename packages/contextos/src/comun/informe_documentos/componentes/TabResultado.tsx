@@ -7,6 +7,7 @@ import { FichaInforme, ModoInforme, PestañaInforme, ResultadoInforme } from "..
 import { MODOS_POR_DEFECTO, nombreFicheroInforme } from "../dominio.ts";
 import { getReportInforme } from "../infraestructura.ts";
 import { TablaResultado } from "./TablaResultado.tsx";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Un botón por modo de la pestaña («Calcular detalle», «Calcular resumen»…)
  * y «Descargar PDF» (el PDF de lo último que se ha calculado: los documentos
@@ -24,6 +25,7 @@ export const TabResultado = ({
     modo: ModoInforme | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { intentar } = useContext(ContextoError);
     const [ocupado, setOcupado] = useState<ModoInforme | "pdf" | null>(null);
 
@@ -56,16 +58,16 @@ export const TabResultado = ({
             <div className="maestro-botones">
                 {(pestaña.modos ?? MODOS_POR_DEFECTO).map(({ modo: modoCalculo, etiqueta }) => (
                     <QBoton key={modoCalculo} onClick={() => calcular(modoCalculo)} deshabilitado={!!ocupado}>
-                        {ocupado === modoCalculo ? "Calculando…" : etiqueta}
+                        {ocupado === modoCalculo ? t("informeDocumentos.calculando") : etiqueta}
                     </QBoton>
                 ))}
                 <QBoton variante="borde" onClick={descargar} deshabilitado={!!ocupado || !modo}>
-                    Descargar PDF
+                    {t("informeDocumentos.descargarPdf")}
                 </QBoton>
             </div>
 
             {!resultado && (
-                <p>Pulsa un botón «Calcular». «Descargar PDF» descarga lo último calculado.</p>
+                <p>{t("informeDocumentos.pulsaUnBotonCalcularDescargarPdf")}</p>
             )}
 
             {resultado && (

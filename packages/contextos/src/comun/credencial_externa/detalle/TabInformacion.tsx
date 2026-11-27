@@ -3,6 +3,7 @@ import { Empresa } from "../../componentes/empresa.js";
 import { getConfiguracionCredenciales } from "../configuracion.js";
 import { OPCIONES_TIPO_AUTH } from "../dominio.js";
 import { CredencialExterna } from "../diseño.js";
+import { tComun } from "../../i18n/index.ts";
 
 interface TabInformacionProps {
     credencial: CredencialExterna;
@@ -21,23 +22,23 @@ export const TabInformacion = ({ credencial }: TabInformacionProps) => {
             <dl>
                 {!getConfiguracionCredenciales().empresaFija && (
                     <>
-                        <dt>Empresa</dt>
+                        <dt>{tComun("credencialExterna.empresa")}</dt>
                         <dd><Empresa valor={credencial.empresaId} soloLectura /></dd>
                     </>
                 )}
-                <dt>Categoría</dt>
-                <dd>{credencial.categoria === "llm" ? "Modelo de IA" : "Conector"}</dd>
-                <dt>Tipo de autenticación</dt>
+                <dt>{tComun("credencialExterna.categoria")}</dt>
+                <dd>{credencial.categoria === "llm" ? tComun("credencialExterna.modeloDeIa") : tComun("credencialExterna.conector")}</dd>
+                <dt>{tComun("credencialExterna.tipoDeAutenticacion")}</dt>
                 <dd>{tipoAuth}</dd>
-                <dt>Ámbito</dt>
-                <dd>{credencial.propietarioId ? "Personal" : "Toda la empresa"}</dd>
-                <dt>Estado</dt>
-                <dd>{credencial.activo ? "Activa" : "Inactiva"}</dd>
-                <dt>Creado por</dt>
+                <dt>{tComun("credencialExterna.ambito")}</dt>
+                <dd>{credencial.propietarioId ? tComun("credencialExterna.personal") : tComun("credencialExterna.todaLaEmpresa")}</dd>
+                <dt>{tComun("credencialExterna.estado")}</dt>
+                <dd>{credencial.activo ? tComun("credencialExterna.activa") : tComun("credencialExterna.inactiva")}</dd>
+                <dt>{tComun("credencialExterna.creadoPor")}</dt>
                 <dd>{credencial.creadoPor || "-"}</dd>
-                <dt>Creado en</dt>
+                <dt>{tComun("credencialExterna.creadoEn")}</dt>
                 <dd>{formatearFechaDate(credencial.creadoEn)}</dd>
-                <dt>Actualizado en</dt>
+                <dt>{tComun("credencialExterna.actualizadoEn")}</dt>
                 <dd>{formatearFechaDate(credencial.actualizadoEn)}</dd>
             </dl>
         </div>

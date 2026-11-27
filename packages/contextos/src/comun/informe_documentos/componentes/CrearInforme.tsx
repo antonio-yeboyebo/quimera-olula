@@ -9,6 +9,7 @@ import { FichaInforme, PestañaInforme } from "../diseño.ts";
 import { fichaNueva, metaFichaInforme } from "../dominio.ts";
 import { postFichaInforme } from "../infraestructura.ts";
 import { CamposInforme } from "./CamposInforme.tsx";
+import { useTComun } from "../../i18n/index.ts";
 
 export const CrearInforme = ({
     pestaña,
@@ -18,6 +19,7 @@ export const CrearInforme = ({
     publicar: EmitirEvento;
 }) => {
     // Memoizados: useModelo reinicia el formulario si cambia su identidad.
+    const t = useTComun();
     const inicial = useMemo(() => fichaNueva(pestaña), [pestaña]);
     const meta = useMemo(() => metaFichaInforme<FichaInforme>(pestaña), [pestaña]);
 
@@ -37,7 +39,7 @@ export const CrearInforme = ({
         <QModal
             abierto={true}
             nombre={`crearInforme-${pestaña.clave}`}
-            titulo={`Nuevo informe de ${pestaña.titulo.toLowerCase()}`}
+            titulo={t("informeDocumentos.nuevoInformeDeTolowercase", { toLowerCase: pestaña.titulo.toLowerCase() })}
             onCerrar={cancelar}
         >
             <div className="CrearInformeDocumentos">
@@ -46,7 +48,7 @@ export const CrearInforme = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("informeDocumentos.crear")}
                     </QBoton>
                 </div>
             </div>

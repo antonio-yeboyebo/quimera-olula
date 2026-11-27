@@ -8,6 +8,7 @@ import { secretoConCambios } from "../dominio.js";
 import { CredencialExterna, SecretoCredencialExterna } from "../diseño.js";
 import { rotarSecretoCredencialExterna } from "../infraestructura.js";
 import "./RotarCredencialExterna.css";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Modal de edición de los campos del secreto de una credencial ya existente
@@ -28,6 +29,7 @@ export const RotarCredencialExterna = ({
     credencial: CredencialExterna;
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const [secreto, setSecreto] = useState<SecretoCredencialExterna>({});
 
     const rotar_ = useCallback(
@@ -49,15 +51,12 @@ export const RotarCredencialExterna = ({
         <QModal
             abierto={true}
             nombre="rotarCredencialExterna"
-            titulo={`Editar credencial "${credencial.nombre}"`}
+            titulo={t("credencialExterna.editarCredencialNombre", { nombre: credencial.nombre })}
             onCerrar={cancelar}
         >
             <div className="RotarCredencialExterna">
                 <p>
-                    Rellena solo los campos que quieras cambiar (por ejemplo,
-                    solo el modelo o solo la contraseña) — los que dejes en
-                    blanco conservan su valor actual. El valor anterior de un
-                    campo modificado se sobrescribirá y no podrá recuperarse.
+                    {t("credencialExterna.rellenaSoloLosCamposQueQuieras")}
                 </p>
                 <quimera-formulario>
                     <CamposSecreto
@@ -73,7 +72,7 @@ export const RotarCredencialExterna = ({
                         onClick={rotar}
                         deshabilitado={!secretoConCambios(secreto)}
                     >
-                        Guardar cambios
+                        {t("credencialExterna.guardarCambios")}
                     </QBoton>
                 </div>
             </div>

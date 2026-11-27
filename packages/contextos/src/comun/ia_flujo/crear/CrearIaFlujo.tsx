@@ -10,6 +10,7 @@ import { useCallback } from "react";
 import { postIaFlujo } from "../infraestructura.js";
 import "./CrearIaFlujo.css";
 import { metaNuevoIaFlujo, nuevoIaFlujoVacio } from "./crear.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Modal de alta de flujo de trabajo del asistente de IA.
@@ -25,6 +26,7 @@ export const CrearIaFlujo = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { modelo: iaFlujo, uiProps, valido } = useModelo(
         metaNuevoIaFlujo,
         nuevoIaFlujoVacio
@@ -51,19 +53,19 @@ export const CrearIaFlujo = ({
         <QModal
             abierto={true}
             nombre="crearIaFlujo"
-            titulo="Nuevo flujo de trabajo"
+            titulo={t("iaFlujo.nuevoFlujoDeTrabajo")}
             onCerrar={cancelar}
         >
             <div className="CrearIaFlujo">
                 <quimera-formulario>
-                    <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
-                    <QInput label="Descripción corta" {...uiProps("descripcionCorta")} />
-                    <QTextArea label="Contenido (pasos)" rows={8} {...uiProps("contenido")} />
+                    <QInput label={t("iaFlujo.nombre")} {...uiProps("nombre")} ref={focus} />
+                    <QInput label={t("iaFlujo.descripcionCorta")} {...uiProps("descripcionCorta")} />
+                    <QTextArea label={t("iaFlujo.contenidoPasos")} rows={8} {...uiProps("contenido")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("iaFlujo.crear")}
                     </QBoton>
                 </div>
             </div>

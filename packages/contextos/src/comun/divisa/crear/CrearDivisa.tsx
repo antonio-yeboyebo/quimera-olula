@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposDivisa } from "../detalle/CamposDivisa.tsx";
 import { metaNuevoDivisa, nuevoDivisaVacio } from "../dominio.ts";
 import { postDivisa } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const CrearDivisa = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTComun();
     const inicial = useMemo(nuevoDivisaVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoDivisa, inicial);
@@ -27,15 +29,15 @@ export const CrearDivisa = ({ publicar }: { publicar: EmitirEvento }) => {
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearDivisa" titulo="Nueva divisa" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearDivisa" titulo={t("divisas.nuevaDivisa")} onCerrar={cancelar}>
             <div className="CrearDivisa">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("divisas.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposDivisa uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("divisas.crear")}
                     </QBoton>
                 </div>
             </div>

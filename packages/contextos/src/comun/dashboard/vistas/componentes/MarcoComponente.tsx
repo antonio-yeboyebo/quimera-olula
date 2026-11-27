@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { tComun } from "../../../i18n/index.ts";
 
 /**
  * Marco común: título (con el periodo de los datos, para saber de qué fechas son),
@@ -39,9 +40,9 @@ export const MarcoComponente = ({
           {error}
         </p>
       ) : cargando ? (
-        <div className="dashboard-componente-cargando" aria-label="Cargando" />
+        <div className="dashboard-componente-cargando" aria-label={tComun("dashboard.cargando")} />
       ) : vacio ? (
-        <p className="dashboard-componente-estado">Sin datos para este periodo</p>
+        <p className="dashboard-componente-estado">{tComun("dashboard.sinDatosParaEstePeriodo")}</p>
       ) : (
         children
       )}

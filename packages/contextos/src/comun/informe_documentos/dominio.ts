@@ -10,6 +10,7 @@ import {
     ValorCelda,
     ValorCriterio,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 export const camposPestaña = (pestaña: PestañaInforme): CampoInforme[] =>
     pestaña.filas.flat();
@@ -182,17 +183,17 @@ export const etiquetaFichaInforme = (
 
 /** Intervalos predefinidos de Eneboo (`flfactppal.calcularIntervalo`). */
 export const OPCIONES_INTERVALO = [
-    { valor: "", descripcion: "(Sin intervalo)" },
-    { valor: "000001", descripcion: "Hoy" },
-    { valor: "000002", descripcion: "Ayer" },
-    { valor: "000003", descripcion: "Esta semana" },
-    { valor: "000004", descripcion: "Semana pasada" },
-    { valor: "000005", descripcion: "Este mes" },
-    { valor: "000006", descripcion: "Mes pasado" },
-    { valor: "000007", descripcion: "Este año" },
-    { valor: "000008", descripcion: "Año pasado" },
-    { valor: "000009", descripcion: "Todas las fechas" },
-    { valor: "000010", descripcion: "Hasta hoy" },
+    { valor: "", get descripcion() { return tComun("informeDocumentos.sinIntervalo"); } },
+    { valor: "000001", get descripcion() { return tComun("informeDocumentos.hoy"); } },
+    { valor: "000002", get descripcion() { return tComun("informeDocumentos.ayer"); } },
+    { valor: "000003", get descripcion() { return tComun("informeDocumentos.estaSemana"); } },
+    { valor: "000004", get descripcion() { return tComun("informeDocumentos.semanaPasada"); } },
+    { valor: "000005", get descripcion() { return tComun("informeDocumentos.esteMes"); } },
+    { valor: "000006", get descripcion() { return tComun("informeDocumentos.mesPasado"); } },
+    { valor: "000007", get descripcion() { return tComun("informeDocumentos.esteAno"); } },
+    { valor: "000008", get descripcion() { return tComun("informeDocumentos.anoPasado"); } },
+    { valor: "000009", get descripcion() { return tComun("informeDocumentos.todasLasFechas"); } },
+    { valor: "000010", get descripcion() { return tComun("informeDocumentos.hastaHoy"); } },
 ];
 
 const iso = (fecha: Date): string => {
@@ -260,6 +261,6 @@ export const conIntervalo = (
 };
 
 export const MODOS_POR_DEFECTO: ModoCalculo[] = [
-    { modo: "detalle", etiqueta: "Calcular detalle" },
-    { modo: "resumen", etiqueta: "Calcular resumen" },
+    { modo: "detalle", get etiqueta() { return tComun("informeDocumentos.calcularDetalle"); } },
+    { modo: "resumen", get etiqueta() { return tComun("informeDocumentos.calcularResumen"); } },
 ];

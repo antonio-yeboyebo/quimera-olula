@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { CambiosDivisa, Divisa, NuevaDivisa } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 export const REGLA_DIVISA = "comun.divisa";
 
@@ -26,7 +27,7 @@ const campos = {
         tipo: "decimal" as const,
         decimales: 6,
         validacion: (d: NuevaDivisa) =>
-            Math.abs(Number(d.tasaConversion)) < 1_000_000 || "La tasa admite 6 cifras enteras",
+            Math.abs(Number(d.tasaConversion)) < 1_000_000 || tComun("divisas.laTasaAdmite6CifrasEnteras"),
     },
     fecha: { requerido: false, tipo: "fecha" as const },
     codigoIso: { requerido: false, maximo: 3 },

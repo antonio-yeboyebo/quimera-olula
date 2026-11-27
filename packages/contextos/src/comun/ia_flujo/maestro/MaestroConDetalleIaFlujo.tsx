@@ -14,15 +14,16 @@ import { DetalleIaFlujo } from "../detalle/DetalleIaFlujo.js";
 import { IaFlujo } from "../diseño.js";
 import "./MaestroConDetalleIaFlujo.css";
 import { getMaquina } from "./maquina.js";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 /**
  * Metadatos para renderizar la tabla del listado de flujos.
  */
 const metaTablaIaFlujo: MetaTabla<IaFlujo> = [
-    { id: 'nombre', cabecera: 'Nombre' },
-    { id: 'descripcionCorta', cabecera: 'Descripción' },
-    { id: 'activo', cabecera: 'Activo', tipo: 'booleano' },
-    { id: 'actualizadoEn', cabecera: 'Actualizado', tipo: 'fecha' },
+    { id: 'nombre', get cabecera() { return tComun("iaFlujo.nombre"); } },
+    { id: 'descripcionCorta', get cabecera() { return tComun("iaFlujo.descripcion"); } },
+    { id: 'activo', get cabecera() { return tComun("iaFlujo.activo"); }, tipo: 'booleano' },
+    { id: 'actualizadoEn', get cabecera() { return tComun("iaFlujo.actualizado"); }, tipo: 'fecha' },
 ];
 
 /**
@@ -30,6 +31,7 @@ const metaTablaIaFlujo: MetaTabla<IaFlujo> = [
  */
 export const MaestroConDetalleIaFlujo = () => {
 
+    const t = useTComun();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { layout, cambiarLayout } = useLayout("TARJETA");
@@ -56,7 +58,7 @@ export const MaestroConDetalleIaFlujo = () => {
             <MaestroDetalle<IaFlujo>
                 Maestro={
                     <>
-                        <h2>Flujos de trabajo</h2>
+                        <h2>{t("iaFlujo.flujosDeTrabajo")}</h2>
                         <div className="maestro-botones">
                             <span
                                 className="cambio-modo-icono"
@@ -80,7 +82,7 @@ export const MaestroConDetalleIaFlujo = () => {
                                 puede("comun.ia_flujo") && (
                                     <div className="maestro-botones">
                                         <QBoton onClick={() => emitir("creacion_solicitada")}>
-                                            Nuevo flujo
+                                            {t("iaFlujo.nuevoFlujo")}
                                         </QBoton>
                                     </div>
                                 )
@@ -116,7 +118,7 @@ const TarjetaIaFlujo = (iaFlujo: IaFlujo) => {
             <div className="tarjeta-ia-flujo-nombre">{iaFlujo.nombre}</div>
             <div className="tarjeta-ia-flujo-descripcion">{iaFlujo.descripcionCorta}</div>
             <div className={`tarjeta-ia-flujo-estado ${iaFlujo.activo ? "estado-activo" : "estado-inactivo"}`}>
-                {iaFlujo.activo ? "Activo" : "Inactivo"}
+                {iaFlujo.activo ? tComun("iaFlujo.activo") : tComun("iaFlujo.inactivo")}
             </div>
         </div>
     );

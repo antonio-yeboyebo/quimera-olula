@@ -14,6 +14,7 @@ import "./DetalleIaFlujo.css";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
 import { TabInformacion } from "./TabInformacion.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de un flujo de trabajo del asistente de IA.
@@ -32,6 +33,7 @@ export const DetalleIaFlujo = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleIaFlujoInicial,
@@ -64,17 +66,17 @@ export const DetalleIaFlujo = ({
     // al padre), porque estas acciones transicionan/actualizan el estado local.
     const accionesIaFlujo = [
         {
-            texto: "Guardar",
+            texto: t("iaFlujo.guardar"),
             onClick: () => autoGuardar(formModelo.modelo),
             deshabilitado: !puede("comun.ia_flujo") || !formModelo.modificado || !formModelo.valido,
         },
         {
-            texto: iaFlujo.activo ? "Desactivar" : "Activar",
+            texto: iaFlujo.activo ? t("iaFlujo.desactivar") : t("iaFlujo.activar"),
             onClick: () => emitir("activo_alternado_solicitado"),
             deshabilitado: !puede("comun.ia_flujo"),
         },
         {
-            texto: "Borrar",
+            texto: t("iaFlujo.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("comun.ia_flujo"),
             advertencia: true,
@@ -92,11 +94,11 @@ export const DetalleIaFlujo = ({
             <div className="DetalleIaFlujo">
                 <QuimeraAcciones acciones={accionesIaFlujo} />
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("iaFlujo.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label="Información"
+                    <Tab label={t("iaFlujo.informacion")}
                         key="tab-info"
                         children={<TabInformacion iaFlujo={iaFlujo} />}
                     />,

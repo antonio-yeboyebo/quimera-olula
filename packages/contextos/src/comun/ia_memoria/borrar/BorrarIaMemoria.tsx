@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { IaMemoria } from "../diseño.js";
 import { deleteIaMemoria } from "../infraestructura.js";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarIaMemoria = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarIaMemoria = ({
     iaMemoria: IaMemoria;
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const borrar_ = useCallback(
         async () => {
             await deleteIaMemoria(iaMemoria.id);
@@ -31,8 +33,8 @@ export const BorrarIaMemoria = ({
         <QModalConfirmacion
             nombre="borrarIaMemoria"
             abierto={true}
-            titulo="Borrar memoria del asistente"
-            mensaje={`¿Está seguro de que desea borrar "${iaMemoria.titulo}"?`}
+            titulo={t("iaMemoria.borrarMemoriaDelAsistente")}
+            mensaje={t("iaMemoria.estaSeguroDeQueDeseaBorrar", { titulo: iaMemoria.titulo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

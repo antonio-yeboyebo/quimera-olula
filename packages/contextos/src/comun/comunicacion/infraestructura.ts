@@ -8,6 +8,7 @@ import {
     GetComunicacion,
     GetComunicaciones,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 type ComunicacionAPI = {
     id: number | string;
@@ -75,26 +76,26 @@ export const postComunicacion = async (
     const respuesta = await RestAPI.post<ComunicacionPayloadAPI>(
         baseUrl,
         comunicacion,
-        "Error al crear comunicación"
+        tComun("comunicacion.errorAlCrearComunicacion")
     );
 
     return respuesta.id.toString();
 };
 
 export const marcarComunicacionLeida = async (id: string): Promise<void> => {
-    await RestAPI.patch(`${baseUrl}/${id}/marcar_leida`, {}, "Error al marcar comunicación como leída");
+    await RestAPI.patch(`${baseUrl}/${id}/marcar_leida`, {}, tComun("comunicacion.errorAlMarcarComunicacionComoLeida"));
 };
 
 export const marcarComunicacionNoLeida = async (id: string): Promise<void> => {
     await RestAPI.patch(
         `${baseUrl}/${id}/marcar_no_leida`,
         {},
-        "Error al marcar comunicación como no leída"
+        tComun("comunicacion.errorAlMarcarComunicacionComoNo")
     );
 };
 
 export const borrarComunicacion = async (id: string): Promise<void> => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar comunicación");
+    await RestAPI.delete(`${baseUrl}/${id}`, tComun("comunicacion.errorAlBorrarComunicacion"));
 };
 
 

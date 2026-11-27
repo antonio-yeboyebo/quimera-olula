@@ -8,6 +8,7 @@ import { leerComoBase64 } from "../crear/crear.js";
 import { IaMemoria } from "../diseño.js";
 import { obtenerUrlDescargaFicheroIaMemoria, patchIaMemoriaDesdeFichero } from "../infraestructura.js";
 import "./TabFichero.css";
+import { useTComun } from "../../i18n/index.ts";
 
 interface TabFicheroProps {
     iaMemoria: IaMemoria;
@@ -25,6 +26,7 @@ interface TabFicheroProps {
  *     — no hay ni descarga ni reemplazo manual, solo se informa del origen.
  */
 export const TabFichero = ({ iaMemoria, onReemplazado }: TabFicheroProps) => {
+    const t = useTComun();
     const [reemplazando, setReemplazando] = useState(false);
     const [cargando, setCargando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -71,17 +73,17 @@ export const TabFichero = ({ iaMemoria, onReemplazado }: TabFicheroProps) => {
             <dl>
                 {esExterno ? (
                     <>
-                        <dt>Sincronizado desde</dt>
+                        <dt>{t("iaMemoria.sincronizadoDesde")}</dt>
                         <dd>
                             {iaMemoria.proveedorExterno || "-"}
                             {iaMemoria.externoModificadoEn
-                                ? ` — última sincronización: ${formatearFechaDate(iaMemoria.externoModificadoEn)}`
+                                ? t("iaMemoria.ultimaSincronizacionExternomodificadoen", { externoModificadoEn: formatearFechaDate(iaMemoria.externoModificadoEn) })
                                 : ""}
                         </dd>
                     </>
                 ) : (
                     <>
-                        <dt>Fichero</dt>
+                        <dt>{t("iaMemoria.fichero")}</dt>
                         <dd>{iaMemoria.nombreFichero || "-"}</dd>
                     </>
                 )}
@@ -94,14 +96,14 @@ export const TabFichero = ({ iaMemoria, onReemplazado }: TabFicheroProps) => {
                         onClick={descargarOriginal}
                         deshabilitado={descargando}
                     >
-                        Descargar original
+                        {t("iaMemoria.descargarOriginal")}
                     </QBoton>
                     <QBoton
                         variante="borde"
                         onClick={() => setReemplazando(true)}
                         deshabilitado={cargando || reemplazando}
                     >
-                        Reemplazar fichero
+                        {t("iaMemoria.reemplazarFichero")}
                     </QBoton>
                 </div>
             )}
@@ -110,13 +112,13 @@ export const TabFichero = ({ iaMemoria, onReemplazado }: TabFicheroProps) => {
                 <div className="TabFichero-reemplazo">
                     <ArrastraSuelta emitir={manejarArchivoSeleccionado} />
                     <QBoton variante="texto" onClick={() => setReemplazando(false)} deshabilitado={cargando}>
-                        Cancelar
+                        {t("iaMemoria.cancelar")}
                     </QBoton>
                 </div>
             )}
 
             <quimera-formulario>
-                <QTextArea label="Contenido extraído" nombre="contenido" rows={12} valor={iaMemoria.contenido} soloLectura />
+                <QTextArea label={t("iaMemoria.contenidoExtraido")} nombre="contenido" rows={12} valor={iaMemoria.contenido} soloLectura />
             </quimera-formulario>
         </div>
     );

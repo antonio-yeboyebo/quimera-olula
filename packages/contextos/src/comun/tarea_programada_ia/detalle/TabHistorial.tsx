@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { EjecucionIaTareaProgramada, IaTareaProgramada } from "../diseño.js";
 import { getEjecucionesIaTareaProgramada } from "../infraestructura.js";
 import "./TabHistorial.css";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 interface TabHistorialProps {
     tarea: IaTareaProgramada;
 }
 
 const ETIQUETA_ESTADO: Record<EjecucionIaTareaProgramada["estado"], string> = {
-    ok: "Completada",
-    bloqueada: "Pendiente de confirmación",
-    error: "Error",
+    get ok() { return tComun("tareaProgramadaIa.completada"); },
+    get bloqueada() { return tComun("tareaProgramadaIa.pendienteDeConfirmacion"); },
+    get error() { return tComun("tareaProgramadaIa.error"); },
 };
 
 /**
@@ -20,6 +21,7 @@ const ETIQUETA_ESTADO: Record<EjecucionIaTareaProgramada["estado"], string> = {
  * cambia la tarea mostrada.
  */
 export const TabHistorial = ({ tarea }: TabHistorialProps) => {
+    const t = useTComun();
     const [ejecuciones, setEjecuciones] = useState<EjecucionIaTareaProgramada[] | null>(null);
 
     useEffect(() => {
@@ -33,11 +35,11 @@ export const TabHistorial = ({ tarea }: TabHistorialProps) => {
     }, [tarea.id]);
 
     if (ejecuciones === null) {
-        return <div className="TabHistorial">Cargando…</div>;
+        return <div className="TabHistorial">{t("tareaProgramadaIa.cargando")}</div>;
     }
 
     if (ejecuciones.length === 0) {
-        return <div className="TabHistorial">Todavía no se ha ejecutado.</div>;
+        return <div className="TabHistorial">{t("tareaProgramadaIa.todaviaNoSeHaEjecutado")}</div>;
     }
 
     return (

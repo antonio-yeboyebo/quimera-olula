@@ -5,8 +5,10 @@ import { useCallback } from "react";
 import { Provincia } from "../diseño.ts";
 import { etiquetaProvincia } from "../dominio.ts";
 import { deleteProvincia } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarProvincia = ({ publicar, provincia }: { provincia: Provincia; publicar: EmitirEvento }) => {
+    const t = useTComun();
     const borrar_ = useCallback(async () => {
         await deleteProvincia(provincia.id);
         publicar("provincia_borrado", provincia);
@@ -20,8 +22,8 @@ export const BorrarProvincia = ({ publicar, provincia }: { provincia: Provincia;
         <QModalConfirmacion
             nombre="borrarProvincia"
             abierto={true}
-            titulo="Borrar provincia"
-            mensaje={`¿Confirma borrar ${etiquetaProvincia(provincia)}? No se puede borrar si la usan direcciones de clientes.`}
+            titulo={t("provincia.borrarProvincia")}
+            mensaje={t("provincia.confirmaBorrarProvinciaNoSePuede", { provincia: etiquetaProvincia(provincia) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

@@ -3,6 +3,7 @@ import {
     CategoriaCredencialExterna, CredencialExterna, SecretoCredencialExterna, TipoAuthCredencialExterna,
 } from "./diseño.ts";
 import { getConfiguracionCredenciales } from "./configuracion.ts";
+import { tComun } from "../i18n/index.ts";
 
 const CAMPOS_SECRETO_POR_TIPO: Record<TipoAuthCredencialExterna, string[]> = {
     api_key: ["api_key"],
@@ -55,8 +56,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "google",
         campos: [
-            { clave: "api_key", etiqueta: "API key", contraseña: true },
-            { clave: "modelo", etiqueta: "Modelo (opcional — por defecto gemini-2.5-pro)", opcional: true },
+            { clave: "api_key", get etiqueta() { return tComun("credencialExterna.apiKey"); }, contraseña: true },
+            { clave: "modelo", get etiqueta() { return tComun("credencialExterna.modeloOpcionalPorDefectoGemini2"); }, opcional: true },
         ],
     },
     {
@@ -65,8 +66,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "openai",
         campos: [
-            { clave: "api_key", etiqueta: "API key", contraseña: true },
-            { clave: "modelo", etiqueta: "Modelo (opcional — por defecto gpt-4.1)", opcional: true },
+            { clave: "api_key", get etiqueta() { return tComun("credencialExterna.apiKey"); }, contraseña: true },
+            { clave: "modelo", get etiqueta() { return tComun("credencialExterna.modeloOpcionalPorDefectoGpt4"); }, opcional: true },
         ],
     },
     {
@@ -75,8 +76,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "anthropic",
         campos: [
-            { clave: "api_key", etiqueta: "API key", contraseña: true },
-            { clave: "modelo", etiqueta: "Modelo (opcional — por defecto claude-sonnet-5)", opcional: true },
+            { clave: "api_key", get etiqueta() { return tComun("credencialExterna.apiKey"); }, contraseña: true },
+            { clave: "modelo", get etiqueta() { return tComun("credencialExterna.modeloOpcionalPorDefectoClaudeSonnet"); }, opcional: true },
         ],
     },
     {
@@ -85,8 +86,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "mistral",
         campos: [
-            { clave: "api_key", etiqueta: "API key", contraseña: true },
-            { clave: "modelo", etiqueta: "Modelo (opcional — por defecto mistral-large-latest)", opcional: true },
+            { clave: "api_key", get etiqueta() { return tComun("credencialExterna.apiKey"); }, contraseña: true },
+            { clave: "modelo", get etiqueta() { return tComun("credencialExterna.modeloOpcionalPorDefectoMistralLarge"); }, opcional: true },
         ],
     },
     {
@@ -95,10 +96,10 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "azure",
         campos: [
-            { clave: "api_key", etiqueta: "API key", contraseña: true },
-            { clave: "endpoint", etiqueta: "Endpoint (p.ej. https://mi-recurso.openai.azure.com)" },
-            { clave: "despliegue", etiqueta: "Nombre del despliegue" },
-            { clave: "version_api", etiqueta: "Versión de la API (opcional)", opcional: true },
+            { clave: "api_key", get etiqueta() { return tComun("credencialExterna.apiKey"); }, contraseña: true },
+            { clave: "endpoint", get etiqueta() { return tComun("credencialExterna.endpointPEjHttpsMiRecurso"); } },
+            { clave: "despliegue", get etiqueta() { return tComun("credencialExterna.nombreDelDespliegue"); } },
+            { clave: "version_api", get etiqueta() { return tComun("credencialExterna.versionDeLaApiOpcional"); }, opcional: true },
         ],
     },
     {
@@ -112,8 +113,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "ollama",
         campos: [
-            { clave: "base_url", etiqueta: "URL del servidor (p.ej. http://localhost:11434)" },
-            { clave: "modelo", etiqueta: "Modelo (debe soportar tool-calling, p.ej. llama3.1, qwen2.5)" },
+            { clave: "base_url", get etiqueta() { return tComun("credencialExterna.urlDelServidorPEjHttp"); } },
+            { clave: "modelo", get etiqueta() { return tComun("credencialExterna.modeloDebeSoportarToolCallingP"); } },
         ],
     },
     {
@@ -122,10 +123,10 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "api_key",
         icono: "telegram",
         campos: [
-            { clave: "bot_token", etiqueta: "Token del bot", contraseña: true },
+            { clave: "bot_token", get etiqueta() { return tComun("credencialExterna.tokenDelBot"); }, contraseña: true },
             {
                 clave: "chat_id_autorizado",
-                etiqueta: "Tu ID numérico de Telegram (p.ej. vía @userinfobot)",
+                get etiqueta() { return tComun("credencialExterna.tuIdNumericoDeTelegramP"); },
             },
         ],
         // `chat_id_autorizado` es obligatorio (no `opcional: true`) a propósito: sin él,
@@ -144,8 +145,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "oauth2",
         icono: "google",
         campos: [
-            { clave: "client_id", etiqueta: "Client ID" },
-            { clave: "client_secret", etiqueta: "Client secret", contraseña: true },
+            { clave: "client_id", get etiqueta() { return tComun("credencialExterna.clientId"); } },
+            { clave: "client_secret", get etiqueta() { return tComun("credencialExterna.clientSecret"); }, contraseña: true },
         ],
     },
     {
@@ -154,8 +155,8 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "oauth2",
         icono: "google",
         campos: [
-            { clave: "client_id", etiqueta: "Client ID" },
-            { clave: "client_secret", etiqueta: "Client secret", contraseña: true },
+            { clave: "client_id", get etiqueta() { return tComun("credencialExterna.clientId"); } },
+            { clave: "client_secret", get etiqueta() { return tComun("credencialExterna.clientSecret"); }, contraseña: true },
         ],
     },
     {
@@ -164,12 +165,12 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         tipoAuth: "basic",
         icono: "correo",
         campos: [
-            { clave: "usuario", etiqueta: "Usuario" },
-            { clave: "password", etiqueta: "Contraseña", contraseña: true },
-            { clave: "imap_host", etiqueta: "Servidor IMAP (entrada)" },
-            { clave: "imap_puerto", etiqueta: "Puerto IMAP" },
-            { clave: "smtp_host", etiqueta: "Servidor SMTP (salida)" },
-            { clave: "smtp_puerto", etiqueta: "Puerto SMTP" },
+            { clave: "usuario", get etiqueta() { return tComun("credencialExterna.usuario"); } },
+            { clave: "password", get etiqueta() { return tComun("credencialExterna.contrasena"); }, contraseña: true },
+            { clave: "imap_host", get etiqueta() { return tComun("credencialExterna.servidorImapEntrada"); } },
+            { clave: "imap_puerto", get etiqueta() { return tComun("credencialExterna.puertoImap"); } },
+            { clave: "smtp_host", get etiqueta() { return tComun("credencialExterna.servidorSmtpSalida"); } },
+            { clave: "smtp_puerto", get etiqueta() { return tComun("credencialExterna.puertoSmtp"); } },
         ],
     },
     {
@@ -185,28 +186,28 @@ export const PROVEEDORES_CONOCIDOS: ProveedorConocido[] = [
         campos: [
             {
                 clave: "modo",
-                etiqueta: "Modo de cobro",
+                get etiqueta() { return tComun("credencialExterna.modoDeCobro"); },
                 opciones: [
-                    { valor: "test", descripcion: "Test (pruebas, sin cobros reales)" },
-                    { valor: "live", descripcion: "Live (cobros reales)" },
+                    { valor: "test", get descripcion() { return tComun("credencialExterna.testPruebasSinCobrosReales"); } },
+                    { valor: "live", get descripcion() { return tComun("credencialExterna.liveCobrosReales"); } },
                 ],
             },
             {
                 // La cuenta propia de la pasarela: el webhook paga ahí los recibos y
                 // luego se concilia con las transferencias de Stripe al banco.
                 clave: "cuenta_banco_id",
-                etiqueta: "Cuenta donde se apuntan los cobros",
+                get etiqueta() { return tComun("credencialExterna.cuentaDondeSeApuntanLosCobros"); },
                 tipo: "cuenta_bancaria",
             },
-            { clave: "secret_key_test", etiqueta: "Clave secreta de test (sk_test_… o rk_test_…)", contraseña: true },
-            { clave: "publishable_key_test", etiqueta: "Clave publicable de test (pk_test_…)", opcional: true },
+            { clave: "secret_key_test", get etiqueta() { return tComun("credencialExterna.claveSecretaDeTestSkTest"); }, contraseña: true },
+            { clave: "publishable_key_test", get etiqueta() { return tComun("credencialExterna.clavePublicableDeTestPkTest"); }, opcional: true },
             {
                 clave: "secret_key_live",
-                etiqueta: "Clave secreta de live (sk_live_… o rk_live_…)",
+                get etiqueta() { return tComun("credencialExterna.claveSecretaDeLiveSkLive"); },
                 contraseña: true,
                 opcional: true,
             },
-            { clave: "publishable_key_live", etiqueta: "Clave publicable de live (pk_live_…)", opcional: true },
+            { clave: "publishable_key_live", get etiqueta() { return tComun("credencialExterna.clavePublicableDeLivePkLive"); }, opcional: true },
         ],
     },
 ];
@@ -224,7 +225,7 @@ export const opcionesProveedorPorCategoria = (
     categoria: CategoriaCredencialExterna
 ): { valor: string; descripcion: string }[] => [
     ...proveedoresPorCategoria(categoria).map((p) => ({ valor: p.valor, descripcion: p.valor })),
-    ...(categoria === "conector" ? [{ valor: OTRO_PROVEEDOR, descripcion: "Otro (especificar)" }] : []),
+    ...(categoria === "conector" ? [{ valor: OTRO_PROVEEDOR, descripcion: tComun("credencialExterna.otroEspecificar") }] : []),
 ];
 
 export const iconoProveedor = (proveedor: string): string =>
@@ -278,10 +279,10 @@ export const credencialExternaVacia: CredencialExterna = {
 };
 
 export const OPCIONES_TIPO_AUTH: { valor: TipoAuthCredencialExterna; descripcion: string }[] = [
-    { valor: "api_key", descripcion: "API key" },
-    { valor: "bearer", descripcion: "Token Bearer" },
-    { valor: "basic", descripcion: "Usuario y contraseña" },
-    { valor: "oauth2", descripcion: "OAuth2 (Client ID / Secret)" },
+    { valor: "api_key", get descripcion() { return tComun("credencialExterna.apiKey"); } },
+    { valor: "bearer", get descripcion() { return tComun("credencialExterna.tokenBearer"); } },
+    { valor: "basic", get descripcion() { return tComun("credencialExterna.usuarioYContrasena"); } },
+    { valor: "oauth2", get descripcion() { return tComun("credencialExterna.oauth2ClientIdSecret"); } },
 ];
 
 /**

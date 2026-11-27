@@ -23,6 +23,7 @@ import {
   serieTemporal,
 } from "../../dominio.ts";
 import { COLOR_COMPARACION, COLORES_SERIE } from "./colores.ts";
+import { tComun } from "../../../i18n/index.ts";
 
 type PropsGrafico = {
   componente: ComponenteDashboard;
@@ -53,7 +54,7 @@ const EtiquetaCategoria = ({
 );
 
 const textoComparacion = (componente: ComponenteDashboard) =>
-  componente.consultas[0]?.comparar === "periodo_anterior" ? "Periodo anterior" : "Año anterior";
+  componente.consultas[0]?.comparar === "periodo_anterior" ? tComun("dashboard.periodoAnterior") : tComun("dashboard.anoAnterior");
 
 /** Evolución en el tiempo, con la serie del otro periodo discontinua si se compara. */
 export const Temporal = ({ componente, respuesta }: PropsGrafico) => {
@@ -82,7 +83,7 @@ export const Temporal = ({ componente, respuesta }: PropsGrafico) => {
         )}
         <Line
           dataKey="actual"
-          name="Actual"
+          name={tComun("dashboard.actual")}
           stroke={COLORES_SERIE[0]}
           strokeWidth={2.5}
           dot={false}
@@ -139,7 +140,7 @@ export const Barras = ({
         <Tooltip formatter={(valor) => formatearValor(Number(valor), formato)} />
         <Bar
           dataKey="valor"
-          name={componente.titulo || "Valor"}
+          name={componente.titulo || tComun("dashboard.valor")}
           fill={COLORES_SERIE[0]}
           radius={horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]}
           maxBarSize={36}

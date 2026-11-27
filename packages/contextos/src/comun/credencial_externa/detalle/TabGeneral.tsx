@@ -1,6 +1,7 @@
 import { QInput } from "@olula/componentes/index.js";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabGeneral.css";
+import { tComun } from "../../i18n/index.ts";
 
 interface TabGeneralProps {
     form: FormModelo;
@@ -17,8 +18,8 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Nombre" {...uiProps("nombre")} />
-                <QInput label="Proveedor" {...uiProps("proveedor")} />
+                <QInput label={tComun("credencialExterna.nombre")} {...uiProps("nombre")} />
+                <QInput label={tComun("credencialExterna.proveedor")} {...uiProps("proveedor")} />
             </quimera-formulario>
         </div>
     );

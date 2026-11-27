@@ -17,12 +17,14 @@ import { PreguntarIA } from "../PreguntarIA.tsx";
 import "../Dashboard.css";
 import { getMaquina } from "./maquina.ts";
 import { contextoDashboardInicial } from "./pagina.ts";
+import { tComun, useTComun } from "../../../i18n/index.ts";
 
 /**
  * Página de un dashboard: verlo, editarlo (su propietario), compartirlo, exportarlo.
  * Con `clave`, uno de módulo o la Inicio: la versión del usuario o el de por defecto.
  */
 export const PaginaDashboard = ({ clave }: { clave?: string }) => {
+  const t = useTComun();
   const { id } = useParams();
   const [parametros] = useSearchParams();
   const navegar = useNavigate();
@@ -50,10 +52,10 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
       <div className="pagina-dashboard">
         <p className="pagina-dashboard-vacio">
           {clave
-            ? "No hay un dashboard para esta sección."
-            : "Este dashboard no existe o no tienes acceso."}{" "}
+            ? t("dashboard.noHayUnDashboardParaEsta")
+            : t("dashboard.esteDashboardNoExisteONo")}{" "}
           <QBoton variante="texto" enlace="/comun/dashboard">
-            Ver mis dashboards
+            {t("dashboard.verMisDashboards")}
           </QBoton>
         </p>
       </div>
@@ -66,7 +68,7 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
 
   const duplicar = async () => {
     const nuevo = await crearDashboard({
-      nombre: `${dashboard.nombre} (copia)`,
+      nombre: t("dashboard.nombreCopia", { nombre: dashboard.nombre }),
       componentes: dashboard.componentes,
     });
     navegar(`/comun/dashboard/${nuevo}`);
@@ -79,8 +81,8 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
         <div className="pagina-dashboard-acciones-componente">
           <button
             type="button"
-            aria-label={`Configurar ${componente.titulo || componente.tipo}`}
-            title="Configurar"
+            aria-label={t("dashboard.configurarValor", { valor: componente.titulo || componente.tipo })}
+            title={t("dashboard.configurar")}
             onClick={() => emitir("componente_configurado", componente.id)}
           >
             <QIcono nombre="editar" tamaño="sm" />
@@ -88,8 +90,8 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
           <button
             type="button"
             data-destructivo
-            aria-label={`Quitar ${componente.titulo || componente.tipo}`}
-            title="Quitar"
+            aria-label={t("dashboard.quitarValor", { valor: componente.titulo || componente.tipo })}
+            title={t("dashboard.quitar")}
             onClick={() => emitir("componente_quitado", componente.id)}
           >
             <QIcono nombre="eliminar" tamaño="sm" />
@@ -106,7 +108,7 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
         <div className="pagina-dashboard-titulo">
           {editando ? (
             <QInput
-              label="Nombre del dashboard"
+              label={t("dashboard.nombreDelDashboard")}
               nombre="nombre_dashboard"
               valor={ctx.nombre}
               maxLength={80}
@@ -122,31 +124,31 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
           {editando ? (
             <>
               <QBoton variante="borde" onClick={() => emitir("edicion_cancelada")}>
-                Cancelar
+                {t("dashboard.cancelar")}
               </QBoton>
-              <QBoton onClick={() => emitir("edicion_guardada")}>Guardar</QBoton>
+              <QBoton onClick={() => emitir("edicion_guardada")}>{t("dashboard.guardar")}</QBoton>
             </>
           ) : (
             <>
               <QBoton variante="borde" onClick={() => window.print()}>
-                Exportar PDF
+                {t("dashboard.exportarPdf")}
               </QBoton>
               <QBoton variante="borde" onClick={duplicar}>
-                Duplicar
+                {t("dashboard.duplicar")}
               </QBoton>
               {dashboard.esPropio && dashboard.clave === null && (
                 <QBoton variante="borde" onClick={() => emitir("compartido_alternado")}>
-                  {dashboard.compartido ? "Dejar de compartir" : "Compartir con la empresa"}
+                  {dashboard.compartido ? t("dashboard.dejarDeCompartir") : t("dashboard.compartirConLaEmpresa")}
                 </QBoton>
               )}
               {dashboard.esPropio && dashboard.id !== "" && (
                 <QBoton variante="borde" destructivo onClick={() => emitir("borrado_solicitado")}>
-                  {dashboard.clave ? "Restaurar por defecto" : "Borrar"}
+                  {dashboard.clave ? t("dashboard.restaurarPorDefecto") : t("dashboard.borrar")}
                 </QBoton>
               )}
               {dashboard.esPropio && (
                 <QBoton onClick={() => emitir("edicion_iniciada")}>
-                  {dashboard.id ? "Editar" : "Personalizar"}
+                  {dashboard.id ? t("dashboard.editar") : t("dashboard.personalizar")}
                 </QBoton>
               )}
             </>
@@ -158,8 +160,8 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
         <p className="pagina-dashboard-aviso" role="status">
           <QIcono nombre="candado" tamaño="sm" />
           {dashboard.componentesOcultos === 1
-            ? "Hay 1 componente que no puedes ver porque no tienes permiso sobre sus datos. Se conserva al guardar."
-            : `Hay ${dashboard.componentesOcultos} componentes que no puedes ver porque no tienes permiso sobre sus datos. Se conservan al guardar.`}
+            ? t("dashboard.hay1ComponenteQueNoPuedes")
+            : t("dashboard.hayComponentesocultosComponentesQueNoPue", { componentesOcultos: dashboard.componentesOcultos })}
         </p>
       )}
 
@@ -168,8 +170,8 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
           {componentes.length === 0 ? (
             <div className="pagina-dashboard-vacio">
               {editando
-                ? "Añade componentes desde el panel."
-                : "Este dashboard aún no tiene componentes."}
+                ? t("dashboard.anadeComponentesDesdeElPanel")
+                : t("dashboard.esteDashboardAunNoTieneComponentes")}
             </div>
           ) : (
             <QRejilla
@@ -212,11 +214,11 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
       <QModalConfirmacion
         nombre="borrar-dashboard"
         abierto={estado === "BORRANDO"}
-        titulo={dashboard.clave ? "Restaurar por defecto" : "Borrar dashboard"}
+        titulo={dashboard.clave ? t("dashboard.restaurarPorDefecto") : t("dashboard.borrarDashboard")}
         mensaje={
           dashboard.clave
-            ? "Se descartará tu versión y volverás a ver el dashboard por defecto."
-            : `Se borrará «${dashboard.nombre}»${dashboard.compartido ? " también para el resto de la empresa" : ""}.`
+            ? t("dashboard.seDescartaraTuVersionYVolveras")
+            : t("dashboard.seBorraraNombreValor", { nombre: dashboard.nombre, valor: dashboard.compartido ? t("dashboard.tambienParaElRestoDeLa") : "" })
         }
         onCerrar={() => emitir("borrado_cancelado")}
         onAceptar={() => emitir("borrado_confirmado")}
@@ -228,11 +230,11 @@ export const PaginaDashboard = ({ clave }: { clave?: string }) => {
 const subtitulo = (dashboard: Dashboard) => {
   if (dashboard.clave) {
     return dashboard.id
-      ? "Tu versión personalizada"
-      : "Por defecto · personalízalo y se guardará tu versión";
+      ? tComun("dashboard.tuVersionPersonalizada")
+      : tComun("dashboard.porDefectoPersonalizaloYSeGuardara");
   }
-  if (!dashboard.esPropio) return `Compartido por ${dashboard.propietario}`;
-  return dashboard.compartido ? "Compartido con toda la empresa" : "Solo lo ves tú";
+  if (!dashboard.esPropio) return tComun("dashboard.compartidoPorPropietario", { propietario: dashboard.propietario });
+  return dashboard.compartido ? tComun("dashboard.compartidoConTodaLaEmpresa") : tComun("dashboard.soloLoVesTu");
 };
 
 /** Dashboard de un módulo (`/dashboard/:clave`). */

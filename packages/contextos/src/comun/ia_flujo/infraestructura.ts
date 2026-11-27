@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ComunUrls from "../urls.ts";
 import { CambiosIaFlujo, DeleteIaFlujo, GetIaFlujo, GetIaFlujos, IaFlujo, NuevoIaFlujo, PatchIaFlujo, PostIaFlujo } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Forma de la entidad tal como la devuelve la API (snake_case).
@@ -92,7 +93,7 @@ export const postIaFlujo: PostIaFlujo = async (nuevoIaFlujo) => {
     const respuesta = await RestAPI.post<NuevoIaFlujoApi>(
         baseUrl,
         nuevoIaFlujoAApi(nuevoIaFlujo),
-        "Error al crear el flujo de trabajo",
+        tComun("iaFlujo.errorAlCrearElFlujoDe"),
     );
     return respuesta.id;
 };
@@ -104,7 +105,7 @@ export const patchIaFlujo: PatchIaFlujo = async (id, cambios) => {
     await RestAPI.patch<CambiosIaFlujoApi>(
         `${baseUrl}/${id}`,
         cambiosIaFlujoAApi(cambios),
-        "Error al guardar el flujo de trabajo",
+        tComun("iaFlujo.errorAlGuardarElFlujoDe"),
     );
 };
 
@@ -114,6 +115,6 @@ export const patchIaFlujo: PatchIaFlujo = async (id, cambios) => {
 export const deleteIaFlujo: DeleteIaFlujo = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar el flujo de trabajo",
+        tComun("iaFlujo.errorAlEliminarElFlujoDe"),
     );
 };

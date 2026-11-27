@@ -3,6 +3,7 @@ import { AUTH_STORAGE_CHANGED_EVENT } from "@olula/lib/api/auth_storage_events.t
 import { useEffect, useRef, useState } from "react";
 import { whoAmIStorage } from "../../auth/login/infraestructura.ts";
 import { empresaActual } from "../../valores/empresaActual.ts";
+import { tComun, useTComun } from "../i18n/index.ts";
 
 type ItemEmpresa = { id: string; nombre: string };
 
@@ -40,9 +41,10 @@ interface EmpresaActualProps {
  */
 export const EmpresaActual = ({
     nombre = "empresa_id",
-    label = "Empresa",
+    label = tComun("componentes.empresa"),
     onChange,
 }: EmpresaActualProps) => {
+    const t = useTComun();
     const [datos, setDatos] = useState<DatosEmpresa>(leerDatosEmpresa);
 
     useEffect(() => {
@@ -65,7 +67,7 @@ export const EmpresaActual = ({
     if (!idActual || empresas.length === 0) {
         return (
             <span style={{ color: "var(--color-error)", display: "block", whiteSpace: "nowrap" }}>
-                Sin empresa activa
+                {t("componentes.sinEmpresaActiva")}
             </span>
         );
     }

@@ -1,6 +1,7 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { NodoTraza } from "./diseño.ts";
 import { etiquetaNodo, nombreTipo, resumenDocumento } from "./dominio.ts";
+import { tComun } from "../../i18n/index.ts";
 
 export const PanelDocumentoTraza = ({
   nodo,
@@ -34,7 +35,7 @@ export const PanelDocumentoTraza = ({
           ))}
         </dl>
       ) : (
-        <p className="traza-panel-aviso">No tienes acceso a los datos de este documento.</p>
+        <p className="traza-panel-aviso">{tComun("componentes.noTienesAccesoALosDatos")}</p>
       )}
 
       <div className="botones">
@@ -44,7 +45,7 @@ export const PanelDocumentoTraza = ({
           props={{ disabled: !destino }}
           onClick={() => destino && onVer(destino)}
         >
-          {esRaiz ? "Documento actual" : "Ver documento"}
+          {esRaiz ? tComun("componentes.documentoActual") : tComun("componentes.verDocumento")}
         </QBoton>
       </div>
     </section>

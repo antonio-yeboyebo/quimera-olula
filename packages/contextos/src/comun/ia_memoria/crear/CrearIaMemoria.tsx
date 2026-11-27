@@ -15,6 +15,7 @@ import { buscarArchivosDrive, getCredencialesExterna } from "../../credencial_ex
 import { postIaMemoria, postIaMemoriaDesdeConector, postIaMemoriaDesdeFichero } from "../infraestructura.js";
 import "./CrearIaMemoria.css";
 import { leerComoBase64, metaNuevaIaMemoria, nuevaIaMemoriaVacia, PROVEEDORES_IMPORTABLES } from "./crear.js";
+import { useTComun } from "../../i18n/index.ts";
 
 type ModoAlta = "texto" | "fichero" | "conector";
 
@@ -37,6 +38,7 @@ export const CrearIaMemoria = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const [modo, setModo] = useState<ModoAlta>("texto");
     const [fichero, setFichero] = useState<File | null>(null);
     const [tituloFichero, setTituloFichero] = useState("");
@@ -77,12 +79,12 @@ export const CrearIaMemoria = ({
                 .then((datos) => { setResultados(datos); setErrorBusqueda(""); })
                 .catch((error: { descripcion?: string }) => {
                     setResultados([]);
-                    setErrorBusqueda(error?.descripcion || "Error al buscar archivos en Google Drive");
+                    setErrorBusqueda(error?.descripcion || t("iaMemoria.errorAlBuscarArchivosEnGoogle"));
                 })
                 .finally(() => setBuscando(false));
         }, 400);
         return () => clearTimeout(temporizador);
-    }, [modo, credencialId, textoBusqueda]);
+    }, [modo, credencialId, textoBusqueda, t]);
 
     const crear_ = useCallback(
         async () => {
@@ -143,7 +145,7 @@ export const CrearIaMemoria = ({
         <QModal
             abierto={true}
             nombre="crearIaMemoria"
-            titulo="Nueva memoria del asistente"
+            titulo={t("iaMemoria.nuevaMemoriaDelAsistente")}
             onCerrar={cancelar}
         >
             <div className="CrearIaMemoria">
@@ -152,26 +154,26 @@ export const CrearIaMemoria = ({
                         variante={modo === "texto" ? "solido" : "borde"}
                         onClick={() => setModo("texto")}
                     >
-                        Escribir texto
+                        {t("iaMemoria.escribirTexto")}
                     </QBoton>
                     <QBoton
                         variante={modo === "fichero" ? "solido" : "borde"}
                         onClick={() => setModo("fichero")}
                     >
-                        Subir o importar fichero
+                        {t("iaMemoria.subirOImportarFichero")}
                     </QBoton>
                     <QBoton
                         variante={modo === "conector" ? "solido" : "borde"}
                         onClick={() => setModo("conector")}
                     >
-                        Importar de un conector
+                        {t("iaMemoria.importarDeUnConector")}
                     </QBoton>
                 </div>
 
                 {modo === "texto" && (
                     <quimera-formulario>
-                        <QInput label="Título" {...uiProps("titulo")} ref={focus} />
-                        <QTextArea label="Contenido" rows={8} {...uiProps("contenido")} />
+                        <QInput label={t("iaMemoria.titulo")} {...uiProps("titulo")} ref={focus} />
+                        <QTextArea label={t("iaMemoria.contenido")} rows={8} {...uiProps("contenido")} />
                     </quimera-formulario>
                 )}
 
@@ -179,7 +181,7 @@ export const CrearIaMemoria = ({
                     <div className="CrearIaMemoria-fichero">
                         <quimera-formulario>
                             <QInput
-                                label="Título (opcional)"
+                                label={t("iaMemoria.tituloOpcional")}
                                 nombre="tituloFichero"
                                 valor={tituloFichero}
                                 onChange={(valor) => setTituloFichero(valor)}
@@ -189,7 +191,7 @@ export const CrearIaMemoria = ({
                             <div className="CrearIaMemoria-fichero-seleccionado">
                                 <span>{fichero.name}</span>
                                 <QBoton variante="texto" onClick={() => setFichero(null)}>
-                                    Quitar
+                                    {t("iaMemoria.quitar")}
                                 </QBoton>
                             </div>
                         ) : (
@@ -202,20 +204,20 @@ export const CrearIaMemoria = ({
                     <div className="CrearIaMemoria-conector">
                         {credenciales.length === 0 ? (
                             <p className="CrearIaMemoria-conector-vacio">
-                                No hay ninguna credencial de conector con Google Drive dada de alta.
+                                {t("iaMemoria.noHayNingunaCredencialDeConector")}
                             </p>
                         ) : (
                             <>
                                 <quimera-formulario>
                                     <QSelect
-                                        label="Credencial"
+                                        label={t("iaMemoria.credencial")}
                                         nombre="credencialId"
                                         valor={credencialId}
                                         onChange={(opcion) => { setCredencialId(opcion?.valor ?? ""); setArchivoSeleccionado(null); }}
                                         opciones={credenciales.map((c) => ({ valor: c.id, descripcion: `${c.nombre} (${c.proveedor})` }))}
                                     />
                                     <QInput
-                                        label="Título (opcional)"
+                                        label={t("iaMemoria.tituloOpcional")}
                                         nombre="tituloConector"
                                         valor={tituloConector}
                                         onChange={(valor) => setTituloConector(valor)}
@@ -223,7 +225,7 @@ export const CrearIaMemoria = ({
                                 </quimera-formulario>
 
                                 <QInput
-                                    label="Buscar archivo"
+                                    label={t("iaMemoria.buscarArchivo")}
                                     nombre="textoBusqueda"
                                     valor={textoBusqueda}
                                     onChange={(valor) => { setTextoBusqueda(valor); setArchivoSeleccionado(null); }}
@@ -231,12 +233,12 @@ export const CrearIaMemoria = ({
                                 />
 
                                 <ul className="CrearIaMemoria-conector-resultados">
-                                    {buscando && <li className="CrearIaMemoria-conector-estado">Buscando…</li>}
+                                    {buscando && <li className="CrearIaMemoria-conector-estado">{t("iaMemoria.buscando")}</li>}
                                     {!buscando && errorBusqueda && (
                                         <li className="CrearIaMemoria-conector-error">{errorBusqueda}</li>
                                     )}
                                     {!buscando && !errorBusqueda && credencialId && resultados.length === 0 && (
-                                        <li className="CrearIaMemoria-conector-estado">Sin resultados</li>
+                                        <li className="CrearIaMemoria-conector-estado">{t("iaMemoria.sinResultados")}</li>
                                     )}
                                     {resultados.map((archivo) => (
                                         <li
@@ -258,7 +260,7 @@ export const CrearIaMemoria = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!validoAlta}>
-                        Crear
+                        {t("iaMemoria.crear")}
                     </QBoton>
                 </div>
             </div>

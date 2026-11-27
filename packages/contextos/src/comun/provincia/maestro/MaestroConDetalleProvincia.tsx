@@ -11,10 +11,12 @@ import { Provincia } from "../diseño.ts";
 import { REGLA_PROVINCIA } from "../dominio.ts";
 import { criteriaProvinciasDefecto, metaFiltroProvincia, metaTablaProvincia } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Provincias (Eneboo `provincias.ui`), en Organización > Tablas generales. */
 export const MaestroConDetalleProvincia = () => {
 
+    const t = useTComun();
     const criteriaInicial = useMemo(criteriaProvinciasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleProvincia = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las provincias.</p>;
+        return <p>{t("provincia.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetalleProvincia = () => {
                 seleccionada={provincias.activo}
                 Maestro={
                     <>
-                        <h2>Provincias</h2>
+                        <h2>{t("provincia.provincias")}</h2>
                         <Listado<Provincia>
                             metaTabla={metaTablaProvincia}
                             metaFiltro={metaFiltroProvincia}
@@ -54,7 +56,7 @@ export const MaestroConDetalleProvincia = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_provincia_solicitado")}>
-                                        Nueva provincia
+                                        {t("provincia.nuevaProvincia")}
                                     </QBoton>
                                 </div>
                             )}

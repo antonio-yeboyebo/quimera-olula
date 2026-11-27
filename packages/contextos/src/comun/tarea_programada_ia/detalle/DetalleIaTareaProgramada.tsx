@@ -15,6 +15,7 @@ import "./DetalleIaTareaProgramada.css";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
 import { TabHistorial } from "./TabHistorial.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de una tarea programada de IA.
@@ -31,6 +32,7 @@ export const DetalleIaTareaProgramada = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleIaTareaProgramadaInicial,
@@ -59,17 +61,17 @@ export const DetalleIaTareaProgramada = ({
 
     const acciones = [
         {
-            texto: "Guardar",
+            texto: t("tareaProgramadaIa.guardar"),
             onClick: () => autoGuardar(formModelo.modelo),
             deshabilitado: !puede("comun.ia_tarea_programada") || !formModelo.modificado || !formModelo.valido,
         },
         {
-            texto: tarea.activo ? "Desactivar" : "Activar",
+            texto: tarea.activo ? t("tareaProgramadaIa.desactivar") : t("tareaProgramadaIa.activar"),
             onClick: () => emitir("activo_alternado_solicitado"),
             deshabilitado: !puede("comun.ia_tarea_programada"),
         },
         {
-            texto: "Borrar",
+            texto: t("tareaProgramadaIa.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("comun.ia_tarea_programada"),
             advertencia: true,
@@ -87,15 +89,15 @@ export const DetalleIaTareaProgramada = ({
             <div className="DetalleIaTareaProgramada">
                 <QuimeraAcciones acciones={acciones} />
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("tareaProgramadaIa.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label="Historial"
+                    <Tab label={t("tareaProgramadaIa.historial")}
                         key="tab-historial"
                         children={<TabHistorial tarea={tarea} />}
                     />,
-                    <Tab label="Informes"
+                    <Tab label={t("tareaProgramadaIa.informes")}
                         key="tab-informes"
                         children={<QListaDocumentos vinculoTipo="ia_tarea_programada" vinculoId={tarea.id} />}
                     />,

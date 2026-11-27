@@ -5,8 +5,10 @@ import { useCallback } from "react";
 import { Pais } from "../diseño.ts";
 import { etiquetaPais } from "../dominio.ts";
 import { deletePais } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarPais = ({ publicar, pais }: { pais: Pais; publicar: EmitirEvento }) => {
+    const t = useTComun();
     const borrar_ = useCallback(async () => {
         await deletePais(pais.id);
         publicar("pais_borrado", pais);
@@ -20,8 +22,8 @@ export const BorrarPais = ({ publicar, pais }: { pais: Pais; publicar: EmitirEve
         <QModalConfirmacion
             nombre="borrarPais"
             abierto={true}
-            titulo="Borrar país"
-            mensaje={`¿Confirma borrar ${etiquetaPais(pais)}? No se puede borrar si lo usan provincias, direcciones, documentos o cuentas.`}
+            titulo={t("paises.borrarPais")}
+            mensaje={t("paises.confirmaBorrarPaisNoSePuede", { pais: etiquetaPais(pais) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

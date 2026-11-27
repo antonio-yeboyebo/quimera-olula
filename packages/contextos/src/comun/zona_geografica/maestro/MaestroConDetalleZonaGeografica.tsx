@@ -11,10 +11,12 @@ import { ZonaGeografica } from "../diseño.ts";
 import { REGLA_ZONA_GEOGRAFICA } from "../dominio.ts";
 import { criteriaZonasGeograficasDefecto, metaFiltroZonaGeografica, metaTablaZonaGeografica } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Zonas geográficas (Eneboo `zonasgeo.ui`), en Organización > Tablas generales. */
 export const MaestroConDetalleZonaGeografica = () => {
 
+    const t = useTComun();
     const criteriaInicial = useMemo(criteriaZonasGeograficasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleZonaGeografica = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las zonas geográficas.</p>;
+        return <p>{t("zonaGeografica.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetalleZonaGeografica = () => {
                 seleccionada={zonasGeograficas.activo}
                 Maestro={
                     <>
-                        <h2>Zonas geográficas</h2>
+                        <h2>{t("zonaGeografica.zonasGeograficas")}</h2>
                         <Listado<ZonaGeografica>
                             metaTabla={metaTablaZonaGeografica}
                             metaFiltro={metaFiltroZonaGeografica}
@@ -54,7 +56,7 @@ export const MaestroConDetalleZonaGeografica = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_zona_geografica_solicitado")}>
-                                        Nueva zona geográfica
+                                        {t("zonaGeografica.nuevaZonaGeografica")}
                                     </QBoton>
                                 </div>
                             )}

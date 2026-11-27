@@ -13,6 +13,7 @@ import {
 } from "../../dominio.ts";
 import { LIMITES_ESPAÑA } from "../../geografia.ts";
 import { COLORES_SERIE } from "./colores.ts";
+import { useTComun } from "../../../i18n/index.ts";
 
 /**
  * Estilo del mapa base. Por defecto OpenFreeMap (sin clave, uso comercial permitido);
@@ -86,6 +87,7 @@ export const Mapa = ({
   componente: ComponenteDashboard;
   respuesta: RespuestaAgregado;
 }) => {
+  const t = useTComun();
   const consulta = componente.consultas[0];
   const formato = componente.opciones.formato ?? formatoPorDefecto(consulta.metricas);
   const datos = useMemo(() => datosMapa(respuesta, consulta), [respuesta, consulta]);
@@ -190,17 +192,17 @@ export const Mapa = ({
         ref={contenedor}
         className="dashboard-mapa-lienzo"
         role="img"
-        aria-label={`Mapa: ${datos.puntos
+        aria-label={t("dashboard.mapaJoin", { join: datos.puntos
           .slice(0, 5)
           .map((p) => `${p.nombre} ${formatearValor(p.valor, formato)}`)
-          .join(", ")}`}
+          .join(", ") })}
       />
       {error && (
-        <p className="dashboard-mapa-aviso">No se ha podido cargar el mapa base.</p>
+        <p className="dashboard-mapa-aviso">{t("dashboard.noSeHaPodidoCargarEl")}</p>
       )}
       {encuadre.fuera.length > 0 && (
         <p className="dashboard-mapa-pie">
-          Canarias:{" "}
+          {t("dashboard.canarias")}{" "}
           {encuadre.fuera
             .map((p) =>
               [p.nombre, formatearValor(p.valor, formato), p.clientes !== null ? `${p.clientes} clientes` : null]
@@ -212,7 +214,7 @@ export const Mapa = ({
       )}
       {datos.sinSituar > 0 && (
         <p className="dashboard-mapa-pie">
-          {formatearValor(datos.sinSituar, formato)} sin provincia o fuera de España
+          {t("dashboard.valorSinProvinciaOFueraDe", { valor: formatearValor(datos.sinSituar, formato) })}
         </p>
       )}
     </div>

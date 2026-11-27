@@ -16,6 +16,7 @@ import {
   RespuestaAgregado,
   TipoComponente,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 export const MAX_COMPONENTES = 40;
 
@@ -26,20 +27,20 @@ export const MAX_COMPONENTES = 40;
 export const ALTO_FILA_DASHBOARD = 36;
 
 export const CATALOGO: DefinicionTipoComponente[] = [
-  { tipo: "tarjeta", nombre: "Tarjeta", descripcion: "Un valor y su comparación con otro periodo", grupo: "Indicadores", w: 3, h: 2, disponible: true },
-  { tipo: "objetivo", nombre: "Objetivo", descripcion: "Valor frente a una meta", grupo: "Indicadores", w: 3, h: 2, disponible: true },
-  { tipo: "temporal", nombre: "Temporal", descripcion: "Evolución por día, mes o año", grupo: "Gráficos", w: 8, h: 8, disponible: true },
-  { tipo: "barras", nombre: "Barras", descripcion: "Comparar categorías", grupo: "Gráficos", w: 6, h: 8, disponible: true },
-  { tipo: "circular", nombre: "Circular", descripcion: "Reparto entre pocas categorías", grupo: "Gráficos", w: 4, h: 8, disponible: true },
-  { tipo: "embudo", nombre: "Embudo", descripcion: "Presupuesto → pedido → factura", grupo: "Gráficos", w: 4, h: 8, disponible: true },
-  { tipo: "mapa", nombre: "Mapa", descripcion: "Ventas y clientes por provincia o comunidad", grupo: "Gráficos", w: 6, h: 12, disponible: true },
-  { tipo: "ranking", nombre: "Ranking", descripcion: "Los primeros N: clientes, artículos…", grupo: "Datos", w: 6, h: 8, disponible: true },
-  { tipo: "tabla", nombre: "Tabla filtrada", descripcion: "Filas de un listado con su filtro", grupo: "Datos", w: 12, h: 8, disponible: true },
-  { tipo: "tabla_resumen", nombre: "Tabla resumen", descripcion: "Cruce de dos dimensiones", grupo: "Datos", w: 6, h: 8, disponible: false },
-  { tipo: "avisos", nombre: "Avisos", descripcion: "Umbrales que piden atención", grupo: "Otros", w: 6, h: 6, disponible: false },
-  { tipo: "pregunta_ia", nombre: "Pregunta a la IA", descripcion: "Describe lo que quieres ver", grupo: "Otros", w: 6, h: 8, disponible: true },
-  { tipo: "accesos", nombre: "Accesos rápidos", descripcion: "Enlaces a pantallas", grupo: "Otros", w: 6, h: 4, disponible: false },
-  { tipo: "texto", nombre: "Texto", descripcion: "Una nota libre", grupo: "Otros", w: 4, h: 4, disponible: true },
+  { tipo: "tarjeta", get nombre() { return tComun("dashboard.tarjeta"); }, get descripcion() { return tComun("dashboard.unValorYSuComparacionCon"); }, grupo: "Indicadores", w: 3, h: 2, disponible: true },
+  { tipo: "objetivo", get nombre() { return tComun("dashboard.objetivo"); }, get descripcion() { return tComun("dashboard.valorFrenteAUnaMeta"); }, grupo: "Indicadores", w: 3, h: 2, disponible: true },
+  { tipo: "temporal", get nombre() { return tComun("dashboard.temporal"); }, get descripcion() { return tComun("dashboard.evolucionPorDiaMesOAno"); }, grupo: "Gráficos", w: 8, h: 8, disponible: true },
+  { tipo: "barras", get nombre() { return tComun("dashboard.barras"); }, get descripcion() { return tComun("dashboard.compararCategorias"); }, grupo: "Gráficos", w: 6, h: 8, disponible: true },
+  { tipo: "circular", get nombre() { return tComun("dashboard.circular"); }, get descripcion() { return tComun("dashboard.repartoEntrePocasCategorias"); }, grupo: "Gráficos", w: 4, h: 8, disponible: true },
+  { tipo: "embudo", get nombre() { return tComun("dashboard.embudo"); }, get descripcion() { return tComun("dashboard.presupuestoPedidoFactura"); }, grupo: "Gráficos", w: 4, h: 8, disponible: true },
+  { tipo: "mapa", get nombre() { return tComun("dashboard.mapa"); }, get descripcion() { return tComun("dashboard.ventasYClientesPorProvinciaO"); }, grupo: "Gráficos", w: 6, h: 12, disponible: true },
+  { tipo: "ranking", get nombre() { return tComun("dashboard.ranking"); }, get descripcion() { return tComun("dashboard.losPrimerosNClientesArticulos"); }, grupo: "Datos", w: 6, h: 8, disponible: true },
+  { tipo: "tabla", get nombre() { return tComun("dashboard.tablaFiltrada"); }, get descripcion() { return tComun("dashboard.filasDeUnListadoConSu"); }, grupo: "Datos", w: 12, h: 8, disponible: true },
+  { tipo: "tabla_resumen", get nombre() { return tComun("dashboard.tablaResumen"); }, get descripcion() { return tComun("dashboard.cruceDeDosDimensiones"); }, grupo: "Datos", w: 6, h: 8, disponible: false },
+  { tipo: "avisos", get nombre() { return tComun("dashboard.avisos"); }, get descripcion() { return tComun("dashboard.umbralesQuePidenAtencion"); }, grupo: "Otros", w: 6, h: 6, disponible: false },
+  { tipo: "pregunta_ia", get nombre() { return tComun("dashboard.preguntaALaIa"); }, get descripcion() { return tComun("dashboard.describeLoQueQuieresVer"); }, grupo: "Otros", w: 6, h: 8, disponible: true },
+  { tipo: "accesos", get nombre() { return tComun("dashboard.accesosRapidos"); }, get descripcion() { return tComun("dashboard.enlacesAPantallas"); }, grupo: "Otros", w: 6, h: 4, disponible: false },
+  { tipo: "texto", get nombre() { return tComun("dashboard.texto"); }, get descripcion() { return tComun("dashboard.unaNotaLibre"); }, grupo: "Otros", w: 4, h: 4, disponible: true },
 ];
 
 export const definicionTipo = (tipo: TipoComponente): DefinicionTipoComponente =>
@@ -201,9 +202,9 @@ export const categorias = (
 };
 
 const textoCategoria = (clave: GrupoAgregado[string], nombre: GrupoAgregado[string]) => {
-  if (clave === null || clave === undefined || clave === "") return "Sin valor";
-  if (clave === true) return "Sí";
-  if (clave === false) return "No";
+  if (clave === null || clave === undefined || clave === "") return tComun("dashboard.sinValor");
+  if (clave === true) return tComun("dashboard.si");
+  if (clave === false) return tComun("dashboard.no");
   return nombre ? String(nombre) : String(clave);
 };
 
@@ -215,7 +216,7 @@ export const agruparResto = (lista: Categoria[], maximo = 6): Categoria[] => {
   if (lista.length <= maximo) return lista;
   const ordenadas = [...lista].sort((a, b) => b.valor - a.valor);
   const resto = ordenadas.slice(maximo - 1).reduce((suma, c) => suma + c.valor, 0);
-  return [...ordenadas.slice(0, maximo - 1), { clave: "__otros", etiqueta: "Otros", valor: resto }];
+  return [...ordenadas.slice(0, maximo - 1), { clave: "__otros", etiqueta: tComun("dashboard.otros"), valor: resto }];
 };
 
 // ---------------------------------------------------------------------------
@@ -282,19 +283,19 @@ export const nuevoComponente = (
 export const problemaComponente = (componente: ComponenteDashboard): string | null => {
   if (sinDatos(componente.tipo)) return null;
   const [consulta] = componente.consultas;
-  if (!consulta?.recurso) return "Elige de dónde salen los datos";
+  if (!consulta?.recurso) return tComun("dashboard.eligeDeDondeSalenLosDatos");
   if (componente.tipo === "embudo") {
-    return componente.consultas.length >= 2 ? null : "Elige un circuito con al menos dos pasos";
+    return componente.consultas.length >= 2 ? null : tComun("dashboard.eligeUnCircuitoConAlMenos");
   }
   if (componente.tipo === "tabla") {
-    return consulta.columnas ? null : "Elige al menos una columna";
+    return consulta.columnas ? null : tComun("dashboard.eligeAlMenosUnaColumna");
   }
-  if (!consulta.metricas) return "Elige qué medir";
+  if (!consulta.metricas) return tComun("dashboard.eligeQueMedir");
   const agrupa = ["temporal", "barras", "circular", "ranking"].includes(componente.tipo);
-  if (agrupa && !consulta.agrupar) return "Elige por qué agrupar";
-  if (componente.tipo === "objetivo" && !componente.opciones.meta) return "Indica la meta";
+  if (agrupa && !consulta.agrupar) return tComun("dashboard.eligePorQueAgrupar");
+  if (componente.tipo === "objetivo" && !componente.opciones.meta) return tComun("dashboard.indicaLaMeta");
   if (componente.tipo === "mapa" && !esGeografica(leerAgrupacion(consulta.agrupar)[0])) {
-    return "Elige provincia o comunidad";
+    return tComun("dashboard.eligeProvinciaOComunidad");
   }
   return null;
 };
@@ -308,45 +309,45 @@ export const sustituirComponente = (
     : [...componentes, componente];
 
 export const RANGOS_PERIODO: { valor: RangoPeriodo; descripcion: string }[] = [
-  { valor: "hoy", descripcion: "Hoy" },
-  { valor: "ayer", descripcion: "Ayer" },
-  { valor: "esta_semana", descripcion: "Esta semana" },
-  { valor: "semana_anterior", descripcion: "Semana anterior" },
-  { valor: "este_mes", descripcion: "Este mes" },
-  { valor: "mes_anterior", descripcion: "Mes anterior" },
-  { valor: "este_trimestre", descripcion: "Este trimestre" },
-  { valor: "trimestre_anterior", descripcion: "Trimestre anterior" },
-  { valor: "este_año", descripcion: "Este año" },
-  { valor: "año_anterior", descripcion: "Año anterior" },
-  { valor: "ultimos_7_dias", descripcion: "Últimos 7 días" },
-  { valor: "ultimos_30_dias", descripcion: "Últimos 30 días" },
-  { valor: "ultimos_90_dias", descripcion: "Últimos 90 días" },
-  { valor: "ultimos_12_meses", descripcion: "Últimos 12 meses" },
+  { valor: "hoy", get descripcion() { return tComun("dashboard.hoy"); } },
+  { valor: "ayer", get descripcion() { return tComun("dashboard.ayer"); } },
+  { valor: "esta_semana", get descripcion() { return tComun("dashboard.estaSemana"); } },
+  { valor: "semana_anterior", get descripcion() { return tComun("dashboard.semanaAnterior"); } },
+  { valor: "este_mes", get descripcion() { return tComun("dashboard.esteMes"); } },
+  { valor: "mes_anterior", get descripcion() { return tComun("dashboard.mesAnterior"); } },
+  { valor: "este_trimestre", get descripcion() { return tComun("dashboard.esteTrimestre"); } },
+  { valor: "trimestre_anterior", get descripcion() { return tComun("dashboard.trimestreAnterior"); } },
+  { valor: "este_año", get descripcion() { return tComun("dashboard.esteAno"); } },
+  { valor: "año_anterior", get descripcion() { return tComun("dashboard.anoAnterior"); } },
+  { valor: "ultimos_7_dias", get descripcion() { return tComun("dashboard.ultimos7Dias"); } },
+  { valor: "ultimos_30_dias", get descripcion() { return tComun("dashboard.ultimos30Dias"); } },
+  { valor: "ultimos_90_dias", get descripcion() { return tComun("dashboard.ultimos90Dias"); } },
+  { valor: "ultimos_12_meses", get descripcion() { return tComun("dashboard.ultimos12Meses"); } },
 ];
 
 export const GRANULARIDADES: { valor: Granularidad; descripcion: string }[] = [
-  { valor: "dia", descripcion: "Día" },
-  { valor: "semana", descripcion: "Semana" },
-  { valor: "mes", descripcion: "Mes" },
-  { valor: "trimestre", descripcion: "Trimestre" },
-  { valor: "año", descripcion: "Año" },
+  { valor: "dia", get descripcion() { return tComun("dashboard.dia"); } },
+  { valor: "semana", get descripcion() { return tComun("dashboard.semana"); } },
+  { valor: "mes", get descripcion() { return tComun("dashboard.mes"); } },
+  { valor: "trimestre", get descripcion() { return tComun("dashboard.trimestre"); } },
+  { valor: "año", get descripcion() { return tComun("dashboard.ano"); } },
 ];
 
 export const OPERACIONES: { valor: string; descripcion: string; conCampo: boolean }[] = [
-  { valor: "suma", descripcion: "Suma de", conCampo: true },
-  { valor: "conteo", descripcion: "Número de registros", conCampo: false },
-  { valor: "promedio", descripcion: "Media de", conCampo: true },
-  { valor: "maximo", descripcion: "Máximo de", conCampo: true },
-  { valor: "minimo", descripcion: "Mínimo de", conCampo: true },
+  { valor: "suma", get descripcion() { return tComun("dashboard.sumaDe"); }, conCampo: true },
+  { valor: "conteo", get descripcion() { return tComun("dashboard.numeroDeRegistros"); }, conCampo: false },
+  { valor: "promedio", get descripcion() { return tComun("dashboard.mediaDe"); }, conCampo: true },
+  { valor: "maximo", get descripcion() { return tComun("dashboard.maximoDe"); }, conCampo: true },
+  { valor: "minimo", get descripcion() { return tComun("dashboard.minimoDe"); }, conCampo: true },
 ];
 
 const ETIQUETAS_PIE: Record<string, string> = {
-  suma: "Suma",
-  conteo: "Recuento",
-  conteo_distinto: "Distintos",
-  promedio: "Media",
-  minimo: "Mínimo",
-  maximo: "Máximo",
+  get suma() { return tComun("dashboard.suma"); },
+  get conteo() { return tComun("dashboard.recuento"); },
+  get conteo_distinto() { return tComun("dashboard.distintos"); },
+  get promedio() { return tComun("dashboard.media"); },
+  get minimo() { return tComun("dashboard.minimo"); },
+  get maximo() { return tComun("dashboard.maximo"); },
 };
 
 /** «Este año», «Últimos 12 meses»…: el periodo de la consulta, o vacío si no tiene. */
@@ -366,7 +367,7 @@ export const pieTarjeta = (consulta: ConsultaComponente | undefined): string => 
   const metrica = !op
     ? ""
     : !campo
-      ? etiquetaOp || "Recuento"
+      ? etiquetaOp || tComun("dashboard.recuento")
       : `${etiquetaOp} de ${campo === campo.toUpperCase() ? campo : campo.toLowerCase()}`;
   const periodo = etiquetaPeriodo(consulta);
   if (metrica && periodo) return `${metrica} · ${periodo}`;
@@ -488,18 +489,18 @@ export const CIRCUITOS: Record<string, { nombre: string; pasos: { recurso: strin
   ventas: {
     nombre: "Ciclo de venta",
     pasos: [
-      { recurso: "ventas.presupuesto", etiqueta: "Presupuestos" },
-      { recurso: "ventas.pedido", etiqueta: "Pedidos" },
-      { recurso: "ventas.albaran", etiqueta: "Albaranes" },
-      { recurso: "ventas.factura", etiqueta: "Facturas" },
+      { recurso: "ventas.presupuesto", get etiqueta() { return tComun("dashboard.presupuestos"); } },
+      { recurso: "ventas.pedido", get etiqueta() { return tComun("dashboard.pedidos"); } },
+      { recurso: "ventas.albaran", get etiqueta() { return tComun("dashboard.albaranes"); } },
+      { recurso: "ventas.factura", get etiqueta() { return tComun("dashboard.facturas"); } },
     ],
   },
   compras: {
     nombre: "Ciclo de compra",
     pasos: [
-      { recurso: "compras.pedido", etiqueta: "Pedidos" },
-      { recurso: "compras.albaran", etiqueta: "Albaranes" },
-      { recurso: "compras.factura", etiqueta: "Facturas" },
+      { recurso: "compras.pedido", get etiqueta() { return tComun("dashboard.pedidos"); } },
+      { recurso: "compras.albaran", get etiqueta() { return tComun("dashboard.albaranes"); } },
+      { recurso: "compras.factura", get etiqueta() { return tComun("dashboard.facturas"); } },
     ],
   },
 };

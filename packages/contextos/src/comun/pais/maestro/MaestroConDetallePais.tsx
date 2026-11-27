@@ -11,10 +11,12 @@ import { Pais } from "../diseño.ts";
 import { REGLA_PAIS } from "../dominio.ts";
 import { criteriaPaisesDefecto, metaFiltroPais, metaTablaPais } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Países (Eneboo `paises.ui`), en Organización > Tablas generales. */
 export const MaestroConDetallePais = () => {
 
+    const t = useTComun();
     const criteriaInicial = useMemo(criteriaPaisesDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetallePais = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los países.</p>;
+        return <p>{t("paises.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetallePais = () => {
                 seleccionada={paises.activo}
                 Maestro={
                     <>
-                        <h2>Países</h2>
+                        <h2>{t("paises.paises")}</h2>
                         <Listado<Pais>
                             metaTabla={metaTablaPais}
                             metaFiltro={metaFiltroPais}
@@ -54,7 +56,7 @@ export const MaestroConDetallePais = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_pais_solicitado")}>
-                                        Nuevo país
+                                        {t("paises.nuevoPais")}
                                     </QBoton>
                                 </div>
                             )}

@@ -1,6 +1,7 @@
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { formatearFechaDate } from "@olula/lib/dominio.js";
 import { IaMemoria } from "../diseño.js";
+import { tComun } from "../../i18n/index.ts";
 
 interface TabInformacionProps {
     iaMemoria: IaMemoria;
@@ -13,24 +14,24 @@ export const TabInformacion = ({ iaMemoria }: TabInformacionProps) => {
     return (
         <div className="TabInformacion">
             <dl>
-                <dt>Estado</dt>
-                <dd>{iaMemoria.activo ? "Activo" : "Inactivo"}</dd>
-                <dt>Creado por</dt>
+                <dt>{tComun("iaMemoria.estado")}</dt>
+                <dd>{iaMemoria.activo ? tComun("iaMemoria.activo") : tComun("iaMemoria.inactivo")}</dd>
+                <dt>{tComun("iaMemoria.creadoPor")}</dt>
                 <dd>{iaMemoria.creadoPor || "-"}</dd>
-                <dt>Creado en</dt>
+                <dt>{tComun("iaMemoria.creadoEn")}</dt>
                 <dd>{formatearFechaDate(iaMemoria.creadoEn)}</dd>
-                <dt>Actualizado en</dt>
+                <dt>{tComun("iaMemoria.actualizadoEn")}</dt>
                 <dd>{formatearFechaDate(iaMemoria.actualizadoEn)}</dd>
-                <dt>Indexado (RAG)</dt>
+                <dt>{tComun("iaMemoria.indexadoRag")}</dt>
                 <dd>
                     {iaMemoria.indexado
-                        ? `Sí (${iaMemoria.indexadoEn ? formatearFechaDate(iaMemoria.indexadoEn) : "-"})`
-                        : "No"}
+                        ? tComun("iaMemoria.siValor", { valor: iaMemoria.indexadoEn ? formatearFechaDate(iaMemoria.indexadoEn) : "-" })
+                        : tComun("iaMemoria.no")}
                     {iaMemoria.modeloDesactualizado && (
                         <>
                             {" "}
                             <QEtiqueta variante="advertencia">
-                                Modelo de embeddings desactualizado — conviene reindexar
+                                {tComun("iaMemoria.modeloDeEmbeddingsDesactualizadoConviene")}
                             </QEtiqueta>
                         </>
                     )}

@@ -12,6 +12,7 @@ import { BorrarInforme } from "./BorrarInforme.tsx";
 import { CamposInforme } from "./CamposInforme.tsx";
 import { contextoDetalleInicial, getMaquinaDetalle, guardarFicha } from "./detalle.ts";
 import { TabResultado } from "./TabResultado.tsx";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Ficha de un informe: pestañas Criterios (se guardan solos al cambiar) y
  * Resultado, como el libro diario. */
@@ -24,6 +25,7 @@ export const DetalleInforme = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTComun();
     const getMaquina = useMemo(() => getMaquinaDetalle(pestaña), [pestaña]);
     const inicial = useMemo(() => contextoDetalleInicial(pestaña), [pestaña]);
     const { ctx, emitir } = useMaquina(getMaquina, inicial, publicar);
@@ -51,7 +53,7 @@ export const DetalleInforme = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("informeDocumentos.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede(pestaña.regla),
             advertencia: true,
@@ -73,7 +75,7 @@ export const DetalleInforme = ({
                 <Tabs
                     children={[
                         <Tab
-                            label="Criterios"
+                            label={t("informeDocumentos.criterios")}
                             key="tab-criterios"
                             children={
                                 <quimera-formulario>
@@ -86,7 +88,7 @@ export const DetalleInforme = ({
                             }
                         />,
                         <Tab
-                            label="Resultado"
+                            label={t("informeDocumentos.resultado")}
                             key="tab-resultado"
                             children={
                                 pestaña.Resultado ? (

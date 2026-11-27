@@ -18,6 +18,7 @@ import {
   metaNuevaComunicacion,
   nuevaComunicacionVacia,
 } from "./dominio.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 interface CrearComunicacionProps {
   publicar?: EmitirEvento;
@@ -30,6 +31,7 @@ export const CrearComunicacion = ({
   onCancelar = () => {},
   activo = false,
 }: CrearComunicacionProps) => {
+  const t = useTComun();
   const { modelo, uiProps, valido, init } = useModelo(
     metaNuevaComunicacion,
     nuevaComunicacionVacia
@@ -85,37 +87,37 @@ export const CrearComunicacion = ({
   return (
     <QModal
       nombre="crear-comunicacion"
-      titulo="Nueva comunicación"
+      titulo={t("comunicacion.nuevaComunicacion")}
       abierto={activo}
       onCerrar={cancelar}
     >
       <div className="crear-comunicacion-modal">
         <Usuario
           {...uiProps("usuario_destino_id", "nombre_usuario_destino")}
-          label="Responsable"
+          label={t("comunicacion.responsable")}
         />
 
-        <QInput label="Asunto" {...uiProps("asunto")} />
+        <QInput label={t("comunicacion.asunto")} {...uiProps("asunto")} />
 
         <QEditorEnriquecido
           valor={jsonEditor}
           onChange={(valor) => {
             setJsonEditor(valor);
           }}
-          marcadorPosicion="Escribe el contenido..."
+          marcadorPosicion={t("comunicacion.escribeElContenido")}
         />
 
         <section className="crear-comunicacion-preview">
-          <h4>Vista lectura (componente de solo lectura)</h4>
+          <h4>{t("comunicacion.vistaLecturaComponenteDeSoloLectura")}</h4>
           <QTextEnriquecidoJSON valor={jsonEditor} />
         </section>
 
         <div className="crear-comunicacion-botones">
           <QBoton variante="borde" onClick={cancelar}>
-            Cancelar
+            {t("comunicacion.cancelar")}
           </QBoton>
           <QBoton onClick={guardar} deshabilitado={guardando || !valido}>
-            {guardando ? "Guardando..." : "Guardar"}
+            {guardando ? t("comunicacion.guardando") : t("comunicacion.guardar")}
           </QBoton>
         </div>
       </div>

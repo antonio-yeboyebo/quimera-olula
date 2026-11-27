@@ -1,5 +1,6 @@
 import { opcionesTipoCodBarras } from "#/valores/codbarras.ts";
 import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
+import { tComun } from "../i18n/index.ts";
 
 type TipoCodBarrasProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
   valor: string;
@@ -9,7 +10,7 @@ type TipoCodBarrasProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & 
 
 export const TipoCodBarras = ({
   valor,
-  label = "Tipo cód. barras",
+  label = tComun("componentes.tipoCodBarras"),
   nombre = "tipoCodBarras",
   ...props
 }: TipoCodBarrasProps) => {

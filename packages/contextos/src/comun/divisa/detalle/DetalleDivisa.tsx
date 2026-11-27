@@ -12,6 +12,7 @@ import { etiquetaDivisa, metaDivisa, REGLA_DIVISA } from "../dominio.ts";
 import { CamposDivisa } from "./CamposDivisa.tsx";
 import { contextoDetalleDivisaInicial, guardarDivisa } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `divisas.ui` (sin bandera). */
 export const DetalleDivisa = ({
@@ -21,6 +22,7 @@ export const DetalleDivisa = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleDivisaInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -44,7 +46,7 @@ export const DetalleDivisa = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("divisas.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede(REGLA_DIVISA),
             advertencia: true,
@@ -64,7 +66,7 @@ export const DetalleDivisa = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={divisa.id} soloLectura />
+                    <QInput label={t("divisas.codigo")} nombre="id" valor={divisa.id} soloLectura />
                     <CamposDivisa uiProps={formModelo.uiProps} />
                 </quimera-formulario>
             </div>

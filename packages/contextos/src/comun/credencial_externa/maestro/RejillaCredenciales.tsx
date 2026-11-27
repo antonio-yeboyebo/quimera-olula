@@ -2,6 +2,7 @@ import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { CredencialExterna } from "../diseño.js";
 import { iconoProveedor } from "../dominio.js";
 import "./RejillaCredenciales.css";
+import { tComun } from "../../i18n/index.ts";
 
 interface RejillaCredencialesProps {
     titulo: string;
@@ -55,7 +56,7 @@ export const RejillaCredenciales = ({
                 )}
             </div>
             {credenciales.length === 0 && !puedeCrear && (
-                <p className="RejillaCredenciales-vacio">Nada configurado todavía.</p>
+                <p className="RejillaCredenciales-vacio">{tComun("credencialExterna.nadaConfiguradoTodavia")}</p>
             )}
         </section>
     );

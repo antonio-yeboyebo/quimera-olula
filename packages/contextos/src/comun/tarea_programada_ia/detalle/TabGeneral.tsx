@@ -5,6 +5,7 @@ import { SelectorCredenciales } from "../componentes/SelectorCredenciales.js";
 import { SelectorIaFlujo } from "../componentes/SelectorIaFlujo.js";
 import { SelectorProgramacion } from "../componentes/SelectorProgramacion.js";
 import "./TabGeneral.css";
+import { tComun } from "../../i18n/index.ts";
 
 interface TabGeneralProps {
     form: HookModelo<IaTareaProgramada>;
@@ -23,7 +24,7 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Nombre" {...uiProps("nombre")} />
+                <QInput label={tComun("tareaProgramadaIa.nombre")} {...uiProps("nombre")} />
                 <SelectorIaFlujo {...uiProps("iaFlujoId")} />
                 <SelectorProgramacion
                     valor={expresionCronProps.valor as string}

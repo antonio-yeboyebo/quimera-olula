@@ -15,6 +15,7 @@ import { getMaquina } from "./maquina.js";
 import { TabFichero } from "./TabFichero.js";
 import { TabGeneral } from "./TabGeneral.js";
 import { TabInformacion } from "./TabInformacion.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de una memoria del asistente de IA.
@@ -33,6 +34,7 @@ export const DetalleIaMemoria = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleIaMemoriaInicial,
@@ -65,17 +67,17 @@ export const DetalleIaMemoria = ({
     // al padre), porque estas acciones transicionan/actualizan el estado local.
     const accionesIaMemoria = [
         {
-            texto: "Guardar",
+            texto: t("iaMemoria.guardar"),
             onClick: () => autoGuardar(formModelo.modelo),
             deshabilitado: !puede("comun.ia_memoria") || !formModelo.modificado || !formModelo.valido,
         },
         {
-            texto: iaMemoria.activo ? "Desactivar" : "Activar",
+            texto: iaMemoria.activo ? t("iaMemoria.desactivar") : t("iaMemoria.activar"),
             onClick: () => emitir("activo_alternado_solicitado"),
             deshabilitado: !puede("comun.ia_memoria"),
         },
         {
-            texto: "Borrar",
+            texto: t("iaMemoria.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("comun.ia_memoria"),
             advertencia: true,
@@ -94,7 +96,7 @@ export const DetalleIaMemoria = ({
                 <QuimeraAcciones acciones={accionesIaMemoria} />
                 <Tabs children={[
                     iaMemoria.origen === 'fichero' || iaMemoria.origen === 'externo'
-                        ? <Tab label={iaMemoria.origen === 'externo' ? "Origen" : "Fichero"}
+                        ? <Tab label={iaMemoria.origen === 'externo' ? t("iaMemoria.origen") : t("iaMemoria.fichero")}
                             key="tab-fichero"
                             children={
                                 <TabFichero
@@ -103,11 +105,11 @@ export const DetalleIaMemoria = ({
                                 />
                             }
                         />
-                        : <Tab label="General"
+                        : <Tab label={t("iaMemoria.general")}
                             key="tab-general"
                             children={<TabGeneral form={formModelo} />}
                         />,
-                    <Tab label="Información"
+                    <Tab label={t("iaMemoria.informacion")}
                         key="tab-info"
                         children={<TabInformacion iaMemoria={iaMemoria} />}
                     />,
