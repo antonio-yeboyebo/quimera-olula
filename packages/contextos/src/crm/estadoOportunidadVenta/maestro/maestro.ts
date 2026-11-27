@@ -7,12 +7,14 @@ import {
 import { EstadoOportunidad } from "../diseño.ts";
 import { getEstadosOportunidad } from "../infraestructura.ts";
 import { ContextoMaestroEstadosOportunidad, EstadoMaestroEstadosOportunidad } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
+import { textoEstadoBaseOportunidad } from "../../comun/valores/texto_opcion.ts";
 
 export const metaTablaEstadoOportunidad: MetaTabla<EstadoOportunidad> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "estadobase", cabecera: "Estado Base" },
-    { id: "probabilidad", cabecera: "Probabilidad", tipo: "numero" },
+    { id: "id", get cabecera() { return tCrm("estadoOportunidadVenta.codigo"); } },
+    { id: "descripcion", get cabecera() { return tCrm("estadoOportunidadVenta.descripcion"); } },
+    { id: "estadobase", get cabecera() { return tCrm("estadoOportunidadVenta.estadoBase"); }, render: (e) => textoEstadoBaseOportunidad(e.estadobase) },
+    { id: "probabilidad", get cabecera() { return tCrm("estadoOportunidadVenta.probabilidad2"); }, tipo: "numero" },
 ];
 
 type ProcesarEstadosOportunidad = ProcesarContexto<EstadoMaestroEstadosOportunidad, ContextoMaestroEstadosOportunidad>;

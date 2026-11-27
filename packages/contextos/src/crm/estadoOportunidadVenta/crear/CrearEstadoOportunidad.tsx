@@ -14,12 +14,14 @@ import {
   metaNuevoEstadoOportunidad,
   nuevoEstadoOportunidadVacio,
 } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearEstadoOportunidad = ({
   publicar,
 }: {
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevoEstadoOportunidad,
     nuevoEstadoOportunidadVacio
@@ -41,22 +43,22 @@ export const CrearEstadoOportunidad = ({
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nuevo Estado de Oportunidad de Venta"
+      titulo={t("estadoOportunidadVenta.nuevoEstadoDeOportunidadDeVenta")}
       onCerrar={cancelar}
     >
       <div className="CrearEstadoOportunidad">
         <quimera-formulario>
-          <QInput label="Código" maxLength={10} {...uiProps("id")} />
-          <QInput label="Descripción" {...uiProps("descripcion")} />
-          <QInput label="Probabilidad (%)" {...uiProps("probabilidad")} />
+          <QInput label={t("estadoOportunidadVenta.codigo")} maxLength={10} {...uiProps("id")} />
+          <QInput label={t("estadoOportunidadVenta.descripcion")} {...uiProps("descripcion")} />
+          <QInput label={t("estadoOportunidadVenta.probabilidad")} {...uiProps("probabilidad")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("estadoOportunidadVenta.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("estadoOportunidadVenta.cancelar")}
           </QBoton>
         </div>
       </div>

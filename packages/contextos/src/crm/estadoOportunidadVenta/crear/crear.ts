@@ -1,5 +1,6 @@
 import { MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { NuevoEstadoOportunidad } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const metaNuevoEstadoOportunidad: MetaModelo<NuevoEstadoOportunidad> = {
     campos: {
@@ -7,9 +8,9 @@ export const metaNuevoEstadoOportunidad: MetaModelo<NuevoEstadoOportunidad> = {
             requerido: true,
             validacion: (estado: NuevoEstadoOportunidad) =>
                 !stringNoVacio(estado.id)
-                    ? "El código es obligatorio"
+                    ? tCrm("estadoOportunidadVenta.elCodigoEsObligatorio")
                     : estado.id.length > 10
-                        ? "Máximo 10 caracteres"
+                        ? tCrm("estadoOportunidadVenta.maximo10Caracteres")
                         : true,
         },
         descripcion: { requerido: true, validacion: (estado: NuevoEstadoOportunidad) => stringNoVacio(estado.descripcion) },

@@ -10,6 +10,7 @@ import { BorrarEstadoOportunidad } from "../borrar/BorrarEstadoOportunidad.tsx";
 import { estadoOportunidadVacio, metaEstadoOportunidad } from "./detalle.ts";
 import "./DetalleEstadoOportunidad.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleEstadoOportunidad = ({
   id,
@@ -18,6 +19,7 @@ export const DetalleEstadoOportunidad = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const estadoOportunidadId = id ?? params.id;
@@ -60,12 +62,12 @@ export const DetalleEstadoOportunidad = ({
             vertical
             acciones={[
               {
-                texto: "Marcar por defecto",
+                texto: t("estadoOportunidadVenta.marcarPorDefecto"),
                 onClick: () => emitir("marcar_estado_oportunidad_por_defecto"),
                 deshabilitado: modelo.valorDefecto,
               },
               {
-                texto: "Borrar",
+                texto: t("estadoOportunidadVenta.borrar"),
                 onClick: () => emitir("borrado_estado_oportunidad_solicitado"),
                 advertencia: true,
               },
@@ -73,8 +75,8 @@ export const DetalleEstadoOportunidad = ({
           />
 
           <quimera-formulario>
-            <QInput label="Descripción" {...uiProps("descripcion")} />
-            <QInput label="Probabilidad (%)" {...uiProps("probabilidad")} />
+            <QInput label={t("estadoOportunidadVenta.descripcion")} {...uiProps("descripcion")} />
+            <QInput label={t("estadoOportunidadVenta.probabilidad")} {...uiProps("probabilidad")} />
             <EstadoBaseOportunidad {...uiProps("estadobase")} />
           </quimera-formulario>
 
@@ -84,14 +86,14 @@ export const DetalleEstadoOportunidad = ({
                 onClick={() => emitir("estado_oportunidad_cambiado", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("estadoOportunidadVenta.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_estado_oportunidad_cancelada")}
               >
-                Cancelar
+                {t("estadoOportunidadVenta.cancelar")}
               </QBoton>
             </div>
           )}
