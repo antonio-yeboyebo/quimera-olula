@@ -16,6 +16,7 @@ import {
 } from "./dominio.ts";
 import { usePantallasMenu } from "./usePantallasMenu.ts";
 import { useBusquedaDatos } from "./useBusquedaDatos.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 /** Fila navegable de la búsqueda: una pantalla, un dato o la pregunta al asistente. */
 type Opcion = {
@@ -34,6 +35,7 @@ type Seccion = { titulo: string; nota?: string; opciones: Opcion[] };
  * documentos; 3 por tipo) y, al final, la pregunta al asistente.
  */
 export const BusquedaRapida = () => {
+  const t = useTComponentes();
   const { cerrarBusqueda, recargarPantalla } = useMenuControl();
   const { app } = useContext(FactoryCtx);
   const { pantallas, favoritos, recientes } = usePantallasMenu();
@@ -66,8 +68,8 @@ export const BusquedaRapida = () => {
     titulo: p.nombre,
     resaltar: true,
     detalle:
-      (p.grupo || "Inicio") +
-      (p.aliasCoincide ? ` · también «${p.aliasCoincide}»` : ""),
+      (p.grupo || t("ui.menu.inicio")) +
+      (p.aliasCoincide ? t("ui.menu.tambienAliascoincide", { aliasCoincide: p.aliasCoincide }) : ""),
     abrir: (nueva) => ir(p.url, nueva),
   });
 
@@ -77,7 +79,7 @@ export const BusquedaRapida = () => {
   const secciones: Seccion[] = consulta
     ? [
         {
-          titulo: "Pantallas",
+          titulo: t("ui.menu.pantallas"),
           opciones: buscarPantallas(pantallas, consulta, 6).map((p) =>
             opcionPantalla(p)
           ),
@@ -103,14 +105,14 @@ export const BusquedaRapida = () => {
         ...(hayAsistente
           ? [
               {
-                titulo: "Asistente",
+                titulo: t("ui.menu.asistente"),
                 opciones: [
                   {
                     clave: "asistente",
                     icono: "asistente",
-                    titulo: `Preguntar a Olula: «${consulta}»`,
+                    titulo: t("ui.menu.preguntarAOlulaConsulta", { consulta }),
                     resaltar: false,
-                    detalle: "Para preguntas como «facturas pendientes de octubre»",
+                    detalle: t("ui.menu.paraPreguntasComoFacturasPendientesDe"),
                     abrir: () => {
                       cerrarBusqueda();
                       solicitarPreguntaAsistente(consulta);
@@ -122,9 +124,9 @@ export const BusquedaRapida = () => {
           : []),
       ]
     : [
-        { titulo: "Recientes", opciones: recientes.map((p) => opcionPantalla(p, "reloj")) },
+        { titulo: t("ui.menu.recientes"), opciones: recientes.map((p) => opcionPantalla(p, "reloj")) },
         {
-          titulo: "Favoritos",
+          titulo: t("ui.menu.favoritos"),
           opciones: favoritos.map((p) => opcionPantalla(p, "estrella_rellena")),
         },
       ];
@@ -164,7 +166,7 @@ export const BusquedaRapida = () => {
           <QInput
             nombre="busqueda_rapida"
             label=""
-            placeholder="Pantalla, cliente, proveedor o documento…"
+            placeholder={t("ui.menu.pantallaClienteProveedorODocumento")}
             valor={texto}
             autoFocus
             onChange={(v) => {
@@ -178,7 +180,7 @@ export const BusquedaRapida = () => {
         <div
           className="busqueda-rapida-resultados"
           role="listbox"
-          aria-label="Resultados"
+          aria-label={t("ui.menu.resultados")}
           aria-busy={cargando}
         >
           {visibles.map((seccion) => (
@@ -224,26 +226,26 @@ export const BusquedaRapida = () => {
             </section>
           ))}
           {cargando && (
-            <p className="busqueda-rapida-cargando">Buscando en clientes y documentos…</p>
+            <p className="busqueda-rapida-cargando">{t("ui.menu.buscandoEnClientesYDocumentos")}</p>
           )}
           {lista.length === 0 && !cargando && (
             <p className="busqueda-rapida-vacio">
               {consulta
-                ? `Nada coincide con «${consulta}».`
-                : "Escribe para buscar pantallas, clientes, proveedores o documentos por código o nombre."}
+                ? t("ui.menu.nadaCoincideConConsulta", { consulta })
+                : t("ui.menu.escribeParaBuscarPantallasClientesProvee")}
             </p>
           )}
         </div>
 
         <footer className="busqueda-rapida-pie">
           <span>
-            <b>↑ ↓</b> moverse
+            <b>↑ ↓</b>{" "}{t("ui.menu.moverse")}
           </span>
           <span>
-            <b>↵</b> abrir
+            <b>↵</b>{" "}{t("ui.menu.abrir")}
           </span>
           <span>
-            <b>Ctrl ↵</b> en pestaña nueva
+            <b>Ctrl ↵</b>{" "}{t("ui.menu.enPestanaNueva")}
           </span>
         </footer>
       </div>
