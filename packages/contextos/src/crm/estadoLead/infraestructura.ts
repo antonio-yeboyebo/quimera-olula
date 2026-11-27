@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { DeleteEstadoLead, EstadoLead, GetEstadoLead, GetEstadosLead, PatchEstadoLead, PostEstadoLead } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const baseUrlEstadoLead = `/crm/estado_lead`;
 
@@ -39,15 +40,15 @@ export const getEstadosLead: GetEstadosLead = async (filtro, orden, paginacion) 
 
 export const postEstadoLead: PostEstadoLead = async (estado) => {
     const payload = estadoLeadToAPI(estado);
-    return await RestAPI.post(baseUrlEstadoLead, payload, "Error al guardar el estado de lead").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrlEstadoLead, payload, tCrm("estadoLead.errorAlGuardarElEstadoDe")).then((respuesta) => respuesta.id);
 };
 
 export const patchEstadoLead: PatchEstadoLead = async (id, estado) => {
     const payload = estadoLeadToAPI(estado);
-    await RestAPI.patch(`${baseUrlEstadoLead}/${id}`, payload, "Error al guardar el estado de lead");
+    await RestAPI.patch(`${baseUrlEstadoLead}/${id}`, payload, tCrm("estadoLead.errorAlGuardarElEstadoDe"));
 };
 
 export const deleteEstadoLead: DeleteEstadoLead = async (id) =>
-    await RestAPI.delete(`${baseUrlEstadoLead}/${id}`, "Error al borrar el estado de lead");
+    await RestAPI.delete(`${baseUrlEstadoLead}/${id}`, tCrm("estadoLead.errorAlBorrarElEstadoDe"));
 
-export const marcarPorDefectoEstadoLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoLead}/${id}/pordefecto`, {}, "Error al marcar por defecto el estado de lead");
+export const marcarPorDefectoEstadoLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoLead}/${id}/pordefecto`, {}, tCrm("estadoLead.errorAlMarcarPorDefectoEl"));

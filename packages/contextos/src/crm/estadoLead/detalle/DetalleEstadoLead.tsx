@@ -9,6 +9,7 @@ import { BorrarEstadoLead } from "../borrar/BorrarEstadoLead.tsx";
 import { estadoLeadVacio, metaEstadoLead } from "./detalle.ts";
 import "./DetalleEstadoLead.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleEstadoLead = ({
   id,
@@ -17,6 +18,7 @@ export const DetalleEstadoLead = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const estadoLeadId = id ?? params.id;
@@ -55,12 +57,12 @@ export const DetalleEstadoLead = ({
             vertical
             acciones={[
               {
-                texto: "Marcar por defecto",
+                texto: t("estadoLead.marcarPorDefecto"),
                 onClick: () => emitir("marcar_estado_lead_por_defecto"),
                 deshabilitado: modelo.valorDefecto,
               },
               {
-                texto: "Borrar",
+                texto: t("estadoLead.borrar"),
                 onClick: () => emitir("borrado_estado_lead_solicitado"),
                 advertencia: true,
               },
@@ -68,7 +70,7 @@ export const DetalleEstadoLead = ({
           />
 
           <quimera-formulario>
-            <QInput label="Descripción" {...uiProps("descripcion")} />
+            <QInput label={t("estadoLead.descripcion")} {...uiProps("descripcion")} />
           </quimera-formulario>
 
           {modificado && (
@@ -77,14 +79,14 @@ export const DetalleEstadoLead = ({
                 onClick={() => emitir("estado_lead_cambiado", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("estadoLead.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_estado_lead_cancelada")}
               >
-                Cancelar
+                {t("estadoLead.cancelar")}
               </QBoton>
             </div>
           )}
