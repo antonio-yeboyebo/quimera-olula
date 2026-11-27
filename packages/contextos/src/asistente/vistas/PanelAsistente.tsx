@@ -139,7 +139,9 @@ const PanelAsistenteLateral = ({ navigate }: PanelAsistenteModoProps) => {
             if ((e as CustomEvent<string>).detail === "asistente") setAbierto(v => !v);
         };
         const alAbrirOtroPanel = (e: Event) => {
-            if ((e as CustomEvent<string>).detail === "usuario") setAbierto(false);
+            // Comparte la zona derecha con el menú de usuario y el panel de personalizar.
+            const panel = (e as CustomEvent<string>).detail;
+            if (panel === "usuario" || panel === "personalizar") setAbierto(false);
         };
         window.addEventListener(PANEL_LATERAL_TOGGLE_EVENT, alSolicitarToggle);
         window.addEventListener(PANEL_LATERAL_ABIERTO_EVENT, alAbrirOtroPanel);

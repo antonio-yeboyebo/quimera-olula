@@ -257,6 +257,9 @@ export const hayAgenciasEnvio = (): boolean =>
 export const albaranesSinEnvio = (orden: OrdenAlmacen): AlbaranGenerado[] =>
     orden.albaranes.filter((a) => !a.numeroTracking);
 
+/** Con el plugin `impresion` las etiquetas de caja se mandan directamente a una impresora de red. */
+export const impresionEtiquetasActiva = (): boolean => plugin("impresion") === "activo";
+
 export const ordenPermiteEnvio = (orden: OrdenAlmacen, hayAgencias: boolean): boolean =>
     hayAgencias
     && orden.tipo === "SALIDA"

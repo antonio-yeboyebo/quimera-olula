@@ -1,0 +1,328 @@
+/* Botón de la cabecera: como el del modo voz (ver Cabecera.css). */
+#boton-personalizar {
+  order: 96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--blanco);
+  opacity: 0.7;
+  cursor: pointer;
+
+  quimera-icono {
+    fill: var(--blanco);
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--blanco);
+    outline-offset: 2px;
+  }
+
+  &.activo {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+  }
+}
+
+/* Panel lateral, no modal: la pantalla le deja sitio (abajo) y los cambios
+   se ven al momento. Por debajo de los menús flotantes (1200); con el menú de
+   usuario y el asistente no convive (se cierran entre sí). */
+.panel-personalizar {
+  position: fixed;
+  top: var(--alto-header);
+  right: 0;
+  bottom: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-m);
+  width: min(22rem, 100vw);
+  padding: var(--espaciado-m);
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: var(--color-superficie-elevada);
+  border-left: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+  box-shadow: var(--sombra-l);
+
+  &:focus {
+    outline: none;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: var(--tamaño-letra-m);
+    font-weight: var(--grosor-letra-6);
+  }
+}
+
+.panel-personalizar-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaciado-s);
+}
+
+.panel-personalizar-cerrar {
+  display: inline-flex;
+  padding: var(--espaciado-xs);
+  border: 0;
+  border-radius: var(--redondeo-borde-xs);
+  background: transparent;
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--color-superficie-sunken);
+    color: var(--color-texto-primario);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 1px;
+  }
+}
+
+.panel-personalizar-ayuda {
+  margin: 0;
+  font-size: var(--tamaño-letra-xs);
+  color: var(--color-texto-secundario);
+}
+
+.panel-personalizar-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-s);
+  padding-top: var(--espaciado-m);
+  border-top: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+
+  h3 {
+    margin: 0;
+    font-size: var(--tamaño-letra-s);
+    font-weight: var(--grosor-letra-6);
+  }
+
+  h4 {
+    margin: var(--espaciado-xs) 0 0;
+    font-size: var(--tamaño-letra-xs);
+    font-weight: var(--grosor-letra-6);
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* El hueco donde pinta cada componente: su contenido, apilado. */
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-s);
+  }
+
+  /* Las listas del selector de columnas y de botones, a todo el ancho. */
+  .selector-columnas {
+    min-width: 0;
+  }
+}
+
+.panel-personalizar-campo {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  align-items: center;
+  gap: var(--espaciado-s);
+  font-size: var(--tamaño-letra-s);
+
+  select {
+    min-width: 0;
+    padding: var(--espaciado-xs);
+    border: var(--tamaño-borde-s) solid var(--color-borde-tabla);
+    border-radius: var(--redondeo-borde-xs);
+    background: var(--color-superficie);
+    color: var(--color-texto-primario);
+    font: inherit;
+  }
+}
+
+.panel-personalizar-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaciado-m);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--tamaño-letra-s);
+
+  /* Como los h4 de la sección. */
+  legend {
+    width: 100%;
+    margin-bottom: var(--espaciado-s);
+    padding: 0;
+    font-size: var(--tamaño-letra-xs);
+    font-weight: var(--grosor-letra-6);
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-xs);
+    cursor: pointer;
+  }
+}
+
+.panel-personalizar-enlace {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-primario-texto);
+  font: inherit;
+  font-size: var(--tamaño-letra-s);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:disabled {
+    color: light-dark(var(--gris-6), var(--gris-5));
+    text-decoration: none;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+  }
+}
+
+/* La pantalla deja sitio al panel en vez de quedar tapada. */
+body[data-modo-personalizar] section[role="main"] {
+  padding-inline-end: min(22rem, 100vw);
+  box-sizing: border-box;
+}
+
+/* Móvil: hoja inferior; la mitad de arriba sigue mostrando la pantalla. */
+@media (max-width: 768px) {
+  .panel-personalizar {
+    top: auto;
+    left: 0;
+    width: 100%;
+    max-height: 50dvh;
+    border-left: 0;
+    border-top: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+  }
+
+  body[data-modo-personalizar] section[role="main"] {
+    padding-inline-end: 0;
+    padding-block-end: 50dvh;
+  }
+}
+
+/* En pantalla, mientras se personaliza: qué se puede personalizar y qué
+   corresponde a la sección por la que pasa el usuario en el panel. Hacia
+   dentro (offset negativo): main recorta lo que sobresale. */
+[data-personalizable] {
+  outline: 2px dashed color-mix(in srgb, var(--color-primario) 55%, transparent);
+  outline-offset: -2px;
+}
+
+[data-personalizable-resaltado] {
+  outline: 2px solid var(--color-primario);
+  outline-offset: -2px;
+}
+
+.panel-personalizar-casilla {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaciado-s);
+  font-size: var(--tamaño-letra-s);
+  cursor: pointer;
+
+  input {
+    margin-top: 0.15em;
+  }
+}
+
+.panel-personalizar-compartidas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--tamaño-letra-s);
+
+  li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--espaciado-s);
+  }
+
+  small {
+    color: var(--color-texto-secundario);
+  }
+}
+
+.panel-personalizar-error {
+  margin: 0;
+  font-size: var(--tamaño-letra-s);
+  color: var(--color-error-texto);
+}
+
+/* Acción principal de una sección (p. ej. «Compartir con…»), como QBoton. */
+.panel-personalizar-boton {
+  align-self: flex-start;
+  padding: var(--espaciado-xs) var(--espaciado-m);
+  border: var(--tamaño-borde-s) solid var(--color-primario-texto);
+  border-radius: var(--redondeo-borde-xs);
+  background: var(--color-primario-texto);
+  color: var(--blanco);
+  font: inherit;
+  font-size: var(--tamaño-letra-s);
+  font-weight: var(--grosor-letra-5);
+  cursor: pointer;
+
+  &:disabled {
+    border-color: var(--color-borde-tabla);
+    background: var(--color-superficie);
+    color: light-dark(var(--gris-6), var(--gris-5));
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+  }
+}
+
+.panel-personalizar-subtitulo {
+  margin: var(--espaciado-xs) 0 0;
+  font-size: var(--tamaño-letra-xs);
+  font-weight: var(--grosor-letra-6);
+}
+
+.panel-personalizar-aviso {
+  margin: 0;
+  font-size: var(--tamaño-letra-s);
+  color: var(--color-texto-secundario);
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* Títulos que reciben el foco por programa (tras quitar algo): sin contorno. */
+.panel-personalizar-seccion h4[tabindex="-1"]:focus {
+  outline: none;
+}

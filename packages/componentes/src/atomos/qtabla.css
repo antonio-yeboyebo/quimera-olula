@@ -122,6 +122,76 @@ quimera-tabla {
             width: 1em;
             margin-right: -1em;
         }
+
+        /* Pantallas personalizables: menú por columna y arrastrar. */
+        /* Texto + botón: el texto se recorta con puntos suspensivos y el botón
+           siempre queda visible (con anchos fijos el th tiene overflow hidden). */
+        .cabecera-contenido {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .cabecera-texto {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cabecera-menu-boton {
+            display: inline-flex;
+            flex: none;
+            margin-left: var(--espaciado-xs);
+            padding: 2px;
+            border: 0;
+            border-radius: var(--redondeo-borde-xs);
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity var(--transicion-basica);
+
+            &:hover {
+                background: var(--color-superficie);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--color-primario);
+                outline-offset: 1px;
+            }
+        }
+
+        &:hover .cabecera-menu-boton,
+        .cabecera-menu-boton:focus-visible,
+        .cabecera-menu-boton[aria-expanded="true"] {
+            opacity: 1;
+        }
+
+        /* Táctil: siempre visible y con objetivo de ~32px sin crecer la fila
+           (el margen negativo compensa el padding). */
+        @media (hover: none) {
+            .cabecera-menu-boton {
+                opacity: 1;
+                padding: var(--espaciado-s);
+                margin-block: calc(-1 * var(--espaciado-s));
+            }
+        }
+
+        &[draggable="true"] {
+            cursor: grab;
+        }
+
+        &[data-destino-arrastre] {
+            box-shadow: inset 3px 0 0 var(--color-primario);
+        }
+
+        &.col-extremo {
+            padding: 0;
+            text-align: center;
+            cursor: default;
+        }
     }
 
     td {

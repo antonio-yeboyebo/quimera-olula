@@ -199,6 +199,19 @@ export type AdquirirOrden = (id: string) => Promise<void>;
 export type PostColocacion = (id: string) => Promise<string>;
 export type GetReportEtiquetasOrden = (id: string) => Promise<Blob>;
 
+/** Impresora de etiquetas de red (plugin impresion), con la etiqueta que tiene cargada. */
+export interface ImpresoraEtiquetas {
+    codigo: string;
+    descripcion: string;
+    anchoMm: number;
+    altoMm: number;
+    modoSalida: string;
+}
+
+export type GetImpresorasEtiquetas = () => Promise<ImpresoraEtiquetas[]>;
+/** Manda a la impresora las etiquetas de las cajas creadas desde la orden. */
+export type PostImprimirEtiquetasOrden = (ordenId: string, impresora: string) => Promise<void>;
+
 /** Agencia de transporte activa en la app (plugins transporte_*). */
 export interface ServicioAgenciaEnvio {
     codigo: string;

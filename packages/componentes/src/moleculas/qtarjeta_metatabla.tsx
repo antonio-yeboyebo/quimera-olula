@@ -1,19 +1,12 @@
-import { ContenidoConEnlace } from "../atomos/qenlace_ficha.tsx";
-import { etiquetaEnlace } from "../atomos/url_enlace.ts";
 import { Entidad } from "@olula/lib/diseño.ts";
-import {
-  formatearFechaDate,
-  formatearFechaHora,
-  formatearFechaString,
-  formatearHoraString,
-  formatearMoneda,
-  resolverDivisa,
-} from "@olula/lib/dominio.ts";
-import { ReactNode, isValidElement, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
+import { ContenidoConEnlace } from "../atomos/qenlace_ficha.tsx";
 import { MetaColumna, MetaTabla, obtenerCols } from "../atomos/qtablacontrolada.tsx";
+import { etiquetaEnlace } from "../atomos/url_enlace.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 import { QTarjetaGenerica } from "./qtarjeta_generica.tsx";
 import "./qtarjeta_metatabla.css";
-import { tComponentes, useTComponentes } from "../i18n/textos.ts";
+import { valorColumna } from "./valor_columna.tsx";
 
 type Prioridad = "alta" | "media" | "baja";
 
@@ -35,115 +28,6 @@ const pesoPrioridad = (prioridad?: Prioridad) => {
     return 2;
   }
   return 1;
-};
-
-const formatearValor = (
-  valor: unknown,
-  tipo?:
-    | "texto"
-    | "numero"
-    | "moneda"
-    | "fecha"
-    | "hora"
-    | "fechahora"
-    | "booleano",
-  divisa?: string
-): string => {
-  if (tipo === "moneda") {
-    if (typeof valor === "number" || typeof valor === "string") {
-      return formatearMoneda(valor, divisa ?? "EUR");
-    }
-    return "";
-  }
-
-  if (tipo === "fecha" && typeof valor === "string") {
-    return formatearFechaString(valor);
-  }
-
-  if (tipo === "fecha" && valor instanceof Date) {
-    return formatearFechaDate(valor);
-  }
-
-  if (tipo === "hora" && typeof valor === "string") {
-    return formatearHoraString(valor);
-  }
-
-  if (tipo === "fechahora" && valor instanceof Date) {
-    return formatearFechaHora(valor);
-  }
-
-  if (tipo === "numero" && typeof valor === "number") {
-    return valor.toLocaleString("es-ES");
-  }
-
-  if (tipo === "booleano" && typeof valor === "boolean") {
-    return valor ? tComponentes("ui.moleculas.si") : tComponentes("ui.moleculas.no");
-  }
-
-  if (typeof valor === "boolean") {
-    return valor ? tComponentes("ui.moleculas.si") : tComponentes("ui.moleculas.no");
-  }
-
-  if (typeof valor === "number") {
-    return valor.toString();
-  }
-
-  if (typeof valor === "string") {
-    return valor;
-  }
-
-  return valor as string;
-};
-
-const esValorVacio = (valor: unknown) =>
-  valor === undefined || valor === null || valor === "";
-
-const valorColumna = <T extends Entidad>(
-  entidad: T,
-  columna: MetaColumna<T>,
-  placeholderVacio: string
-): string | ReactNode => {
-  const valorRender = columna.render?.(entidad);
-
-  if (valorRender !== undefined && valorRender !== null) {
-    if (typeof valorRender === "string" && esValorVacio(valorRender.trim())) {
-      return (
-        <span className="tarjeta-metatabla-valor-vacio">
-          {placeholderVacio}
-        </span>
-      );
-    }
-
-    return valorRender;
-  }
-
-  const valorBruto = entidad[columna.id] as unknown;
-
-  if (esValorVacio(valorBruto)) {
-    return (
-      <span className="tarjeta-metatabla-valor-vacio">{placeholderVacio}</span>
-    );
-  }
-
-  const valorFormateado = formatearValor(
-    valorBruto,
-    columna.tipo,
-    resolverDivisa(columna.divisa, entidad)
-  );
-
-  if (isValidElement(valorFormateado)) {
-    return valorFormateado;
-  }
-
-  if (
-    typeof valorFormateado === "string" ||
-    typeof valorFormateado === "number" ||
-    typeof valorFormateado === "boolean"
-  ) {
-    return String(valorFormateado);
-  }
-
-  return valorFormateado as ReactNode;
 };
 
 const esCampoCorto = <T extends Entidad>(columna: MetaColumna<T>) => {

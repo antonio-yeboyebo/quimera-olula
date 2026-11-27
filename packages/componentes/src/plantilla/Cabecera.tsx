@@ -17,6 +17,7 @@ import { NotificacionesCabecera } from "./NotificacionesCabecera.tsx";
 import { estaAutentificado } from "./autenticacion";
 import { useEsMovil } from "../maestro/useEsMovil.ts";
 import { useMenuControl } from "./useMenuControl";
+import { BotonPersonalizar } from "../vistas/PanelPersonalizar.tsx";
 
 export type CabeceraProps = {
   logoSrc?: string;
@@ -68,7 +69,8 @@ export const CabeceraBase = ({
     // MenuProvider) avisa por evento cuando se abre, para que el menú de usuario se
     // cierre — misma zona de pantalla, no deben convivir abiertos a la vez.
     const alAbrirPanelLateral = (e: Event) => {
-      if ((e as CustomEvent<string>).detail === "asistente") cerrarMenu("usuario");
+      const panel = (e as CustomEvent<string>).detail;
+      if (panel === "asistente" || panel === "personalizar") cerrarMenu("usuario");
     };
     window.addEventListener(PANEL_LATERAL_ABIERTO_EVENT, alAbrirPanelLateral);
     return () => window.removeEventListener(PANEL_LATERAL_ABIERTO_EVENT, alAbrirPanelLateral);
@@ -117,6 +119,7 @@ export const CabeceraBase = ({
             {AccionesCabecera ? <AccionesCabecera /> : null}
           </div>
         </div>
+        {autenticado && <BotonPersonalizar />}
         {autenticado && mostrarAsistente && modoCapturaVoz() !== null && (
           <button
             type="button"

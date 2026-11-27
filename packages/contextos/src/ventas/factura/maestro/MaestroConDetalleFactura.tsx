@@ -16,6 +16,7 @@ import {
   filtroCodigo,
   filtroFechaDocumento,
 } from "../../comun/filtros.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 import { CrearFactura } from "../crear/CrearFactura.tsx";
 import { DetalleFactura } from "../detalle/DetalleFactura.tsx";
 import { Factura } from "../diseño.ts";
@@ -27,7 +28,6 @@ import {
 } from "../dominio.ts";
 import "./MaestroConDetalleFactura.css";
 import { getMaquina } from "./maquina.ts";
-import { useTVentas } from "../../i18n/index.ts";
 
 export const MaestroConDetalleFactura = () => {
   const t = useTVentas();
@@ -76,7 +76,8 @@ export const MaestroConDetalleFactura = () => {
             <Listado<Factura>
               metaTabla={metaTablaFactura}
               metaFiltro={metaFiltroFactura}
-              widgets={widgets}
+              widgets={widgets}             
+              pantalla="ventas.factura"
               tarjeta={(factura) => (
                 <TarjetaDocumentoVenta
                   codigo={factura.codigo}

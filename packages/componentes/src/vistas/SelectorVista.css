@@ -1,0 +1,180 @@
+/* Como el botón de filtros que tiene al lado (MaestroFiltrosActivoControlado.css). */
+.selector-vista {
+  flex: 0 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaciado-xs);
+  min-width: 7rem;
+  max-width: 16rem;
+  height: 2rem;
+  padding: 0 var(--espaciado-s);
+  border: var(--tamaño-borde-s) solid var(--color-borde-tabla);
+  border-radius: var(--redondeo-borde-s);
+  background: var(--color-superficie);
+  color: var(--color-primario-texto);
+  font: inherit;
+  font-size: var(--tamaño-letra-s);
+  font-weight: var(--grosor-letra-6);
+  cursor: pointer;
+
+  quimera-icono {
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  &:hover {
+    border-color: var(--color-primario-texto);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded="true"] {
+    background: var(--color-primario-texto);
+    border-color: var(--color-primario-texto);
+    color: var(--blanco);
+  }
+
+  /* Una vista con nombre activa se distingue de la de por defecto. */
+  &[data-activa]:not([aria-expanded="true"]) {
+    border-color: var(--color-primario-texto);
+  }
+}
+
+/* Punto de «cambios sin guardar» (filtro distinto del de la vista). */
+.selector-vista-cambios {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (max-width: 768px) {
+  .selector-vista {
+    height: 2.5rem;
+  }
+}
+
+/* Solo para lectores de pantalla. */
+.selector-vista-anuncio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.selector-vista-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hueco del icono de «marcada» para que los nombres queden alineados. */
+.selector-vista-hueco {
+  display: inline-block;
+  width: 1rem;
+}
+
+.selector-vista-origen {
+  color: var(--color-texto-secundario);
+}
+
+.selector-vista-dialogo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-s);
+  min-width: 16rem;
+  max-width: 22rem;
+  padding: var(--espaciado-s);
+
+  p:not(.selector-vista-ayuda) {
+    margin: 0;
+    font-size: var(--tamaño-letra-s);
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+    font-size: var(--tamaño-letra-s);
+  }
+
+  input {
+    padding: var(--espaciado-xs) var(--espaciado-s);
+    border: var(--tamaño-borde-s) solid var(--color-borde-tabla);
+    border-radius: var(--redondeo-borde-xs);
+    background: var(--color-superficie);
+    color: var(--color-texto-primario);
+    font: inherit;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primario);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.selector-vista-ayuda {
+  margin: 0;
+  font-size: var(--tamaño-letra-xs);
+  color: var(--color-texto-secundario);
+}
+
+.selector-vista-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--espaciado-s);
+
+  button {
+    padding: var(--espaciado-xs) var(--espaciado-m);
+    border: var(--tamaño-borde-s) solid var(--color-borde-tabla);
+    border-radius: var(--redondeo-borde-xs);
+    background: var(--color-superficie);
+    color: var(--color-texto-primario);
+    font: inherit;
+    font-size: var(--tamaño-letra-s);
+    cursor: pointer;
+
+    &[type="submit"] {
+      /* Como QBoton: el primario de texto, con blanco encima cumple AA. */
+      border-color: var(--color-primario-texto);
+      background: var(--color-primario-texto);
+      color: var(--blanco);
+      font-weight: var(--grosor-letra-5);
+    }
+
+    &.selector-vista-borrar {
+      border-color: var(--color-error-texto);
+      background: var(--color-error-texto);
+      color: var(--blanco);
+      font-weight: var(--grosor-letra-5);
+    }
+
+    &:disabled {
+      border-color: var(--color-borde-tabla);
+      background: var(--color-superficie);
+      color: light-dark(var(--gris-6), var(--gris-5));
+      cursor: default;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primario);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.selector-vista-error {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--tamaño-letra-s);
+  color: var(--color-error-texto);
+}

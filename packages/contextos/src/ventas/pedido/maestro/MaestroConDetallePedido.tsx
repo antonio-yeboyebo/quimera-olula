@@ -1,3 +1,4 @@
+import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import { widgetsPedido } from "#/ventas/pedido/dominio.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -20,22 +21,21 @@ import {
   filtroCodigo,
   filtroFechaDocumento,
 } from "../../comun/filtros.tsx";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 import { CrearPedido } from "../crear/CrearPedido.tsx";
 import { DetallePedido } from "../detalle/DetallePedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { AlbaranarPedidos } from "./AlbaranarPedidos.tsx";
-import "./MaestroConDetallePedido.css";
-import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import {
   agruparPorCliente,
   estadoServidoPedido,
   etiquetaEstadoPedido,
   todosPuedenAlbaranarse,
 } from "./maestro.ts";
+import "./MaestroConDetallePedido.css";
 import { getMaquina } from "./maquina.ts";
 import { getMetaTablaPedido } from "./metatabla_pedido.tsx";
 import { ResultadoAlbaranado } from "./ResultadoAlbaranado.tsx";
-import { tVentas, useTVentas } from "../../i18n/index.ts";
 
 const SERVIDO_NO = "No";
 const SERVIDO_PARCIAL = "Parcial";
@@ -114,7 +114,8 @@ export const MaestroConDetallePedido = () => {
             <Listado<Pedido>
               metaTabla={metaTablaPedido}
               metaFiltro={metaFiltroPedido}
-              widgets={widgets}
+              widgets={widgets}            
+              pantalla="ventas.pedido"
               tarjeta={(pedido) => (
                 <TarjetaDocumentoVenta
                   codigo={pedido.codigo}

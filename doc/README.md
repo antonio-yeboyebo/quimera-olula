@@ -4,6 +4,16 @@
 
 ---
 
+## Manual de usuario
+
+Cómo se usa la aplicación (para usuarios finales y para quien los forma).
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Personalizar lo que ves](./usuario/vistas.md) | Columnas, botones de los documentos, tarjetas, vistas con nombre y, para administradores, compartir vistas y bloquear pantallas |
+
+---
+
 ## Arquitectura
 
 Cómo está estructurado el código y qué patrones seguimos.

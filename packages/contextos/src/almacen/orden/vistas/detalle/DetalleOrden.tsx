@@ -1,9 +1,10 @@
-import { urlFicha, urlMapa } from "#/almacen/comun/fichas.ts";
 import { CrearCaja } from "#/almacen/caja/crear/CrearCaja.tsx";
-import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
+import { iniciarAudioLectura } from "#/almacen/comun/audio.ts";
 import { Almacen } from "#/almacen/comun/componentes/Almacen.tsx";
 import { Caja } from "#/almacen/comun/componentes/Caja.tsx";
 import { Ubicacion } from "#/almacen/comun/componentes/Ubicacion.tsx";
+import { urlFicha, urlMapa } from "#/almacen/comun/fichas.ts";
+import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -19,10 +20,12 @@ import { desbloquearTTS, useSintesisVoz } from "@olula/lib/voz/useSintesisVoz.ts
 import { useCallback, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
+import { useTAlmacen } from "../../../i18n/index.ts";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import {
     etiquetaEstadoOrden,
     hayAgenciasEnvio,
+    impresionEtiquetasActiva,
     metaOrden,
     ordenAlbaranable,
     ordenPermiteEnvio,
@@ -30,10 +33,12 @@ import {
     pedidoUnicoDeOrden,
 } from "../../dominio.ts";
 import { crearCajasOrden, getEtiquetaEnvio, getReportEtiquetasOrden } from "../../infraestructura.ts";
+import { definicionDeLinea, tieneFaseDrop } from "../../pasos/catalogo.ts";
 import { AlbaranarOrden } from "../albaranar/AlbaranarOrden.tsx";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
-import { GenerarEnvioOrden } from "../generar_envio/GenerarEnvioOrden.tsx";
 import { ColocacionOrden } from "../colocar/ColocacionOrden.tsx";
+import { GenerarEnvioOrden } from "../generar_envio/GenerarEnvioOrden.tsx";
+import { ImprimirEtiquetasOrden } from "../imprimir_etiquetas/ImprimirEtiquetasOrden.tsx";
 import { RecorridoOrden } from "../recorrido/RecorridoOrden.tsx";
 import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
 import { calcularAccionPrincipal } from "./accion_principal.ts";
@@ -42,13 +47,10 @@ import "./DetalleOrden.css";
 import { LecturaOrden } from "./lectura/LecturaLineaOrden.tsx";
 import { LecturasCajaOrden } from "./lecturas_caja/LecturasCajaOrden.tsx";
 import { LecturaCajaOrden } from "./leer_caja/LecturaCajaOrden.tsx";
-import { iniciarAudioLectura } from "#/almacen/comun/audio.ts";
-import { definicionDeLinea, tieneFaseDrop } from "../../pasos/catalogo.ts";
 import { LeerPasosOrden } from "./leer_pasos/LeerPasosOrden.tsx";
 import { LecturaUbicacionOrden } from "./leer_ubicacion/LecturaUbicacionOrden.tsx";
 import { LineasOrden } from "./lineas/LineasOrden.tsx";
 import { ContextoOrdenAlmacen, getMaquina } from "./maquina.ts";
-import { useTAlmacen } from "../../../i18n/index.ts";
 
 const titulo = (orden: OrdenAlmacen) => `${orden.descripcion}`
 
@@ -173,6 +175,12 @@ export const DetalleOrden = ({
                     </QBoton>
                 )}
                 <QBoton variante="borde" onClick={imprimirEtiquetas}>{t("orden.imprimirEtiquetas")}</QBoton>
+                <QBoton variante="borde" onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
+                {impresionEtiquetasActiva() && (
+                    <QBoton variante="borde" onClick={() => emitir("impresion_etiquetas_solicitada")}>
+                        Etiquetas a impresora
+                    </QBoton>
+                )}
                 {sgaActivo && (
                     <QBoton variante="borde" onClick={generarCajas}>{t("orden.crearCajas")}</QBoton>
                 )}
@@ -334,6 +342,9 @@ export const DetalleOrden = ({
             )}
             {ctx.estado === "GENERANDO_ENVIO" && (
                 <GenerarEnvioOrden publicar={emitir} orden={ctx.orden} />
+            )}
+            {ctx.estado === "IMPRIMIENDO_ETIQUETAS" && (
+                <ImprimirEtiquetasOrden publicar={emitir} orden={ctx.orden} />
             )}
         </Detalle>
     );

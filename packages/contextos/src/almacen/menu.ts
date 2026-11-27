@@ -55,4 +55,11 @@ export const menuAlmacen = {
         regla: "almacen.tipo_ubicacion",
         plugin: "sga",
     },
+    // Impresoras de etiquetas de red: solo con el plugin impresion activo.
+    "Almacén/Impresoras de etiquetas": {
+        alias: ["impresoras", "etiquetadoras", "zpl"],
+        url: "/almacen/impresoras",
+        regla: "almacen.impresora",
+        plugin: "impresion",
+    },
 };

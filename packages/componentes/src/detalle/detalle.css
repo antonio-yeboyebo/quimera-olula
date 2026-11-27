@@ -180,6 +180,15 @@
             padding-right: 6.5rem;
         }
 
+        /* Acciones personalizables: la caja va de un ancho fijo (el que dejan el
+           código y el estado) al borde, para que su ancho no dependa de los
+           botones que muestra y pueda pasar al menú los que no caben. */
+        :is(.fila-acciones-documento, .maestro-botones):not(.tab-content *, .Listado *):has(> quimera-acciones.acciones-personalizables.vertical) {
+            /* Código y el estado más largo («Error de firma») */
+            left: calc(var(--padding-horizontal) + 13.25rem);
+            justify-content: flex-end;
+        }
+
         /* Acciones del documento (no las de dentro de una pestaña o un listado):
            arriba a la derecha, en la línea del código y el estado; principal como píldora y "⋯" redondo, del alto de las
            pestañas (36px), como las acciones de las líneas. */

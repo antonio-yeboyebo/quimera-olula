@@ -1,36 +1,47 @@
-import { useTComponentes } from "../i18n/textos.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { puede } from "@olula/lib/dominio.ts";
 import { criteriaQueryUrl } from "@olula/lib/infraestructura.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
 import { QKanban, type QKanbanColumna } from "../atomos/qkanban.tsx";
 import { MetaTabla, QTablaControlada } from "../atomos/qtablacontrolada.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
+import { useTComponentes } from "../i18n/textos.ts";
 import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
+import { idDeVista } from "../vistas/dominio.ts";
+import { useSeccionPersonalizable } from "../vistas/modo_personalizar.ts";
+import { conColumnasDePlugins } from "../vistas/registro_plugins.ts";
+import { REGLA_VISTA_COMPARTIDA, SeccionCompartir } from "../vistas/SeccionCompartir.tsx";
+import { SeccionListado } from "../vistas/SeccionListado.tsx";
+import { SelectorColumnas } from "../vistas/SelectorColumnas.tsx";
+import { SelectorVista } from "../vistas/SelectorVista.tsx";
+import { TarjetaPlantilla } from "../vistas/TarjetaPlantilla.tsx";
+import { useVistaListado } from "../vistas/useVistaListado.ts";
+import { useVistasGuardadas } from "../vistas/useVistasGuardadas.ts";
+import { useEnMaestroPrincipal, useListadoMovilEnDetalle } from "./contexto_maestro.ts";
 import "./Listado.css";
-import { useListadoMovilEnDetalle } from "./contexto_maestro.ts";
-import { SelectorModo } from "./SelectorModo.tsx";
-import { useEsMovil } from "./useEsMovil.ts";
-import { ConfigWidgets } from "./widgets/diseño.ts";
-import { getConteo } from "./widgets/infraestructura.ts";
-import { QPanelWidgets } from "./widgets/QPanelWidgets.tsx";
-import { PersonalizarWidgets } from "./widgets/PersonalizarWidgets.tsx";
-import { useTotalesWidgets } from "./widgets/useTotalesWidgets.ts";
-import { useWidgetsUsuario } from "./widgets/useWidgetsUsuario.ts";
-import { useConfigWidgetsAuto } from "./widgets/useConfigWidgetsAuto.ts";
-import { useEnMaestroPrincipal } from "./contexto_maestro.ts";
 import {
   getMetaFiltroDefecto,
   MaestroFiltrosActivoControlado,
   MetaFiltro,
 } from "./maestroFiltros/MaestroFiltrosActivoControlado.tsx";
+import { SelectorModo } from "./SelectorModo.tsx";
+import { useEsMovil } from "./useEsMovil.ts";
 import { describirListado, ejecutarAccionListado } from "./voz_listado.ts";
+import { ConfigWidgets } from "./widgets/diseño.ts";
+import { getConteo } from "./widgets/infraestructura.ts";
+import { PersonalizarWidgets } from "./widgets/PersonalizarWidgets.tsx";
+import { QPanelWidgets } from "./widgets/QPanelWidgets.tsx";
+import { useConfigWidgetsAuto } from "./widgets/useConfigWidgetsAuto.ts";
+import { useTotalesWidgets } from "./widgets/useTotalesWidgets.ts";
+import { useWidgetsUsuario } from "./widgets/useWidgetsUsuario.ts";
 
 const datosCargando = <T extends Entidad>() =>
   new Array(10).fill(null).map(
@@ -82,12 +93,15 @@ type ListadoProps<T extends Entidad> = {
   formatosDescarga?: FormatoDescarga[];
   /** Totales encima del listado, calculados en el servidor con el filtro activo. */
   widgets?: ConfigWidgets;
+  /** Id de la pantalla (`ventas.pedido`) para que el usuario personalice la
+   *  vista: columnas, ordenación y modo. Sin él la vista es fija. */
+  pantalla?: string;
 };
 
 type Densidad = "comoda" | "compacta";
 
 export const Listado = <T extends Entidad>({
-  metaTabla,
+  metaTabla: metaTablaCodigo,
   metaFiltro,
   mostrarFiltros = true,
   cargando = false,
@@ -117,8 +131,15 @@ export const Listado = <T extends Entidad>({
   urlDescarga,
   formatosDescarga,
   widgets,
+  pantalla,
 }: ListadoProps<T>) => {
   const t = useTComponentes();
+  // Las columnas que añaden los plugins activos forman parte del catálogo
+  // (ocultas por defecto: el usuario las muestra si quiere).
+  const metaTabla = useMemo(
+    () => conColumnasDePlugins(metaTablaCodigo, pantalla),
+    [metaTablaCodigo, pantalla]
+  );
   // Sin widgets propios, el maestro principal los ofrece igualmente si su
   // pantalla tiene un recurso agregable en el servidor (los crea el usuario).
   const enMaestroPrincipal = useEnMaestroPrincipal();
@@ -146,6 +167,57 @@ export const Listado = <T extends Entidad>({
       : (modo ?? modoInicial ?? (esMovil ? "tarjetas" : "tabla"))
   );
   const modoInterno = modo ?? modoEstado;
+
+  const cambiarOrden = useCallback(
+    (orden: string[]) =>
+      onCriteriaChanged({
+        ...criteria,
+        orden,
+        paginacion: { ...criteria.paginacion, pagina: 1 },
+      }),
+    [criteria, onCriteriaChanged]
+  );
+  // Vista con nombre activa ('' = la de por defecto) y las que hay.
+  const [vistaActiva, setVistaActiva] = useState("");
+  const [errorVista, setErrorVista] = useState<string | null>(null);
+  // El aviso de error se va solo al rato (y al abrir el selector).
+  useEffect(() => {
+    if (!errorVista) return;
+    const temporizador = setTimeout(() => setErrorVista(null), 8000);
+    return () => clearTimeout(temporizador);
+  }, [errorVista]);
+  const vistasGuardadas = useVistasGuardadas(pantalla);
+  const aplicarVista = useCallback(
+    (filtro: Criteria["filtro"], orden: string[]) =>
+      onCriteriaChanged({
+        ...criteria,
+        filtro,
+        orden,
+        paginacion: { ...criteria.paginacion, pagina: 1 },
+      }),
+    [criteria, onCriteriaChanged]
+  );
+  const vista = useVistaListado({
+    pantalla,
+    vista: vistaActiva,
+    metaTabla,
+    orden: criteria.orden,
+    ordenInicial: criteriaInicial.orden,
+    filtro: criteria.filtro,
+    filtroInicial: criteriaInicial.filtro,
+    onOrdenChanged: cambiarOrden,
+    onVistaAplicada: aplicarVista,
+  });
+  // El modo guardado solo cuando la pantalla no lo fija y la tabla cabe; otra
+  // vez al cambiar de vista.
+  const modoGuardadoAplicado = useRef<string | null>(null);
+  const modoLibre = modo === undefined && !esMovil && !tarjetasCompactas;
+  useEffect(() => {
+    if (!vista.modoGuardado || modoGuardadoAplicado.current === vistaActiva || !modoLibre)
+      return;
+    modoGuardadoAplicado.current = vistaActiva;
+    setModoEstado(vista.modoGuardado);
+  }, [vista.modoGuardado, modoLibre, vistaActiva]);
 
   const [multiseleccionEstado, setMultiseleccionEstado] = useState(false);
   const multiseleccionInterna = modoMultiseleccion ?? multiseleccionEstado;
@@ -222,8 +294,70 @@ export const Listado = <T extends Entidad>({
 
   const cambiarModo = (nuevoModo: Modo) => {
     if (modo === undefined) setModoEstado(nuevoModo);
+    if (modoLibre) vista.guardarModo(nuevoModo);
     onModoChanged?.(nuevoModo);
   };
+
+  // Con la sección del listado en el panel, los widgets se personalizan desde
+  // allí («Personalizar widgets…»): el botón propio del resumen sobra.
+  const widgetsEnPanel = !!pantalla && !!vista.selector && widgetsUsuario.personalizable;
+
+  // Sección del listado en el panel «Personalizar pantalla».
+  const raiz = useRef<HTMLDivElement>(null);
+  // Quien administra las vistas tiene la sección aunque la pantalla esté bloqueada.
+  // (Y con el servidor respondiendo: personalizable o bloqueada.)
+  const puedeCompartir =
+    !!pantalla &&
+    (vista.vistas.personalizable || vista.bloqueada) &&
+    puede(REGLA_VISTA_COMPARTIDA);
+  const vistaGuardadaActiva = vistasGuardadas.find((v) => v.vista === vistaActiva);
+  const nombreVistaActiva = vistaActiva
+    ? (vistaGuardadaActiva?.nombre ?? vistaActiva)
+    : "Vista por defecto";
+  const destinoPersonalizar = useSeccionPersonalizable(
+    pantalla && (vista.selector || puedeCompartir)
+      ? {
+          id: `listado:${pantalla}`,
+          titulo: vistaActiva ? `Listado · ${nombreVistaActiva}` : "Listado",
+        }
+      : undefined,
+    raiz
+  );
+  const seccionPersonalizar = destinoPersonalizar && pantalla && (
+    <SeccionListado
+      modos={modoLibre && vista.selector ? modosDisponiblesCalculados : []}
+      modo={modoEfectivo}
+      onCambiarModo={cambiarModo}
+      columnas={
+        vista.selector && {
+          catalogo: vista.selector.catalogo,
+          visibles: vista.selector.visibles,
+          onCambiar: vista.selector.onCambiar,
+        }
+      }
+      tarjeta={vista.tarjeta}
+      onCambiarTarjeta={vista.guardarTarjeta}
+      compartir={
+        puedeCompartir && (
+          <SeccionCompartir
+            pantalla={pantalla}
+            vista={vistaActiva}
+            nombreVista={nombreVistaActiva}
+            paraCompartir={() => vista.vistas.paraCompartir(vistaGuardadaActiva?.nombre ?? undefined)}
+            onCambio={() => void vista.vistas.recargar()}
+          />
+        )
+      }
+      onPersonalizarWidgets={
+        configBase && widgetsUsuario.personalizable
+          ? () => setPersonalizandoWidgets(true)
+          : undefined
+      }
+      personalizada={!!vista.selector?.personalizada}
+      onRestaurar={() => vista.selector?.onRestaurar()}
+      bloqueada={vista.bloqueada}
+    />
+  );
 
 
   const mostrarCambioModoPorDefecto =
@@ -273,23 +407,21 @@ export const Listado = <T extends Entidad>({
   }));
 
   const renderTabla = (datos: T[]) => {
-    if (!metaTabla) return null;
+    if (!vista.metaTabla) return null;
 
     return (
       <QTablaControlada
-        metaTabla={metaTabla}
+        metaTabla={vista.metaTabla}
+        personalizacion={vista.personalizacion}
+        extremoCabecera={
+          vista.selector && <SelectorColumnas {...vista.selector} />
+        }
         datos={datos}
         cargando={cargando}
         seleccionadaId={seleccionada}
         onSeleccion={(e: T) => onSeleccion(e.id)}
         orden={criteria.orden}
-        onOrdenChanged={(orden) => {
-          onCriteriaChanged({
-            ...criteria,
-            orden,
-            paginacion: { ...criteria.paginacion, pagina: 1 },
-          });
-        }}
+        onOrdenChanged={cambiarOrden}
         paginacion={criteria.paginacion}
         onPaginacionChanged={(paginacion) => {
           onCriteriaChanged({
@@ -374,8 +506,18 @@ export const Listado = <T extends Entidad>({
           <QTarjetaMetatabla entidad={entidad} metaTabla={metaTabla} />
         )
       : undefined;
+    // La plantilla del usuario manda sobre la tarjeta del código. Usa el
+    // catálogo completo (también columnas ocultas en la tabla).
+    const plantilla = vista.tarjeta;
+    const tarjetaUsuario =
+      plantilla && metaTabla
+        ? (entidad: T) => (
+            <TarjetaPlantilla entidad={entidad} metaTabla={metaTabla} plantilla={plantilla} />
+          )
+        : undefined;
 
     if (modoEfectivo === "tarjetas") {
+      if (tarjetaUsuario) return renderTarjetas(datos, tarjetaUsuario);
       if (tarjeta) return renderTarjetas(datos, tarjeta);
       if (tarjetaGenerica) return renderTarjetas(datos, tarjetaGenerica);
     }
@@ -394,10 +536,15 @@ export const Listado = <T extends Entidad>({
   };
 
   return (
-    <div className="Listado" data-densidad={tarjetasCompactas ? "compacta" : densidad}
+    <div
+      ref={raiz}
+      className="Listado"
+      data-densidad={tarjetasCompactas ? "compacta" : densidad}
     >
+      {seccionPersonalizar && createPortal(seccionPersonalizar, destinoPersonalizar)}
       {configWidgets &&
-        (configWidgets.widgets.length > 0 || widgetsUsuario.personalizable) && (
+        (configWidgets.widgets.length > 0 ||
+          (widgetsUsuario.personalizable && !widgetsEnPanel)) && (
           <QPanelWidgets
             widgets={configWidgets.widgets}
             campos={configWidgets.campos}
@@ -405,7 +552,7 @@ export const Listado = <T extends Entidad>({
             series={seriesWidgets}
             cargando={cargandoWidgets}
             onPersonalizar={
-              widgetsUsuario.personalizable
+              widgetsUsuario.personalizable && !widgetsEnPanel
                 ? () => setPersonalizandoWidgets(true)
                 : undefined
             }
@@ -423,6 +570,41 @@ export const Listado = <T extends Entidad>({
       )}
       <div className="listado-cabecera">
         <div className="listado-cabecera-izquierda">
+          {pantalla && (vista.vistas.personalizable || vistasGuardadas.length > 0) && (
+            <SelectorVista
+              vistas={vistasGuardadas}
+              activa={vistaActiva}
+              puedeGuardar={vista.vistas.personalizable}
+              filtroCambiado={vista.vistas.filtroCambiado}
+              error={errorVista}
+              onAbrir={() => setErrorVista(null)}
+              onElegir={(id) => {
+                setErrorVista(null);
+                setVistaActiva(id);
+              }}
+              onGuardarComo={(nombre) => {
+                setErrorVista(null);
+                const id = idDeVista(nombre, vistasGuardadas.map((v) => v.vista));
+                void vista.vistas
+                  .guardarComo(nombre, id, modoLibre && modoEfectivo ? modoEfectivo : undefined)
+                  .then(() => setVistaActiva(id))
+                  .catch(() => setErrorVista("No se ha podido guardar la vista."));
+              }}
+              onGuardarFiltro={() => {
+                setErrorVista(null);
+                void vista.vistas.guardarFiltro().then((ok) => {
+                  if (!ok) setErrorVista("No se ha podido guardar el filtro.");
+                });
+              }}
+              onBorrar={() => {
+                setErrorVista(null);
+                void vista.vistas
+                  .borrar()
+                  .then(() => setVistaActiva(""))
+                  .catch(() => setErrorVista("No se ha podido borrar la vista."));
+              }}
+            />
+          )}
           {mostrarFiltros && (
             <MaestroFiltrosActivoControlado
               metaFiltro={metaFiltroEfectivo}

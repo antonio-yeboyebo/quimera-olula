@@ -1,0 +1,71 @@
+.tarjeta-plantilla {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-s);
+  width: 100%;
+  min-width: 0;
+}
+
+.tarjeta-plantilla-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espaciado-s);
+  min-width: 0;
+}
+
+.tarjeta-plantilla-titulos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Tamaños como la tarjeta genérica (qtarjeta_generica.css). */
+.tarjeta-plantilla-titulo {
+  font-size: var(--tamaño-letra-m);
+  line-height: var(--altura-linea-compacta, 1.25);
+  font-weight: var(--grosor-letra-6);
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-plantilla-subtitulo {
+  font-size: var(--tamaño-letra-s);
+  color: var(--color-texto-secundario);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tarjeta-plantilla-etiqueta {
+  flex-shrink: 0;
+  text-align: right;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tarjeta-plantilla-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  gap: var(--espaciado-s);
+  margin: 0;
+
+  > div {
+    min-width: 0;
+  }
+
+  dt {
+    font-size: var(--tamaño-letra-xs);
+    color: var(--color-texto-secundario);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--grosor-letra-5);
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

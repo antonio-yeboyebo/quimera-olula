@@ -1,0 +1,38 @@
+.DetalleImpresora {
+    quimera-input[nombre="codigo"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 8;
+    }
+
+    quimera-input[nombre="host"] {
+        grid-column: span 8;
+    }
+
+    quimera-input[nombre="puerto"],
+    quimera-input[nombre="anchoMm"],
+    quimera-input[nombre="altoMm"],
+    quimera-input[nombre="puntosPorMm"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="desplazamientoX"],
+    quimera-select[nombre="modoSalida"] {
+        grid-column: span 6;
+    }
+}
+
+.DetalleImpresora .estado-impresora {
+    font-weight: 600;
+    margin: 0 0 var(--espaciado-m);
+
+    &.lista {
+        color: var(--color-exito-oscuro);
+    }
+
+    &.no-lista {
+        color: var(--color-error-texto);
+    }
+}

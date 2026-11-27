@@ -3,40 +3,28 @@ import { useState } from "react";
 import { iconoAccionBoton } from "../atomos/icono_accion.ts";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
+import { AccionesPersonalizables } from "../vistas/AccionesPersonalizables.tsx";
+import { accionesDePlugins } from "../vistas/registro_plugins.ts";
+import { Accion, AccionDefinida, accionPrincipal } from "./acciones.ts";
 import "./qacciones.css";
 
-export type Accion =
-  | {
-      icono?: string;
-      texto?: string;
-      onClick: () => void;
-      deshabilitado?: boolean;
-      variante?: "solido" | "borde" | "texto";
-      advertencia?: boolean;
-      /** Acción principal del detalle: se muestra como botón fuera del menú. */
-      principal?: boolean;
-    }
-  | false;
-
-type AccionDefinida = Exclude<Accion, false>;
-
-/** La marcada como principal o, si no hay (o está deshabilitada), la primera
- *  con texto que esté habilitada y no sea de advertencia. Así cambia sola
- *  según el estado del documento. */
-const accionPrincipal = (
-  acciones: AccionDefinida[]
-): AccionDefinida | undefined =>
-  acciones.find((accion) => accion.principal && !accion.deshabilitado) ??
-  acciones.find(
-    (accion) => accion.texto && !accion.deshabilitado && !accion.advertencia
-  );
+export type { Accion, AccionDefinida };
 
 export const QuimeraAcciones = ({
   acciones,
   vertical,
+  pantalla,
+  grupo,
+  contexto,
 }: {
   acciones: (Accion | false)[];
   vertical?: boolean;
+  /** Con `pantalla` y `grupo`, el usuario elige qué acciones (con `id`) salen
+   *  como botón; el resto va al desplegable, y lo que no cabe también. */
+  pantalla?: string;
+  grupo?: string;
+  /** Lo que reciben las acciones que añaden los plugins a este grupo (p. ej. el documento). */
+  contexto?: unknown;
 }) => {
   const t = useTComponentes();
   const [activo, setActivo] = useState(false);
@@ -142,6 +130,20 @@ export const QuimeraAcciones = ({
       </quimera-acciones>
     );
   };
+
+  if (pantalla && grupo) {
+    return (
+      <AccionesPersonalizables
+        acciones={[
+          ...acciones.filter((accion): accion is AccionDefinida => Boolean(accion)),
+          ...accionesDePlugins(pantalla, grupo, contexto),
+        ]}
+        pantalla={pantalla}
+        grupo={grupo}
+        vertical={vertical === true}
+      />
+    );
+  }
 
   return render();
 };

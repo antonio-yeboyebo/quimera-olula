@@ -34,7 +34,9 @@ import {
     PostOrden,
     TerminarOrden,
     PostColocacion,
+    GetImpresorasEtiquetas,
     GetReportEtiquetasOrden,
+    PostImprimirEtiquetasOrden,
     AgenciaEnvio,
     GetAgenciasEnvio,
     GetEtiquetaEnvio,
@@ -550,6 +552,33 @@ export const getDiferenciasPedidoOrden: GetDiferenciasPedidoOrden = async (id) =
 
 export const getReportEtiquetasOrden: GetReportEtiquetasOrden = async (id) =>
     RestAPI.blob(`/almacen/caja/report-por-orden-origen/${id}`, tAlmacen("orden.errorAlObtenerElReportDe"));
+
+type ImpresoraEtiquetasApi = {
+    codigo: string;
+    descripcion: string;
+    ancho_mm: number;
+    alto_mm: number;
+    modo_salida: string;
+};
+
+export const getImpresorasEtiquetas: GetImpresorasEtiquetas = async () => {
+    const respuesta = await RestAPI.get<{ datos: ImpresoraEtiquetasApi[] }>("/almacen/impresora");
+    return respuesta.datos.map((api) => ({
+        codigo: api.codigo,
+        descripcion: api.descripcion,
+        anchoMm: api.ancho_mm,
+        altoMm: api.alto_mm,
+        modoSalida: api.modo_salida,
+    }));
+};
+
+export const postImprimirEtiquetasOrden: PostImprimirEtiquetasOrden = async (ordenId, impresora) => {
+    await RestAPI.post(
+        `/almacen/caja/imprimir-etiquetas-por-orden-origen/${ordenId}`,
+        { impresora },
+        "Error al imprimir las etiquetas",
+    );
+};
 
 export const postColocacion: PostColocacion = async (id) => {
     const respuesta = await RestAPI.post(`${baseUrl}/${id}/colocacion`, {}, tAlmacen("orden.errorAlCrearLaOrdenDe"));

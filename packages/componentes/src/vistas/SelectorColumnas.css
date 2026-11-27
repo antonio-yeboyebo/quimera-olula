@@ -1,0 +1,193 @@
+.selector-columnas-boton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaciado-xs);
+  border: 0;
+  border-radius: var(--redondeo-borde-xs);
+  background: transparent;
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible,
+  &[aria-expanded="true"] {
+    background: var(--color-superficie);
+    color: var(--color-texto-primario);
+  }
+
+  /* Dentro: el th recorta (overflow hidden), el anillo no puede salir. */
+  &:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: -2px;
+  }
+
+  /* Táctil: objetivo mínimo ~40px (el th ya mide 40px de ancho). */
+  @media (hover: none) {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  /* Punto: la vista está personalizada. */
+  &[data-personalizada="true"]::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primario);
+  }
+}
+
+.selector-columnas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-s);
+  min-width: 15rem;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espaciado-s);
+    padding: var(--espaciado-xs) var(--espaciado-s);
+    border-radius: var(--redondeo-borde-xs);
+    /* Del alto de las filas con flechas: al marcar o desmarcar no se mueve la
+       lista (el siguiente clic caería en otra fila). */
+    min-height: var(--selector-columnas-alto-fila, 2.125rem);
+    box-sizing: border-box;
+
+    &:hover {
+      background: var(--color-superficie-sunken);
+    }
+
+    &[data-visible="false"] label span {
+      color: var(--color-texto-secundario);
+    }
+
+    &:focus-within {
+      background: var(--color-superficie-sunken);
+    }
+  }
+
+  input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+  }
+
+  input[type="checkbox"]:disabled,
+  input[type="checkbox"]:disabled + span {
+    cursor: default;
+    color: var(--color-texto-deshabilitado);
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-s);
+    flex: 1;
+    cursor: pointer;
+  }
+
+  .selector-columnas-mover {
+    display: flex;
+
+    button {
+      display: inline-flex;
+      padding: var(--espaciado-xs);
+      border: 0;
+      border-radius: var(--redondeo-borde-xs);
+      background: transparent;
+      color: var(--color-texto-secundario);
+      cursor: pointer;
+
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background: var(--color-superficie);
+        color: var(--color-texto-primario);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-primario);
+        outline-offset: -2px;
+      }
+
+      &:disabled,
+      &[aria-disabled="true"] {
+        opacity: 0.3;
+        cursor: default;
+      }
+    }
+  }
+
+  .selector-columnas-nota {
+    color: var(--color-texto-secundario);
+    font-size: var(--tamaño-letra-xs);
+  }
+
+  /* Solo para lectores de pantalla (anuncia los cambios de posición). */
+  .selector-columnas-aviso {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.selector-columnas-pie {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-xs);
+  padding-top: var(--espaciado-s);
+  border-top: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+
+  button {
+    padding: var(--espaciado-xs) var(--espaciado-s);
+    border: 0;
+    border-radius: var(--redondeo-borde-xs);
+    background: transparent;
+    color: var(--color-texto-primario);
+    font: inherit;
+    font-weight: var(--grosor-letra-5);
+    text-align: left;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: var(--color-superficie-sunken);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primario);
+      outline-offset: -2px;
+    }
+
+    /* Ni --color-texto-deshabilitado (es el mismo que --color-primario en el
+       tema claro) ni --color-deshabilitado (1,2:1, no se lee): gris medio,
+       legible (3,2:1 en claro, 3,9:1 en oscuro) y distinto del activo. */
+    &:disabled {
+      color: light-dark(var(--gris-6), var(--gris-5));
+      font-weight: var(--grosor-letra-4);
+      cursor: default;
+    }
+  }
+}
+
+.selector-columnas-ayuda {
+  margin: 0;
+  max-width: 16rem;
+  padding: var(--espaciado-xs) var(--espaciado-s);
+  color: var(--color-texto-secundario);
+  font-size: var(--tamaño-letra-xs);
+  line-height: 1.4;
+}

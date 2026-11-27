@@ -10,8 +10,10 @@ import {
   formatearMoneda,
   resolverDivisa,
 } from "@olula/lib/dominio.ts";
-import { ComponentType, Fragment, ReactNode, useState } from "react";
+import { ComponentType, Fragment, ReactNode, useCallback, useRef, useState } from "react";
+import { MenuFlotante, OpcionMenu } from "../vistas/MenuFlotante.tsx";
 import { QBoton } from "./qboton.tsx";
+import { QIcono } from "./qicono.tsx";
 import "./qtabla.css";
 import { tComponentes } from "../i18n/textos.ts";
 
@@ -36,6 +38,17 @@ export type MetaColumna<T extends Entidad> = {
   render?: (entidad: T) => string | ReactNode;
   /** La celda lleva a la ficha de otra entidad (ver `MetaColumna` de qtabla.tsx). */
   enlace?: (entidad: T) => string | null | undefined;
+  /** Oculta por defecto en las pantallas personalizables: el usuario la añade
+   *  desde el selector de columnas. */
+  oculta?: boolean;
+};
+
+/** Lo que el usuario puede hacer con las columnas desde la cabecera. */
+export type PersonalizacionColumnas = {
+  onOcultar: (id: string) => void;
+  onMover: (id: string, destino: string) => void;
+  /** Falso si solo queda una columna visible. */
+  puedeOcultar: boolean;
 };
 
 export type MetaTabla2<T extends Entidad> = {
@@ -60,33 +73,122 @@ export const obtenerCols = <T extends Entidad>(
   return m.cols;
 };
 
-const cabecera = <T extends Entidad>(
-  cols: MetaColumna<T>[],
-  orden: Orden,
-  onOrdenChanged?: (orden: Orden) => void
-) => {
-  const [colOrdenada, sentido] = orden;
+const sentidoSiguiente = (id: string, orden: Orden) =>
+  orden[0] == id ? (orden[1] == "ASC" ? "DESC" : "ASC") : "ASC";
 
-  const renderCabecera = ({ id, cabecera, tipo, ancho }: MetaColumna<T>) => (
+/** Arrastrar una cabecera sobre otra la mueve a su sitio (solo con ratón; con
+ *  teclado se reordena desde el selector de columnas). */
+const TIPO_ARRASTRE = "application/x-quimera-columna";
+
+const CeldaCabecera = <T extends Entidad>({
+  columna: { id, cabecera, tipo, ancho },
+  orden,
+  onOrdenChanged,
+  personalizacion,
+}: {
+  columna: MetaColumna<T>;
+  orden: Orden;
+  onOrdenChanged?: (orden: Orden) => void;
+  personalizacion?: PersonalizacionColumnas;
+}) => {
+  const [colOrdenada, sentido] = orden;
+  const boton = useRef<HTMLButtonElement>(null);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const [destino, setDestino] = useState(false);
+  const cerrarMenu = useCallback(() => setMenuAbierto(false), []);
+
+  const ordenar = (nuevo: string) => {
+    onOrdenChanged?.([id, nuevo]);
+    setMenuAbierto(false);
+  };
+
+  return (
     <th
-      key={id}
       data-modo="columna"
       data-orden={id === colOrdenada ? sentido : ""}
+      data-destino-arrastre={destino || undefined}
       className={`${id} ${tipo ?? ""}`}
       style={ancho ? { width: ancho } : undefined}
-      onClick={() =>
-        onOrdenChanged &&
-        onOrdenChanged([
-          id,
-          colOrdenada == id ? (sentido == "ASC" ? "DESC" : "ASC") : "ASC",
-        ])
+      onClick={() => onOrdenChanged?.([id, sentidoSiguiente(id, orden)])}
+      aria-sort={
+        id === colOrdenada ? (sentido === "DESC" ? "descending" : "ascending") : undefined
       }
+      {...(personalizacion && {
+        // Sin esto el nombre de la columna incluiría el del botón de opciones.
+        "aria-label": cabecera,
+        draggable: true,
+        onDragStart: (e: React.DragEvent) => {
+          e.dataTransfer.setData(TIPO_ARRASTRE, id);
+          e.dataTransfer.effectAllowed = "move";
+        },
+        onDragOver: (e: React.DragEvent) => {
+          if (!e.dataTransfer.types.includes(TIPO_ARRASTRE)) return;
+          e.preventDefault();
+          setDestino(true);
+        },
+        onDragLeave: () => setDestino(false),
+        onDrop: (e: React.DragEvent) => {
+          e.preventDefault();
+          setDestino(false);
+          const origen = e.dataTransfer.getData(TIPO_ARRASTRE);
+          if (origen) personalizacion.onMover(origen, id);
+        },
+      })}
     >
-      {cabecera}
+      {!personalizacion && cabecera}
+      {personalizacion && (
+        <span className="cabecera-contenido">
+          <span className="cabecera-texto">{cabecera}</span>
+          <button
+            ref={boton}
+            type="button"
+            className="cabecera-menu-boton"
+            aria-label={`Opciones de la columna ${cabecera}`}
+            aria-haspopup="menu"
+            aria-expanded={menuAbierto}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuAbierto(!menuAbierto);
+            }}
+          >
+            <QIcono nombre="mas_opciones" tamaño="xs" />
+          </button>
+          {menuAbierto && boton.current && (
+            <MenuFlotante
+              ancla={boton.current}
+              onCerrar={cerrarMenu}
+              etiqueta={`Columna ${cabecera}`}
+            >
+              <OpcionMenu
+                icono={<QIcono nombre="arriba" tamaño="sm" />}
+                onClick={() => ordenar("ASC")}
+                deshabilitado={!onOrdenChanged}
+              >
+                Orden ascendente
+              </OpcionMenu>
+              <OpcionMenu
+                icono={<QIcono nombre="abajo" tamaño="sm" />}
+                onClick={() => ordenar("DESC")}
+                deshabilitado={!onOrdenChanged}
+              >
+                Orden descendente
+              </OpcionMenu>
+              <OpcionMenu
+                icono={<QIcono nombre="ocultar" tamaño="sm" />}
+                onClick={() => {
+                  personalizacion.onOcultar(id);
+                  setMenuAbierto(false);
+                }}
+                deshabilitado={!personalizacion.puedeOcultar}
+              >
+                Ocultar columna
+              </OpcionMenu>
+            </MenuFlotante>
+          )}
+        </span>
+      )}
     </th>
   );
-
-  return cols.map(renderCabecera);
 };
 
 const a_string = (
@@ -301,6 +403,10 @@ export type QTablaProps<T extends Entidad> = {
   seleccionadasIds?: string[];
   onMultiSeleccionToggle?: (id: string) => void;
   onSetSeleccionadas?: (ids: string[]) => void;
+  /** Menú por columna y arrastrar para reordenar (pantallas personalizables). */
+  personalizacion?: PersonalizacionColumnas;
+  /** Contenido de una última celda de cabecera (el selector de columnas). */
+  extremoCabecera?: ReactNode;
 };
 
 export const QTablaControlada = <T extends Entidad>({
@@ -317,6 +423,8 @@ export const QTablaControlada = <T extends Entidad>({
   seleccionadasIds,
   onMultiSeleccionToggle,
   onSetSeleccionadas,
+  personalizacion,
+  extremoCabecera,
 }: QTablaProps<T>) => {
   const modoMulti = seleccionadasIds !== undefined;
 
@@ -392,8 +500,12 @@ export const QTablaControlada = <T extends Entidad>({
     }
   };
 
+  const conExtremo = extremoCabecera !== undefined;
   const totalCols =
-    colsCompletas.length + (modoMulti ? 1 : 0) + (expansion ? 1 : 0);
+    colsCompletas.length +
+    (modoMulti ? 1 : 0) +
+    (expansion ? 1 : 0) +
+    (conExtremo ? 1 : 0);
 
   const ExpansionComp = expansion;
 
@@ -421,7 +533,20 @@ export const QTablaControlada = <T extends Entidad>({
                   />
                 </th>
               )}
-              {cabecera(colsCompletas, orden, onOrdenChanged)}
+              {colsCompletas.map((columna) => (
+                <CeldaCabecera
+                  key={columna.id}
+                  columna={columna}
+                  orden={orden}
+                  onOrdenChanged={onOrdenChanged}
+                  personalizacion={personalizacion}
+                />
+              ))}
+              {conExtremo && (
+                <th className="col-extremo" style={{ width: "40px" }}>
+                  {extremoCabecera}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody data-cargando={cargando}>
@@ -457,6 +582,7 @@ export const QTablaControlada = <T extends Entidad>({
                     </td>
                   )}
                   {fila(entidad, colsCompletas, cargando)}
+                  {conExtremo && <td className="col-extremo" />}
                 </tr>
                 {ExpansionComp && expandidas.has(entidad.id) && (
                   <tr className="fila-expansion">

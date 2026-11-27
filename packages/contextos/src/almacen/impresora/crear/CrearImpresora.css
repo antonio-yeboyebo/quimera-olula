@@ -1,0 +1,25 @@
+.CrearImpresora {
+    quimera-input[nombre="codigo"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 8;
+    }
+
+    quimera-input[nombre="host"] {
+        grid-column: span 8;
+    }
+
+    quimera-input[nombre="puerto"],
+    quimera-input[nombre="anchoMm"],
+    quimera-input[nombre="altoMm"],
+    quimera-input[nombre="puntosPorMm"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="desplazamientoX"],
+    quimera-select[nombre="modoSalida"] {
+        grid-column: span 6;
+    }
+}

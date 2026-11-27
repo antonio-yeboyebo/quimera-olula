@@ -7,9 +7,8 @@ import { CambiarDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivis
 import "#/ventas/comun/estilos/campos.css";
 import "#/ventas/comun/estilos/detalle_documento.css";
 import { tituloDocumentoVenta } from "#/ventas/venta/dominio.ts";
-import { useDatosClaveDocumentoVenta } from "#/ventas/venta/vistas/useDatosClaveDocumentoVenta.ts";
-import { etiquetaEstadoPedido } from "../maestro/maestro.ts";
 import { TotalesVenta } from "#/ventas/venta/vistas/TotalesVenta.tsx";
+import { useDatosClaveDocumentoVenta } from "#/ventas/venta/vistas/useDatosClaveDocumentoVenta.ts";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -20,19 +19,20 @@ import { imprimir_blob } from "@olula/lib/impresion.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useTVentas } from "../../i18n/index.ts";
 import { BorrarPedido } from "../borrar/BorrarPedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { pedidoPendiente } from "../dominio.ts";
 import { getReportPedido, getTrazaPedido } from "../infraestructura.ts";
+import { etiquetaEstadoPedido } from "../maestro/maestro.ts";
+import { AvisoPreparacionAlmacen } from "./aviso_almacen/AvisoPreparacionAlmacen.tsx";
 import { editable, metaPedido, pedidoVacio } from "./detalle.ts";
 import "./DetallePedido.css";
-import { AvisoPreparacionAlmacen } from "./aviso_almacen/AvisoPreparacionAlmacen.tsx";
 import { Lineas } from "./lineas/Lineas.tsx";
 import { getMaquina } from "./maquina.ts";
 import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatosBase as TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
-import { useTVentas } from "../../i18n/index.ts";
 
 export type DetallePedidoProps = {
   id?: string;
@@ -105,20 +105,27 @@ export const DetallePedidoBase = ({
   };
 
   const acciones = [
-    {
+    {      
+      id: "albaranar",
+      icono: "camion",
       texto: t("pedido.detalle.albaranParcial"),
       onClick: handleAlbaranar,
       deshabilitado: !esEditable,
     },
-    {
+    { 
+      id: "imprimir",
+      icono: "imprimir",
       texto: t("documento.detalle.imprimir"),
       onClick: imprimir,
     },
     {
+      id: "documentos_relacionados",
+      icono: "relacion",
       texto: t("documento.detalle.documentosRelacionados"),
       onClick: () => emitir("traza_solicitada"),
     },
     {
+      id: "borrar",
       icono: "eliminar",
       texto: t("documento.detalle.borrar"),
       advertencia: true,
@@ -145,7 +152,13 @@ export const DetallePedidoBase = ({
           error={pedido.errorGuardado}
           guardados={pedido.guardados}
         />
-        <QuimeraAcciones acciones={acciones} vertical />
+        <QuimeraAcciones
+          acciones={acciones}
+          vertical
+          pantalla="ventas.pedido"
+          grupo="detalle"
+          contexto={ctx.pedido}
+        />
       </div>
 
       <AvisoPreparacionAlmacen pedido={ctx.pedido} />

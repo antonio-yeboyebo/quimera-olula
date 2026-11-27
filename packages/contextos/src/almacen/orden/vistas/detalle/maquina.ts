@@ -35,6 +35,7 @@ export type EstadoOrdenAlmacen =
     | 'COLOCANDO'
     | 'ALBARANANDO'
     | 'GENERANDO_ENVIO'
+    | 'IMPRIMIENDO_ETIQUETAS'
     | 'VIENDO_RECORRIDO';
 
 export type ContextoOrdenAlmacen = {
@@ -72,6 +73,7 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
             colocacion_solicitada: "COLOCANDO",
             albaranado_solicitado: "ALBARANANDO",
             envio_solicitado: "GENERANDO_ENVIO",
+            impresion_etiquetas_solicitada: "IMPRIMIENDO_ETIQUETAS",
             recorrido_solicitado: "VIENDO_RECORRIDO",
             devolucion_sobrante_solicitada: [Lineas.activar, "DEVOLVIENDO_SOBRANTE"],
         },
@@ -171,6 +173,11 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
         GENERANDO_ENVIO: {
             envio_generado: [refrescarOrden, "ABIERTA"],
             envio_cancelado: "ABIERTA",
+        },
+
+        IMPRIMIENDO_ETIQUETAS: {
+            etiquetas_impresas: "ABIERTA",
+            impresion_etiquetas_cancelada: "ABIERTA",
         },
     };
 };

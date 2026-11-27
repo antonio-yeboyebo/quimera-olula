@@ -1,0 +1,58 @@
+/* `:not(.acciones-medida)` sube la especificidad por encima de reglas de
+   contexto como `.fila-acciones-documento quimera-acciones { flex: 0 0 auto }`:
+   el grupo ocupa el hueco disponible, no el de sus botones (si no, nunca
+   desborda). */
+quimera-acciones.acciones-personalizables:not(.acciones-medida) {
+  position: relative;
+  display: flex;
+  /* También en `vertical` (qacciones.css lo apila): aquí los botones van en fila. */
+  flex-direction: row;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--espaciado-s);
+}
+
+.acciones-personalizables quimera-boton button {
+  white-space: nowrap;
+}
+
+/* Destacada deshabilitada: con borde y texto gris legible (el sólido gris con
+   texto blanco no se lee). */
+quimera-acciones.acciones-personalizables quimera-boton[deshabilitado][variante] button {
+  color: light-dark(var(--gris-6), var(--gris-5));
+  border-color: light-dark(var(--gris-5), var(--gris-6));
+  background: transparent;
+}
+
+/* Copia invisible de los botones para medir cuántos caben: a su ancho natural. */
+quimera-acciones.acciones-personalizables.acciones-medida {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  gap: var(--espaciado-s);
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+
+  > quimera-boton {
+    flex-shrink: 0;
+  }
+}
+
+/* Móvil, acciones del documento (ver detalle.css): el «⋯» y los botones de
+   solo icono, redondos como en QuimeraAcciones. */
+@media (max-width: 768px) {
+  .detalle quimera-acciones.acciones-personalizables.vertical
+    quimera-boton[variante]
+    button:is(.acciones-mas, .acciones-icono) {
+    width: 2.25rem;
+    padding: 0;
+  }
+}
