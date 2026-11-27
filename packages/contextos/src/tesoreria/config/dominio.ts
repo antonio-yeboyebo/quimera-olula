@@ -1,5 +1,6 @@
 import { plugin } from "@olula/lib/dominio.ts";
 import { ConfigTesoreria, ModoPagoRemesa, TipoRemesa } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 /** El modo de las remesas de pago solo existe con su plugin activo (sin él, la BD
  * no tiene sus columnas y el servidor no las lee ni las guarda). */
@@ -20,29 +21,21 @@ export const flagsDesdeModo = (modo: ModoPagoRemesa): { diferido: boolean; indir
 });
 
 export const opcionesModoPagoRemesa: { valor: ModoPagoRemesa; descripcion: string }[] = [
-    { valor: "directo", descripcion: "Directo" },
-    { valor: "diferido", descripcion: "Diferido" },
-    { valor: "indirecto", descripcion: "Indirecto" },
+    { valor: "directo", get descripcion() { return tTesoreria("config.directo"); } },
+    { valor: "diferido", get descripcion() { return tTesoreria("config.diferido"); } },
+    { valor: "indirecto", get descripcion() { return tTesoreria("config.indirecto"); } },
 ];
 
 const EXPLICACION: Record<TipoRemesa, Record<ModoPagoRemesa, string>> = {
     cobro: {
-        directo: "Al remesar, cada recibo queda cobrado con un asiento banco a cliente. "
-            + "La remesa no admite pagos.",
-        diferido: "Al remesar, los recibos quedan remesados sin asiento. Al registrar el pago "
-            + "de la remesa se cobran con un asiento banco a cada cliente.",
-        indirecto: "Al remesar, cada recibo queda cobrado con un asiento de efectos comerciales "
-            + "en gestión de cobro a cliente. El pago de la remesa genera el asiento banco a "
-            + "efectos. Requiere la subcuenta de efectos en la cuenta bancaria.",
+        get directo() { return tTesoreria("config.alRemesarCadaReciboQuedaCobrado"); },
+        get diferido() { return tTesoreria("config.alRemesarLosRecibosQuedanRemesados"); },
+        get indirecto() { return tTesoreria("config.alRemesarCadaReciboQuedaCobrado2"); },
     },
     pago: {
-        directo: "Al remesar, cada recibo queda pagado con un asiento proveedor a banco. "
-            + "La remesa no admite pagos.",
-        diferido: "Al remesar, los recibos quedan remesados sin asiento. Al registrar el pago "
-            + "de la remesa se pagan con un asiento de cada proveedor a banco.",
-        indirecto: "Al remesar, cada recibo queda pagado con un asiento proveedor a efectos "
-            + "comerciales en gestión de pago. El pago de la remesa genera el asiento efectos a "
-            + "banco. Requiere la subcuenta de efectos en la cuenta bancaria.",
+        get directo() { return tTesoreria("config.alRemesarCadaReciboQuedaPagado"); },
+        get diferido() { return tTesoreria("config.alRemesarLosRecibosQuedanRemesados2"); },
+        get indirecto() { return tTesoreria("config.alRemesarCadaReciboQuedaPagado2"); },
     },
 };
 
