@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { DeleteFuenteLead, FuenteLead, GetFuenteLead, GetFuentesLead, PatchFuenteLead, PostFuenteLead } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const baseUrlFuenteLead = `/crm/fuente_lead`;
 
@@ -39,15 +40,15 @@ export const getFuentesLead: GetFuentesLead = async (filtro, orden, paginacion) 
 
 export const postFuenteLead: PostFuenteLead = async (fuente) => {
     const payload = fuenteLeadToAPI(fuente);
-    return await RestAPI.post(baseUrlFuenteLead, payload, "Error al guardar la fuente de lead").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrlFuenteLead, payload, tCrm("fuenteLead.errorAlGuardarLaFuenteDe")).then((respuesta) => respuesta.id);
 };
 
 export const patchFuenteLead: PatchFuenteLead = async (id, fuente) => {
     const payload = fuenteLeadToAPI(fuente);
-    await RestAPI.patch(`${baseUrlFuenteLead}/${id}`, payload, "Error al guardar la fuente de lead");
+    await RestAPI.patch(`${baseUrlFuenteLead}/${id}`, payload, tCrm("fuenteLead.errorAlGuardarLaFuenteDe"));
 };
 
 export const deleteFuenteLead: DeleteFuenteLead = async (id) =>
-    await RestAPI.delete(`${baseUrlFuenteLead}/${id}`, "Error al borrar la fuente de lead");
+    await RestAPI.delete(`${baseUrlFuenteLead}/${id}`, tCrm("fuenteLead.errorAlBorrarLaFuenteDe"));
 
-export const marcarPorDefectoFuenteLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlFuenteLead}/${id}/pordefecto`, {}, "Error al marcar por defecto la fuente de lead");
+export const marcarPorDefectoFuenteLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlFuenteLead}/${id}/pordefecto`, {}, tCrm("fuenteLead.errorAlMarcarPorDefectoLa"));

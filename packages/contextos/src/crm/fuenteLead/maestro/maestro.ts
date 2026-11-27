@@ -7,10 +7,11 @@ import {
 import { FuenteLead } from "../diseño.ts";
 import { getFuentesLead } from "../infraestructura.ts";
 import { ContextoMaestroFuentesLead, EstadoMaestroFuentesLead } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const metaTablaFuenteLead: MetaTabla<FuenteLead> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "id", get cabecera() { return tCrm("fuenteLead.codigo"); } },
+    { id: "descripcion", get cabecera() { return tCrm("fuenteLead.descripcion"); } },
 ];
 
 type ProcesarFuentesLead = ProcesarContexto<EstadoMaestroFuentesLead, ContextoMaestroFuentesLead>;

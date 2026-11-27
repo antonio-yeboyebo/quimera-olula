@@ -1,5 +1,6 @@
 import { MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { FuenteLead } from "../diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const metaNuevaFuenteLead: MetaModelo<FuenteLead> = {
     campos: {
@@ -7,9 +8,9 @@ export const metaNuevaFuenteLead: MetaModelo<FuenteLead> = {
             requerido: true,
             validacion: (fuente: FuenteLead) =>
                 !stringNoVacio(fuente.id)
-                    ? "El código es obligatorio"
+                    ? tCrm("fuenteLead.elCodigoEsObligatorio")
                     : fuente.id.length > 20
-                        ? "Máximo 20 caracteres"
+                        ? tCrm("fuenteLead.maximo20Caracteres")
                         : true,
         },
         descripcion: { requerido: true, validacion: (fuente: FuenteLead) => stringNoVacio(fuente.descripcion) },
