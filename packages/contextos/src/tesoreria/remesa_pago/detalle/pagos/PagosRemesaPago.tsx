@@ -5,9 +5,10 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { PagoRemesaPago, RemesaPago } from "../../diseño.js";
 import { remesaPagoAdmitePagos, remesaPagoConPago, remesaPagoPagable } from "../../dominio.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 const metaTablaPagos: MetaTabla<PagoRemesaPago> = [
-  { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
+  { id: "fecha", get cabecera() { return tTesoreria("remesa_pago.fecha"); }, tipo: "fecha" },
 ];
 
 export const PagosRemesaPago = ({
@@ -20,8 +21,7 @@ export const PagosRemesaPago = ({
   <div className="PagosRemesaPago">
     {!remesaPagoAdmitePagos(remesa) && (
       <p className="sin-pagos">
-        Con pago directo de remesas de pago los recibos se pagaron al remesarlos: la remesa
-        no admite pagos.
+        {tTesoreria("remesa_pago.conPagoDirectoDeRemesasDe")}
       </p>
     )}
     <ListadoSemiControlado
@@ -37,14 +37,14 @@ export const PagosRemesaPago = ({
       renderAcciones={() => (
         <div className="maestro-botones">
           {remesaPagoPagable(remesa) && (
-            <QBoton onClick={() => publicar("pago_solicitado")}>Pagar</QBoton>
+            <QBoton onClick={() => publicar("pago_solicitado")}>{tTesoreria("remesa_pago.pagar")}</QBoton>
           )}
           {remesaPagoConPago(remesa) && (
             <QBoton
               advertencia
               onClick={() => publicar("deshacer_pago_solicitado")}
             >
-              Deshacer pago
+              {tTesoreria("remesa_pago.deshacerPago")}
             </QBoton>
           )}
         </div>

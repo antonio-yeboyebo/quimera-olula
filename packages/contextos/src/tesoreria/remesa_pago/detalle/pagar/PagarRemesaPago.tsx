@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { RemesaPago } from "../../diseño.js";
 import { esRemesaDeNominas } from "../../dominio.js";
 import { metaPagoRemesaPago, pagoRemesaPagoInicial } from "./dominio.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 export const PagarRemesaPago = ({
   remesa,
@@ -16,6 +17,7 @@ export const PagarRemesaPago = ({
   remesa: RemesaPago;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const inicial = useMemo(
     () => pagoRemesaPagoInicial(remesa.fechaPago),
     [remesa.fechaPago]
@@ -33,27 +35,27 @@ export const PagarRemesaPago = ({
   const [pagar, cancelar] = useForm(pagar_, cancelar_);
 
   const que = esRemesaDeNominas(remesa)
-    ? `sus ${remesa.nominas.length} nóminas`
-    : `sus ${remesa.recibos.length} recibos`;
+    ? t("remesa_pago.susLengthNominas", { length: remesa.nominas.length })
+    : t("remesa_pago.susLengthRecibos", { length: remesa.recibos.length });
 
   return (
     <QModal
       abierto={true}
       nombre="pagar_remesa_pago"
-      titulo="Pagar remesa de pago"
+      titulo={t("remesa_pago.pagarRemesaDePago")}
       onCerrar={cancelar}
     >
       <div className="PagarRemesaPago">
-        <p>{`Se pagará la remesa entera, ${que}, por ${formatearMoneda(
+        <p>{t("remesa_pago.sePagaraLaRemesaEnteraQue", { que, total: formatearMoneda(
           remesa.total,
           remesa.divisaId || "EUR"
-        )}.`}</p>
+        ) })}</p>
         <quimera-formulario>
-          <QDate label="Fecha" {...uiProps("fecha")} />
+          <QDate label={t("remesa_pago.fecha")} {...uiProps("fecha")} />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={pagar} deshabilitado={!valido}>
-            Pagar
+            {t("remesa_pago.pagar")}
           </QBoton>
         </div>
       </div>

@@ -13,26 +13,28 @@ import { varianteEstadoRemesaPago } from "../dominio.js";
 import { CrearRemesaNominas } from "./crear_remesa_nominas/CrearRemesaNominas.js";
 import "./MaestroConDetalleRemesaPago.css";
 import { getMaquina } from "./maquina.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 const metaTablaRemesaPago: MetaTabla<RemesaPago> = [
     { id: 'id', cabecera: 'ID' },
-    { id: 'tipo', cabecera: 'Tipo' },
-    { id: 'fecha', cabecera: 'Fecha', tipo: 'fecha' },
-    { id: 'fechaPago', cabecera: 'F. Pago', tipo: 'fecha' },
-    { id: 'cuentaId', cabecera: 'Cuenta' },
-    { id: 'descripcionCuenta', cabecera: 'Descripción cuenta' },
+    { id: 'tipo', get cabecera() { return tTesoreria("remesa_pago.tipo"); }, render: (remesa: RemesaPago) => textoEstado(remesa.tipo) },
+    { id: 'fecha', get cabecera() { return tTesoreria("remesa_pago.fecha"); }, tipo: 'fecha' },
+    { id: 'fechaPago', get cabecera() { return tTesoreria("remesa_pago.fPago"); }, tipo: 'fecha' },
+    { id: 'cuentaId', get cabecera() { return tTesoreria("remesa_pago.cuenta"); } },
+    { id: 'descripcionCuenta', get cabecera() { return tTesoreria("remesa_pago.descripcionCuenta"); } },
     {
         id: 'estado',
-        cabecera: 'Estado',
+        get cabecera() { return tTesoreria("remesa_pago.estado"); },
         render: (remesa: RemesaPago) => (
             <QEtiqueta variante={varianteEstadoRemesaPago(remesa.estado)}>
-                {remesa.estado}
+                {textoEstado(remesa.estado)}
             </QEtiqueta>
         ),
     },
     {
         id: 'total',
-        cabecera: 'Total',
+        get cabecera() { return tTesoreria("remesa_pago.total"); },
         tipo: 'moneda',
         divisa: (r: RemesaPago) => r.divisaId,
     },
@@ -45,6 +47,7 @@ const metaTablaRemesaPago: MetaTabla<RemesaPago> = [
  */
 export const MaestroConDetalleRemesaPago = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -71,7 +74,7 @@ export const MaestroConDetalleRemesaPago = () => {
             <MaestroDetalle<RemesaPago>
                 Maestro={
                     <>
-                        <h2>Remesas de pago</h2>
+                        <h2>{t("remesa_pago.remesasDePago")}</h2>
                         <Listado<RemesaPago>
                             metaTabla={metaTablaRemesaPago}
                             criteria={remesas.criteria}
@@ -84,7 +87,7 @@ export const MaestroConDetalleRemesaPago = () => {
                                 nominasActivas && (
                                     <div className="maestro-botones">
                                         <QBoton onClick={() => emitir("crear_remesa_nominas_solicitado")}>
-                                            Nueva remesa de nóminas
+                                            {t("remesa_pago.nuevaRemesaDeNominas")}
                                         </QBoton>
                                     </div>
                                 )
@@ -111,13 +114,13 @@ const TarjetaRemesaPago = (remesa: RemesaPago) => {
     return (
         <div className="tarjeta-remesa-pago" key={remesa.id}>
             <div className="tarjeta-remesa-pago-cuenta">
-                {`${remesa.tipo} · ${remesa.descripcionCuenta || remesa.cuentaId}`}
+                {`${textoEstado(remesa.tipo)} · ${remesa.descripcionCuenta || remesa.cuentaId}`}
             </div>
             <div className="tarjeta-remesa-pago-total">
                 {formatearMoneda(remesa.total, remesa.divisaId)}
             </div>
             <QEtiqueta variante={varianteEstadoRemesaPago(remesa.estado)}>
-                {remesa.estado}
+                {textoEstado(remesa.estado)}
             </QEtiqueta>
         </div>
     );

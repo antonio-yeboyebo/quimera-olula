@@ -16,6 +16,7 @@ import {
     TipoRemesaPago,
 } from "./diseño.js";
 import { fechaIso } from "./dominio.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 interface PagoRemesaPagoApi {
     id: string;
@@ -122,7 +123,7 @@ export const getRemesaPago: GetRemesaPago = async (id) => {
     return await RestAPI.getItem<RemesaPago, RemesaPagoApi>(
         `${baseUrl}/${id}`,
         remesaPagoDesdeApi,
-        "Error al obtener la remesa de pago"
+        tTesoreria("remesa_pago.errorAlObtenerLaRemesaDe")
     );
 };
 
@@ -131,7 +132,7 @@ export const getRemesasPago: GetRemesasPago = async (criteria) => {
         baseUrl,
         criteria,
         remesaPagoDesdeApi,
-        "Error al obtener las remesas de pago"
+        tTesoreria("remesa_pago.errorAlObtenerLasRemesasDe")
     );
 };
 
@@ -144,7 +145,7 @@ export const postRemesaPago: PostRemesaPago = async (nueva) => {
             nomina_ids: nueva.nominaIds,
             fecha_pago: nueva.fechaPago ? fechaIso(nueva.fechaPago) : null,
         },
-        "Error al crear la remesa de pago"
+        tTesoreria("remesa_pago.errorAlCrearLaRemesaDe")
     );
 
     return String(respuesta.id);
@@ -154,14 +155,14 @@ export const pagarRemesaPago: PagarRemesaPago = async (id, fecha) => {
     await RestAPI.post(
         `${baseUrl}/${id}/pagar`,
         { fecha },
-        "Error al pagar la remesa de pago"
+        tTesoreria("remesa_pago.errorAlPagarLaRemesaDe")
     );
 };
 
 export const deshacerPagoRemesaPago: DeshacerPagoRemesaPago = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}/pago`,
-        "Error al deshacer el pago de la remesa de pago"
+        tTesoreria("remesa_pago.errorAlDeshacerElPagoDe")
     );
 };
 
@@ -169,6 +170,6 @@ export const getNominasRemesables: GetNominasRemesables = async () => {
     return await RestAPI.getLista<NominaRemesable, NominaRemesableApi>(
         nominasRemesablesUrl,
         nominaRemesableDesdeApi,
-        "Error al obtener las nóminas remesables"
+        tTesoreria("remesa_pago.errorAlObtenerLasNominasRemesables")
     );
 };
