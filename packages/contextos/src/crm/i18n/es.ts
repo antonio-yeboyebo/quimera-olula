@@ -40,4 +40,9 @@ export const es = {
         telefono: "Teléfono",
         tarea: "Tarea",
     },
+    otros: {
+        estadosOportunidad: "Estados oportunidad",
+        estadosLead: "Estados lead",
+        fuentesLead: "Fuentes lead",
+    },
 } as const;

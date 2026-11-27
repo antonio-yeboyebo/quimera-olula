@@ -39,4 +39,9 @@ export const en: Traduccion<typeof es> = {
         telefono: "Phone",
         tarea: "Task",
     },
+    otros: {
+        estadosOportunidad: "Opportunity statuses",
+        estadosLead: "Lead statuses",
+        fuentesLead: "Lead sources",
+    },
 };
