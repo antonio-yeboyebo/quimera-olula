@@ -4,13 +4,15 @@ import { ProcesarListaActivaEntidades, accionesListaActivaEntidades } from "@olu
 import { Lead } from "../diseño.ts";
 import { getLeads } from "../infraestructura.ts";
 import { ContextoMaestroLeads, EstadoMaestroLeads } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
+import { textoTipoEntidadLead } from "../../comun/valores/texto_opcion.ts";
 
 export const metaTablaLead: MetaTabla<Lead> = [
-    { id: "id", cabecera: "Código" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "tipo", cabecera: "Tipo" },
-    { id: "estado_id", cabecera: "Estado" },
-    { id: "fuente_id", cabecera: "Fuente" },
+    { id: "id", get cabecera() { return tCrm("lead.codigo"); } },
+    { id: "nombre", get cabecera() { return tCrm("lead.nombre"); } },
+    { id: "tipo", get cabecera() { return tCrm("lead.tipo"); }, render: (l) => textoTipoEntidadLead(l.tipo) },
+    { id: "estado_id", get cabecera() { return tCrm("lead.estado"); } },
+    { id: "fuente_id", get cabecera() { return tCrm("lead.fuente"); } },
 ];
 
 type ProcesarLeads = ProcesarContexto<EstadoMaestroLeads, ContextoMaestroLeads>;

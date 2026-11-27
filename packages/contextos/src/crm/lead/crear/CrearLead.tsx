@@ -8,8 +8,10 @@ import { useCallback } from "react";
 import { getLead, postLead } from "../infraestructura.ts";
 import "./CrearLead.css";
 import { metaNuevoLead, nuevoLeadVacio } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearLead = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(metaNuevoLead, nuevoLeadVacio);
 
   const crear_ = useCallback(async () => {
@@ -28,20 +30,20 @@ export const CrearLead = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nuevo Lead"
+      titulo={t("lead.nuevoLead")}
       onCerrar={cancelar}
     >
       <div className="CrearLead">
         <quimera-formulario>
-          <QInput label="Nombre" {...uiProps("nombre")} />
+          <QInput label={t("lead.nombre")} {...uiProps("nombre")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Crear
+            {t("lead.crear")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("lead.cancelar")}
           </QBoton>
         </div>
       </div>

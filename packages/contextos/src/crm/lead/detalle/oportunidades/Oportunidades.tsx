@@ -16,8 +16,10 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Lead } from "../../diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../../i18n/index.ts";
 
 export const Oportunidades = ({ lead }: { lead: HookModelo<Lead> }) => {
+  const t = useTCrm();
   const [cargando, setCargando] = useState(false);
   const criteriaInicial = useMemo(
     () => ({
@@ -94,16 +96,16 @@ export const Oportunidades = ({ lead }: { lead: HookModelo<Lead> }) => {
           <QuimeraAcciones
             acciones={[
               {
-                texto: "Nueva",
+                texto: t("lead.nueva"),
                 onClick: () => emitir("creacion_de_oportunidad_solicitada"),
               },
               {
-                texto: "Editar",
+                texto: t("lead.editar"),
                 onClick: () => emitir("edicion_oportunidad_solicitada"),
                 deshabilitado: !ctx.oportunidades.activo,
               },
               {
-                texto: "Borrar",
+                texto: t("lead.borrar"),
                 onClick: () => emitir("borrado_oportunidad_solicitado"),
                 deshabilitado: !ctx.oportunidades.activo,
               },
@@ -123,7 +125,7 @@ export const Oportunidades = ({ lead }: { lead: HookModelo<Lead> }) => {
         abierto={
           ctx.estado === "EDITANDO" && Boolean(ctx.oportunidades.activo?.id)
         }
-        titulo="Editar oportunidad"
+        titulo={t("lead.editarOportunidad")}
         onCerrar={() => publicarDetalle("oportunidad_deseleccionada")}
         mostrarBotonCerrar={false}
         mostrarCabecera={false}

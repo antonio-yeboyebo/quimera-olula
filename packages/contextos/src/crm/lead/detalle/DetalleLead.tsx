@@ -12,6 +12,7 @@ import { getMaquina } from "./maquina.ts";
 import { Oportunidades } from "./oportunidades/Oportunidades.tsx";
 import { TabDatos } from "./tabs/TabDatos.tsx";
 import { TabObservaciones } from "./tabs/TabObservaciones.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleLead = ({
   id,
@@ -20,6 +21,7 @@ export const DetalleLead = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const titulo = (lead: Entidad) => lead.nombre as string;
 
   const { ctx, emitir } = useMaquina(
@@ -54,7 +56,7 @@ export const DetalleLead = ({
           vertical
           acciones={[
             {
-              texto: "Borrar",
+              texto: t("lead.borrar"),
               onClick: () => emitir("borrado_lead_solicitado"),
               advertencia: true,
             },
@@ -62,19 +64,19 @@ export const DetalleLead = ({
         />
 
         <Tabs>
-          <Tab label="Datos">
+          <Tab label={t("lead.datos")}>
             <TabDatos lead={lead} />
           </Tab>
 
-          <Tab label="Observaciones">
+          <Tab label={t("lead.observaciones")}>
             <TabObservaciones lead={lead} />
           </Tab>
 
-          <Tab label="Oportunidades">
+          <Tab label={t("lead.oportunidades")}>
             <Oportunidades lead={lead} />
           </Tab>
 
-          <Tab label="Acciones">
+          <Tab label={t("lead.acciones")}>
             <Acciones lead={lead} />
           </Tab>
         </Tabs>
@@ -85,14 +87,14 @@ export const DetalleLead = ({
               onClick={() => emitir("lead_cambiado", modelo)}
               deshabilitado={!valido}
             >
-              Guardar
+              {t("lead.guardar")}
             </QBoton>
             <QBoton
               tipo="reset"
               variante="texto"
               onClick={() => emitir("edicion_lead_cancelada")}
             >
-              Cancelar
+              {t("lead.cancelar")}
             </QBoton>
           </div>
         )}
