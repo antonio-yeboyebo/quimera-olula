@@ -1,6 +1,7 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { useEffect, useState } from "react";
 import { getEstadosLead } from "../../estadoLead/infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 interface EstadoLeadsProps {
   valor: string;
@@ -15,6 +16,7 @@ export const EstadoLead = ({
   onChange,
   ...props
 }: EstadoLeadsProps) => {
+  const t = useTCrm();
   const [opcionesEstadoLead, setOpcionesEstadoLead] = useState<
     { valor: string; descripcion: string }[]
   >([]);
@@ -37,7 +39,7 @@ export const EstadoLead = ({
 
   return (
     <QSelect
-      label="Estado"
+      label={t("comun.estado")}
       nombre={nombre}
       valor={valor}
       onChange={onChange}

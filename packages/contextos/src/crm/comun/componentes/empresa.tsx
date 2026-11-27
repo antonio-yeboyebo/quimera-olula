@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro } from "@olula/lib/diseño.ts";
 import { getEmpresas } from "../../../crm/empresa/infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface ClienteProps {
   descripcion?: string;
@@ -15,7 +16,7 @@ export const Empresa = ({
   descripcion = "",
   valor,
   nombre = "empresa_id",
-  label = "Empresa",
+  label = tCrm("comun.empresa"),
   deshabilitado = false,
   onChange,
   ...props

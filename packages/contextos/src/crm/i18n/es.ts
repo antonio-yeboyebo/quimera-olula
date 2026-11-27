@@ -1,0 +1,43 @@
+/**
+ * Textos del contexto CRM (namespace `crm`). Referencia: español.
+ * Una rama por módulo; las plantillas llevan `{{dato}}`.
+ */
+export const es = {
+    comun: {
+        nueva: "Nueva",
+        enEspera: "En espera",
+        asignada: "Asignada",
+        rechazada: "Rechazada",
+        cerrada: "Cerrada",
+        estado: "Estado",
+        alta: "Alta",
+        media: "Media",
+        baja: "Baja",
+        prioridad: "Prioridad",
+        porDefecto: "Por defecto",
+        proveedor: "Proveedor",
+        transportista: "Transportista",
+        tipo: "Tipo",
+        cliente: "Cliente",
+        nombreDelCliente: "Nombre del Cliente",
+        seleccionarContacto: "Seleccionar contacto",
+        empresa: "Empresa",
+        estadoBase: "Estado Base",
+        fuente: "Fuente",
+        seleccionarLead: "Seleccionar lead",
+        oportunidad: "Oportunidad",
+        tipoAccion: "Tipo Acción",
+        tipoEntidad: "Tipo Entidad",
+        pendiente: "Pendiente",
+        hecha: "Hecha",
+        borrador: "Borrador",
+        ganada: "Ganada",
+        perdida: "Perdida",
+        otro: "Otro",
+        origen: "Origen",
+        eMail: "E-mail",
+        visita: "Visita",
+        telefono: "Teléfono",
+        tarea: "Tarea",
+    },
+} as const;

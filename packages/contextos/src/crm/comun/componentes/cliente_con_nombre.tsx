@@ -6,6 +6,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { getClientes } from "../../../ventas/cliente/infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface ClienteProps {
   descripcion?: string;
@@ -31,7 +32,7 @@ export const Cliente = ({
   descripcion = "",
   valor,
   nombre = "cliente_id",
-  label = "Cliente",
+  label = tCrm("comun.cliente"),
   deshabilitado = false,
   enlace = "/crm/cliente?id={id}",
   onChange,
@@ -82,8 +83,8 @@ export const ClienteConNombre = ({
   descripcion = "",
   valor,
   nombre = "cliente_id",
-  label = "Cliente",
-  labelNombre = "Nombre del Cliente",
+  label = tCrm("comun.cliente"),
+  labelNombre = tCrm("comun.nombreDelCliente"),
   onChange,
   ...props
 }: ClienteConNombreProps) => {

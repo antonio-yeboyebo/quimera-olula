@@ -1,6 +1,7 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { useEffect, useState } from "react";
 import { getFuentesLead } from "../../fuenteLead/infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 interface FuenteLeadsProps {
   valor: string;
@@ -15,6 +16,7 @@ export const FuenteLead = ({
   onChange,
   ...props
 }: FuenteLeadsProps) => {
+  const t = useTCrm();
   const [opcionesFuenteLead, setOpcionesFuenteLead] = useState<
     { valor: string; descripcion: string }[]
   >([]);
@@ -37,7 +39,7 @@ export const FuenteLead = ({
 
   return (
     <QSelect
-      label="Fuente"
+      label={t("comun.fuente")}
       nombre={nombre}
       valor={valor}
       onChange={onChange}

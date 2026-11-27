@@ -1,4 +1,5 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
+import { tCrm } from "../../i18n/index.ts";
 
 interface EstadoProps {
   valor: string;
@@ -7,11 +8,11 @@ interface EstadoProps {
 }
 
 export const opcionesEstadoIncidencia = [
-  { valor: "nueva", descripcion: "Nueva" },
-  { valor: "en_espera", descripcion: "En espera" },
-  { valor: "asignada", descripcion: "Asignada" },
-  { valor: "rechazada", descripcion: "Rechazada" },
-  { valor: "cerrada", descripcion: "Cerrada" },
+  { valor: "nueva", get descripcion() { return tCrm("comun.nueva"); } },
+  { valor: "en_espera", get descripcion() { return tCrm("comun.enEspera"); } },
+  { valor: "asignada", get descripcion() { return tCrm("comun.asignada"); } },
+  { valor: "rechazada", get descripcion() { return tCrm("comun.rechazada"); } },
+  { valor: "cerrada", get descripcion() { return tCrm("comun.cerrada"); } },
 ];
 
 const opcionesEstado = opcionesEstadoIncidencia;
@@ -27,7 +28,7 @@ export const EstadoIncidencia = ({
 }: EstadoProps) => {
   return (
     <QSelect
-      label="Estado"
+      label={tCrm("comun.estado")}
       nombre="estado"
       valor={valor}
       onChange={onChange}

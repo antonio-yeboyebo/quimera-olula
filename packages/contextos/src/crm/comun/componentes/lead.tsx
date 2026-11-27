@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { getLeads } from "../../lead/infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface LeadSelectorProps {
   descripcion?: string;
@@ -17,7 +18,7 @@ export const LeadSelector = ({
   descripcion = "",
   valor,
   nombre = "lead_id",
-  label = "Seleccionar lead",
+  label = tCrm("comun.seleccionarLead"),
   deshabilitado = false,
   enlace = "/crm/lead?id={id}",
   onChange,
