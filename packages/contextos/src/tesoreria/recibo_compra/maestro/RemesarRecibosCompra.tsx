@@ -8,6 +8,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo, useState } from "react";
 import { ReciboCompra } from "../diseño.js";
 import { NuevaRemesaRecibos } from "./diseño.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 type FechaPagoForm = { fechaPago: Date };
 
@@ -24,6 +25,7 @@ export const RemesarRecibosCompra = ({
   recibos: ReciboCompra[];
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const [cuentaId, setCuentaId] = useState("");
 
   const inicial = useMemo((): FechaPagoForm => ({ fechaPago: new Date() }), []);
@@ -54,26 +56,26 @@ export const RemesarRecibosCompra = ({
     <QModal
       abierto={true}
       nombre="remesar_recibos_compra"
-      titulo="Crear remesa de pago"
+      titulo={t("recibo_compra.crearRemesaDePago")}
       onCerrar={cancelar}
     >
       <div className="RemesarRecibosCompra">
-        <p>{`Se creará una remesa de pago con ${cuantos} por ${formatearMoneda(
+        <p>{t("recibo_compra.seCrearaUnaRemesaDePago", { cuantos, total: formatearMoneda(
           total,
           "EUR"
-        )}. Quedarán remesados hasta que se pague la remesa.`}</p>
+        ) })}</p>
         <quimera-formulario>
           <CuentaBancariaSelect
             nombre="cuenta_id"
-            label="Cuenta de cargo"
+            label={t("recibo_compra.cuentaDeCargo")}
             valor={cuentaId}
             onChange={(opcion) => setCuentaId(opcion?.valor ?? "")}
           />
-          <QDate label="Fecha de pago prevista" {...uiProps("fechaPago")} />
+          <QDate label={t("recibo_compra.fechaDePagoPrevista")} {...uiProps("fechaPago")} />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={remesar} deshabilitado={!cuentaId || !valido}>
-            Remesar
+            {t("recibo_compra.remesar")}
           </QBoton>
         </div>
       </div>

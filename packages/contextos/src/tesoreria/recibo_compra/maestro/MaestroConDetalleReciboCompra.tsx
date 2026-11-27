@@ -28,52 +28,54 @@ import { recibosSeleccionados } from "./maestro.js";
 import "./MaestroConDetalleReciboCompra.css";
 import { getMaquina } from "./maquina.js";
 import { RemesarRecibosCompra } from "./RemesarRecibosCompra.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 const metaTablaReciboCompra: MetaTabla<ReciboCompra> = [
-    { id: 'codigo', cabecera: 'Código' },
-    { id: 'nombreProveedor', cabecera: 'Proveedor' },
-    { id: 'idFiscal', cabecera: 'ID Fiscal' },
-    { id: 'fechaEmision', cabecera: 'F. Emisión', tipo: 'fecha' },
-    { id: 'fechaVencimiento', cabecera: 'F. Vencimiento', tipo: 'fecha' },
+    { id: 'codigo', get cabecera() { return tTesoreria("recibo_compra.codigo"); } },
+    { id: 'nombreProveedor', get cabecera() { return tTesoreria("recibo_compra.proveedor"); } },
+    { id: 'idFiscal', get cabecera() { return tTesoreria("recibo_compra.idFiscal"); } },
+    { id: 'fechaEmision', get cabecera() { return tTesoreria("recibo_compra.fEmision"); }, tipo: 'fecha' },
+    { id: 'fechaVencimiento', get cabecera() { return tTesoreria("recibo_compra.fVencimiento"); }, tipo: 'fecha' },
     {
         id: 'estado',
-        cabecera: 'Estado',
+        get cabecera() { return tTesoreria("recibo_compra.estado"); },
         // Como en recibos de cobro: emitido neutro, pagado en verde, devuelto en rojo, remesado en ámbar.
         render: (recibo: ReciboCompra) => (
             <QEtiqueta variante={varianteEstadoReciboVenta(recibo.estado)}>
-                {recibo.estado}
+                {textoEstado(recibo.estado)}
             </QEtiqueta>
         ),
     },
-    { id: 'importe', cabecera: 'Importe', tipo: 'moneda' },
+    { id: 'importe', get cabecera() { return tTesoreria("recibo_compra.importe"); }, tipo: 'moneda' },
 ];
 
 // Filtros como en recibos de cobro: el estado con una casilla por estado y, por defecto, los pendientes.
 const metaFiltroReciboCompra: MetaFiltro = {
     codigo: {
         id: "codigo",
-        label: "Código",
+        get label() { return tTesoreria("recibo_compra.codigo"); },
         filtro: (v) => (v ? ["codigo", "~", v as string] : null),
     },
     nombre_proveedor: {
         id: "nombre_proveedor",
-        label: "Proveedor",
+        get label() { return tTesoreria("recibo_compra.proveedor"); },
         filtro: (v) => (v ? ["nombre_proveedor", "~", v as string] : null),
     },
     id_fiscal: {
         id: "id_fiscal",
-        label: "ID Fiscal",
+        get label() { return tTesoreria("recibo_compra.idFiscal"); },
         filtro: (v) => (v ? ["id_fiscal", "~", v as string] : null),
     },
     fecha_vencimiento: {
         id: "fecha_vencimiento",
-        label: "F. Vencimiento",
+        get label() { return tTesoreria("recibo_compra.fVencimiento"); },
         tipo: "intervalo_fechas",
         filtro: (v) => filtroFechas("fecha_vencimiento", v),
     },
     estado: {
         id: "estado",
-        label: "Estado",
+        get label() { return tTesoreria("recibo_compra.estado"); },
         tipo: "multiseleccion",
         opciones: opcionesEstadoReciboCompra,
         filtro: filtroEstadoReciboVenta,
@@ -91,6 +93,7 @@ const criteriaRecibosPendientes = (): Criteria => ({
 
 export const MaestroConDetalleReciboCompra = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(criteriaRecibosPendientes, []);
 
     const { id, criteria } = getUrlParams();
@@ -129,7 +132,7 @@ export const MaestroConDetalleReciboCompra = () => {
             <MaestroDetalle<ReciboCompra>
                 Maestro={
                     <>
-                        <h2>Recibos de pago</h2>
+                        <h2>{t("recibo_compra.recibosDePago")}</h2>
                         <Listado<ReciboCompra>
                             metaTabla={metaTablaReciboCompra}
                             metaFiltro={metaFiltroReciboCompra}
@@ -152,7 +155,7 @@ export const MaestroConDetalleReciboCompra = () => {
                                             onClick={() => emitir("remesado_solicitado")}
                                             deshabilitado={elegidos.length === 0}
                                         >
-                                            {`Remesar (${elegidos.length})`}
+                                            {t("recibo_compra.remesarLength", { length: elegidos.length })}
                                         </QBoton>
                                     </div>
                                 )
@@ -182,8 +185,8 @@ const TarjetaReciboCompra = (recibo: ReciboCompra) => {
             <div className="tarjeta-recibo-compra-importe">
                 {formatearMoneda(recibo.importe, "EUR")}
             </div>
-            <div className={`tarjeta-recibo-compra-estado estado-${recibo.estado}`}>
-                {recibo.estado}
+            <div className={`tarjeta-recibo-compra-estado estado-${textoEstado(recibo.estado)}`}>
+                {textoEstado(recibo.estado)}
             </div>
         </div>
     );

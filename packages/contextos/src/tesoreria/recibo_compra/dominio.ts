@@ -1,5 +1,6 @@
 import { MovimientoRecibo } from "../recibo_venta/diseño.ts";
 import { ReciboCompra } from "./diseño.ts";
+import { textoEstado } from "../comun/estados.ts";
 
 /**
  * Estados en los que el recibo admite pago. El servidor manda el estado como
@@ -55,5 +56,5 @@ export const ESTADOS_RECIBO_COMPRA_DEFECTO = ESTADOS_RECIBO_COMPRA.filter((estad
 
 export const opcionesEstadoReciboCompra = ESTADOS_RECIBO_COMPRA.map((estado) => ({
     valor: estado,
-    descripcion: estado,
+    get descripcion() { return textoEstado(estado); },
 }));
