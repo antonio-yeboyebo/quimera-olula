@@ -13,6 +13,7 @@ import "./DetalleAccion.css";
 import { getMaquina } from "./maquina.ts";
 import { TabDatos } from "./tabs/TabDatos.tsx";
 import { TabObservaciones } from "./tabs/TabObservaciones.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleAccion = ({
   id,
@@ -21,6 +22,7 @@ export const DetalleAccion = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const accionId = id ?? params.id;
@@ -58,19 +60,19 @@ export const DetalleAccion = ({
           <div className="maestro-botones">
             {modelo.estado === "Hecha" ? (
               <span className="accion-finalizada">
-                Finalizada
+                {t("accion.finalizada")}
                 {modelo.fecha_fin ? ` ${formatearFechaDate(modelo.fecha_fin)}` : ""}
               </span>
             ) : (
               <QBoton onClick={() => emitir("finalizacion_accion_solicitada")}>
-                Finalizar
+                {t("accion.finalizar")}
               </QBoton>
             )}
             <QuimeraAcciones
               vertical
               acciones={[
                 {
-                  texto: "Borrar",
+                  texto: t("accion.borrar"),
                   onClick: () => emitir("borrado_accion_solicitado"),
                   advertencia: true,
                 },
@@ -79,11 +81,11 @@ export const DetalleAccion = ({
           </div>
 
           <Tabs>
-            <Tab label="Datos">
+            <Tab label={t("accion.datos")}>
               <TabDatos accion={accion} />
             </Tab>
 
-            <Tab label="Observaciones">
+            <Tab label={t("accion.observaciones")}>
               <TabObservaciones accion={accion} />
             </Tab>
           </Tabs>
@@ -94,14 +96,14 @@ export const DetalleAccion = ({
                 onClick={() => emitir("accion_cambiada", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("accion.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_accion_cancelada")}
               >
-                Cancelar
+                {t("accion.cancelar")}
               </QBoton>
             </div>
           )}

@@ -6,6 +6,7 @@ import {
 } from "../../widgets/comun.ts";
 import { Accion } from "../diseño.ts";
 import { getAcciones } from "../infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export type GrupoAccionesHoy = {
     tipo: string;
@@ -50,7 +51,7 @@ const agruparPorTipo = (acciones: Accion[]): GrupoAccionesHoy[] => {
     const grupos = new Map<string, Accion[]>();
 
     for (const accion of acciones) {
-        const tipo = accion.tipo || "Sin tipo";
+        const tipo = accion.tipo || tCrm("accion.sinTipo");
         const lista = grupos.get(tipo) ?? [];
         lista.push(accion);
         grupos.set(tipo, lista);

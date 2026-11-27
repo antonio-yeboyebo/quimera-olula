@@ -8,8 +8,11 @@ import {
   ModeloWidgetAccionesHoy,
   modeloWidgetAccionesHoyInicial,
 } from "./dominio_acciones_hoy.ts";
+import { useTCrm } from "../../i18n/index.ts";
+import { textoTipoAccion } from "../../comun/valores/texto_opcion.ts";
 
 export const WidgetAccionesHoy = () => {
+  const t = useTCrm();
   const [modelo, setModelo] = useState<ModeloWidgetAccionesHoy>(
     modeloWidgetAccionesHoyInicial
   );
@@ -35,7 +38,7 @@ export const WidgetAccionesHoy = () => {
   }, []);
 
   if (modelo.estado === "cargando") {
-    return <div>Cargando acciones de hoy...</div>;
+    return <div>{t("accion.cargandoAccionesDeHoy")}</div>;
   }
 
   const gruposVisibles =
@@ -62,7 +65,7 @@ export const WidgetAccionesHoy = () => {
   return (
     <div className="widget-crm-lista">
       <div className="widget-crm-lista__cabecera">
-        <h3 className="widget-crm-lista__titulo">Acciones de hoy</h3>
+        <h3 className="widget-crm-lista__titulo">{t("accion.accionesDeHoy")}</h3>
         <div className="widget-acciones-situacion">
           <button
             type="button"
@@ -71,7 +74,7 @@ export const WidgetAccionesHoy = () => {
             }`.trim()}
             onClick={() => setFiltroActivo("pendientes")}
           >
-            {modelo.totalPendientes} pendientes
+            {t("accion.totalpendientesPendientes", { totalPendientes: modelo.totalPendientes })}
           </button>
           {modelo.totalRetrasadas > 0 && (
             <button
@@ -81,7 +84,7 @@ export const WidgetAccionesHoy = () => {
               }`.trim()}
               onClick={() => setFiltroActivo("retrasadas")}
             >
-              {modelo.totalRetrasadas} retrasadas
+              {t("accion.totalretrasadasRetrasadas", { totalRetrasadas: modelo.totalRetrasadas })}
             </button>
           )}
           <button
@@ -91,7 +94,7 @@ export const WidgetAccionesHoy = () => {
             }`.trim()}
             onClick={() => setFiltroActivo("hoy")}
           >
-            {modelo.totalAcciones} para hoy
+            {t("accion.totalaccionesParaHoy", { totalAcciones: modelo.totalAcciones })}
           </button>
         </div>
       </div>
@@ -99,16 +102,16 @@ export const WidgetAccionesHoy = () => {
       {totalVisible === 0 ? (
         <div className="widget-crm-lista__vacio">
           {filtroActivo === "pendientes"
-            ? "No tienes acciones pendientes"
+            ? t("accion.noTienesAccionesPendientes")
             : filtroActivo === "retrasadas"
-              ? "No tienes acciones retrasadas"
-              : "No tienes acciones para hoy"}
+              ? t("accion.noTienesAccionesRetrasadas")
+              : t("accion.noTienesAccionesParaHoy")}
         </div>
       ) : (
         <div className="widget-crm-lista__grupos">
           {gruposVisibles.map((grupo) => (
             <section key={grupo.tipo} className="widget-crm-lista__grupo">
-              <div className="widget-crm-lista__grupo-titulo">{grupo.tipo}</div>
+              <div className="widget-crm-lista__grupo-titulo">{textoTipoAccion(grupo.tipo)}</div>
               <div className="widget-crm-lista__lista">
                 {grupo.acciones.map((accion) => (
                   <Link
@@ -127,7 +130,7 @@ export const WidgetAccionesHoy = () => {
 
       <div className="widget-crm-lista__acciones">
         <Link className="widget-crm-lista__enlace" to={urlVerFiltro}>
-          Ver todas
+          {t("accion.verTodas")}
         </Link>
       </div>
     </div>
