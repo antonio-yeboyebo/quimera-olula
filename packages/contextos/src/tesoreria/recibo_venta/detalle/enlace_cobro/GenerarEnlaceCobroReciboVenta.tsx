@@ -11,6 +11,7 @@ import { TransferenciaBancaria } from "../../../comun/componentes/TransferenciaB
 import { ReciboVenta } from "../../diseño.js";
 import { EnlaceCobroReciboVentaApi, postEnlaceCobroReciboVenta } from "../../infraestructura.js";
 import "./GenerarEnlaceCobroReciboVenta.css";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 type ModeloCuenta = { cuenta_banco_id: string; nombre_cuenta: string };
 
@@ -33,12 +34,13 @@ export const GenerarEnlaceCobroReciboVenta = ({
     recibo: ReciboVenta;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const { modelo, uiProps, valido } = useModelo(metaCuenta, vacio);
     const [enlace, setEnlace] = useState<EnlaceCobroReciboVentaApi | null>(null);
     const [copiado, setCopiado] = useState(false);
 
-    const cliente = recibo.nombreCliente || "el cliente";
+    const cliente = recibo.nombreCliente || t("recibo_venta.elCliente");
 
     const generar = () => {
         intentar(async () => {
@@ -62,26 +64,24 @@ export const GenerarEnlaceCobroReciboVenta = ({
         <QModal
             abierto={true}
             nombre="generar_enlace_cobro"
-            titulo={`Cobrar a ${cliente}`}
+            titulo={t("recibo_venta.cobrarACliente", { cliente })}
             onCerrar={cerrar}
         >
             <div className="GenerarEnlaceCobroReciboVenta">
                 {!enlace ? (
                     <>
                         <p>
-                            Se generará un enlace para que <strong>{cliente}</strong> pague
-                            el recibo {recibo.codigo} desde su banco. Elige la cuenta de la
-                            empresa en la que se recibirá el dinero.
+                            {t("recibo_venta.seGeneraraUnEnlaceParaQue")}{" "}<strong>{cliente}</strong>{" "}{t("recibo_venta.pagueElRecibo")}{" "}{recibo.codigo}{" "}{t("recibo_venta.desdeSuBancoEligeLaCuenta")}
                         </p>
                         <quimera-formulario>
                             <CuentaBancariaSelect
-                                label="Cuenta de la empresa que recibe el dinero"
+                                label={t("recibo_venta.cuentaDeLaEmpresaQueRecibe")}
                                 {...uiProps("cuenta_banco_id", "nombre_cuenta")}
                             />
                         </quimera-formulario>
                         <div className="botones maestro-botones">
                             <QBoton onClick={generar} deshabilitado={!valido}>
-                                Generar enlace de cobro
+                                {t("recibo_venta.generarEnlaceDeCobro")}
                             </QBoton>
                         </div>
                     </>
@@ -94,19 +94,17 @@ export const GenerarEnlaceCobroReciboVenta = ({
                             referencia={enlace.referencia}
                         />
                         <p>
-                            Envía este enlace a <strong>{enlace.pagador.nombre}</strong> por
-                            correo o WhatsApp. Al abrirlo elegirá su banco y autorizará la
-                            transferencia a <strong>{enlace.beneficiario.nombre}</strong>.
+                            {t("recibo_venta.enviaEsteEnlaceA")}{" "}<strong>{enlace.pagador.nombre}</strong>{" "}{t("recibo_venta.porCorreoOWhatsappAlAbrirlo")}{" "}<strong>{enlace.beneficiario.nombre}</strong>.
                         </p>
                         <quimera-formulario>
-                            <QInput label="Enlace de cobro" nombre="url" valor={enlace.url} soloLectura />
+                            <QInput label={t("recibo_venta.enlaceDeCobro")} nombre="url" valor={enlace.url} soloLectura />
                         </quimera-formulario>
                         <div className="botones maestro-botones">
                             <QBoton onClick={copiar}>
-                                {copiado ? "Enlace copiado" : "Copiar enlace"}
+                                {copiado ? t("recibo_venta.enlaceCopiado") : t("recibo_venta.copiarEnlace")}
                             </QBoton>
                             <QBoton onClick={cerrar} variante="borde">
-                                Cerrar
+                                {t("recibo_venta.cerrar")}
                             </QBoton>
                         </div>
                     </>

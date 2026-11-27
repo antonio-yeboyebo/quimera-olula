@@ -4,6 +4,7 @@ import { MetaTabla } from "@olula/componentes/atomos/qtablacontrolada.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MovimientoRecibo } from "../../diseño.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 const NOMBRE_PASARELA: Record<string, string> = { stripe: "Stripe" };
 
@@ -21,7 +22,7 @@ const Pasarela = ({ pago }: { pago: MovimientoRecibo }) => {
           href={pago.urlPanel}
           target="_blank"
           rel="noopener noreferrer"
-          title={`Abrir el pago en el panel de ${nombre}`}
+          title={tTesoreria("recibo_venta.abrirElPagoEnElPanel", { nombre })}
         >
           {nombre}
           <QIcono nombre="arriba_derecha" tamaño="sm" />
@@ -37,12 +38,12 @@ const Pasarela = ({ pago }: { pago: MovimientoRecibo }) => {
 };
 
 const metaTablaPagos: MetaTabla<MovimientoRecibo> = [
-  { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-  { id: "tipo", cabecera: "Tipo", tipo: "texto" },
-  { id: "estado", cabecera: "Estado", tipo: "booleano" },
+  { id: "fecha", get cabecera() { return tTesoreria("recibo_venta.fecha"); }, tipo: "fecha" },
+  { id: "tipo", get cabecera() { return tTesoreria("recibo_venta.tipo"); }, tipo: "texto" },
+  { id: "estado", get cabecera() { return tTesoreria("recibo_venta.estado"); }, tipo: "booleano" },
   {
     id: "pasarela",
-    cabecera: "Tarjeta",
+    get cabecera() { return tTesoreria("recibo_venta.tarjeta"); },
     render: (pago) => <Pasarela pago={pago} />,
   },
 ];
@@ -50,7 +51,7 @@ const metaTablaPagos: MetaTabla<MovimientoRecibo> = [
 export const PagosReciboVenta = ({ pagos }: { pagos: MovimientoRecibo[] }) => {
   return (
     <div className="PagosReciboVenta">
-      <h3>Pagos y devoluciones</h3>
+      <h3>{tTesoreria("recibo_venta.pagosYDevoluciones")}</h3>
 
       <ListadoSemiControlado
         metaTabla={metaTablaPagos}

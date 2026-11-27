@@ -29,33 +29,35 @@ import "./MaestroConDetalleReciboVenta.css";
 import { getMaquina } from "./maquina.js";
 import { metaTablaReciboVenta } from "./metatabla_recibo_venta.js";
 import { RemesarRecibos } from "./RemesarRecibos.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 const metaFiltroReciboVenta: MetaFiltro = {
   codigo: {
     id: "codigo",
-    label: "Código",
+    get label() { return tTesoreria("recibo_venta.codigo"); },
     filtro: (v) => (v ? ["codigo", "~", v as string] : null),
   },
   cliente_id: filtroCliente,
   nombre_cliente: {
     id: "nombre_cliente",
-    label: "Nombre cliente",
+    get label() { return tTesoreria("recibo_venta.nombreCliente"); },
     filtro: (v) => (v ? ["nombre_cliente", "~", v as string] : null),
   },
   id_fiscal: {
     id: "id_fiscal",
-    label: "ID Fiscal",
+    get label() { return tTesoreria("recibo_venta.idFiscal"); },
     filtro: (v) => (v ? ["id_fiscal", "~", v as string] : null),
   },
   fecha_vencimiento: {
     id: "fecha_vencimiento",
-    label: "F. Vencimiento",
+    get label() { return tTesoreria("recibo_venta.fVencimiento"); },
     tipo: "intervalo_fechas",
     filtro: (v) => filtroFechas("fecha_vencimiento", v),
   },
   estado: {
     id: "estado",
-    label: "Estado",
+    get label() { return tTesoreria("recibo_venta.estado"); },
     tipo: "multiseleccion",
     opciones: opcionesEstadoReciboVenta,
     filtro: filtroEstadoReciboVenta,
@@ -72,6 +74,7 @@ const criteriaRecibosVivos = (): Criteria => ({
 });
 
 export const MaestroConDetalleReciboVenta = () => {
+  const t = useTTesoreria();
   const criteriaBase = useMemo(criteriaRecibosVivos, []);
 
   const { id, criteria } = getUrlParams();
@@ -111,7 +114,7 @@ export const MaestroConDetalleReciboVenta = () => {
       <MaestroDetalle<ReciboVenta>
         Maestro={
           <>
-            <h2>Recibos de cobro</h2>
+            <h2>{t("recibo_venta.recibosDeCobro")}</h2>
             <Listado<ReciboVenta>
               metaTabla={metaTablaReciboVenta}
               metaFiltro={metaFiltroReciboVenta}
@@ -130,20 +133,20 @@ export const MaestroConDetalleReciboVenta = () => {
                   <div className="maestro-botones">
                     {bloqueoAgrupar && (
                       <QEtiqueta variante="advertencia">
-                        Solo se agrupan recibos de un mismo cliente
+                        {t("recibo_venta.soloSeAgrupanRecibosDeUn")}
                       </QEtiqueta>
                     )}
                     <QBoton
                       onClick={() => emitir("agrupado_solicitado")}
                       deshabilitado={!agrupables}
                     >
-                      {`Agrupar (${elegidos.length})`}
+                      {t("recibo_venta.agruparLength", { length: elegidos.length })}
                     </QBoton>
                     <QBoton
                       onClick={() => emitir("remesado_solicitado")}
                       deshabilitado={elegidos.length === 0}
                     >
-                      {`Remesar (${elegidos.length})`}
+                      {t("recibo_venta.remesarLength", { length: elegidos.length })}
                     </QBoton>
                   </div>
                 )
@@ -181,8 +184,8 @@ const TarjetaReciboVenta = (recibo: ReciboVenta) => {
       <div className="tarjeta-recibo-venta-importe">
         {formatearMoneda(recibo.importe, "EUR")}
       </div>
-      <div className={`tarjeta-recibo-venta-estado estado-${recibo.estado}`}>
-        {recibo.estado}
+      <div className={`tarjeta-recibo-venta-estado estado-${textoEstado(recibo.estado)}`}>
+        {textoEstado(recibo.estado)}
       </div>
     </div>
   );

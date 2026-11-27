@@ -14,6 +14,7 @@ import { enDivisaExtranjera } from "../../dominio.js";
 import "./DevolverReciboVenta.css";
 import { DevolucionRecibo } from "./diseño.js";
 import { devolucionReciboVacia, metaDevolucionRecibo } from "./dominio.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 export const DevolverReciboVenta = ({
   recibo,
@@ -23,6 +24,7 @@ export const DevolverReciboVenta = ({
   publicar: EmitirEvento;
 }) => {
   // Memoizado: useModelo reinicia el modelo cada vez que cambia el inicial.
+  const t = useTTesoreria();
   const devolucionInicial = useMemo(
     () => devolucionReciboVacia(recibo),
     [recibo]
@@ -64,20 +66,20 @@ export const DevolverReciboVenta = ({
     <QModal
       abierto={true}
       nombre="devolver_recibo_venta"
-      titulo="Devolver recibo"
+      titulo={t("recibo_venta.devolverRecibo")}
       onCerrar={cancelar}
     >
       <div className="DevolverReciboVenta">
         <quimera-formulario>
           <CuentaBancariaSelect
-            label="Cuenta de pago"
+            label={t("recibo_venta.cuentaDePago")}
             {...uiProps("cuenta_pago_id", "nombre_cuenta_pago")}
             deshabilitado
           />
-          <QDate label="Fecha" {...uiProps("fecha")} />
+          <QDate label={t("recibo_venta.fecha")} {...uiProps("fecha")} />
           {enDivisa && (
             <QInput
-              label={`Tasa de cambio ${recibo.divisaId} → ${recibo.divisaEmpresaId}`}
+              label={t("recibo_venta.tasaDeCambioDivisaidDivisaempresaid", { divisaId: recibo.divisaId, divisaEmpresaId: recibo.divisaEmpresaId })}
               {...uiProps("tasa_conversion")}
             />
           )}
@@ -92,15 +94,14 @@ export const DevolverReciboVenta = ({
             />
             {!reembolsar && (
               <QAviso variante="advertencia">
-                El recibo quedará devuelto en Olula, pero el cliente no recibirá
-                el dinero: tendrás que reembolsarlo en el panel de Stripe.
+                {t("recibo_venta.elReciboQuedaraDevueltoEnOlula")}
               </QAviso>
             )}
           </div>
         )}
         <div className="botones maestro-botones">
           <QBoton onClick={devolver} deshabilitado={!valido}>
-            Devolver
+            {t("recibo_venta.devolver")}
           </QBoton>
         </div>
       </div>

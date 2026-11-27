@@ -3,6 +3,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { fechaDesdeApi } from "../comun/infraestructura.js";
 import ApiUrls from "../comun/urls.js";
 import { AgruparRecibosVenta, DesagruparReciboVenta, GetReciboVenta, GetRecibosVenta, MovimientoRecibo, PatchDevolverReciboVenta, PatchPagarReciboVenta, ReciboVenta } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface MovimientoReciboApi {
     id: string;
@@ -76,7 +77,7 @@ export const getReciboVenta: GetReciboVenta = async (id) => {
     return await RestAPI.getItem<ReciboVenta, ReciboVentaApi>(
         `${baseUrl}/${id}`,
         reciboVentaDesdeApi,
-        "Error al obtener el recibo de cobro"
+        tTesoreria("recibo_venta.errorAlObtenerElReciboDe")
     );
 };
 
@@ -85,7 +86,7 @@ export const getRecibosVenta: GetRecibosVenta = async (criteria) => {
         baseUrl,
         criteria,
         reciboVentaDesdeApi,
-        "Error al obtener los recibos de cobro"
+        tTesoreria("recibo_venta.errorAlObtenerLosRecibosDe")
     );
 };
 
@@ -105,7 +106,7 @@ export const postEnlaceCobroReciboVenta = async (
     return await RestAPI.query(
         `${baseUrl}/${id}/enlace_cobro`,
         { cuenta_banco_id: cuentaBancoId },
-        "Error al generar el enlace de cobro"
+        tTesoreria("recibo_venta.errorAlGenerarElEnlaceDe")
     );
 };
 
@@ -117,7 +118,7 @@ export const patchPagarReciboVenta: PatchPagarReciboVenta = async (id, pago) => 
             fecha: pago.fecha,
             ...(pago.tasaConversion !== undefined && { tasa_conversion: String(pago.tasaConversion) }),
         },
-        "Error al pagar el recibo de cobro"
+        tTesoreria("recibo_venta.errorAlPagarElReciboDe")
     );
 };
 
@@ -132,7 +133,7 @@ export const patchDevolverReciboVenta: PatchDevolverReciboVenta = async (id, dev
             }),
             ...(devolucion.reembolsarEnPasarela && { reembolsar_en_pasarela: true }),
         },
-        "Error al devolver el recibo de cobro"
+        tTesoreria("recibo_venta.errorAlDevolverElReciboDe")
     );
 };
 
@@ -140,7 +141,7 @@ export const agruparRecibosVenta: AgruparRecibosVenta = async (id, reciboIds) =>
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/${id}/agrupar`,
         { recibo_ids: reciboIds },
-        "Error al agrupar los recibos"
+        tTesoreria("recibo_venta.errorAlAgruparLosRecibos")
     )) as unknown as { grupo_id: string };
 
     return respuesta.grupo_id;
@@ -150,7 +151,7 @@ export const desagruparReciboVenta: DesagruparReciboVenta = async (id) => {
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/${id}/desagrupar`,
         {},
-        "Error al deshacer la agrupación"
+        tTesoreria("recibo_venta.errorAlDeshacerLaAgrupacion")
     )) as unknown as { grupo_id: string };
 
     return respuesta.grupo_id;
@@ -170,7 +171,7 @@ export const patchCambiarReciboVenta = async (
             cuenta_domiciliacion_id: cambios.cuentaDomiciliacionId,
             ...(cambios.importe !== undefined && { importe: String(cambios.importe) }),
         },
-        "Error al guardar el recibo"
+        tTesoreria("recibo_venta.errorAlGuardarElRecibo")
     );
 };
 
@@ -179,6 +180,6 @@ export const patchAnularPagoReciboVenta = async (id: string): Promise<void> => {
     await RestAPI.patch(
         `${baseUrl}/${id}/anular_pago`,
         {},
-        "Error al anular el último pago del recibo"
+        tTesoreria("recibo_venta.errorAlAnularElUltimoPago")
     );
 };

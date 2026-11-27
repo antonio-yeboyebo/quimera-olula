@@ -3,6 +3,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { ReciboVenta } from "../../diseño.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 export const DeshacerAgrupacion = ({
   recibo,
@@ -11,6 +12,7 @@ export const DeshacerAgrupacion = ({
   recibo: ReciboVenta;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const deshacer_ = useCallback(
     async () => publicar("desagrupado_confirmado"),
     [publicar]
@@ -24,20 +26,20 @@ export const DeshacerAgrupacion = ({
   const [deshacer, cancelar] = useForm(deshacer_, cancelar_);
 
   const mensaje = [
-    `El recibo de grupo ${recibo.codigo} se eliminará.`,
+    t("recibo_venta.elReciboDeGrupoCodigoSe", { codigo: recibo.codigo }),
     "",
-    "Los recibos que agrupaba vuelven a quedar sueltos.",
+    t("recibo_venta.losRecibosQueAgrupabaVuelvenA"),
   ].join("\n");
 
   return (
     <QModalConfirmacion
       nombre="deshacer_agrupacion_recibo_venta"
       abierto={true}
-      titulo="Deshacer agrupación"
+      titulo={t("recibo_venta.deshacerAgrupacion")}
       mensaje={mensaje}
       onCerrar={cancelar}
       onAceptar={deshacer}
-      labelAceptar="Deshacer"
+      labelAceptar={t("recibo_venta.deshacer")}
     />
   );
 };
