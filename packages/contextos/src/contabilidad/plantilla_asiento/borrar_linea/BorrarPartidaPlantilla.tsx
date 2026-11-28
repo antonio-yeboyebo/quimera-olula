@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { PartidaPlantilla, PlantillaAsiento } from "../diseño.ts";
 import { deletePartidaPlantilla } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarPartidaPlantilla = ({
     plantilla,
@@ -14,6 +15,7 @@ export const BorrarPartidaPlantilla = ({
     partida: PartidaPlantilla;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deletePartidaPlantilla(plantilla.id, partida.id);
         publicar("linea_borrada", partida.id);
@@ -27,8 +29,8 @@ export const BorrarPartidaPlantilla = ({
         <QModalConfirmacion
             nombre="borrarPartidaPlantilla"
             abierto={true}
-            titulo="Borrar partida"
-            mensaje={`¿Está seguro de que desea borrar la partida ${partida.numeroOrden}?`}
+            titulo={t("plantilla_asiento.borrarPartida")}
+            mensaje={t("plantilla_asiento.estaSeguroDeQueDeseaBorrar2", { numeroOrden: partida.numeroOrden })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

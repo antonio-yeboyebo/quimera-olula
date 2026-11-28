@@ -12,6 +12,7 @@ import { etiquetaZonaGeografica, metaZonaGeografica, REGLA_ZONA_GEOGRAFICA } fro
 import { CamposZonaGeografica } from "./CamposZonaGeografica.tsx";
 import { contextoDetalleZonaGeograficaInicial, guardarZonaGeografica } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `zonasgeo.ui`. */
 export const DetalleZonaGeografica = ({
@@ -21,6 +22,7 @@ export const DetalleZonaGeografica = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleZonaGeograficaInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -44,7 +46,7 @@ export const DetalleZonaGeografica = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("zonaGeografica.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede(REGLA_ZONA_GEOGRAFICA),
             advertencia: true,
@@ -64,7 +66,7 @@ export const DetalleZonaGeografica = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={zonaGeografica.id} soloLectura />
+                    <QInput label={t("zonaGeografica.codigo")} nombre="id" valor={zonaGeografica.id} soloLectura />
                     <CamposZonaGeografica uiProps={formModelo.uiProps} />
                 </quimera-formulario>
             </div>

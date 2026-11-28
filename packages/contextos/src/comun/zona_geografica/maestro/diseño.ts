@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { ZonaGeografica } from "../diseño.ts";
+import { tComun } from "../../i18n/index.ts";
 
 export type EstadoMaestroZonaGeografica = "INICIAL" | "CREANDO";
 
@@ -13,8 +14,8 @@ export type ContextoMaestroZonaGeografica = {
 };
 
 export const metaTablaZonaGeografica: MetaTabla<ZonaGeografica> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "id", get cabecera() { return tComun("zonaGeografica.codigo"); } },
+    { id: "descripcion", get cabecera() { return tComun("zonaGeografica.descripcion"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -28,8 +29,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroZonaGeografica: MetaFiltro = {
-    id: filtroTexto("id", "Código"),
-    descripcion: filtroTexto("descripcion", "Descripción"),
+    get id() { return filtroTexto("id", tComun("zonaGeografica.codigo")); },
+    get descripcion() { return filtroTexto("descripcion", tComun("zonaGeografica.descripcion")); },
 };
 
 export const criteriaZonasGeograficasDefecto = (): Criteria => ({

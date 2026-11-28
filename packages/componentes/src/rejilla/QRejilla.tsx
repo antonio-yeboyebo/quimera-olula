@@ -22,6 +22,7 @@ import {
   redimensionarElemento,
 } from "./dominio.ts";
 import "./QRejilla.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 type Modo = "mover" | "tamaño";
 
@@ -187,6 +188,7 @@ const CeldaRejilla = ({
   arrastrando: Modo | null;
   children: ReactNode;
 }) => {
+  const t = useTComponentes();
   const mover = useDraggable({ id: `mover:${elemento.id}`, disabled: !editable });
   const tamaño = useDraggable({ id: `tamaño:${elemento.id}`, disabled: !editable });
 
@@ -210,7 +212,7 @@ const CeldaRejilla = ({
           ref={mover.setNodeRef}
           type="button"
           className="qrejilla-mover"
-          aria-label={`Mover ${etiqueta}`}
+          aria-label={t("ui.rejilla.moverEtiqueta", { etiqueta })}
           {...mover.listeners}
           {...mover.attributes}
         >
@@ -223,7 +225,7 @@ const CeldaRejilla = ({
           ref={tamaño.setNodeRef}
           type="button"
           className="qrejilla-tamaño"
-          aria-label={`Cambiar tamaño de ${etiqueta}`}
+          aria-label={t("ui.rejilla.cambiarTamanoDeEtiqueta", { etiqueta })}
           {...tamaño.listeners}
           {...tamaño.attributes}
         />

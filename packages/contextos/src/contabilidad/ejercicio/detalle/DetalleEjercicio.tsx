@@ -10,9 +10,15 @@ import { AsientosEjercicio } from "../asientos/AsientosEjercicio.tsx";
 import { CerrarEjercicio } from "../cerrar/CerrarEjercicio.tsx";
 import { DeshacerCierreEjercicio } from "../deshacer_cierre/DeshacerCierreEjercicio.tsx";
 import { Ejercicio } from "../diseño.ts";
-import { etiquetaEjercicio, puedeCerrar, puedeReabrir } from "../dominio.ts";
+import {
+    etiquetaEjercicio,
+    puedeCerrar,
+    puedeReabrir,
+    textoEstadoEjercicio,
+} from "../dominio.ts";
 import { contextoDetalleEjercicioInicial } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export interface PropsDetalleEjercicio {
     id?: string;
@@ -27,6 +33,7 @@ export const DetalleEjercicio = ({
     ejercicios,
     publicar = async () => {},
 }: PropsDetalleEjercicio) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleEjercicioInicial, publicar);
     const { estado, ejercicio } = ctx;
 
@@ -40,9 +47,9 @@ export const DetalleEjercicio = ({
     const autorizado = puede("contabilidad.asiento");
 
     const acciones = [
-        { texto: "Cerrar Ejercicio", onClick: () => emitir("cierre_solicitado"),
+        { texto: t("ejercicio.cerrarEjercicio"), onClick: () => emitir("cierre_solicitado"),
             deshabilitado: !autorizado || !puedeCerrar(ejercicio) },
-        { texto: "Reabrir Ejercicio", onClick: () => emitir("deshacer_cierre_solicitado"),
+        { texto: t("ejercicio.reabrirEjercicio"), onClick: () => emitir("deshacer_cierre_solicitado"),
             deshabilitado: !autorizado || !puedeReabrir(ejercicio), advertencia: true },
     ];
 
@@ -64,11 +71,11 @@ export const DetalleEjercicio = ({
                 </div>
                 <quimera-formulario>
                     <FilaFormulario columnas="1fr 3fr 1.5fr 1.5fr 1.5fr">
-                        {campo("Código", "id", ejercicio.id)}
-                        {campo("Nombre", "nombre", ejercicio.nombre)}
-                        {campo("Inicio", "fechaInicio", formatearFechaDate(ejercicio.fechaInicio))}
-                        {campo("Fin", "fechaFin", formatearFechaDate(ejercicio.fechaFin))}
-                        {campo("Estado", "estado", ejercicio.estado)}
+                        {campo(t("ejercicio.codigo"), "id", ejercicio.id)}
+                        {campo(t("ejercicio.nombre"), "nombre", ejercicio.nombre)}
+                        {campo(t("ejercicio.inicio"), "fechaInicio", formatearFechaDate(ejercicio.fechaInicio))}
+                        {campo(t("ejercicio.fin"), "fechaFin", formatearFechaDate(ejercicio.fechaFin))}
+                        {campo(t("ejercicio.estado"), "estado", textoEstadoEjercicio(ejercicio.estado))}
                     </FilaFormulario>
                 </quimera-formulario>
                 <AsientosEjercicio ejercicio={ejercicio} />

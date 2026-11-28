@@ -8,8 +8,10 @@ import { Banco } from "../diseño.ts";
 import { metaSucursal, nuevaSucursalVacia } from "../dominio.ts";
 import { postSucursal } from "../infraestructura.ts";
 import { CamposSucursal } from "./CamposSucursal.tsx";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const CrearSucursalBanco = ({ banco, publicar }: { banco: Banco; publicar: EmitirEvento }) => {
+    const t = useTTesoreria();
     const inicial = useMemo(nuevaSucursalVacia, []);
 
     const { modelo, uiProps, valido } = useModelo(metaSucursal, inicial);
@@ -24,14 +26,14 @@ export const CrearSucursalBanco = ({ banco, publicar }: { banco: Banco; publicar
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
     return (
-        <QModal abierto={true} nombre="crearSucursalBanco" titulo={`Nueva sucursal de ${banco.nombre}`} onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearSucursalBanco" titulo={t("banco.nuevaSucursalDeNombre", { nombre: banco.nombre })} onCerrar={cancelar}>
             <div className="CrearSucursalBanco">
                 <quimera-formulario>
                     <CamposSucursal uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("banco.crear")}
                     </QBoton>
                 </div>
             </div>

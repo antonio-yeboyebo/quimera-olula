@@ -9,6 +9,7 @@ import {
     ResultadoInforme,
 } from "./diseño.ts";
 import { fichaAApi, fichaDesdeApi } from "./dominio.ts";
+import { tComun } from "../i18n/index.ts";
 
 export interface ResultadoInformeApi {
     modo: ModoInforme;
@@ -56,7 +57,7 @@ export const postFichaInforme = async (
     const respuesta = await RestAPI.post(
         pestaña.url,
         fichaAApi(pestaña, ficha),
-        "Error al crear el informe"
+        tComun("informeDocumentos.errorAlCrearElInforme")
     );
     return String(respuesta.id);
 };
@@ -69,7 +70,7 @@ export const patchFichaInforme = async (
     await RestAPI.patch(
         `${pestaña.url}/${id}`,
         cambios,
-        "Error al guardar el informe"
+        tComun("informeDocumentos.errorAlGuardarElInforme")
     );
 };
 
@@ -77,7 +78,7 @@ export const deleteFichaInforme = async (
     pestaña: PestañaInforme,
     id: string
 ): Promise<void> => {
-    await RestAPI.delete(`${pestaña.url}/${id}`, "Error al borrar el informe");
+    await RestAPI.delete(`${pestaña.url}/${id}`, tComun("informeDocumentos.errorAlBorrarElInforme"));
 };
 
 export const getResultadoInforme = async (
@@ -88,7 +89,7 @@ export const getResultadoInforme = async (
     RestAPI.getItem<ResultadoInforme, ResultadoInformeApi>(
         `${pestaña.url}/${id}/resultado?modo=${modo}`,
         resultadoDesdeApi,
-        "Error al calcular el informe"
+        tComun("informeDocumentos.errorAlCalcularElInforme")
     );
 
 export const getReportInforme = async (
@@ -98,5 +99,5 @@ export const getReportInforme = async (
 ): Promise<Blob> =>
     RestAPI.blob(
         `${pestaña.url}/${id}/report?modo=${modo}`,
-        "Error al descargar el PDF del informe"
+        tComun("informeDocumentos.errorAlDescargarElPdfDel")
     );

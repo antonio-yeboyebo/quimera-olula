@@ -9,6 +9,7 @@ import { CambiarAsientoManual } from "../cambiar/CambiarAsientoManual.tsx";
 import { contextoDetalleAsientoInicial, getMaquina } from "./maquina.ts";
 import { CabeceraAsiento } from "./CabeceraAsiento.tsx";
 import { PartidasAsientoLista } from "./PartidasAsientoLista.tsx";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 export const DetalleAsiento = ({
     id,
@@ -17,6 +18,7 @@ export const DetalleAsiento = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleAsientoInicial, publicar);
 
     useEffect(() => {
@@ -44,12 +46,12 @@ export const DetalleAsiento = ({
                             acciones={[
                                 {
                                     icono: "editar",
-                                    texto: "Editar",
+                                    texto: t("asiento.editar"),
                                     onClick: () => emitir("cambio_asiento_solicitado"),
                                 },
                                 {
                                     icono: "borrar",
-                                    texto: "Borrar",
+                                    texto: t("asiento.borrar"),
                                     onClick: () => emitir("borrado_solicitado"),
                                     advertencia: true,
                                 },

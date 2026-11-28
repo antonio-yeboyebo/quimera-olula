@@ -4,6 +4,7 @@ import type {
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { MetaTabla, obtenerCols } from "../atomos/qtablacontrolada.tsx";
 import { filtroToValores, MetaCampoFiltro, MetaFiltro } from "./maestroFiltros/MaestroFiltrosActivoControlado.tsx";
+import { tComponentes } from "../i18n/textos.ts";
 
 /**
  * Listado manejado por voz (ver controles_pantalla.ts en @olula/lib): qué se describe
@@ -162,13 +163,13 @@ export const aplicarFiltrosVoz = (
     const valores = filtroToValores(filtroActual, metaFiltro);
     for (const { campo, valor } of cambios) {
         const meta = metaFiltro[campo];
-        if (!meta) return { error: `No hay ningún filtro «${campo}» en esta pantalla.` };
+        if (!meta) return { error: tComponentes("ui.maestro.noHayNingunFiltroCampoEn", { campo }) };
         if (valor === null || valor === undefined) {
             valores[campo] = meta.valorDefecto;
             continue;
         }
         const convertido = valorFiltroDesdeVoz(meta, valor);
-        if (convertido === undefined) return { error: `No entiendo ese valor para «${meta.label}».` };
+        if (convertido === undefined) return { error: tComponentes("ui.maestro.noEntiendoEseValorParaLabel", { label: meta.label }) };
         valores[campo] = convertido;
     }
 
@@ -217,11 +218,11 @@ export const ejecutarAccionListado = <T extends Entidad>(
             const cambios = (filtros as { campo?: unknown; valor?: unknown }[])
                 .filter(f => typeof f?.campo === "string")
                 .map(f => ({ campo: f.campo as string, valor: f.valor }));
-            if (!cambios.length) return fallo("No sé por qué campo filtrar.");
+            if (!cambios.length) return fallo(tComponentes("ui.maestro.noSePorQueCampoFiltrar"));
             const resultado = aplicarFiltrosVoz(criteria.filtro as ClausulaFiltro[], m.metaFiltro, cambios);
             if ("error" in resultado) return fallo(resultado.error);
             m.onCriteriaChanged({ ...criteria, filtro: resultado.filtro, paginacion: primeraPagina });
-            return ok("Filtrado.");
+            return ok(tComponentes("ui.maestro.filtrado"));
         }
         case "quitar_filtros": {
             if (typeof parametros.campo === "string") {
@@ -229,18 +230,18 @@ export const ejecutarAccionListado = <T extends Entidad>(
                     criteria.filtro as ClausulaFiltro[], m.metaFiltro, [{ campo: parametros.campo, valor: null }]);
                 if ("error" in resultado) return fallo(resultado.error);
                 m.onCriteriaChanged({ ...criteria, filtro: resultado.filtro, paginacion: primeraPagina });
-                return ok("Filtro quitado.");
+                return ok(tComponentes("ui.maestro.filtroQuitado"));
             }
             m.onCriteriaChanged({ ...criteria, filtro: m.filtroInicial, paginacion: primeraPagina });
-            return ok("Filtros quitados.");
+            return ok(tComponentes("ui.maestro.filtrosQuitados"));
         }
         case "ordenar": {
             const campo = parametros.campo;
             const columnas = m.metaTabla ? obtenerCols(m.metaTabla).map(c => c.id) : [];
-            if (typeof campo !== "string" || !columnas.includes(campo)) return fallo("No puedo ordenar por ese campo.");
+            if (typeof campo !== "string" || !columnas.includes(campo)) return fallo(tComponentes("ui.maestro.noPuedoOrdenarPorEseCampo"));
             const direccion = parametros.direccion === "ASC" ? "ASC" : "DESC";
             m.onCriteriaChanged({ ...criteria, orden: [campo, direccion], paginacion: primeraPagina });
-            return ok("Ordenado.");
+            return ok(tComponentes("ui.maestro.ordenado"));
         }
         case "pagina": {
             const limite = criteria.paginacion.limite || 1;
@@ -249,9 +250,9 @@ export const ejecutarAccionListado = <T extends Entidad>(
             const pedida = parametros.pagina === "siguiente" ? actual + 1
                 : parametros.pagina === "anterior" ? actual - 1
                 : numero(parametros.pagina);
-            if (pedida === undefined || pedida < 1 || pedida > ultima) return fallo("No hay más páginas.");
+            if (pedida === undefined || pedida < 1 || pedida > ultima) return fallo(tComponentes("ui.maestro.noHayMasPaginas"));
             m.onCriteriaChanged({ ...criteria, paginacion: { ...criteria.paginacion, pagina: Math.trunc(pedida) } });
-            return ok(`Página ${Math.trunc(pedida)}.`);
+            return ok(tComponentes("ui.maestro.paginaTrunc", { trunc: Math.trunc(pedida) }));
         }
         case "seleccionar": {
             let destino: T | undefined;
@@ -264,18 +265,18 @@ export const ejecutarAccionListado = <T extends Entidad>(
                 const posicion = numero(parametros.posicion);
                 destino = posicion === undefined ? undefined : m.entidades[posicion - 1];
             }
-            if (!destino) return fallo("No encuentro ese registro en la lista.");
+            if (!destino) return fallo(tComponentes("ui.maestro.noEncuentroEseRegistroEnLa"));
             m.onSeleccion(destino.id);
             const texto = textoFila(destino, m.metaTabla);
-            return ok(texto ? `Abro ${texto.split(" · ")[0]}.` : "Abierto.");
+            return ok(texto ? tComponentes("ui.maestro.abroValor", { valor: texto.split(" · ")[0] }) : tComponentes("ui.maestro.abierto"));
         }
         case "modo": {
             const modo = parametros.modo;
-            if (typeof modo !== "string" || !m.modos.includes(modo)) return fallo("Esa vista no está disponible.");
+            if (typeof modo !== "string" || !m.modos.includes(modo)) return fallo(tComponentes("ui.maestro.esaVistaNoEstaDisponible"));
             m.cambiarModo(modo);
-            return ok(`Vista de ${modo}.`);
+            return ok(tComponentes("ui.maestro.vistaDeModo", { modo }));
         }
         default:
-            return fallo("No sé hacer eso en esta lista.");
+            return fallo(tComponentes("ui.maestro.noSeHacerEsoEnEsta"));
     }
 };

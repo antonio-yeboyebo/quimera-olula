@@ -8,9 +8,11 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postPlantillaAsiento } from "../infraestructura.ts";
 import { metaNuevaPlantillaAsiento, nuevaPlantillaAsientoVacia } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearPlantillaAsiento = ({ publicar }: { publicar: EmitirEvento }) => {
     // Memoizado: useModelo se reinicia si cambia la identidad del inicial.
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaPlantillaAsientoVacia, []);
     const { modelo, uiProps, valido } = useModelo(metaNuevaPlantillaAsiento, inicial);
 
@@ -25,16 +27,16 @@ export const CrearPlantillaAsiento = ({ publicar }: { publicar: EmitirEvento }) 
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearPlantillaAsiento" titulo="Nueva plantilla de asiento" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearPlantillaAsiento" titulo={t("plantilla_asiento.nuevaPlantillaDeAsiento")} onCerrar={cancelar}>
             <div className="CrearPlantillaAsiento">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("codigo")} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
-                    <QInput label="Concatenar con" {...uiProps("concatenar")} />
+                    <QInput label={t("plantilla_asiento.codigo")} {...uiProps("codigo")} ref={focus} />
+                    <QInput label={t("plantilla_asiento.descripcion")} {...uiProps("descripcion")} />
+                    <QInput label={t("plantilla_asiento.concatenarCon")} {...uiProps("concatenar")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("plantilla_asiento.crear")}
                     </QBoton>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { Amortizacion } from "../diseño.ts";
 import { metaNuevaRegularizacion, nuevaRegularizacionVacia } from "../dominio.ts";
 import { postRegularizacion } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearRegularizacion = ({
     amortizacion,
@@ -18,6 +19,7 @@ export const CrearRegularizacion = ({
     onCreada: () => void;
     onCancelar: () => void;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaRegularizacionVacia, []);
     const { modelo, uiProps, valido } = useModelo(metaNuevaRegularizacion, inicial);
 
@@ -30,15 +32,15 @@ export const CrearRegularizacion = ({
 
     return (
         <QModal abierto={true} nombre="crearRegularizacionValor"
-            titulo="Nueva regularización de valor" onCerrar={cancelar}>
+            titulo={t("amortizacion.nuevaRegularizacionDeValor")} onCerrar={cancelar}>
             <div className="CrearRegularizacionValor">
                 <quimera-formulario>
-                    <QDate label="Fecha" {...uiProps("fecha")} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
-                    <QInput label="Importe" {...uiProps("importe")} />
+                    <QDate label={t("amortizacion.fecha")} {...uiProps("fecha")} />
+                    <QInput label={t("amortizacion.descripcion")} {...uiProps("descripcion")} />
+                    <QInput label={t("amortizacion.importe")} {...uiProps("importe")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
-                    <QBoton onClick={crear} deshabilitado={!valido}>Crear</QBoton>
+                    <QBoton onClick={crear} deshabilitado={!valido}>{t("amortizacion.crear")}</QBoton>
                 </div>
             </div>
         </QModal>

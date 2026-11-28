@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposBanco } from "../detalle/CamposBanco.tsx";
 import { metaNuevoBanco, nuevoBancoVacio } from "../dominio.ts";
 import { postBanco } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const CrearBanco = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTTesoreria();
     const inicial = useMemo(nuevoBancoVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoBanco, inicial);
@@ -27,15 +29,15 @@ export const CrearBanco = ({ publicar }: { publicar: EmitirEvento }) => {
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearBanco" titulo="Nuevo banco" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearBanco" titulo={t("banco.nuevoBanco")} onCerrar={cancelar}>
             <div className="CrearBanco">
                 <quimera-formulario>
-                    <QInput label="Nº de entidad" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("banco.nDeEntidad")} {...uiProps("id")} ref={focus} />
                     <CamposBanco uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("banco.crear")}
                     </QBoton>
                 </div>
             </div>

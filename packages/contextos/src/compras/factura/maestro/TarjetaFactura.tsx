@@ -3,6 +3,7 @@ import { QAvatar, QEtiqueta, QTarjetaGenerica } from "@olula/componentes/index.j
 import { formatearFechaDate, formatearMoneda } from "@olula/lib/dominio.ts";
 import { Factura } from "../diseño.ts";
 import { etiquetaEstadoFactura } from "../dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 
 export const TarjetaFactura = (factura: Factura) => (
   <QTarjetaGenerica
@@ -13,7 +14,7 @@ export const TarjetaFactura = (factura: Factura) => (
     }
     arribaDerecha={
       <>
-        {factura.deAbono && <QEtiqueta variante="advertencia">Abono</QEtiqueta>}
+        {factura.deAbono && <QEtiqueta variante="advertencia">{tCompras("comun.documento.abono")}</QEtiqueta>}
         <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />
       </>
     }

@@ -3,6 +3,7 @@ import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { DirCliente } from "../diseño.ts";
+import { useTVentas } from "../../i18n/index.ts";
 import { deleteDireccion } from "../infraestructura.ts";
 
 interface BorrarDireccionProps {
@@ -18,6 +19,7 @@ export const BorrarDireccion = ({
   publicar = async () => {},
   onCancelar = () => {},
 }: BorrarDireccionProps) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     await deleteDireccion(clienteId, direccion.id);
     publicar("borrado_confirmado", { direccion });
@@ -32,8 +34,8 @@ export const BorrarDireccion = ({
     <QModalConfirmacion
       nombre="borrarDireccion"
       abierto={true}
-      titulo="Confirmar borrar"
-      mensaje={`¿Está seguro de que desea borrar la dirección "${direccion.nombre_via}"?`}
+      titulo={t("cliente.direccion.borrarTitulo")}
+      mensaje={t("cliente.direccion.borrarMensaje", { nombre: direccion.nombre_via })}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

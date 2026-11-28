@@ -5,6 +5,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { useEffect, useState } from "react";
 import { PartidaHuerfana } from "../diseño.js";
 import { getPartidasHuerfanas } from "../infraestructura.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 type FilaPartida = {
     id: string;
@@ -15,10 +16,10 @@ type FilaPartida = {
 };
 
 const metaTablaPartidas: MetaTabla<FilaPartida> = [
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "descripcion", cabecera: "Concepto", esTitulo: true },
-    { id: "numeroAsiento", cabecera: "Asiento", estilo: "secundario" },
-    { id: "importe", cabecera: "Importe", tipo: "moneda", divisa: "EUR" },
+    { id: "fecha", get cabecera() { return tTesoreria("conciliacion.fecha"); }, tipo: "fecha" },
+    { id: "descripcion", get cabecera() { return tTesoreria("conciliacion.concepto"); }, esTitulo: true },
+    { id: "numeroAsiento", get cabecera() { return tTesoreria("conciliacion.asiento"); }, estilo: "secundario" },
+    { id: "importe", get cabecera() { return tTesoreria("conciliacion.importe"); }, tipo: "moneda", divisa: "EUR" },
 ];
 
 const filaDesdePartida = (partida: PartidaHuerfana): FilaPartida => ({
@@ -41,6 +42,7 @@ export const PartidasSinConciliar = ({
     onCerrar: () => void;
 }) => {
 
+    const t = useTTesoreria();
     const [partidas, setPartidas] = useState<FilaPartida[] | null>(null);
 
     useEffect(() => {
@@ -52,7 +54,7 @@ export const PartidasSinConciliar = ({
     return (
         <QModal
             nombre="partidasSinConciliar"
-            titulo="Partidas contables sin conciliar"
+            titulo={t("conciliacion.partidasContablesSinConciliar")}
             abierto={true}
             onCerrar={onCerrar}
         >
@@ -64,7 +66,7 @@ export const PartidasSinConciliar = ({
                     orden={["fecha", "DESC"]}
                 />
                 <div className="botones maestro-botones">
-                    <QBoton onClick={onCerrar}>Cerrar</QBoton>
+                    <QBoton onClick={onCerrar}>{t("conciliacion.cerrar")}</QBoton>
                 </div>
             </div>
         </QModal>

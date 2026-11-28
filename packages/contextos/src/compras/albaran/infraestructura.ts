@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { empresaActual } from "#/valores/empresaActual.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
@@ -314,7 +315,7 @@ export const getAlbaran: GetAlbaran = async (id) =>
     await RestAPI.getItem<Albaran, AlbaranApi>(
         `${baseUrl}/${id}`,
         albaranDesdeApi,
-        "Error al obtener el albarán"
+        tCompras("albaran.errores.obtener")
     );
 
 export const getAlbaranes: GetAlbaranes = async (criteria) =>
@@ -322,14 +323,14 @@ export const getAlbaranes: GetAlbaranes = async (criteria) =>
         baseUrl,
         criteria,
         albaranDesdeApi,
-        "Error al obtener los albaranes"
+        tCompras("albaran.errores.obtenerLista")
     );
 
 export const postAlbaran: PostAlbaran = async (nuevoAlbaran) => {
     const respuesta = await RestAPI.post<NuevoAlbaranApi>(
         baseUrl,
         nuevoAlbaranAApi(nuevoAlbaran),
-        "Error al crear el albarán"
+        tCompras("albaran.errores.crear")
     );
     return respuesta.id;
 };
@@ -348,7 +349,7 @@ export const albaranarPedidos: AlbaranarPedidos = async (pedidoIds, lineas) => {
                 }
                 : {}),
         },
-        "Error al albaranar los pedidos"
+        tCompras("albaran.errores.albaranarPedidos")
     )) as unknown as { albaran_id: string; codigo: string };
     return { id: respuesta.albaran_id, codigo: respuesta.codigo };
 };
@@ -357,36 +358,36 @@ export const patchAlbaran: PatchAlbaran = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         { cambios: cambiosAlbaranAApi(cambios) },
-        "Error al guardar el albarán"
+        tCompras("albaran.errores.guardar")
     );
 };
 
 export const deleteAlbaran: DeleteAlbaran = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el albarán");
+    await RestAPI.delete(`${baseUrl}/${id}`, tCompras("albaran.errores.borrar"));
 };
 
 export const getReportAlbaran: GetReportAlbaran = async (id) =>
-    await RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del albarán");
+    await RestAPI.blob(`${baseUrl}/${id}/report`, tCompras("albaran.errores.report"));
 
 export const getLineasAlbaran: GetLineasAlbaran = async (id) =>
     await RestAPI.getLista<LineaAlbaran, LineaAlbaranApi>(
         `${baseUrl}/${id}/linea`,
         lineaAlbaranDesdeApi,
-        "Error al obtener las líneas del albarán"
+        tCompras("albaran.errores.obtenerLineas")
     );
 
 export const getLineaAlbaran: GetLineaAlbaran = async (id, lineaId) =>
     await RestAPI.getItem<LineaAlbaran, LineaAlbaranApi>(
         `${baseUrl}/${id}/linea/${lineaId}`,
         lineaAlbaranDesdeApi,
-        "Error al obtener la línea"
+        tCompras("albaran.errores.obtenerLinea")
     );
 
 export const postLineasAlbaran: PostLineasAlbaran = async (id, lineas) => {
     const respuesta = await RestAPI.post<{ lineas: NuevaLineaAlbaranApi[] }>(
         `${baseUrl}/${id}/linea`,
         { lineas: lineas.map(nuevaLineaAApi) },
-        "Error al crear las líneas del albarán"
+        tCompras("albaran.errores.crearLineas")
     );
     const { lineas: ids } = respuesta as unknown as { lineas: string[] };
     return ids;
@@ -407,7 +408,7 @@ export const queryNuevaLineaAlbaran: QueryNuevaLineaAlbaran = async (id, linea) 
     >(
         `${baseUrl}/${id}/nueva_linea`,
         queryNuevaLineaAApi(linea),
-        "Error al calcular la nueva línea del albarán"
+        tCompras("albaran.errores.nuevaLinea")
     );
     return queryNuevaLineaDesdeApi(linea, respuesta);
 };
@@ -416,7 +417,7 @@ export const patchLineaAlbaran: PatchLineaAlbaran = async (id, lineaId, cambios)
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${lineaId}`,
         { cambios: cambiosLineaAApi(cambios) },
-        "Error al actualizar la línea"
+        tCompras("albaran.errores.actualizarLinea")
     );
 };
 
@@ -424,7 +425,7 @@ export const borrarLineasAlbaran: BorrarLineasAlbaran = async (id, lineas) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/borrar`,
         { lineas },
-        "Error al borrar las líneas del albarán"
+        tCompras("albaran.errores.borrarLineas")
     );
 };
 

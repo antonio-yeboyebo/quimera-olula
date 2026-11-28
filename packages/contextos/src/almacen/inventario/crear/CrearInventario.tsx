@@ -8,12 +8,14 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postInventario } from "../infraestructura.ts";
 import { metaNuevoInventario, nuevoInventarioInicial } from "./crear.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearInventario = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const inicial = useMemo(nuevoInventarioInicial, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoInventario, inicial);
@@ -34,20 +36,20 @@ export const CrearInventario = ({
         <QModal
             abierto={true}
             nombre="crearInventario"
-            titulo="Nuevo inventario"
+            titulo={t("inventario.nuevoInventario")}
             onCerrar={cancelar}
         >
             <div className="CrearInventario">
                 <quimera-formulario>
                     <Almacen {...uiProps("almacenId")} />
-                    <QInput label="Fecha" {...uiProps("fecha")} />
-                    <QInput label="Hora" {...uiProps("hora")} />
-                    <QInput label="Observaciones" {...uiProps("observaciones")} />
+                    <QInput label={t("inventario.fecha")} {...uiProps("fecha")} />
+                    <QInput label={t("inventario.hora")} {...uiProps("hora")} />
+                    <QInput label={t("inventario.observaciones")} {...uiProps("observaciones")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("inventario.crear")}
                     </QBoton>
                 </div>
             </div>

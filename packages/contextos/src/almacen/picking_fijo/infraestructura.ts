@@ -10,6 +10,7 @@ import {
     PickingFijo,
     PostPickingFijo,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/picking_fijo`;
 
@@ -75,7 +76,7 @@ export const postPickingFijo: PostPickingFijo = async (nuevo) => {
     const respuesta = await RestAPI.post<NuevoPickingFijoApi>(
         baseUrl,
         nuevoPickingFijoAApi(nuevo),
-        "Error al crear picking fijo"
+        tAlmacen("picking_fijo.errorAlCrearPickingFijo")
     );
     return respuesta.id;
 };
@@ -84,10 +85,10 @@ export const patchPickingFijo: PatchPickingFijo = async (id, cambios) => {
     await RestAPI.patch<CambiosPickingFijoApi>(
         `${baseUrl}/${id}`,
         cambiosPickingFijoAApi(cambios),
-        "Error al actualizar picking fijo"
+        tAlmacen("picking_fijo.errorAlActualizarPickingFijo")
     );
 };
 
 export const deletePickingFijo: DeletePickingFijo = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar picking fijo");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("picking_fijo.errorAlBorrarPickingFijo"));
 };

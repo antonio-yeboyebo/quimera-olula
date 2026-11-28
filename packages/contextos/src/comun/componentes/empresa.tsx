@@ -2,6 +2,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { getEmpresas } from "../../empresa/empresa/infraestructura.js";
+import { tComun } from "../i18n/index.ts";
 
 interface EmpresaProps {
     descripcion?: string;
@@ -21,7 +22,7 @@ export const Empresa = ({
     descripcion = "",
     valor,
     nombre = "empresa_id",
-    label = "Empresa",
+    label = tComun("componentes.empresa"),
     deshabilitado = false,
     onChange,
     ...props

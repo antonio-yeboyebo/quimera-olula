@@ -16,6 +16,7 @@ import {
 import { LineasPlantillaAsiento } from "./lineas/LineasPlantillaAsiento.tsx";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetallePlantillaAsiento = ({
     id,
@@ -24,6 +25,7 @@ export const DetallePlantillaAsiento = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePlantillaInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -57,7 +59,7 @@ export const DetallePlantillaAsiento = ({
                         acciones={[
                             {
                                 icono: "eliminar",
-                                texto: "Borrar",
+                                texto: t("plantilla_asiento.borrar"),
                                 onClick: () => emitir("borrado_solicitado"),
                                 advertencia: true,
                             },
@@ -69,7 +71,7 @@ export const DetallePlantillaAsiento = ({
                     children={[
                         <Tab
                             key="tab-partidas"
-                            label="Partidas"
+                            label={t("plantilla_asiento.partidas")}
                             children={
                                 <LineasPlantillaAsiento
                                     plantilla={ctx.plantilla}
@@ -79,7 +81,7 @@ export const DetallePlantillaAsiento = ({
                                 />
                             }
                         />,
-                        <Tab key="tab-general" label="General" children={<TabGeneral form={modelo} />} />,
+                        <Tab key="tab-general" label={t("plantilla_asiento.general")} children={<TabGeneral form={modelo} />} />,
                     ]}
                 />
             </div>

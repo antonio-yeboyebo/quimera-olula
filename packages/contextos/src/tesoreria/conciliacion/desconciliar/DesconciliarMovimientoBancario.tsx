@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { Conciliacion } from "../diseño.js";
 import { mensajeDesconciliarMovimientoBancario } from "../dominio.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const DesconciliarMovimientoBancario = ({
     conciliacion,
@@ -13,6 +14,7 @@ export const DesconciliarMovimientoBancario = ({
     conciliacion: Conciliacion | null;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const desconciliar_ = useCallback(async () => publicar("desconciliacion_confirmada"), [publicar]);
     const cancelar_ = useCallback(() => publicar("desconciliacion_cancelada"), [publicar]);
 
@@ -22,11 +24,11 @@ export const DesconciliarMovimientoBancario = ({
         <QModalConfirmacion
             nombre="desconciliarMovimientoBancario"
             abierto={true}
-            titulo="Desconciliar movimiento"
+            titulo={t("conciliacion.desconciliarMovimiento")}
             mensaje={mensajeDesconciliarMovimientoBancario(conciliacion)}
             onCerrar={cancelar}
             onAceptar={desconciliar}
-            labelAceptar="Desconciliar"
+            labelAceptar={t("conciliacion.desconciliar")}
         />
     );
 };

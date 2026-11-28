@@ -20,6 +20,7 @@ import { contextoDetalleZonaInicial, metaZona } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { PasillosZona } from "./pasillos/PasillosZona.js";
 import { UbicacionesZona } from "./ubicaciones/UbicacionesZona.js";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 const titulo = (zona: Zona) => zona.codigo as string;
 
@@ -30,6 +31,7 @@ export const DetalleZona = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleZonaInicial, publicar);
@@ -61,29 +63,29 @@ export const DetalleZona = ({
         >
             <div className="DetalleZona">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
-                    <QBoton variante="borde" enlace={urlListado.ubicacionesDeZona(ctx.zona.id)}>Ver ubicaciones</QBoton>
+                    <QBoton onClick={() => emitir("borrado_solicitado")}>{t("zona.borrar")}</QBoton>
+                    <QBoton variante="borde" enlace={urlListado.ubicacionesDeZona(ctx.zona.id)}>{t("zona.verUbicaciones")}</QBoton>
                     <QBoton variante="borde" enlace={urlMapa({ almacenId: ctx.zona.almacenId, zonaId: ctx.zona.id })}>
-                        Ver en el mapa
+                        {t("zona.verEnElMapa")}
                     </QBoton>
                 </div>
                 <Tabs
                     children={[
-                        <Tab key="general" label="General">
+                        <Tab key="general" label={t("zona.general")}>
                             <quimera-formulario>
-                                <QInput label="Código" {...modelo.uiProps("codigo")} />
+                                <QInput label={t("zona.codigo")} {...modelo.uiProps("codigo")} />
                                 <Almacen {...modelo.uiProps("almacenId")} />
                                 <FuncionZona {...modelo.uiProps("funcion")} />
-                                <QInput label="Descripción" {...modelo.uiProps("descripcion")} />
+                                <QInput label={t("zona.descripcion")} {...modelo.uiProps("descripcion")} />
                             </quimera-formulario>
                         </Tab>,
-                        <Tab key="clases" label="Clases">
+                        <Tab key="clases" label={t("zona.clases")}>
                             <quimera-formulario>
-                                <QCheckbox label="Admite artículos sin clase" {...modelo.uiProps("admiteSinClase")} />
+                                <QCheckbox label={t("zona.admiteArticulosSinClase")} {...modelo.uiProps("admiteSinClase")} />
                                 <ClasesAdmitidasZona {...modelo.uiProps("clasesAdmitidas")} />
                             </quimera-formulario>
                         </Tab>,
-                        <Tab key="pasillos" label="Pasillos">
+                        <Tab key="pasillos" label={t("zona.pasillos")}>
                             <PasillosZona
                                 zona={ctx.zona}
                                 pasillos={ctx.pasillos}
@@ -91,7 +93,7 @@ export const DetalleZona = ({
                                 publicar={emitir}
                             />
                         </Tab>,
-                        <Tab key="ubicaciones" label="Ubicaciones">
+                        <Tab key="ubicaciones" label={t("zona.ubicaciones")}>
                             <UbicacionesZona
                                 ubicaciones={ctx.ubicaciones}
                                 total={ctx.totalUbicaciones}

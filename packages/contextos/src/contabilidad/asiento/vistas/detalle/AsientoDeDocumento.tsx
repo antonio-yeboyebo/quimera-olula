@@ -5,6 +5,7 @@ import { CabeceraAsiento } from "./CabeceraAsiento.tsx";
 import { PartidasAsientoLista } from "./PartidasAsientoLista.tsx";
 import "./AsientoDeDocumento.css";
 import { useEffect, useState } from "react";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 /** El asiento de un documento (factura de compra o de venta, regularización
  * de IVA...). Recibe solo el id: el documento no trae el asiento. Sin
@@ -28,6 +29,7 @@ export const AsientoDeDocumento = ({
     titulo,
     sinDatosDocumento = false,
 }: AsientoDeDocumentoProps) => {
+    const t = useTContabilidad();
     const [asiento, setAsiento] = useState<Asiento | null>(null);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState("");
@@ -43,15 +45,15 @@ export const AsientoDeDocumento = ({
             .then(setAsiento)
             // El asiento puede haberse borrado desde contabilidad y devolver 404:
             // mejor un mensaje que una promesa rechazada sin gestionar.
-            .catch(() => setError("No se ha podido cargar el asiento."))
+            .catch(() => setError(t("asiento.noSeHaPodidoCargarEl")))
             .finally(() => setCargando(false));
-    }, [asientoId]);
+    }, [asientoId, t]);
 
     if (!asientoId) {
-        return <p>Esta factura todavía no está contabilizada.</p>;
+        return <p>{t("asiento.estaFacturaTodaviaNoEstaContabilizada")}</p>;
     }
 
-    if (cargando) return <p>Cargando asiento…</p>;
+    if (cargando) return <p>{t("asiento.cargandoAsiento")}</p>;
     if (error) return <p>{error}</p>;
     if (!asiento) return null;
 

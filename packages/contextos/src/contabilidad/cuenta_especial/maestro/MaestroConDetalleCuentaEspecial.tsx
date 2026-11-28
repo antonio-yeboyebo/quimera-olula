@@ -14,6 +14,7 @@ import {
     metaTablaCuentaEspecial,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Maestro de cuentas especiales (`co_cuentasesp`).
@@ -27,6 +28,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleCuentaEspecial = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaCuentasEspecialesDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -51,7 +53,7 @@ export const MaestroConDetalleCuentaEspecial = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las cuentas especiales.</p>;
+        return <p>{t("cuenta_especial.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -75,7 +77,7 @@ export const MaestroConDetalleCuentaEspecial = () => {
                                             emitir("crear_cuenta_especial_solicitada")
                                         }
                                     >
-                                        Nueva cuenta especial
+                                        {t("cuenta_especial.nuevaCuentaEspecial")}
                                     </QBoton>
                                 </div>
                             )}

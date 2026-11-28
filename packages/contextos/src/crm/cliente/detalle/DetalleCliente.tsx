@@ -15,6 +15,7 @@ import "./DetalleCliente.css";
 import { getMaquina } from "./maquina.ts";
 import { Oportunidades } from "./oportunidades/Oportunidades.tsx";
 import { TabGeneral } from "./tabs/TabGeneral.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleCliente = ({
   id,
@@ -23,6 +24,7 @@ export const DetalleCliente = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const clienteId = id ?? params.id;
@@ -63,7 +65,7 @@ export const DetalleCliente = ({
               acciones={[
                 {
                   icono: "eliminar",
-                  texto: "Borrar",
+                  texto: t("cliente.borrar"),
                   onClick: () => emitir("borrado_cliente_solicitado"),
                   advertencia: true,
                 },
@@ -72,19 +74,19 @@ export const DetalleCliente = ({
           </div>
 
           <Tabs>
-            <Tab label="General">
+            <Tab label={t("cliente.general")}>
               <TabGeneral cliente={cliente} emitir={emitir} />
             </Tab>
 
-            <Tab label="Contactos">
+            <Tab label={t("cliente.contactos")}>
               <TabCrmContactos entidadId={clienteId} api={apiAgendaCliente} />
             </Tab>
 
-            <Tab label="Oportunidades">
+            <Tab label={t("cliente.oportunidades")}>
               <Oportunidades cliente={cliente} />
             </Tab>
 
-            <Tab label="Acciones">
+            <Tab label={t("cliente.acciones")}>
               <Acciones cliente={cliente} />
             </Tab>
           </Tabs>
@@ -95,14 +97,14 @@ export const DetalleCliente = ({
                 onClick={() => emitir("cliente_cambiado", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("cliente.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_cliente_cancelada")}
               >
-                Cancelar
+                {t("cliente.cancelar")}
               </QBoton>
             </div>
           )}

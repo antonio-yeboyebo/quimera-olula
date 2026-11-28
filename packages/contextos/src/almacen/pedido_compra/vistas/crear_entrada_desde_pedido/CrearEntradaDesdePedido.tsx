@@ -10,6 +10,7 @@ import {
     formEntradaVacia,
     metaFormEntrada,
 } from "./crear_entrada_desde_pedido.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CrearEntradaDesdePedido = ({
     publicar,
@@ -18,6 +19,7 @@ export const CrearEntradaDesdePedido = ({
     publicar: EmitirEvento;
     pedidoCompraId: string;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(
         metaFormEntrada,
         formEntradaVacia
@@ -45,16 +47,16 @@ export const CrearEntradaDesdePedido = ({
         <QModal
             abierto={true}
             nombre="crearEntradaDesdePedido"
-            titulo="Crear entrada desde pedido de compra"
+            titulo={t("pedido_compra.crearEntradaDesdePedidoDeCompra")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Ubicacion label="Ubicación de entrada" {...uiProps("ubicacionId")} />
+                <Ubicacion label={t("pedido_compra.ubicacionDeEntrada")} {...uiProps("ubicacionId")} />
             </quimera-formulario>
 
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Crear entrada
+                    {t("pedido_compra.crearEntrada")}
                 </QBoton>
             </div>
         </QModal>

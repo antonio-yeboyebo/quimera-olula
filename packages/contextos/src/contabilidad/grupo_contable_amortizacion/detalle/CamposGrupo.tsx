@@ -3,6 +3,7 @@ import { FilaFormulario } from "#/contabilidad/comun/componentes/FilaFormulario.
 import { FormModelo } from "@olula/lib/dominio.js";
 import { RolSubcuentaGrupo } from "../diseño.ts";
 import { ROLES_SUBCUENTA } from "../dominio.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type UiProps = FormModelo["uiProps"];
 
@@ -17,7 +18,7 @@ export const CamposGrupo = ({
     descripciones?: Record<RolSubcuentaGrupo, string>;
 }) => (
     <>
-        <QInput label="Descripción" {...uiProps("descripcion")} />
+        <QInput label={tContabilidad("grupo_contable_amortizacion.descripcion")} {...uiProps("descripcion")} />
         {ROLES_SUBCUENTA.map(({ rol, campo, etiqueta }) => (
             <FilaFormulario
                 key={rol}
@@ -26,7 +27,7 @@ export const CamposGrupo = ({
                 <QInput label={etiqueta} {...uiProps(campo)} />
                 {descripciones && (
                     <QInput
-                        label="Nombre"
+                        label={tContabilidad("grupo_contable_amortizacion.nombre")}
                         nombre={`nombre_${rol}`}
                         valor={descripciones[rol]}
                         soloLectura

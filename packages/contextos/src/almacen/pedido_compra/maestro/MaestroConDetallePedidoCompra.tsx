@@ -10,14 +10,15 @@ import { DetallePedidoCompra } from "../detalle/DetallePedidoCompra.js";
 import { ItemPedidoCompra } from "../diseño.ts";
 import "./MaestroConDetallePedidoCompra.css";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Metadatos para renderizar la tabla de pedidos de compra.
  */
 const metaTablaPedidoCompra: MetaTabla<ItemPedidoCompra> = [
-    { id: "codigo", cabecera: "Código" },
-    { id: "proveedor", cabecera: "Proveedor" },
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
+    { id: "codigo", get cabecera() { return tAlmacen("pedido_compra.codigo"); } },
+    { id: "proveedor", get cabecera() { return tAlmacen("pedido_compra.proveedor"); } },
+    { id: "fecha", get cabecera() { return tAlmacen("pedido_compra.fecha"); }, tipo: "fecha" },
 ];
 
 /**
@@ -31,6 +32,7 @@ const metaTablaPedidoCompra: MetaTabla<ItemPedidoCompra> = [
  * Solo lectura: no hay botón de crear ni modales de edición/borrado.
  */
 export const MaestroConDetallePedidoCompra = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -55,7 +57,7 @@ export const MaestroConDetallePedidoCompra = () => {
             <MaestroDetalle<ItemPedidoCompra>
                 Maestro={
                     <>
-                        <h2>Pedidos de Compra</h2>
+                        <h2>{t("pedido_compra.pedidosDeCompra")}</h2>
                         <Listado<ItemPedidoCompra>
                             metaTabla={metaTablaPedidoCompra}
                             criteria={pedidos.criteria}

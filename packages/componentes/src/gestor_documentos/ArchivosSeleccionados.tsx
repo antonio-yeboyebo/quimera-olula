@@ -3,6 +3,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useCallback } from "react";
 import { superaTamanioMaximo } from "./dominio.ts";
 import "./ArchivosSeleccionados.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 const formatearTamaño = (bytes: number): string => {
   if (bytes === 0) return "0 B";
@@ -21,6 +22,7 @@ export const ArchivosSeleccionados = ({
   tamanioMaximoBytes?: number;
   emitir: EmitirEvento;
 }) => {
+  const t = useTComponentes();
   const archivosValidos = archivos.filter(
     (archivo) => !superaTamanioMaximo(archivo, tamanioMaximoBytes)
   );
@@ -45,8 +47,8 @@ export const ArchivosSeleccionados = ({
       <div className="ArchivosSeleccionados-titulo">
         <h3 aria-live="polite">
           {tamanioMaximoBytes !== undefined
-            ? `Se subirán ${archivosValidos.length} de ${archivos.length} archivos`
-            : `Archivos seleccionados (${archivos.length})`}
+            ? t("ui.gestorDocumentos.seSubiranLengthDeLength2Archivos", { length: archivosValidos.length, length2: archivos.length })
+            : t("ui.gestorDocumentos.archivosSeleccionadosLength", { length: archivos.length })}
         </h3>
       </div>
 
@@ -72,7 +74,7 @@ export const ArchivosSeleccionados = ({
                   </p>
                   {excedeLimite ? (
                     <p className="ArchivosSeleccionados-aviso">
-                      Excede el límite (máx. {formatearTamaño(tamanioMaximoBytes as number)}) — no se subirá
+                      {t("ui.gestorDocumentos.excedeElLimiteMaxValorNo", { valor: formatearTamaño(tamanioMaximoBytes as number) })}
                     </p>
                   ) : (
                     <p className="ArchivosSeleccionados-tamaño">
@@ -85,7 +87,7 @@ export const ArchivosSeleccionados = ({
                 tamaño="pequeño"
                 variante="texto"
                 destructivo
-                props={{ "aria-label": `Eliminar ${archivo.name}` }}
+                props={{ "aria-label": t("ui.gestorDocumentos.eliminarName", { name: archivo.name }) }}
                 onClick={() => handleEliminar(index)}
               >
                 <QIcono nombre="eliminar" tamaño="md" />
@@ -96,12 +98,12 @@ export const ArchivosSeleccionados = ({
       </div>
 
       <div className="ArchivosSeleccionados-botones">
-        <QBoton onClick={handleCancelar}>Cancelar</QBoton>
+        <QBoton onClick={handleCancelar}>{t("ui.gestorDocumentos.cancelar")}</QBoton>
         <QBoton
           onClick={handleGuardar}
           deshabilitado={archivosValidos.length === 0}
         >
-          Guardar
+          {t("ui.gestorDocumentos.guardar")}
         </QBoton>
       </div>
     </div>

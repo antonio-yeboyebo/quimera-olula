@@ -10,6 +10,7 @@ import {
     NuevoLibroDiario,
     SentidoOrden,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export { ejercicioActual };
 
@@ -21,7 +22,7 @@ export const etiquetaLibroDiario = (
 ): string =>
     informe.descripcion
         ? `${informe.descripcion} — ${informe.ejercicioId}`
-        : `Libro diario ${informe.ejercicioId}`;
+        : tContabilidad("libro_diario.libroDiarioEjercicioid", { ejercicioId: informe.ejercicioId });
 
 export const libroDiarioVacio = (): LibroDiario => ({
     id: "",
@@ -128,7 +129,7 @@ export const nuevoLibroDiarioInicial = (
 export const nombreFicheroLibroDiario = (
     informe: Pick<LibroDiario, "descripcion" | "ejercicioId">
 ): string => {
-    const base = (informe.descripcion || `libro diario ${informe.ejercicioId}`)
+    const base = (informe.descripcion || tContabilidad("libro_diario.libroDiarioEjercicioid2", { ejercicioId: informe.ejercicioId }))
         .toLowerCase()
         .normalize("NFD")
         .replace(/[̀-ͯ]/g, "")
@@ -157,6 +158,25 @@ export const CABECERAS_IVA_LIBRO_DIARIO = [
     "% IVA",
     "R.E.",
 ] as const;
+
+const TEXTO_CABECERA: Record<string, () => string> = {
+    Fecha: () => tContabilidad("libro_diario.cabFecha"),
+    Asiento: () => tContabilidad("libro_diario.cabAsiento"),
+    Documento: () => tContabilidad("libro_diario.cabDocumento"),
+    Subcuenta: () => tContabilidad("libro_diario.cabSubcuenta"),
+    "Descripción": () => tContabilidad("libro_diario.cabDescripcion"),
+    Concepto: () => tContabilidad("libro_diario.cabConcepto"),
+    Debe: () => tContabilidad("libro_diario.cabDebe"),
+    Haber: () => tContabilidad("libro_diario.cabHaber"),
+    Factura: () => tContabilidad("libro_diario.cabFactura"),
+    "Base Im.": () => tContabilidad("libro_diario.cabBaseIm"),
+    "% IVA": () => tContabilidad("libro_diario.cabIva"),
+    "R.E.": () => tContabilidad("libro_diario.cabRe"),
+};
+
+/** Texto visible de una cabecera del resultado, en el idioma activo. */
+export const textoCabeceraLibroDiario = (cabecera: string): string =>
+    TEXTO_CABECERA[cabecera]?.() ?? cabecera;
 
 /** Los textos de mes, asiento y totales ocupan las columnas de antes de
  * «Debe»; el del asiento empieza tras su fecha y número. */
@@ -248,7 +268,7 @@ export const celdasFilaLibroDiario = (
         default:
             return [
                 texto(
-                    `${fila.titulo} · Descuadre ${importeLibroDiario(fila.descuadre)}`,
+                    tContabilidad("libro_diario.tituloDescuadreDescuadre", { titulo: fila.titulo, descuadre: importeLibroDiario(fila.descuadre) }),
                     COLUMNA_DEBE_LIBRO_DIARIO
                 ),
                 ...debeHaber,

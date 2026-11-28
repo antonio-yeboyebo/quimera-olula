@@ -3,12 +3,13 @@ import { ESTADOS_ORDEN_DEFECTO } from "#/almacen/orden/dominio.ts";
 import { getOrdenes } from "#/almacen/orden/infraestructura.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { ClausulaFiltro, Filtro } from "@olula/lib/diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 /**
  * Una orden abierta (pendiente, en curso o preparada) del almacén, buscando por su código o su
  * descripción. Para elegir la orden del recorrido en el mapa.
  */
-export const OrdenAbierta = ({ almacenId, valor, label = "Orden", nombre = "ordenId", deshabilitado, onChange }: {
+export const OrdenAbierta = ({ almacenId, valor, label = tAlmacen("comun.orden"), nombre = "ordenId", deshabilitado, onChange }: {
     almacenId: string;
     valor: string;
     label?: string;

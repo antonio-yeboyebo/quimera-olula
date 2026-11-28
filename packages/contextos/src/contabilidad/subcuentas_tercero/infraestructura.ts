@@ -5,6 +5,7 @@ import {
     PartidaSubcuenta,
     SubcuentaTercero,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export interface SubcuentaTerceroApi {
     id: number;
@@ -56,12 +57,12 @@ export const getSubcuentasTercero: GetSubcuentasTercero = (tipo, terceroId) =>
     RestAPI.getLista<SubcuentaTercero, SubcuentaTerceroApi>(
         urlSubcuentasTercero(tipo, terceroId),
         subcuentaTerceroDesdeApi,
-        "Error al leer las subcuentas"
+        tContabilidad("subcuentas_tercero.errorAlLeerLasSubcuentas")
     );
 
 export const getPartidasSubcuenta: GetPartidasSubcuenta = (subcuentaId) =>
     RestAPI.getLista<PartidaSubcuenta, PartidaSubcuentaApi>(
         urlPartidasSubcuenta(subcuentaId),
         partidaSubcuentaDesdeApi,
-        "Error al leer las partidas"
+        tContabilidad("subcuentas_tercero.errorAlLeerLasPartidas")
     );

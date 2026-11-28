@@ -9,6 +9,7 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Albaran } from "../diseño.ts";
 import { albaranFacturado } from "../dominio.ts";
 import "./TabDatos.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const TabDatos = ({
   form,
@@ -17,6 +18,7 @@ export const TabDatos = ({
   form: HookModelo<Albaran>;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const { uiProps, modelo } = form;
   const puedeCambiarDivisa = !albaranFacturado(modelo);
 
@@ -28,11 +30,11 @@ export const TabDatos = ({
           nombre="almacenId"
         />
         <Divisa {...uiProps("divisaId")} nombre="divisaId" />
-        <QInput label="T. Conversión" {...uiProps("tasaConversion")} />
+        <QInput label={t("comun.campos.tasaConversion")} {...uiProps("tasaConversion")} />
         {puedeCambiarDivisa && (
           <div className="TabDatos-accion">
             <BotonCambiar
-              titulo="Cambiar divisa y tasa de conversión"
+              titulo={t("comun.documento.cambiarDivisa")}
               onClick={() => publicar("cambio_divisa_solicitado")}
             />
           </div>
@@ -46,7 +48,7 @@ export const TabDatos = ({
           nombre="grupoIvaNegocioId"
         />
         {/* Solo lectura: la serie se fija al crear el documento (ver metaAlbaran). */}
-        <QInput label="Serie" {...uiProps("serieId")} />
+        <QInput label={t("comun.campos.serie")} {...uiProps("serieId")} />
       </quimera-formulario>
     </div>
   );

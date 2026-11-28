@@ -1,6 +1,7 @@
 import { getProveedores } from "#/compras/proveedor/infraestructura.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Criteria } from "@olula/lib/diseño.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 interface ProveedorProps {
   descripcion?: string;
@@ -16,11 +17,12 @@ export const Proveedor = ({
   descripcion = "",
   valor,
   nombre = "proveedor_id",
-  label = "Proveedor",
+  label,
   deshabilitado = false,
   onChange,
   ...props
 }: ProveedorProps) => {
+  const t = useTCompras();
   const obtenerOpciones = async (texto: string, id?: string) => {
     if (!id && texto.length < 2) return [];
 
@@ -40,7 +42,7 @@ export const Proveedor = ({
 
   return (
     <QAutocompletar
-      label={label}
+      label={label ?? t("comun.campos.proveedor")}
       nombre={nombre}
       onChange={onChange}
       valor={valor}

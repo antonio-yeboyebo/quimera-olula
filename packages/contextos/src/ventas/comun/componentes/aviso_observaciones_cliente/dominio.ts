@@ -2,6 +2,7 @@ import {
   AvisoObservacionesCliente,
   DependenciasAvisoObservacionesCliente,
 } from "./diseño.ts";
+import { tVentas } from "../../../i18n/index.ts";
 
 const esClienteRegistrado = (clienteId: string | null | undefined): clienteId is string =>
   !!clienteId && clienteId !== "None";
@@ -26,7 +27,7 @@ export const avisoObservacionesCliente = (
 };
 
 export const tituloAvisoObservacionesCliente = (aviso: AvisoObservacionesCliente) =>
-  `Aviso sobre el cliente ${aviso.clienteId}:`;
+  tVentas("comun.avisoObservaciones", { cliente: aviso.clienteId });
 
 /**
  * Lee la configuración y, solo si el aviso está activo, las observaciones del

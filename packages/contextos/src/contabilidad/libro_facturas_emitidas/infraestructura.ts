@@ -23,6 +23,7 @@ import {
     PatchLibroFacturasEmitidas,
     PostLibroFacturasEmitidas,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.LIBRO_FACTURAS_EMITIDAS;
@@ -127,7 +128,7 @@ export const getResultadoLibroFacturasEmitidas: GetResultadoLibroFacturasEmitida
         RestAPI.getItem<ResultadoLibroIva, ResultadoLibroIvaApi>(
             urls.LIBRO_FACTURAS_EMITIDAS_DATOS(id),
             resultadoLibroIvaDesdeApi,
-            "Error al calcular el libro de facturas emitidas"
+            tContabilidad("libro_facturas_emitidas.errorAlCalcularElLibroDe")
         );
 
 export const postLibroFacturasEmitidas: PostLibroFacturasEmitidas = async (
@@ -136,7 +137,7 @@ export const postLibroFacturasEmitidas: PostLibroFacturasEmitidas = async (
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoLibroFacturasEmitidasAApi(nuevo),
-        "Error al crear el libro de facturas emitidas"
+        tContabilidad("libro_facturas_emitidas.errorAlCrearElLibroDe")
     );
     return String(respuesta.id);
 };
@@ -148,7 +149,7 @@ export const patchLibroFacturasEmitidas: PatchLibroFacturasEmitidas = async (
     await RestAPI.patch(
         `${baseUrl}/${informe.id}`,
         cambiosLibroFacturasEmitidasAApi(cambios, informe),
-        "Error al guardar el libro de facturas emitidas"
+        tContabilidad("libro_facturas_emitidas.errorAlGuardarElLibroDe")
     );
 };
 
@@ -157,7 +158,7 @@ export const deleteLibroFacturasEmitidas: DeleteLibroFacturasEmitidas = async (
 ) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar el libro de facturas emitidas"
+        tContabilidad("libro_facturas_emitidas.errorAlBorrarElLibroDe")
     );
 };
 
@@ -165,5 +166,5 @@ export const getReportLibroFacturasEmitidas: GetReportLibroFacturasEmitidas =
     async (id) =>
         RestAPI.blob(
             urls.LIBRO_FACTURAS_EMITIDAS_REPORT(id),
-            "Error al descargar el PDF del libro de facturas emitidas"
+            tContabilidad("libro_facturas_emitidas.errorAlDescargarElPdfDel")
         );

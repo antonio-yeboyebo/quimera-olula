@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { Provincia } from "../diseño.ts";
+import { tComun } from "../../i18n/index.ts";
 
 export type EstadoMaestroProvincia = "INICIAL" | "CREANDO";
 
@@ -13,10 +14,10 @@ export type ContextoMaestroProvincia = {
 };
 
 export const metaTablaProvincia: MetaTabla<Provincia> = [
-    { id: "nombre", cabecera: "Provincia" },
-    { id: "codigo", cabecera: "Código" },
-    { id: "paisId", cabecera: "País" },
-    { id: "nombrePais", cabecera: "Nombre del país" },
+    { id: "nombre", get cabecera() { return tComun("provincia.provincia"); } },
+    { id: "codigo", get cabecera() { return tComun("provincia.codigo"); } },
+    { id: "paisId", get cabecera() { return tComun("provincia.pais"); } },
+    { id: "nombrePais", get cabecera() { return tComun("provincia.nombreDelPais"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -30,8 +31,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroProvincia: MetaFiltro = {
-    nombre: filtroTexto("nombre", "Provincia"),
-    pais_id: filtroTexto("pais_id", "País"),
+    get nombre() { return filtroTexto("nombre", tComun("provincia.provincia")); },
+    get pais_id() { return filtroTexto("pais_id", tComun("provincia.pais")); },
 };
 
 export const criteriaProvinciasDefecto = (): Criteria => ({

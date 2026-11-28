@@ -4,6 +4,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { ResumenConciliacionAutomatica as Resumen } from "../diseño.js";
 import "./ResumenSincronizacionMovimientoBancario.css";
+import { tTesoreria } from "../../i18n/index.ts";
 
 export const ResumenConciliacionAutomatica = ({
     resumen,
@@ -17,21 +18,20 @@ export const ResumenConciliacionAutomatica = ({
     return (
         <QModal
             nombre="resumenConciliacionAutomatica"
-            titulo="Conciliación automática"
+            titulo={tTesoreria("conciliacion.conciliacionAutomatica")}
             abierto={true}
             onCerrar={cerrar}
         >
             <div className="ResumenSincronizacionMovimientoBancario">
                 <p>
-                    {resumen.analizados} movimientos analizados: {resumen.conciliados} casados y{" "}
-                    {resumen.conCandidatos} con candidatos para revisar
+                    {tTesoreria("conciliacion.resumenAnalizados", { count: resumen.analizados, conciliados: resumen.conciliados, conCandidatos: resumen.conCandidatos })}
                     {resumen.conciliadosIa + resumen.conCandidatosIa > 0 &&
-                        ` (la IA ha casado ${resumen.conciliadosIa} y propuesto candidatos en ${resumen.conCandidatosIa})`}.
+                        tTesoreria("conciliacion.resumenIa", { conciliadosIa: resumen.conciliadosIa, conCandidatosIa: resumen.conCandidatosIa })}.
                 </p>
 
                 {resumen.errores.length > 0 && (
                     <>
-                        <QAviso variante="advertencia">No se han podido conciliar:</QAviso>
+                        <QAviso variante="advertencia">{tTesoreria("conciliacion.noSeHanPodidoConciliar")}</QAviso>
                         <ul className="errores-sincronizacion">
                             {resumen.errores.map((error, indice) => <li key={indice}>{error}</li>)}
                         </ul>
@@ -39,7 +39,7 @@ export const ResumenConciliacionAutomatica = ({
                 )}
 
                 <div className="botones maestro-botones">
-                    <QBoton onClick={cerrar}>Cerrar</QBoton>
+                    <QBoton onClick={cerrar}>{tTesoreria("conciliacion.cerrar")}</QBoton>
                 </div>
             </div>
         </QModal>

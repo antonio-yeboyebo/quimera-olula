@@ -5,6 +5,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { DireccionProveedor, Proveedor } from "../diseño.ts";
 import { metaDireccionProveedor } from "../dominio.ts";
 import { patchDireccionProveedor } from "../infraestructura.ts";
@@ -18,6 +19,7 @@ export const CambiarDireccionProveedor = ({
     direccion: DireccionProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { modelo, uiProps, valido } = useModelo(metaDireccionProveedor, direccion);
 
     const cambiar_ = useCallback(async () => {
@@ -36,7 +38,7 @@ export const CambiarDireccionProveedor = ({
         <QModal
             abierto={true}
             nombre="cambiarDireccionProveedor"
-            titulo="Cambiar dirección"
+            titulo={t("proveedor.direcciones.cambiar")}
             onCerrar={cancelar}
         >
             <div className="CambiarDireccionProveedor campos-direccion-proveedor">
@@ -46,7 +48,7 @@ export const CambiarDireccionProveedor = ({
             </div>
             <div className="botones maestro-botones">
                 <QBoton onClick={cambiar} deshabilitado={!valido}>
-                    Cambiar
+                    {t("comun.botones.cambiar")}
                 </QBoton>
             </div>
         </QModal>

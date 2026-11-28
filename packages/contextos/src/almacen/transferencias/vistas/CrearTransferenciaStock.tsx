@@ -15,6 +15,7 @@ import {
   crearTransferenciaStock,
   obtenerTransferenciaStock,
 } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearTransferenciaStock = ({
   publicar = async () => {},
@@ -47,6 +48,7 @@ const FormAltaTransferenciaStock = ({
   publicar?: ProcesarEvento;
   transferencia: HookModelo<NuevaTransferenciaStock>;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
@@ -66,24 +68,24 @@ const FormAltaTransferenciaStock = ({
 
   return (
     <div className="CrearTransferenciaStock">
-      <h2>Nueva Transferencia</h2>
+      <h2>{t("transferencias.nuevaTransferencia")}</h2>
       <quimera-formulario>
         <Almacen
-          label="Origen"
+          label={t("transferencias.origen")}
           {...transferencia.uiProps("origen", "nombre_origen")}
         />
         <Almacen
-          label="Destino"
+          label={t("transferencias.destino")}
           {...transferencia.uiProps("destino", "nombre_destino")}
         />
-        <QDate label="Fecha" {...transferencia.uiProps("fecha")} />
+        <QDate label={t("transferencias.fecha")} {...transferencia.uiProps("fecha")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={crear} deshabilitado={!transferencia.valido}>
-          Guardar
+          {t("transferencias.guardar")}
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">
-          Cancelar
+          {t("transferencias.cancelar")}
         </QBoton>
       </div>
     </div>

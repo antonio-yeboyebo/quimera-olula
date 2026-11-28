@@ -15,11 +15,12 @@ import { useMaquinaLineasTransferenciasStock } from "../../maquina_lineas_transf
 import { BorrarLineaTransferenciaStock } from "./BorrarLineaTransferenciaStock.tsx";
 import { CrearLineaTransferenciaStock } from "./CrearLineaTransferenciaStock.tsx";
 import { DetalleLineaTransferenciaStock } from "./DetalleLineaTransferenciaStock.tsx";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const metaTablaLineasTransferenciaStock: MetaTabla<LineaTransferenciaStock> = [
   { id: "id", cabecera: "ID" },
-  { id: "descripcion_producto", cabecera: "Artículo" },
-  { id: "cantidad", cabecera: "Cantidad" },
+  { id: "descripcion_producto", get cabecera() { return tAlmacen("transferencias.articulo"); } },
+  { id: "cantidad", get cabecera() { return tAlmacen("transferencias.cantidad"); } },
 ];
 
 const metaFiltroLineas = getMetaFiltroDefecto(metaTablaLineasTransferenciaStock);
@@ -29,6 +30,7 @@ export const LineasTransferenciaStock = ({
 }: {
   transferencia: HookModelo<TransferenciaStock>;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const [
@@ -94,18 +96,18 @@ export const LineasTransferenciaStock = ({
     <>
       {transferencia.editable && (
         <div className="botones maestro-botones ">
-          <QBoton onClick={() => emitir("alta_solicitada")}>Nueva</QBoton>
+          <QBoton onClick={() => emitir("alta_solicitada")}>{t("transferencias.nueva")}</QBoton>
           <QBoton
             deshabilitado={!seleccionada}
             onClick={() => emitir("edicion_solicitada")}
           >
-            Editar
+            {t("transferencias.editar")}
           </QBoton>
           <QBoton
             deshabilitado={!seleccionada}
             onClick={() => emitir("borrado_solicitado")}
           >
-            Borrar
+            {t("transferencias.borrar")}
           </QBoton>
         </div>
       )}

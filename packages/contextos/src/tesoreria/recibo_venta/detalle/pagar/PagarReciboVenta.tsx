@@ -8,6 +8,7 @@ import { ReciboVenta } from "../../diseño.js";
 import { enDivisaExtranjera } from "../../dominio.js";
 import { PagoRecibo } from "./diseño.js";
 import { metaPagoRecibo, pagoReciboVacio } from "./dominio.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 export const PagarReciboVenta = ({
   recibo,
@@ -16,6 +17,7 @@ export const PagarReciboVenta = ({
   recibo: ReciboVenta;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const enDivisa = enDivisaExtranjera(recibo);
   // Memoizado: useModelo reinicia el modelo cada vez que cambia la meta.
   const meta = useMemo(() => metaPagoRecibo(enDivisa), [enDivisa]);
@@ -37,26 +39,26 @@ export const PagarReciboVenta = ({
     <QModal
       abierto={true}
       nombre="pagar_recibo_venta"
-      titulo="Pagar recibo"
+      titulo={t("recibo_venta.pagarRecibo")}
       onCerrar={cancelar}
     >
       <div className="PagarReciboVenta">
         <quimera-formulario>
           <CuentaBancariaSelect
-            label="Cuenta de pago"
+            label={t("recibo_venta.cuentaDePago")}
             {...uiProps("cuenta_pago_id", "nombre_cuenta_pago")}
           />
-          <QDate label="Fecha" {...uiProps("fecha")} />
+          <QDate label={t("recibo_venta.fecha")} {...uiProps("fecha")} />
           {enDivisa && (
             <QInput
-              label={`Tasa de cambio ${recibo.divisaId} → ${recibo.divisaEmpresaId}`}
+              label={t("recibo_venta.tasaDeCambioDivisaidDivisaempresaid", { divisaId: recibo.divisaId, divisaEmpresaId: recibo.divisaEmpresaId })}
               {...uiProps("tasa_conversion")}
             />
           )}
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={pagar} deshabilitado={!valido}>
-            Pagar
+            {t("recibo_venta.pagar")}
           </QBoton>
         </div>
       </div>

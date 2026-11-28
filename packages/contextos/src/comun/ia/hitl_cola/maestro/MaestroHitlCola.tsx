@@ -12,12 +12,13 @@ import { ComponentType, useEffect, useState } from "react";
 import { HitlTarea, ResolvedorHitlTareaProps } from "../diseño.js";
 import { rechazarHitlTarea } from "../infraestructura.js";
 import { getMaquina } from "./maquina.js";
+import { tComun, useTComun } from "../../../i18n/index.ts";
 
 const metaTablaHitlTarea: MetaTabla<HitlTarea> = [
-    { id: 'titulo', cabecera: 'Tarea' },
-    { id: 'estado', cabecera: 'Estado' },
-    { id: 'tipo_accion', cabecera: 'Tipo' },
-    { id: 'creado_en', cabecera: 'Recibida', tipo: 'fechahora' },
+    { id: 'titulo', get cabecera() { return tComun("ia.tarea"); } },
+    { id: 'estado', get cabecera() { return tComun("ia.estado"); } },
+    { id: 'tipo_accion', get cabecera() { return tComun("ia.tipo"); } },
+    { id: 'creado_en', get cabecera() { return tComun("ia.recibida"); }, tipo: 'fechahora' },
 ];
 
 /**
@@ -33,6 +34,7 @@ export const MaestroHitlCola = ({
 }: {
     resolvedores?: Record<string, ComponentType<ResolvedorHitlTareaProps>>;
 }) => {
+    const tx = useTComun();
     const { ctx, emitir } = useMaquina(getMaquina, {
         estado: 'INICIAL',
         tareas: listaActivaEntidadesInicial<HitlTarea>(undefined, criteriaDefecto),
@@ -52,15 +54,15 @@ export const MaestroHitlCola = ({
     return (
         <div className="HitlCola">
             <div className="HitlCola-header">
-                <h2>Bandeja de tareas</h2>
+                <h2>{tx("ia.bandejaDeTareas")}</h2>
                 <QSelect
-                    label="Estado"
+                    label={tx("ia.estado")}
                     nombre="filtro_estado"
                     valor={filtroEstado}
                     opciones={[
-                        { valor: 'pendiente', descripcion: 'Pendientes' },
-                        { valor: 'resuelta', descripcion: 'Resueltas' },
-                        { valor: 'rechazada', descripcion: 'Rechazadas' },
+                        { valor: 'pendiente', descripcion: tx("ia.pendientes") },
+                        { valor: 'resuelta', descripcion: tx("ia.resueltas") },
+                        { valor: 'rechazada', descripcion: tx("ia.rechazadas") },
                     ]}
                     onChange={(op) => op && emitir('filtro_estado_cambiado', op.valor)}
                 />
@@ -77,13 +79,13 @@ export const MaestroHitlCola = ({
                     tareaActiva && tareaActiva.estado === 'pendiente' ? (
                         <div className="maestro-botones">
                             <QBoton onClick={() => emitir('resolver_solicitado')}>
-                                Resolver
+                                {tx("ia.resolver")}
                             </QBoton>
                             <QBoton
                                 advertencia
                                 onClick={() => emitir('rechazar_solicitado')}
                             >
-                                Rechazar
+                                {tx("ia.rechazar")}
                             </QBoton>
                         </div>
                     ) : null
@@ -127,8 +129,8 @@ const ResolvedorGenerico = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
                     {JSON.stringify(tarea.datos_payload, null, 2)}
                 </pre>
                 <div className="maestro-botones">
-                    <QBoton onClick={confirmar}>Confirmar</QBoton>
-                    <QBoton onClick={() => publicar('resolucion_cancelada')}>Cancelar</QBoton>
+                    <QBoton onClick={confirmar}>{tComun("ia.confirmar")}</QBoton>
+                    <QBoton onClick={() => publicar('resolucion_cancelada')}>{tComun("ia.cancelar")}</QBoton>
                 </div>
             </div>
         </QModal>
@@ -138,6 +140,7 @@ const ResolvedorGenerico = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
 // ─── Modal de rechazo ────────────────────────────────────────────────────────
 
 const RechazarTarea = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
+    const tx = useTComun();
     const [motivo, setMotivo] = useState("");
 
     // QModalConfirmacion muestra el error si falla (antes se perdía sin aviso).
@@ -150,9 +153,9 @@ const RechazarTarea = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
         <QModalConfirmacion
             nombre="rechazar_tarea"
             abierto={true}
-            titulo="Rechazar tarea"
-            mensaje="La tarea se descartará sin hacer nada más (si es una factura, no se importará). Podrás consultarla después en el filtro «Rechazadas»."
-            labelAceptar="Rechazar"
+            titulo={tx("ia.rechazarTarea")}
+            mensaje={tx("ia.laTareaSeDescartaraSinHacer")}
+            labelAceptar={tx("ia.rechazar")}
             destructivo
             onCerrar={() => publicar('rechazo_cancelado')}
             onAceptar={rechazar}
@@ -162,7 +165,7 @@ const RechazarTarea = ({ tarea, publicar }: ResolvedorHitlTareaProps) => {
                     <strong>{tarea.titulo}</strong>
                 </p>
                 <QInput
-                    label="Motivo"
+                    label={tx("ia.motivo")}
                     nombre="motivo_rechazo"
                     valor={motivo}
                     onChange={setMotivo}

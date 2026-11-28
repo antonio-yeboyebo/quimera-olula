@@ -1,4 +1,5 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
+import { useTComun } from "../i18n/index.ts";
 import {
   OpcionGrupoIvaNegocio,
   useOpcionesGrupoIvaNegocio,
@@ -13,17 +14,18 @@ interface GrupoIvaNegocioProps {
 
 export const GrupoIvaNegocio = ({
   valor,
-  label = "Grupo IVA negocio",
+  label,
   nombre = "grupo_iva_negocio_id",
   onChange,
   ...props
 }: GrupoIvaNegocioProps) => {
+  const t = useTComun();
   const opciones = useOpcionesGrupoIvaNegocio();
 
   return (
     <QSelect
       {...props}
-      label={label}
+      label={label ?? t("grupoIvaNegocio")}
       nombre={nombre}
       valor={valor}
       onChange={onChange}

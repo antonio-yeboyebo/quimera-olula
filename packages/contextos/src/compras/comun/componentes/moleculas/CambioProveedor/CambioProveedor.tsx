@@ -5,6 +5,7 @@ import { Modelo } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useMemo, useState } from "react";
 import "./CambioProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { CambioProveedor as Cambio } from "./diseño.ts";
 import {
     metaCambioProveedor,
@@ -22,13 +23,14 @@ export const CambioProveedor = ({
     documento,
     onGuardar,
     onCancelar,
-    titulo = "Cambiar proveedor",
+    titulo,
 }: {
     documento: DocumentoConProveedor;
     onGuardar: (cambio: Cambio) => Promise<void>;
     onCancelar?: () => void;
     titulo?: string;
 }) => {
+    const t = useTCompras();
     const [registrado, setRegistrado] = useState(
         proveedorRegistrado(documento.proveedorId)
     );
@@ -62,10 +64,10 @@ export const CambioProveedor = ({
     };
 
     return (
-        <QModal abierto={true} nombre="cambioProveedorCompra" titulo={titulo} onCerrar={onCancelar}>
+        <QModal abierto={true} nombre="cambioProveedorCompra" titulo={titulo ?? t("comun.cambioProveedor.titulo")} onCerrar={onCancelar}>
             <div className="modo-proveedor">
                 <QBoton onClick={alternarModo} variante="texto" tipo="button">
-                    {registrado ? "Proveedor no registrado" : "Proveedor registrado"}
+                    {registrado ? t("comun.cambioProveedor.noRegistrado") : t("comun.cambioProveedor.registrado")}
                 </QBoton>
             </div>
             <div className="CambioProveedor">
@@ -78,16 +80,16 @@ export const CambioProveedor = ({
                     ) : (
                         <>
                             <QInput
-                                label="Nombre del proveedor"
+                                label={t("comun.cambioProveedor.nombreProveedor")}
                                 {...uiProps("nombreProveedor")}
                             />
-                            <QInput label="Id Fiscal" {...uiProps("idFiscal")} />
+                            <QInput label={t("comun.campos.idFiscal")} {...uiProps("idFiscal")} />
                         </>
                     )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={guardar} deshabilitado={!valido}>
-                        Guardar
+                        {t("comun.botones.guardar")}
                     </QBoton>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { useLayoutEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 import "./_forminput.css";
@@ -44,6 +45,7 @@ export const QSelect = ({
   onBlur,
   evaluarCambio,
 }: QSelectProps) => {
+  const t = useTComponentes();
   const { editandoHandlers } = useEditando();
   const evaluarCambioRef = useRef(evaluarCambio);
   useLayoutEffect(() => {
@@ -65,7 +67,7 @@ export const QSelect = ({
               <EnlaceFicha
                 href={enlaceHref}
                 className="enlace-solo-lectura"
-                etiqueta={`Abrir ${label ?? "ficha"}${descripcion ? ` ${descripcion}` : ""}`}
+                etiqueta={`${t("campos.abrir", { que: label ?? t("campos.ficha") })}${descripcion ? ` ${descripcion}` : ""}`}
               />
             )}
           </span>

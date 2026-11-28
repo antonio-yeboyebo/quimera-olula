@@ -18,6 +18,7 @@ import {
     metaNuevaLinea,
     nuevaLineaInicial,
 } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearLinea = ({
   albaranId,
@@ -26,6 +27,7 @@ export const CrearLinea = ({
   albaranId: string;
   publicar: ProcesarEvento;
 }) => {
+    const t = useTVentas();
     const onModeloListo = useCallback(
         async (nuevaLinea: ModeloNuevaLinea, campo?: string) => {
             if (campo && !(camposConCambiosServidor as readonly string[]).includes(campo)) return;
@@ -78,7 +80,7 @@ export const CrearLinea = ({
         <QModal
             abierto={true}
             nombre="crear_linea_albaran"
-            titulo="Crear línea"
+            titulo={t("documento.formLinea.crear")}
             onCerrar={cancelar}
         >
             <div className="CrearLinea">
@@ -95,10 +97,10 @@ export const CrearLinea = ({
                     {porLotes ? (
                         <p className="aviso-por-lotes">Artículo por lotes</p>
                     ) : (
-                        <QInput label="Cantidad" {...lineaArticulo.uiProps("cantidad")} />
+                        <QInput label={t("documento.formLinea.cantidad")} {...lineaArticulo.uiProps("cantidad")} />
                     )}
-                    <QInput label="PVP unitario" {...lineaArticulo.uiProps("pvpUnitario")} />
-                    <QInput label="Total" {...lineaArticulo.uiProps("pvpTotal")} />
+                    <QInput label={t("documento.formLinea.pvpUnitario")} {...lineaArticulo.uiProps("pvpUnitario")} />
+                    <QInput label={t("documento.formLinea.total")} {...lineaArticulo.uiProps("pvpTotal")} />
 
                     <div className="mostrar-mas-fila">
                         <button
@@ -106,30 +108,30 @@ export const CrearLinea = ({
                             className="mostrar-mas-btn"
                             onClick={() => setMostrarMas((v) => !v)}
                         >
-                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                            {mostrarMas ? t("documento.formLinea.menosOpciones") : t("documento.formLinea.masOpciones")}
                         </button>
                     </div>
 
                     {mostrarMas && (
                         <>
                             <div className="seccion-separador">Descuento</div>
-                            <QInput label="% Descuento" {...lineaArticulo.uiProps("dtoPorcentual")} />
-                            <QInput label="Dto. lineal" {...lineaArticulo.uiProps("dtoLineal")} />
+                            <QInput label={t("documento.formLinea.descuento")} {...lineaArticulo.uiProps("dtoPorcentual")} />
+                            <QInput label={t("documento.formLinea.dtoLineal")} {...lineaArticulo.uiProps("dtoLineal")} />
 
                             <div className="seccion-separador">Impuestos</div>
                             <GrupoIvaProducto {...lineaArticulo.uiProps("idGrupoIvaProducto")} soloLectura={!libre} />
-                            <QInput label="% IVA" {...lineaArticulo.uiProps("tipoIva")} soloLectura />
-                            <QInput label="% R.Equivalencia" {...lineaArticulo.uiProps("tipoRecargo")} soloLectura />
+                            <QInput label={t("documento.formLinea.iva")} {...lineaArticulo.uiProps("tipoIva")} soloLectura />
+                            <QInput label={t("documento.formLinea.recargo")} {...lineaArticulo.uiProps("tipoRecargo")} soloLectura />
                             {ivaIncluidoActivo &&
-                                <QCheckbox label="IVA incluido" {...lineaArticulo.uiProps("ivaIncluido")} soloLectura={!libre} />
+                                <QCheckbox label={t("documento.formLinea.ivaIncluido")} {...lineaArticulo.uiProps("ivaIncluido")} soloLectura={!libre} />
                             }
-                            <QInput label="% I.R.P.F." {...lineaArticulo.uiProps("tipoIrpf")} />
+                            <QInput label={t("documento.formLinea.irpf")} {...lineaArticulo.uiProps("tipoIrpf")} />
                         </>
                     )}
                 </quimera-formulario>
                 <div className="botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        {porLotes ? "Añadir cantidades" : "Crear"}
+                        {porLotes ? t("documento.formLinea.anadirCantidades") : t("documento.formLinea.crearBoton")}
                     </QBoton>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { CobroOnline, CobroQr, EnlacePago, ReembolsoPasarela } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 interface EnlacePagoApi {
     id: string;
@@ -53,13 +54,13 @@ const postEnlace = async (url: string, email?: string): Promise<EnlacePago> => {
     const r = (await RestAPI.post(
         url,
         email ? { email } : {},
-        email ? "Error al enviar el enlace de pago" : "Error al generar el enlace de pago",
+        email ? tTesoreria("cobro_online.errorAlEnviarElEnlaceDe") : tTesoreria("cobro_online.errorAlGenerarElEnlaceDe"),
     )) as unknown as EnlacePagoApi;
     return enlacePagoDesdeApi(r);
 };
 
 const getCobros = async (url: string): Promise<CobroOnline[]> => {
-    const r = await RestAPI.get<{ datos: CobroOnlineApi[] }>(url, "Error al leer los cobros con tarjeta");
+    const r = await RestAPI.get<{ datos: CobroOnlineApi[] }>(url, tTesoreria("cobro_online.errorAlLeerLosCobrosCon"));
     return r.datos.map(cobroOnlineDesdeApi);
 };
 
@@ -93,7 +94,7 @@ export const reembolsoPasarelaDesdeApi = (r: ReembolsoPasarelaApi | null): Reemb
 export const getReembolsoPasarelaRecibo = async (reciboId: string): Promise<ReembolsoPasarela | null> =>
     reembolsoPasarelaDesdeApi((await RestAPI.get<{ datos: ReembolsoPasarelaApi | null }>(
         `/tesoreria/recibo_cobro/${reciboId}/reembolso_pasarela`,
-        "Error al consultar el reembolso con tarjeta",
+        tTesoreria("cobro_online.errorAlConsultarElReembolsoCon"),
     )).datos);
 
 interface CobroQrApi {
@@ -119,17 +120,17 @@ export const cobroQrDesdeApi = (r: CobroQrApi): CobroQr => ({
 /** Sesión de pago por el pendiente de la venta, para mostrarla como QR. */
 export const postCobroQr = async (ventaId: string): Promise<CobroQr> =>
     cobroQrDesdeApi((await RestAPI.post(
-        `/tpv/venta/${ventaId}/cobro_qr`, {}, "Error al generar el QR de pago",
+        `/tpv/venta/${ventaId}/cobro_qr`, {}, tTesoreria("cobro_online.errorAlGenerarElQrDe"),
     )) as unknown as CobroQrApi);
 
 /** Estado del QR; `pagado` cuando el pago de la venta ya está creado. */
 export const getCobroQr = async (cobroId: string): Promise<CobroQr> =>
     cobroQrDesdeApi((await RestAPI.get<{ datos: CobroQrApi }>(
-        `/tpv/cobro_qr/${cobroId}`, "Error al consultar el pago con QR",
+        `/tpv/cobro_qr/${cobroId}`, tTesoreria("cobro_online.errorAlConsultarElPagoCon"),
     )).datos);
 
 /** El cliente desiste: el QR deja de admitir pagos. */
 export const postCancelarCobroQr = async (cobroId: string): Promise<CobroQr> =>
     cobroQrDesdeApi((await RestAPI.post(
-        `/tpv/cobro_qr/${cobroId}/cancelar`, {}, "Error al cancelar el pago con QR",
+        `/tpv/cobro_qr/${cobroId}/cancelar`, {}, tTesoreria("cobro_online.errorAlCancelarElPagoCon"),
     )) as unknown as CobroQrApi);

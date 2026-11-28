@@ -11,8 +11,10 @@ import { EstadoLead } from "../diseño.ts";
 import { metaTablaEstadoLead } from "./maestro.ts";
 import "./MaestroEstadosLead.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroEstadosLead = () => {
+  const t = useTCrm();
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "INICIAL",
     estados_lead: listaActivaEntidadesInicial<EstadoLead>(),
@@ -28,7 +30,7 @@ export const MaestroEstadosLead = () => {
       <MaestroDetalle<EstadoLead>
         Maestro={
           <>
-            <h2>Estados de Lead</h2>
+            <h2>{t("estadoLead.estadosDeLead")}</h2>
 
             <Listado<EstadoLead>
               metaTabla={metaTablaEstadoLead}
@@ -49,7 +51,7 @@ export const MaestroEstadosLead = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_estado_lead_solicitada")}
                   >
-                    Nuevo
+                    {t("estadoLead.nuevo")}
                   </QBoton>
                 </div>
               )}

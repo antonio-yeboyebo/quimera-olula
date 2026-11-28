@@ -24,7 +24,8 @@ import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { ClausulaFiltro, Entidad } from "@olula/lib/diseño.ts";
 import { puede } from "@olula/lib/dominio.ts";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 import { ESTADOS_RECIBO_COMPRA_PENDIENTE } from "./documentos.ts";
 
 /** El proveedor ya es el de la ficha: sus columnas sobran. */
@@ -33,15 +34,12 @@ const sinProveedor = <T extends Entidad>(meta: MetaTabla<T>): MetaTabla<T> =>
 
 const porProveedor = (proveedorId: string): ClausulaFiltro[] => [["proveedor_id", "=", proveedorId]];
 
-const metaPedidos = sinProveedor(metaTablaPedido);
-const metaAlbaranes = sinProveedor(metaTablaAlbaran);
-const metaFacturas = sinProveedor(metaTablaFactura);
-const metaRecibos: MetaTabla<ReciboCompra> = [
-  { id: "codigo", cabecera: "Código" },
-  { id: "fechaEmision", cabecera: "F. Emisión", tipo: "fecha" },
-  { id: "fechaVencimiento", cabecera: "F. Vencimiento", tipo: "fecha" },
-  { id: "estado", cabecera: "Estado" },
-  { id: "importe", cabecera: "Importe", tipo: "moneda" },
+const metaRecibos = (t = tCompras): MetaTabla<ReciboCompra> => [
+  { id: "codigo", cabecera: t("comun.campos.codigo") },
+  { id: "fechaEmision", cabecera: t("proveedor.documentos.fechaEmision"), tipo: "fecha" },
+  { id: "fechaVencimiento", cabecera: t("proveedor.documentos.fechaVencimiento"), tipo: "fecha" },
+  { id: "estado", cabecera: t("comun.campos.estado") },
+  { id: "importe", cabecera: t("comun.campos.importe"), tipo: "moneda" },
 ];
 
 const TarjetaReciboCompra = (recibo: ReciboCompra) => (
@@ -51,6 +49,8 @@ const TarjetaReciboCompra = (recibo: ReciboCompra) => (
 
 /** Recibos del proveedor: por defecto sólo los pendientes de pago. */
 const RecibosProveedor = ({ proveedorId }: { proveedorId: string }) => {
+  const t = useTCompras();
+  const meta = useMemo(() => metaRecibos(t), [t]);
   const [soloPendientes, setSoloPendientes] = useState(true);
   const filtro: ClausulaFiltro[] = [
     ...porProveedor(proveedorId),
@@ -64,12 +64,12 @@ const RecibosProveedor = ({ proveedorId }: { proveedorId: string }) => {
       cargar={getRecibosCompra}
       filtro={filtro}
       orden={ordenDocumentos("fecha_emision")}
-      metaTabla={metaRecibos}
+      metaTabla={meta}
       tarjeta={TarjetaReciboCompra}
       Detalle={DetalleReciboCompra}
       controles={
         <QCheckbox
-          label="Sólo pendientes"
+          label={t("proveedor.documentos.soloPendientes")}
           nombre="solo_pendientes"
           valor={soloPendientes}
           onChange={(valor) => setSoloPendientes(valor === "true")}
@@ -84,31 +84,35 @@ const RecibosProveedor = ({ proveedorId }: { proveedorId: string }) => {
  * al pulsarla; el orden es fecha y código descendentes.
  */
 export const TabDocumentos = ({ proveedorId }: { proveedorId: string }) => {
+  const t = useTCompras();
   const orden = ordenDocumentos();
+  const metaPedidos = useMemo(() => sinProveedor(metaTablaPedido(t)), [t]);
+  const metaAlbaranes = useMemo(() => sinProveedor(metaTablaAlbaran(t)), [t]);
+  const metaFacturas = useMemo(() => sinProveedor(metaTablaFactura(t)), [t]);
   const pestañas = [
     puede("compras.pedido.leer") && (
-      <Tab key="tab-pedidos" label="Pedidos" children={
+      <Tab key="tab-pedidos" label={t("proveedor.documentos.pedidos")} children={
         <DocumentosTercero<Pedido> className="PedidosProveedor" cargar={getPedidos}
           filtro={porProveedor(proveedorId)} orden={orden} metaTabla={metaPedidos}
           tarjeta={TarjetaPedido} Detalle={DetallePedido} />
       } />
     ),
     puede("compras.albaran.leer") && (
-      <Tab key="tab-albaranes" label="Albaranes" children={
+      <Tab key="tab-albaranes" label={t("proveedor.documentos.albaranes")} children={
         <DocumentosTercero<Albaran> className="AlbaranesProveedor" cargar={getAlbaranes}
           filtro={porProveedor(proveedorId)} orden={orden} metaTabla={metaAlbaranes}
           tarjeta={TarjetaAlbaran} Detalle={DetalleAlbaran} />
       } />
     ),
     puede("compras.factura.leer") && (
-      <Tab key="tab-facturas" label="Facturas" children={
+      <Tab key="tab-facturas" label={t("proveedor.documentos.facturas")} children={
         <DocumentosTercero<Factura> className="FacturasProveedor" cargar={getFacturas}
           filtro={porProveedor(proveedorId)} orden={orden} metaTabla={metaFacturas}
           tarjeta={TarjetaFactura} Detalle={DetalleFactura} />
       } />
     ),
     puede("tesoreria.recibo_compra") && (
-      <Tab key="tab-recibos" label="Recibos" children={<RecibosProveedor proveedorId={proveedorId} />} />
+      <Tab key="tab-recibos" label={t("proveedor.documentos.recibos")} children={<RecibosProveedor proveedorId={proveedorId} />} />
     ),
   ];
 

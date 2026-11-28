@@ -3,12 +3,10 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { GrupoAlbaranar } from "./maestro.ts";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 
-const lineasPorProveedor = (grupos: GrupoAlbaranar[]): string[] =>
-    grupos.map((grupo) => {
-        const cuantos = `${grupo.ids.length} ${grupo.ids.length === 1 ? "pedido" : "pedidos"}`;
-        return `· ${grupo.etiqueta} — ${cuantos}`;
-    });
+const lineasPorProveedor = (grupos: GrupoAlbaranar[], t = tCompras): string[] =>
+    grupos.map((grupo) => t("pedido.albaranar.grupo", { etiqueta: grupo.etiqueta, count: grupo.ids.length }));
 
 export const AlbaranarPedidos = ({
     pedidos,
@@ -19,6 +17,7 @@ export const AlbaranarPedidos = ({
     grupos: GrupoAlbaranar[];
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const albaranar_ = useCallback(
         async () => publicar("albaranado_confirmado"),
         [publicar]
@@ -31,16 +30,14 @@ export const AlbaranarPedidos = ({
 
     const [albaranar, cancelar] = useForm(albaranar_, cancelar_);
 
-    const cabecera = `Albaranar los ${pedidos} pedidos seleccionados. Se ${
-        grupos.length === 1 ? "generará 1 albarán" : `generarán ${grupos.length} albaranes`
-    }.`;
+    const cabecera = `${t("pedido.albaranar.cabecera", { pedidos })} ${t("pedido.albaranar.generara", { count: grupos.length })}`;
 
     return (
         <QModalConfirmacion
             nombre="albaranarPedidosCompra"
             abierto={true}
-            titulo="Albaranar pedidos"
-            mensaje={[cabecera, "", ...lineasPorProveedor(grupos)].join("\n")}
+            titulo={t("pedido.albaranar.titulo")}
+            mensaje={[cabecera, "", ...lineasPorProveedor(grupos, t)].join("\n")}
             onCerrar={cancelar}
             onAceptar={albaranar}
         />

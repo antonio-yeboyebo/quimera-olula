@@ -10,6 +10,7 @@ import {
 } from "@olula/lib/dominio.ts";
 import "./NodoArbolItem.css";
 import { useSeleccionArchivosMovil } from "./useSeleccionArchivosMovil.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export interface NodoArbolItemProps {
   nodo: NodoArbol;
@@ -35,6 +36,7 @@ export const NodoArbolItem = ({
   onCrearCarpeta,
   onAnadirDocumento,
 }: NodoArbolItemProps) => {
+  const t = useTComponentes();
   const sangria = { paddingLeft: `${nivel * 1.25}rem` };
   const { inputRef, handleClick, handleChange } = useSeleccionArchivosMovil(
     nodo.id,
@@ -74,7 +76,7 @@ export const NodoArbolItem = ({
           <QBoton
             tamaño="pequeño"
             variante="texto"
-            props={{ "aria-label": `Nueva carpeta dentro de ${nodo.nombre}` }}
+            props={{ "aria-label": t("ui.arbolDocumentos.nuevaCarpetaDentroDeNombre", { nombre: nodo.nombre }) }}
             onClick={(e) => {
               e.stopPropagation();
               onCrearCarpeta(nodo.id);
@@ -86,7 +88,7 @@ export const NodoArbolItem = ({
             tamaño="pequeño"
             variante="texto"
             props={{
-              "aria-label": `Añadir documento dentro de ${nodo.nombre}`,
+              "aria-label": t("ui.arbolDocumentos.anadirDocumentoDentroDeNombre", { nombre: nodo.nombre }),
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -103,7 +105,7 @@ export const NodoArbolItem = ({
           <QBoton
             tamaño="pequeño"
             variante="texto"
-            props={{ "aria-label": `Eliminar carpeta ${nodo.nombre}` }}
+            props={{ "aria-label": t("ui.arbolDocumentos.eliminarCarpetaNombre", { nombre: nodo.nombre }) }}
             onClick={(e) => {
               e.stopPropagation();
               onEliminar(nodo);
@@ -162,7 +164,7 @@ export const NodoArbolItem = ({
         <QBoton
           tamaño="pequeño"
           variante="texto"
-          props={{ "aria-label": `Descargar ${nodo.nombre}` }}
+          props={{ "aria-label": t("ui.arbolDocumentos.descargarNombre", { nombre: nodo.nombre }) }}
           onClick={() => onDescargar(nodo)}
         >
           <QIcono nombre="descargar" tamaño="md" />
@@ -170,7 +172,7 @@ export const NodoArbolItem = ({
         <QBoton
           tamaño="pequeño"
           variante="texto"
-          props={{ "aria-label": `Eliminar ${nodo.nombre}` }}
+          props={{ "aria-label": t("ui.arbolDocumentos.eliminarNombre", { nombre: nodo.nombre }) }}
           onClick={() => onEliminar(nodo)}
         >
           <QIcono nombre="eliminar" tamaño="md" />

@@ -22,6 +22,7 @@ import {
     NEGRITA_POR_TIPO,
 } from "../infraestructura.ts";
 import "./TabResultado.css";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 type Fila = FilaInformeCuentasAnuales;
 
@@ -125,6 +126,7 @@ export const TabResultado = ({
     balance: BalanceCuentasAnuales | null;
     emitir: EmitirEvento;
 }) => {
+    const tx = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [calculando, setCalculando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -171,36 +173,34 @@ export const TabResultado = ({
         <div className="TabResultado">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={ocupado}>
-                    {calculando ? "Calculando…" : "Calcular"}
+                    {calculando ? tx("cuentas_anuales.calculando") : tx("cuentas_anuales.calcular")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("pdf")}
                     deshabilitado={ocupado}
                 >
-                    Descargar PDF
+                    {tx("cuentas_anuales.descargarPdf")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("xlsx")}
                     deshabilitado={ocupado}
                 >
-                    Descargar Excel
+                    {tx("cuentas_anuales.descargarExcel")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("ods")}
                     deshabilitado={ocupado}
                 >
-                    Descargar ODS
+                    {tx("cuentas_anuales.descargarOds")}
                 </QBoton>
             </div>
 
             {balance && balance.avisosSinCodigoBalance.length > 0 && (
                 <p className="aviso">
-                    Hay {balance.avisosSinCodigoBalance.length} subcuenta(s) con
-                    movimiento cuya cuenta no está asignada a ninguna línea del
-                    modelo, por lo que sus importes no figuran en el informe:{" "}
+                    {tx("cuentas_anuales.hay")}{" "}{balance.avisosSinCodigoBalance.length}{" "}{tx("cuentas_anuales.subcuentaSConMovimientoCuyaCuenta")}{" "}
                     {balance.avisosSinCodigoBalance
                         .slice(0, 10)
                         .map((a) => a.codigoSubcuenta)
@@ -209,15 +209,15 @@ export const TabResultado = ({
                 </p>
             )}
 
-            {!balance && <p>Pulsa «Calcular» para obtener los importes.</p>}
+            {!balance && <p>{tx("cuentas_anuales.pulsaCalcularParaObtenerLosImportes")}</p>}
 
             {balance && (
                 <table className="tabla-cuentas-anuales">
                     <thead>
                         <tr>
-                            <th>Concepto</th>
-                            <th>{informe.ejercicioId || "Actual"}</th>
-                            <th>{informe.ejercicioAnteriorId || "Anterior"}</th>
+                            <th>{tx("cuentas_anuales.concepto")}</th>
+                            <th>{informe.ejercicioId || tx("cuentas_anuales.actual")}</th>
+                            <th>{informe.ejercicioAnteriorId || tx("cuentas_anuales.anterior")}</th>
                         </tr>
                     </thead>
                     <tbody>

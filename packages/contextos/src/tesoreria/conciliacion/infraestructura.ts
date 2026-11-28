@@ -30,6 +30,7 @@ import {
     TipoConciliacion,
     TipoReciboMovimiento,
 } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface MovimientoBancarioApi {
     id: string;
@@ -329,7 +330,7 @@ export const getMovimientoBancario: GetMovimientoBancario = async (id) => {
     return await RestAPI.getItem<MovimientoBancario, MovimientoBancarioApi>(
         `${baseUrl}/${id}`,
         movimientoBancarioDesdeApi,
-        "Error al obtener el movimiento bancario"
+        tTesoreria("conciliacion.errorAlObtenerElMovimientoBancario")
     );
 };
 
@@ -338,7 +339,7 @@ export const getMovimientosBancarios: GetMovimientosBancarios = async (criteria)
         baseUrl,
         criteria,
         movimientoBancarioDesdeApi,
-        "Error al obtener los movimientos bancarios"
+        tTesoreria("conciliacion.errorAlObtenerLosMovimientosBancarios")
     );
 };
 
@@ -352,7 +353,7 @@ export const postSincronizarMovimientoBancario: PostSincronizarMovimientoBancari
     const respuesta = await RestAPI.query<{ cuenta_banco_id: string }, ResumenSincronizacionMovimientoBancarioApi>(
         `${baseUrl}/sincronizar`,
         { cuenta_banco_id: cuentaBancoId },
-        "Error al sincronizar los movimientos bancarios"
+        tTesoreria("conciliacion.errorAlSincronizarLosMovimientosBancario")
     );
     return resumenSincronizacionDesdeApi(respuesta);
 };
@@ -362,7 +363,7 @@ export const postConciliarAutomaticamente: PostConciliarAutomaticamente = async 
     const api = await RestAPI.query<{ cuenta_banco_id: string }, ResumenConciliacionAutomaticaApi>(
         `${baseUrl}/conciliar_automaticamente`,
         { cuenta_banco_id: cuentaBancoId },
-        "Error al conciliar automáticamente los movimientos bancarios"
+        tTesoreria("conciliacion.errorAlConciliarAutomaticamenteLosMovimi")
     );
     return {
         analizados: api.analizados,
@@ -385,7 +386,7 @@ export const getCandidatosConciliacion: GetCandidatosConciliacion = async (id, t
     return await RestAPI.getLista<CandidatoConciliacion, CandidatoConciliacionApi>(
         `${baseUrl}/${id}/candidatos${query}`,
         candidatoConciliacionDesdeApi,
-        "Error al obtener los candidatos de conciliación"
+        tTesoreria("conciliacion.errorAlObtenerLosCandidatosDe")
     );
 };
 
@@ -394,7 +395,7 @@ export const getRemesasConciliacion: GetRemesasConciliacion = async (id) => {
     return await RestAPI.getLista<RemesaCandidata, RemesaCandidataApi>(
         `${baseUrl}/${id}/remesas`,
         remesaCandidataDesdeApi,
-        "Error al obtener las remesas del movimiento"
+        tTesoreria("conciliacion.errorAlObtenerLasRemesasDel")
     );
 };
 
@@ -403,7 +404,7 @@ export const getConciliacionesMovimientoBancario: GetConciliacionesMovimientoBan
     return await RestAPI.getLista<Conciliacion, ConciliacionApi>(
         `${baseUrl}/${id}/conciliaciones`,
         conciliacionDesdeApi,
-        "Error al obtener las conciliaciones del movimiento"
+        tTesoreria("conciliacion.errorAlObtenerLasConciliacionesDel")
     );
 };
 
@@ -412,7 +413,7 @@ export const getConciliacionAplicadaMovimientoBancario = async (id: string): Pro
     const resp = await RestAPI.getItem<ConciliacionApi | null, ConciliacionApi | null>(
         `${baseUrl}/${id}/conciliacion_aplicada`,
         (api) => api,
-        "Error al obtener la conciliación aplicada del movimiento"
+        tTesoreria("conciliacion.errorAlObtenerLaConciliacionAplicada")
     );
     return resp ? conciliacionDesdeApi(resp) : null;
 };
@@ -433,25 +434,25 @@ export const patchConciliarMovimientoBancario: PatchConciliarMovimientoBancario 
     await RestAPI.patch<ConciliarMovimientoBancarioApi>(
         `${baseUrl}/${id}/conciliar`,
         cuerpo,
-        "Error al conciliar el movimiento"
+        tTesoreria("conciliacion.errorAlConciliarElMovimiento")
     );
 };
 
 /** Deshace la casación y deja el movimiento pendiente (puede llegar a borrarlo, ver detalle.ts). */
 export const patchDesconciliarMovimientoBancario: PatchDesconciliarMovimientoBancario = async (id) => {
-    await RestAPI.patch(`${baseUrl}/${id}/desconciliar`, {}, "Error al desconciliar el movimiento");
+    await RestAPI.patch(`${baseUrl}/${id}/desconciliar`, {}, tTesoreria("conciliacion.errorAlDesconciliarElMovimiento"));
 };
 
 export const patchIgnorarMovimientoBancario: PatchIgnorarMovimientoBancario = async (id, motivo) => {
     await RestAPI.patch<IgnorarMovimientoBancarioApi>(
         `${baseUrl}/${id}/ignorar`,
         motivo ? { motivo } : {},
-        "Error al ignorar el movimiento"
+        tTesoreria("conciliacion.errorAlIgnorarElMovimiento")
     );
 };
 
 export const patchReactivarMovimientoBancario: PatchReactivarMovimientoBancario = async (id) => {
-    await RestAPI.patch(`${baseUrl}/${id}/reactivar`, {}, "Error al reactivar el movimiento");
+    await RestAPI.patch(`${baseUrl}/${id}/reactivar`, {}, tTesoreria("conciliacion.errorAlReactivarElMovimiento"));
 };
 
 interface CuadreCuentaApi {
@@ -504,7 +505,7 @@ export const getCuadreBancario: GetCuadreBancario = async () => {
     const api = await RestAPI.getItem<CuadreBancarioApi, CuadreBancarioApi>(
         cuadreBancarioUrl,
         (a) => a,
-        "Error al obtener el cuadre bancario"
+        tTesoreria("conciliacion.errorAlObtenerElCuadreBancario")
     );
     return {
         cuentas: (api.cuentas ?? []).map(cuadreCuentaDesdeApi),
@@ -531,6 +532,6 @@ export const getPartidasHuerfanas: GetPartidasHuerfanas = async (cuentaConexionI
     return await RestAPI.getLista<PartidaHuerfana, PartidaHuerfanaApi>(
         `${cuadreBancarioUrl}/${cuentaConexionId}/partidas_huerfanas`,
         partidaHuerfanaDesdeApi,
-        "Error al obtener las partidas huérfanas"
+        tTesoreria("conciliacion.errorAlObtenerLasPartidasHuerfanas")
     );
 };

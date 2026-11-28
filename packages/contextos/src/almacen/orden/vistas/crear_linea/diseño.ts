@@ -1,4 +1,5 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 export type NuevaLineaOrden = {
     sku: string;
@@ -39,7 +40,7 @@ export const getMetaNuevaLineaOrden = (): MetaModelo<NuevaLineaOrden> => ({
     campos: {
         sku: {
             validacion: (linea) => {
-                if (!linea.sku) return "El SKU es requerido";
+                if (!linea.sku) return tAlmacen("orden.elSkuEsRequerido");
                 return true;
             },
         },
@@ -47,7 +48,7 @@ export const getMetaNuevaLineaOrden = (): MetaModelo<NuevaLineaOrden> => ({
             tipo: "numero",
             validacion: (linea) => {
                 if (linea.cantidadPrevista === null || linea.cantidadPrevista === undefined) {
-                    return "La cantidad prevista es requerida";
+                    return tAlmacen("orden.laCantidadPrevistaEsRequerida");
                 }
                 return true;
             },

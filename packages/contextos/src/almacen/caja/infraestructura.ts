@@ -17,6 +17,7 @@ import {
     PatchCaja,
     PostCaja,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 interface CajaAPI extends Entidad {
     id: string;
@@ -190,7 +191,7 @@ export const postCaja: PostCaja = async (nuevaCaja) => {
     const respuesta = await RestAPI.post<NuevaCajaAPI>(
         baseUrl,
         nuevaCajaAApi(nuevaCaja),
-        "Error al crear caja"
+        tAlmacen("caja.errorAlCrearCaja")
     );
     return respuesta.id;
 };
@@ -199,13 +200,13 @@ export const patchCaja: PatchCaja = async (id, cambios) => {
     await RestAPI.patch<CambiosCajaAPI>(
         `${baseUrl}/${id}`,
         cambiosCajaAApi(cambios),
-        "Error al guardar caja"
+        tAlmacen("caja.errorAlGuardarCaja")
     );
 };
 
 export const deleteCaja: DeleteCaja = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar caja"
+        tAlmacen("caja.errorAlBorrarCaja")
     );
 };

@@ -4,6 +4,7 @@ import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useForm } from "@olula/lib/useForm.js";
 import { useCallback, useRef, useState } from "react";
 import { getInfoLineasPedidoCompra } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const LeerAlbaran = ({
     publicar,
@@ -12,6 +13,7 @@ export const LeerAlbaran = ({
     publicar: EmitirEvento;
     pedidoCompraId: string;
 }) => {
+    const t = useTAlmacen();
     const inputRef = useRef<HTMLInputElement>(null);
     const [fichero, setFichero] = useState<File | null>(null);
 
@@ -41,12 +43,12 @@ export const LeerAlbaran = ({
         <QModal
             abierto={true}
             nombre="leerAlbaran"
-            titulo="Leer albarán"
+            titulo={t("pedido_compra.leerAlbaran")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
                 <div style={{ marginBottom: "1rem" }}>
-                    <label>Fichero del albarán</label>
+                    <label>{t("pedido_compra.ficheroDelAlbaran")}</label>
                     <input
                         ref={inputRef}
                         type="file"
@@ -58,7 +60,7 @@ export const LeerAlbaran = ({
 
             <div className="botones maestro-botones">
                 <QBoton onClick={analizar} deshabilitado={!fichero || analizando}>
-                    {analizando ? "Analizando..." : "Analizar"}
+                    {analizando ? t("pedido_compra.analizando") : t("pedido_compra.analizar")}
                 </QBoton>
             </div>
         </QModal>

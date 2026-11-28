@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { FuenteLead } from "../diseño.ts";
 import { deleteFuenteLead } from "../infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const BorrarFuenteLead = ({
   publicar,
@@ -12,6 +13,7 @@ export const BorrarFuenteLead = ({
   fuente_lead: FuenteLead;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const borrar_ = useCallback(async () => {
     await deleteFuenteLead(fuente_lead.id);
 
@@ -29,8 +31,8 @@ export const BorrarFuenteLead = ({
     <QModalConfirmacion
       nombre="confirmarBorrarFuenteLead"
       abierto={true}
-      titulo="Confirmar borrado"
-      mensaje={`¿Está seguro de que desea borrar esta Fuente de Lead?`}
+      titulo={t("fuenteLead.confirmarBorrado")}
+      mensaje={t("fuenteLead.estaSeguroDeQueDeseaBorrar")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

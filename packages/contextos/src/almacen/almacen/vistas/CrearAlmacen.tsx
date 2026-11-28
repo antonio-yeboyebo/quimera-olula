@@ -9,6 +9,7 @@ import { NuevoAlmacen } from "../diseño.ts";
 import { metaNuevoAlmacen, nuevoAlmacenVacio } from "../dominio.ts";
 import { getAlmacen, postAlmacen } from "../infraestructura.ts";
 import "./CrearAlmacen.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearAlmacen = ({
   publicar = async () => {},
@@ -38,6 +39,7 @@ const FormAltaAlmacen = ({
   publicar?: ProcesarEvento;
   almacen: HookModelo<NuevoAlmacen>;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
@@ -57,17 +59,17 @@ const FormAltaAlmacen = ({
 
   return (
     <div className="CrearAlmacen">
-      <h2>Nuevo Almacen</h2>
+      <h2>{t("almacen.nuevoAlmacen")}</h2>
       <quimera-formulario>
-        <QInput label="Código Almacén" {...almacen.uiProps("id")} />
-        <QInput label="Nombre" {...almacen.uiProps("nombre")} />
+        <QInput label={t("almacen.codigoAlmacen")} {...almacen.uiProps("id")} />
+        <QInput label={t("almacen.nombre")} {...almacen.uiProps("nombre")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={crear} deshabilitado={!almacen.valido}>
-          Guardar
+          {t("almacen.guardar")}
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">
-          Cancelar
+          {t("almacen.cancelar")}
         </QBoton>
       </div>
     </div>

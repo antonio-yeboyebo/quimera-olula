@@ -15,10 +15,12 @@ import {
     metaTablaLibroDiario,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Libros diarios guardados: cada ficha son los criterios de un informe. Se
  * comparten con el ERP de escritorio, que usa la misma tabla. */
 export const MaestroConDetalleLibroDiario = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaLibroDiarioDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -40,7 +42,7 @@ export const MaestroConDetalleLibroDiario = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el libro diario.</p>;
+        return <p>{t("libro_diario.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
@@ -63,7 +65,7 @@ export const MaestroConDetalleLibroDiario = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("libro_diario.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}

@@ -2,6 +2,7 @@ import "./_forminput.css";
 import { Etiqueta, FormFieldProps, Validacion } from "./_forminput.tsx";
 import { QBoton } from "./qboton.tsx";
 import { QDate } from "./qdate.tsx";
+import { tComponentes } from "../i18n/textos.ts";
 
 export type QMonthYearProps = Omit<FormFieldProps, "label"> & {
   label?: string;
@@ -94,7 +95,7 @@ export const QMonthYear = ({
           <Validacion textoValidacion={textoValidacion} />
         </label>
       </quimera-date>
-      <QBoton onClick={manejarChangeManual}>Manual</QBoton>
+      <QBoton onClick={manejarChangeManual}>{tComponentes("ui.atomos.manual")}</QBoton>
     </>
   );
 };

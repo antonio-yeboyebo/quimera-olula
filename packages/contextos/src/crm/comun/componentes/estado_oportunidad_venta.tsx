@@ -2,6 +2,7 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { getEstadosOportunidadVenta } from "../../oportunidadventa/infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface EstadoOportunidadProps {
   valor: string;
@@ -13,7 +14,7 @@ interface EstadoOportunidadProps {
 export const EstadoOportunidad = ({
   valor,
   nombre = "estado_id",
-  label = "Estado",
+  label = tCrm("comun.estado"),
   onChange,
   ...props
 }: EstadoOportunidadProps) => {

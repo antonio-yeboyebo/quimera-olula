@@ -14,15 +14,16 @@ import { CrearTipoCaja } from "../crear/CrearTipoCaja.js";
 import { DetalleTipoCaja } from "../detalle/DetalleTipoCaja.js";
 import "./MaestroConDetalleTipoCaja.css";
 import { getMaquina } from "./maquina.js";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Metadatos para renderizar la tabla.
  */
 const metaTablaTipoCaja: MetaTabla<TipoCaja> = [
     { id: "id", cabecera: "ID" },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "descripcion", get cabecera() { return tAlmacen("tipo_caja.descripcion"); } },
     { id: "sku", cabecera: "SKU" },
-    { id: "capacidad", cabecera: "Capacidad", tipo: "numero" },
+    { id: "capacidad", get cabecera() { return tAlmacen("tipo_caja.capacidad"); }, tipo: "numero" },
 ];
 
 /**
@@ -30,6 +31,7 @@ const metaTablaTipoCaja: MetaTabla<TipoCaja> = [
  */
 export const MaestroConDetalleTipoCaja = () => {
 
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { layout, cambiarLayout } = useLayout("TARJETA");
@@ -56,7 +58,7 @@ export const MaestroConDetalleTipoCaja = () => {
             <MaestroDetalle<TipoCaja>
                 Maestro={
                     <>
-                        <h2>Tipos de Caja</h2>
+                        <h2>{t("tipo_caja.tiposDeCaja")}</h2>
                         <div className="maestro-botones">
                             <span
                                 className="cambio-modo-icono"
@@ -79,7 +81,7 @@ export const MaestroConDetalleTipoCaja = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_tipo_caja_solicitado")}>
-                                        Nuevo Tipo de Caja
+                                        {t("tipo_caja.nuevoTipoDeCaja")}
                                     </QBoton>
                                 </div>
                             )}

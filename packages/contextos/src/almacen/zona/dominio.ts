@@ -1,16 +1,17 @@
 import { MetaModelo, stringNoVacio } from "@olula/lib/dominio.ts";
 import { FuncionZona, Zona } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const FUNCION_ZONA_POR_DEFECTO: FuncionZona = "RESERVA";
 
 export const funcionesZona: { valor: FuncionZona; descripcion: string }[] = [
-    { valor: "RECEPCION", descripcion: "Recepción" },
-    { valor: "CUARENTENA", descripcion: "Cuarentena" },
-    { valor: "RESERVA", descripcion: "Reserva" },
-    { valor: "PICKING", descripcion: "Picking" },
-    { valor: "PREPARACION", descripcion: "Preparación" },
-    { valor: "EXPEDICION", descripcion: "Expedición" },
-    { valor: "TRANSITO", descripcion: "Tránsito" },
+    { valor: "RECEPCION", get descripcion() { return tAlmacen("zona.recepcion"); } },
+    { valor: "CUARENTENA", get descripcion() { return tAlmacen("zona.cuarentena"); } },
+    { valor: "RESERVA", get descripcion() { return tAlmacen("zona.reserva"); } },
+    { valor: "PICKING", get descripcion() { return tAlmacen("zona.picking"); } },
+    { valor: "PREPARACION", get descripcion() { return tAlmacen("zona.preparacion"); } },
+    { valor: "EXPEDICION", get descripcion() { return tAlmacen("zona.expedicion"); } },
+    { valor: "TRANSITO", get descripcion() { return tAlmacen("zona.transito"); } },
 ];
 
 export const descripcionFuncionZona = (funcion: string): string =>

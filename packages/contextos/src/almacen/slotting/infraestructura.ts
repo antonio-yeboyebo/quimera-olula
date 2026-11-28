@@ -3,6 +3,7 @@ import {
     ArticuloAbc, ClaseAbc, GetAbc, GetPropuestaPicking, PropuestaPickingFijo, GetPropuesta, GetRecolocacion, PropuestaUbicacion, Recolocacion, UbicacionPropuesta, ResultadoMigracion, UbicarSinUbicar,
 } from "./diseño.ts";
 import { construirQuery } from "./dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/slotting`;
 
@@ -106,14 +107,14 @@ export const propuestaPickingDesdeApi = (p: PropuestaPickingFijoApi): PropuestaP
 
 export const getAbc: GetAbc = async (almacenId, dias, origen) => {
     const q = construirQuery({ almacen_id: almacenId, dias, origen });
-    const r = await RestAPI.get<{ datos: ArticuloAbcApi[] }>(`${baseUrl}/abc${q}`, "Error al calcular el ABC");
+    const r = await RestAPI.get<{ datos: ArticuloAbcApi[] }>(`${baseUrl}/abc${q}`, tAlmacen("slotting.errorAlCalcularElAbc"));
     return r.datos.map(articuloAbcDesdeApi);
 };
 
 export const getPropuesta: GetPropuesta = async (almacenId, articuloId, limite, origen) => {
     const q = construirQuery({ almacen_id: almacenId, articulo_id: articuloId, limite, origen });
     const r = await RestAPI.get<{ datos: PropuestaUbicacionApi }>(
-        `${baseUrl}/propuesta${q}`, "Error al proponer ubicación"
+        `${baseUrl}/propuesta${q}`, tAlmacen("slotting.errorAlProponerUbicacion")
     );
     return propuestaDesdeApi(r.datos);
 };
@@ -121,7 +122,7 @@ export const getPropuesta: GetPropuesta = async (almacenId, articuloId, limite, 
 export const getRecolocacion: GetRecolocacion = async (almacenId, dias, limite, origen) => {
     const q = construirQuery({ almacen_id: almacenId, dias, limite, origen });
     const r = await RestAPI.get<{ datos: RecolocacionApi[] }>(
-        `${baseUrl}/recolocacion${q}`, "Error al calcular la recolocación"
+        `${baseUrl}/recolocacion${q}`, tAlmacen("slotting.errorAlCalcularLaRecolocacion")
     );
     return r.datos.map(recolocacionDesdeApi);
 };
@@ -131,7 +132,7 @@ export const getPropuestaPicking: GetPropuestaPicking = async (
 ) => {
     const q = construirQuery({ almacen_id: almacenId, dias, origen, clases, cobertura, reposicion });
     const r = await RestAPI.get<{ datos: PropuestaPickingFijoApi[] }>(
-        `${baseUrl}/propuesta_picking${q}`, "Error al proponer picking fijo"
+        `${baseUrl}/propuesta_picking${q}`, tAlmacen("slotting.errorAlProponerPickingFijo")
     );
     return r.datos.map(propuestaPickingDesdeApi);
 };
@@ -162,7 +163,7 @@ export const ubicarSinUbicar: UbicarSinUbicar = async (almacenId, ubicacionId, s
     >(
         "/almacen/stock_ubicacion/ubicar_sin_ubicar",
         { almacen_id: almacenId, ubicacion_id: ubicacionId, simular },
-        simular ? "Error al simular la migración" : "Error al ubicar el stock sin ubicar"
+        simular ? tAlmacen("slotting.errorAlSimularLaMigracion") : tAlmacen("slotting.errorAlUbicarElStockSin")
     );
     return resultadoMigracionDesdeApi(r);
 };

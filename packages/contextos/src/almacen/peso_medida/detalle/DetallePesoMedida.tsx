@@ -14,6 +14,7 @@ import { contextoDetallePesoMedidaInicial } from "./detalle.ts";
 import { MagnitudPesoMedida } from "../MagnitudPesoMedida.tsx";
 import "./DetallePesoMedida.css";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (pesoMedida: PesoMedida) => `${pesoMedida.id} - ${pesoMedida.descripcion}`;
 
@@ -24,6 +25,7 @@ export const DetallePesoMedida = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePesoMedidaInicial, publicar);
@@ -55,13 +57,13 @@ export const DetallePesoMedida = ({
         >
             <div className="DetallePesoMedida">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                    <QBoton onClick={() => emitir("borrado_solicitado")}>{t("peso_medida.borrar")}</QBoton>
                 </div>
                 <quimera-formulario>
-                    <QInput label="Abreviatura" nombre="id" valor={ctx.pesoMedida.id} soloLectura />
-                    <QInput label="Descripción" {...modelo.uiProps("descripcion")} maxLength={100} />
+                    <QInput label={t("peso_medida.abreviatura")} nombre="id" valor={ctx.pesoMedida.id} soloLectura />
+                    <QInput label={t("peso_medida.descripcion")} {...modelo.uiProps("descripcion")} maxLength={100} />
                     <MagnitudPesoMedida {...modelo.uiProps("magnitud")} />
-                    <QInput label="Factor de conversión" {...modelo.uiProps("factorConversion")} />
+                    <QInput label={t("peso_medida.factorDeConversion")} {...modelo.uiProps("factorConversion")} />
                 </quimera-formulario>
             </div>
 

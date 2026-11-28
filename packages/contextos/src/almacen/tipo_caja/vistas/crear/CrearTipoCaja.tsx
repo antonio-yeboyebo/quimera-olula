@@ -11,6 +11,7 @@ import { nuevoTipoCajaInicial } from "../../dominio.js";
 import { postTipoCaja } from "../../infraestructura.js";
 import "./CrearTipoCaja.css";
 import { metaNuevoTipoCaja } from "./crear.js";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Modal de alta de tipo de caja.
@@ -25,6 +26,7 @@ export const CrearTipoCaja = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo: tipoCaja, uiProps, valido } = useModelo(
         metaNuevoTipoCaja,
         nuevoTipoCajaInicial
@@ -51,22 +53,22 @@ export const CrearTipoCaja = ({
         <QModal
             abierto={true}
             nombre="crearTipoCaja"
-            titulo="Crear Tipo de Caja"
+            titulo={t("tipo_caja.crearTipoDeCaja")}
             onCerrar={cancelar}
         >
             <div className="CrearTipoCaja">
                 <quimera-formulario>
-                    <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
-                    <QInput label="Prefijo" {...uiProps("prefijo")} maxLength={2} />
+                    <QInput label={t("tipo_caja.descripcion")} {...uiProps("descripcion")} ref={focus} />
+                    <QInput label={t("tipo_caja.prefijo")} {...uiProps("prefijo")} maxLength={2} />
                     <Articulo label="SKU" {...uiProps("sku")} />
-                    <QInput label="Capacidad" {...uiProps("capacidad")}
+                    <QInput label={t("tipo_caja.capacidad")} {...uiProps("capacidad")}
                         deshabilitado={!tipoCaja.sku}
                     />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("tipo_caja.crear")}
                     </QBoton>
                 </div>
             </div>

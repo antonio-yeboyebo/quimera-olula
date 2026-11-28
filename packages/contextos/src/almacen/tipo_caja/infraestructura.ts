@@ -10,6 +10,7 @@ import {
     PostTipoCaja,
     TipoCaja,
 } from "./diseño.js";
+import { tAlmacen } from "../i18n/index.ts";
 
 export interface TipoCajaApi {
     id: string;
@@ -82,7 +83,7 @@ export const postTipoCaja: PostTipoCaja = async (nuevo: NuevoTipoCaja) => {
     const respuesta = await RestAPI.post<NuevoTipoCajaApi>(
         baseUrl,
         payload,
-        "Error al crear tipo de caja"
+        tAlmacen("tipo_caja.errorAlCrearTipoDeCaja")
     );
     return respuesta.id as string;
 };
@@ -99,7 +100,7 @@ export const patchTipoCaja: PatchTipoCaja = async (id, cambios: CambiosTipoCaja)
     await RestAPI.patch<CambiosTipoCajaApi>(
         `${baseUrl}/${id}`,
         payload,
-        "Error al actualizar tipo de caja"
+        tAlmacen("tipo_caja.errorAlActualizarTipoDeCaja")
     );
 };
 
@@ -109,6 +110,6 @@ export const patchTipoCaja: PatchTipoCaja = async (id, cambios: CambiosTipoCaja)
 export const deleteTipoCaja: DeleteTipoCaja = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar tipo de caja"
+        tAlmacen("tipo_caja.errorAlEliminarTipoDeCaja")
     );
 };

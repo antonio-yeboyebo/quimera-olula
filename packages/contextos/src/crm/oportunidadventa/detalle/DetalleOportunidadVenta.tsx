@@ -16,6 +16,7 @@ import { getMaquina } from "./maquina.ts";
 import { Presupuestos } from "./presupuestos/Presupuestos.tsx";
 import { TabDatos } from "./tabs/TabDatos.tsx";
 import { TabObservaciones } from "./tabs/TabObservaciones.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleOportunidadVenta = ({
   id,
@@ -24,6 +25,7 @@ export const DetalleOportunidadVenta = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const oportunidadId = id ?? params.id;
@@ -65,7 +67,7 @@ export const DetalleOportunidadVenta = ({
             vertical
             acciones={[
               {
-                texto: "Borrar",
+                texto: t("oportunidadventa.borrar"),
                 onClick: () => emitir("borrado_oportunidad_solicitado"),
                 advertencia: true,
               },
@@ -103,25 +105,25 @@ export const DetalleOportunidadVenta = ({
                 variante="advertencia"
                 className="oportunidad-resumen-acciones-pendientes"
               >
-                {`${accionesPendientes} acciones pendientes`}
+                {t("oportunidadventa.accionesPendientes", { count: accionesPendientes })}
               </QEtiqueta>
             )}
           </div>
 
           <Tabs>
-            <Tab label="Datos">
+            <Tab label={t("oportunidadventa.datos")}>
               <TabDatos oportunidad={oportunidad} />
             </Tab>
 
-            <Tab label="Observaciones">
+            <Tab label={t("oportunidadventa.observaciones")}>
               <TabObservaciones oportunidad={oportunidad} />
             </Tab>
 
-            <Tab label="Acciones">
+            <Tab label={t("oportunidadventa.acciones")}>
               <Acciones oportunidad={oportunidad} />
             </Tab>
 
-            <Tab label="Presupuestos">
+            <Tab label={t("oportunidadventa.presupuestos")}>
               <Presupuestos oportunidad={oportunidad} />
             </Tab>
           </Tabs>
@@ -132,14 +134,14 @@ export const DetalleOportunidadVenta = ({
                 onClick={() => emitir("oportunidad_cambiada", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("oportunidadventa.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_oportunidad_cancelada")}
               >
-                Cancelar
+                {t("oportunidadventa.cancelar")}
               </QBoton>
             </div>
           )}

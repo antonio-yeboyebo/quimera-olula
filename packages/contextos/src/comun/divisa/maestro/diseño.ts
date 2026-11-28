@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { Divisa } from "../diseño.ts";
+import { tComun } from "../../i18n/index.ts";
 
 export type EstadoMaestroDivisa = "INICIAL" | "CREANDO";
 
@@ -13,12 +14,12 @@ export type ContextoMaestroDivisa = {
 };
 
 export const metaTablaDivisa: MetaTabla<Divisa> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "tasaConversion", cabecera: "Tasa de conversión", tipo: "numero" },
-    { id: "fecha", cabecera: "Fecha de actualización", tipo: "fecha" },
-    { id: "simbolo", cabecera: "Símbolo" },
-    { id: "codigoIso", cabecera: "Código ISO" },
+    { id: "id", get cabecera() { return tComun("divisas.codigo"); } },
+    { id: "descripcion", get cabecera() { return tComun("divisas.descripcion"); } },
+    { id: "tasaConversion", get cabecera() { return tComun("divisas.tasaDeConversion"); }, tipo: "numero" },
+    { id: "fecha", get cabecera() { return tComun("divisas.fechaDeActualizacion"); }, tipo: "fecha" },
+    { id: "simbolo", get cabecera() { return tComun("divisas.simbolo"); } },
+    { id: "codigoIso", get cabecera() { return tComun("divisas.codigoIso"); } },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -32,8 +33,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroDivisa: MetaFiltro = {
-    id: filtroTexto("id", "Código"),
-    descripcion: filtroTexto("descripcion", "Descripción"),
+    get id() { return filtroTexto("id", tComun("divisas.codigo")); },
+    get descripcion() { return filtroTexto("descripcion", tComun("divisas.descripcion")); },
 };
 
 export const criteriaDivisasDefecto = (): Criteria => ({

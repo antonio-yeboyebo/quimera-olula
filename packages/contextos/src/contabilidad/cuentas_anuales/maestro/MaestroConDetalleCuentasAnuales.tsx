@@ -15,11 +15,13 @@ import {
     metaTablaCuentasAnuales,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Informes de cuentas anuales guardados: cada ficha son los criterios de un
  * balance, una cuenta de resultados o un estado de ingresos y gastos. Se
  * comparten con el ERP de escritorio, que usa la misma tabla. */
 export const MaestroConDetalleCuentasAnuales = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaCuentasAnualesDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetalleCuentasAnuales = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las cuentas anuales.</p>;
+        return <p>{t("cuentas_anuales.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -64,7 +66,7 @@ export const MaestroConDetalleCuentasAnuales = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("cuentas_anuales.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}

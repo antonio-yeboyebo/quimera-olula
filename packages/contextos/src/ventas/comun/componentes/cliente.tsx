@@ -3,6 +3,7 @@ import { Filtro } from "@olula/lib/diseño.ts";
 import { getClientes } from "../../cliente/infraestructura.ts";
 import { AvisoObservacionesCliente } from "./aviso_observaciones_cliente/AvisoObservacionesCliente.tsx";
 import { useAvisoObservacionesCliente } from "./aviso_observaciones_cliente/useAvisoObservacionesCliente.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 interface ClienteProps {
   descripcion?: string;
@@ -29,13 +30,15 @@ export const Cliente = ({
   descripcion = "",
   valor,
   nombre = "cliente_id",
-  label = "Cliente",
+  label: labelProp,
   deshabilitado = false,
   enlace = "/ventas/cliente?id={id}",
   avisarObservaciones = false,
   onChange,
   ...props
 }: ClienteProps) => {
+  const t = useTVentas();
+  const label = labelProp ?? t("comun.campos.cliente");
   const clienteRegistrado = !!valor && valor !== "None";
   const { aviso, avisar, cerrar } = useAvisoObservacionesCliente();
 

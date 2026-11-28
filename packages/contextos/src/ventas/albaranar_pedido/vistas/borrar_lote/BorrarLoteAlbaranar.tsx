@@ -4,6 +4,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { LineaAlbaranar, LoteAlbaranar } from "../../diseño.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const BorrarLoteAlbaranar = ({
     linea,
@@ -14,6 +15,7 @@ export const BorrarLoteAlbaranar = ({
     lote: LoteAlbaranar;
     emitir: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const borrar_ = useCallback(async () => {
         await emitir("baja_de_lote_confirmada", { idLinea: linea.idLinea, idLote: lote.idLote });
     }, [emitir, linea.idLinea, lote.idLote]);
@@ -37,7 +39,7 @@ export const BorrarLoteAlbaranar = ({
             </p>
             <div className="botones maestro-botones">
                 <QBoton onClick={borrar}>
-                    Borrar
+                    {t("documento.detalle.borrar")}
                 </QBoton>
             </div>
         </QModal>

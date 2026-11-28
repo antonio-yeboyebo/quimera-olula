@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro } from "@olula/lib/diseño.ts";
 import { getUsuarios } from "../../auth/usuario/infraestructura.ts";
+import { tComun } from "../i18n/index.ts";
 
 interface UsuarioProps {
   descripcion?: string;
@@ -15,7 +16,7 @@ export const Usuario = ({
   descripcion = "",
   valor,
   nombre = "usuario_id",
-  label = "Usuario",
+  label = tComun("componentes.usuario"),
   deshabilitado = false,
   onChange,
   ...props

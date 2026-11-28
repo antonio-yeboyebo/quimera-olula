@@ -1,3 +1,4 @@
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 import { OlulaWordmark } from "@olula/componentes/tema/Olula.jsx";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import {
@@ -36,7 +37,7 @@ export type CabeceraProps = {
 
 export const CabeceraBase = ({
   logoSrc = "/olula-wordmark.svg",
-  logoAlt = "Olula | Inicio",
+  logoAlt = tComponentes("ui.plantilla.olulaInicio"),
   Logo = () =>
     OlulaWordmark({
       color: "#ffffff",
@@ -51,6 +52,7 @@ export const CabeceraBase = ({
   ExtraLogo,
   mostrarAsistente = false,
 }: CabeceraProps) => {
+  const t = useTComponentes();
   const {
     menuAbierto,
     toggleMenu,
@@ -80,7 +82,7 @@ export const CabeceraBase = ({
       <header className="cabecera-principal">
         <button
           id="boton-menu-lateral"
-          aria-label={esMovil ? "Abrir menú lateral" : "Expandir o contraer el menú lateral"}
+          aria-label={esMovil ? t("cabecera.abrirMenuLateral") : t("cabecera.expandirMenuLateral")}
           onClick={() =>
             esMovil ? toggleMenu("lateral") : alternarLateralExpandido()
           }
@@ -99,12 +101,12 @@ export const CabeceraBase = ({
           <button
             type="button"
             id="boton-busqueda-rapida"
-            aria-label="Buscar pantalla (Ctrl K)"
+            aria-label={t("cabecera.buscarPantalla")}
             onClick={abrirBusqueda}
           >
             <QIcono nombre="buscar" tamaño="sm" />
-            <span className="boton-busqueda-texto">Ir a una pantalla…</span>
-            <span className="boton-busqueda-texto-movil">Buscar</span>
+            <span className="boton-busqueda-texto">{t("cabecera.irAPantalla")}</span>
+            <span className="boton-busqueda-texto-movil">{t("ui.plantilla.buscar")}</span>
             <kbd>Ctrl K</kbd>
           </button>
         )}
@@ -124,8 +126,8 @@ export const CabeceraBase = ({
             id="boton-modo-voz"
             className={modoVoz ? "activo" : ""}
             aria-pressed={modoVoz}
-            aria-label={modoVoz ? "Desactivar modo voz" : "Activar modo voz"}
-            title={modoVoz ? "Modo voz activo — di «Oye Olula». Pulsa para desactivarlo" : "Activar modo voz («Oye Olula»)"}
+            aria-label={modoVoz ? t("ui.plantilla.desactivarModoVoz") : t("ui.plantilla.activarModoVoz")}
+            title={modoVoz ? t("ui.plantilla.modoVozActivoDiOyeOlula") : t("ui.plantilla.activarModoVozOyeOlula")}
             onClick={() => setModoVoz(!modoVoz)}
           >
             {/* 16 px: mismo tamaño que los QIcono "sm" del asistente y del usuario */}
@@ -136,7 +138,7 @@ export const CabeceraBase = ({
           <>
             <button
               id="boton-asistente"
-              aria-label="Abrir asistente"
+              aria-label={t("ui.plantilla.abrirAsistente")}
               onClick={() => solicitarTogglePanelLateral("asistente")}
             ></button>
             <label htmlFor="boton-asistente" id="etiqueta-asistente-abierto">
@@ -148,7 +150,7 @@ export const CabeceraBase = ({
           <>
             <button
               id="boton-menu-usuario"
-              aria-label="Abrir menú usuario"
+              aria-label={t("cabecera.abrirMenuUsuario")}
               onClick={() => {
                 const yaAbierto = menuAbierto.usuario;
                 toggleMenu("usuario");

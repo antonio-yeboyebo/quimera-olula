@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { opcionesTipoAccion } from "../valores/tipo_accion.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface TipoAccionProps {
   valor: string;
@@ -10,7 +11,7 @@ interface TipoAccionProps {
 export const TipoAccion = ({ valor, onChange, getProps }: TipoAccionProps) => {
   return (
     <QSelect
-      label="Tipo Acción"
+      label={tCrm("comun.tipoAccion")}
       nombre="tipo"
       valor={valor}
       onChange={onChange}

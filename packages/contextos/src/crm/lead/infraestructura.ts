@@ -20,6 +20,7 @@ import {
     PatchLead,
     PostLead,
 } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const criteriaOportunidadesRelacionadasDefecto: Criteria = {
     ...criteriaDefecto,
@@ -102,18 +103,18 @@ export const getLeads: GetLeads = async (filtro, orden, paginacion) => {
 };
 
 export const postLead: PostLead = async (lead) => {
-    return await RestAPI.post(new ApiUrls().LEAD, lead, "Error al guardar lead").then(
+    return await RestAPI.post(new ApiUrls().LEAD, lead, tCrm("lead.errorAlGuardarLead")).then(
         (respuesta) => respuesta.id
     );
 };
 
 export const patchLead: PatchLead = async (id, lead) => {
     const apiLead = leadToAPI(lead as Lead);
-    await RestAPI.patch(`${new ApiUrls().LEAD}/${id}`, apiLead, "Error al guardar lead");
+    await RestAPI.patch(`${new ApiUrls().LEAD}/${id}`, apiLead, tCrm("lead.errorAlGuardarLead"));
 };
 
 export const deleteLead: DeleteLead = async (id) =>
-    await RestAPI.delete(`${new ApiUrls().LEAD}/${id}`, "Error al borrar lead");
+    await RestAPI.delete(`${new ApiUrls().LEAD}/${id}`, tCrm("lead.errorAlBorrarLead"));
 
 export const getOportunidadesVentaLead = async (
     leadId: string,

@@ -7,8 +7,10 @@ import {
   ModeloWidgetUltimasTarjetas,
   modeloWidgetUltimasTarjetasInicial,
 } from "./dominio_ultimas_tarjetas.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const WidgetUltimasTarjetas = () => {
+  const t = useTCrm();
   const [modelo, setModelo] = useState<ModeloWidgetUltimasTarjetas>(
     modeloWidgetUltimasTarjetasInicial
   );
@@ -33,20 +35,20 @@ export const WidgetUltimasTarjetas = () => {
   }, []);
 
   if (modelo.estado === "cargando") {
-    return <div>Cargando últimas tarjetas...</div>;
+    return <div>{t("lead.cargandoUltimasTarjetas")}</div>;
   }
 
   return (
     <div className="widget-crm-lista">
       <div className="widget-crm-lista__cabecera">
-        <h3 className="widget-crm-lista__titulo">Últimas tarjetas</h3>
+        <h3 className="widget-crm-lista__titulo">{t("lead.ultimasTarjetas")}</h3>
         <div className="widget-crm-lista__subtitulo">
-          Últimos códigos de tarjeta asignados
+          {t("lead.ultimosCodigosDeTarjetaAsignados")}
         </div>
       </div>
 
       {modelo.tarjetas.length === 0 ? (
-        <div className="widget-crm-lista__vacio">No hay tarjetas recientes</div>
+        <div className="widget-crm-lista__vacio">{t("lead.noHayTarjetasRecientes")}</div>
       ) : (
         <div className="widget-crm-lista__lista">
           {modelo.tarjetas.map((tarjeta) => (
@@ -63,7 +65,7 @@ export const WidgetUltimasTarjetas = () => {
 
       <div className="widget-crm-lista__acciones">
         <Link className="widget-crm-lista__enlace" to={modelo.urlVer}>
-          Ver todas
+          {t("lead.verTodas")}
         </Link>
       </div>
     </div>

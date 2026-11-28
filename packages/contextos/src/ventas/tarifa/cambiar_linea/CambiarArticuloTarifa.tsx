@@ -10,6 +10,7 @@ import { ArticuloTarifa } from "../diseño.js";
 import { descripcionArticuloTarifa, metaArticuloTarifa } from "../dominio.js";
 import { patchArticuloTarifa } from "../infraestructura.js";
 import "./CambiarArticuloTarifa.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Modal de cambio de precio.
@@ -24,6 +25,7 @@ export const CambiarArticuloTarifa = ({
   articulo: ArticuloTarifa;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const { modelo, uiProps, valido } = useModelo(metaArticuloTarifa, articulo);
 
   const cambiar_ = useCallback(async () => {
@@ -50,7 +52,7 @@ export const CambiarArticuloTarifa = ({
       <div className="CambiarArticuloTarifa">
         <quimera-formulario>
           <QInput
-            label="Precio"
+            label={t("tarifa.articulos.precio")}
             {...uiProps("precio")}
             ref={focus}
             tipo="moneda"

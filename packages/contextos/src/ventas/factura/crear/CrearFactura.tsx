@@ -20,6 +20,7 @@ import {
   metaModeloAltaFacturaNoRegistrada,
   metaModeloAltaFacturaRegistrada,
 } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearFactura = ({
   publicar = async () => {},
@@ -30,6 +31,7 @@ export const CrearFactura = ({
   activo?: boolean;
   onCancelar?: () => void;
 }) => {
+  const t = useTVentas();
   const [modoNoRegistrado, setModoNoRegistrado] = useState(false);
   /* Lazy initializer: referencia estable para useModelo y empresa ya puesta en el
      primer render, sin depender del efecto de EmpresaActual. */
@@ -71,7 +73,7 @@ export const CrearFactura = ({
     <QModal
       abierto={activo}
       nombre="crear_factura"
-      titulo="Nueva Factura"
+      titulo={t("factura.maestro.nueva")}
       onCerrar={cancelar}
     >
       <FormAltaFactura
@@ -98,6 +100,7 @@ const FormAltaFactura = ({
   modoNoRegistrado: boolean;
   onToggleModoCliente: () => void;
 }) => {
+  const t = useTVentas();
   const { intentar } = useContext(ContextoError);
 
   const crear = useCallback(async () => {
@@ -138,7 +141,7 @@ const FormAltaFactura = ({
     <>
       <div className="modo-cliente">
         <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
-          {modoNoRegistrado ? "Cliente no registrado" : "Cliente registrado"}
+          {modoNoRegistrado ? t("documento.crear.clienteNoRegistrado") : t("documento.crear.clienteRegistrado")}
         </QBoton>
       </div>
       <quimera-formulario>

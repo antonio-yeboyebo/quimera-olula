@@ -7,6 +7,7 @@ import { Factura, LineaFactura } from "../../diseño.ts";
 import { facturaEditable } from "../../dominio.ts";
 import { EstadoDetalleFactura } from "../diseño.ts";
 import { LineasLista } from "./LineasLista.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const LineasFactura = ({
     factura,
@@ -19,22 +20,23 @@ export const LineasFactura = ({
     estado: EstadoDetalleFactura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const activa = lineas.activo;
     const editable = facturaEditable(factura);
 
     const acciones = [
         {
-            texto: "Nueva",
+            texto: t("comun.botones.nueva"),
             onClick: () => publicar("alta_linea_solicitada"),
         },
         {
-            texto: "Editar",
+            texto: t("comun.botones.editar"),
             onClick: () => publicar("cambio_linea_solicitado"),
             deshabilitado: !activa,
         },
         {
             icono: "eliminar",
-            texto: "Borrar",
+            texto: t("comun.botones.borrar"),
             advertencia: true,
             onClick: () => publicar("baja_linea_solicitada"),
             deshabilitado: !activa,

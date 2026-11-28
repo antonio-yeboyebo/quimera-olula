@@ -13,6 +13,7 @@ import { getMaquina } from "./maquina.ts";
 import { Oportunidades } from "./oportunidades/Oportunidades.tsx";
 import { TabClientes } from "./tabs/TabClientes.tsx";
 import { TabGeneral } from "./tabs/TabGeneral.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleContacto = ({
   id,
@@ -21,6 +22,7 @@ export const DetalleContacto = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const contactoId = id ?? params.id;
@@ -59,7 +61,7 @@ export const DetalleContacto = ({
             vertical
             acciones={[
               {
-                texto: "Borrar",
+                texto: t("contacto.borrar"),
                 onClick: () => emitir("borrado_contacto_solicitado"),
                 advertencia: true,
               },
@@ -67,19 +69,19 @@ export const DetalleContacto = ({
           />
 
           <Tabs>
-            <Tab label="General">
+            <Tab label={t("contacto.general")}>
               <TabGeneral contacto={contacto} />
             </Tab>
 
-            <Tab label="Clientes">
+            <Tab label={t("contacto.clientes")}>
               <TabClientes contacto={contacto} />
             </Tab>
 
-            <Tab label="Oportunidades">
+            <Tab label={t("contacto.oportunidades")}>
               <Oportunidades contacto={contacto} />
             </Tab>
 
-            <Tab label="Acciones">
+            <Tab label={t("contacto.acciones")}>
               <Acciones contacto={contacto} />
             </Tab>
           </Tabs>
@@ -90,14 +92,14 @@ export const DetalleContacto = ({
                 onClick={() => emitir("contacto_cambiado", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("contacto.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_contacto_cancelada")}
               >
-                Cancelar
+                {t("contacto.cancelar")}
               </QBoton>
             </div>
           )}

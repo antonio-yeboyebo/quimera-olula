@@ -11,10 +11,12 @@ import { Divisa } from "../diseño.ts";
 import { REGLA_DIVISA } from "../dominio.ts";
 import { criteriaDivisasDefecto, metaFiltroDivisa, metaTablaDivisa } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Divisas (Eneboo `divisas.ui`), en Organización > Tablas generales. */
 export const MaestroConDetalleDivisa = () => {
 
+    const t = useTComun();
     const criteriaInicial = useMemo(criteriaDivisasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleDivisa = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las divisas.</p>;
+        return <p>{t("divisas.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetalleDivisa = () => {
                 seleccionada={divisas.activo}
                 Maestro={
                     <>
-                        <h2>Divisas</h2>
+                        <h2>{t("divisas.divisas")}</h2>
                         <Listado<Divisa>
                             metaTabla={metaTablaDivisa}
                             metaFiltro={metaFiltroDivisa}
@@ -54,7 +56,7 @@ export const MaestroConDetalleDivisa = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_divisa_solicitado")}>
-                                        Nueva divisa
+                                        {t("divisas.nuevaDivisa")}
                                     </QBoton>
                                 </div>
                             )}

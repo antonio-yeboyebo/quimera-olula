@@ -2,6 +2,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { OportunidadVenta as OportunidadVentaTipo } from "../../oportunidadventa/diseño.ts";
 import { getOportunidadesVenta } from "../../oportunidadventa/infraestructura.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface OportunidadVentaProps {
   descripcion?: string;
@@ -17,7 +18,7 @@ export const OportunidadVenta = ({
   descripcion = "",
   valor,
   nombre = "oportunidad_id",
-  label = "Oportunidad",
+  label = tCrm("comun.oportunidad"),
   deshabilitado = false,
   enlace = "/crm/oportunidadventa?id={id}",
   onChange,

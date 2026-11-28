@@ -28,6 +28,8 @@ import {
 import "./DetalleReciboCompra.css";
 import { OrdenarPagoReciboCompra } from "./ordenar_pago/OrdenarPagoReciboCompra.tsx";
 import { getMaquina } from "./maquina.js";
+import { useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 export const DetalleReciboCompra = ({
   id,
@@ -36,6 +38,7 @@ export const DetalleReciboCompra = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const { ctx, emitir } = useMaquina(
     getMaquina,
     contextoDetalleReciboCompraInicial,
@@ -51,7 +54,7 @@ export const DetalleReciboCompra = ({
 
   if (!ctx.recibo.id) return null;
 
-  const titulo = (r: ReciboCompra) => r.codigo || `Recibo ${r.id}`;
+  const titulo = (r: ReciboCompra) => r.codigo || t("recibo_compra.reciboId", { id: r.id });
   const bancaHabilitada = bancaActiva();
 
   const ultimo = ultimoMovimiento(ctx.recibo);
@@ -60,20 +63,20 @@ export const DetalleReciboCompra = ({
     // TES-02: pago y devolución manuales, como `pagosdevolprov` en el ERP.
     reciboCompraDevolvible(ctx.recibo)
       ? {
-          texto: "Devolver",
+          texto: t("recibo_compra.devolver"),
           onClick: () => emitir("devolucion_solicitada"),
         }
       : {
-          texto: "Pagar",
+          texto: t("recibo_compra.pagar"),
           onClick: () => emitir("pagar_solicitado"),
           deshabilitado: !reciboCompraPagable(ctx.recibo),
         },
     {
-      texto: "Editar recibo",
+      texto: t("recibo_compra.editarRecibo"),
       onClick: () => emitir("cambio_recibo_solicitado"),
     },
     {
-      texto: "Anular último pago o devolución",
+      texto: t("recibo_compra.anularUltimoPagoODevolucion"),
       onClick: () => emitir("anulacion_pago_solicitada"),
       deshabilitado: !reciboCompraAnulable(ctx.recibo),
       advertencia: true,
@@ -84,7 +87,7 @@ export const DetalleReciboCompra = ({
     //   onClick: () => emitir("traza_solicitada"),
     // },
     bancaHabilitada && {
-      texto: "Pagar al proveedor",
+      texto: t("recibo_compra.pagarAlProveedor"),
       onClick: () => emitir("ordenar_pago_solicitado"),
       deshabilitado: !reciboCompraPagable(ctx.recibo),
     },
@@ -102,15 +105,15 @@ export const DetalleReciboCompra = ({
         <QuimeraAcciones acciones={acciones} vertical />
 
         <quimera-formulario>
-          <QInput label="Código" {...uiProps("codigo")} />
-          <QInput label="Estado" {...uiProps("estado")} />
-          <QInput label="Importe" {...uiProps("importe")} />
-          <QInput label="Fecha de emisión" {...uiProps("fechaEmision")} />
-          <QInput label="Fecha de vencimiento" {...uiProps("fechaVencimiento")} />
-          <QInput label="Proveedor" {...uiProps("nombreProveedor")} />
-          <QInput label="ID Fiscal" {...uiProps("idFiscal")} />
-          <QInput label="Factura" {...uiProps("facturaId")} />
-          <QInput label="Cuenta de domiciliación" {...uiProps("nombreCuentaDomiciliacion")} />
+          <QInput label={t("recibo_compra.codigo")} {...uiProps("codigo")} />
+          <QInput label={t("recibo_compra.estado")} {...uiProps("estado")} valor={textoEstado(String(uiProps("estado").valor ?? ""))} />
+          <QInput label={t("recibo_compra.importe")} {...uiProps("importe")} />
+          <QInput label={t("recibo_compra.fechaDeEmision")} {...uiProps("fechaEmision")} />
+          <QInput label={t("recibo_compra.fechaDeVencimiento")} {...uiProps("fechaVencimiento")} />
+          <QInput label={t("recibo_compra.proveedor")} {...uiProps("nombreProveedor")} />
+          <QInput label={t("recibo_compra.idFiscal")} {...uiProps("idFiscal")} />
+          <QInput label={t("recibo_compra.factura")} {...uiProps("facturaId")} />
+          <QInput label={t("recibo_compra.cuentaDeDomiciliacion")} {...uiProps("nombreCuentaDomiciliacion")} />
         </quimera-formulario>
 
         <PagosReciboVenta pagos={ctx.recibo.pagos} />

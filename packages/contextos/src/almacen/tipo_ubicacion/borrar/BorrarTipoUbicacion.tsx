@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { TipoUbicacion } from "../diseño.ts";
 import { deleteTipoUbicacion } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarTipoUbicacion = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarTipoUbicacion = ({
     tipoUbicacion: TipoUbicacion;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteTipoUbicacion(tipoUbicacion.id);
         publicar("tipo_ubicacion_borrado", tipoUbicacion.id);
@@ -25,8 +27,8 @@ export const BorrarTipoUbicacion = ({
         <QModalConfirmacion
             nombre="borrarTipoUbicacion"
             abierto={true}
-            titulo="Borrar tipo de ubicación"
-            mensaje={`¿Está seguro de que desea borrar el tipo de ubicación "${tipoUbicacion.codigo}"?`}
+            titulo={t("tipo_ubicacion.borrarTipoDeUbicacion")}
+            mensaje={t("tipo_ubicacion.estaSeguroDeQueDeseaBorrar", { codigo: tipoUbicacion.codigo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

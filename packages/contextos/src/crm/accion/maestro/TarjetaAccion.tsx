@@ -1,6 +1,7 @@
 import { QAvatar, QIcono, QTarjetaGenerica } from "@olula/componentes/index.js";
 import { formatearFechaDate } from "@olula/lib/dominio.js";
 import { Accion } from "../diseño.ts";
+import { textoEstadoAccion } from "../../comun/valores/texto_opcion.ts";
 
 const iconoTipoAccion = (tipo: string) => {
   const icono = {
@@ -24,7 +25,7 @@ export const TarjetaAccion = (accion: Accion) => {
       }
       arribaIzquierda={accion.descripcion}
       arribaDerecha={accion.fecha ? formatearFechaDate(accion.fecha) : ""}
-      abajoIzquierda={accion.estado}
+      abajoIzquierda={textoEstadoAccion(accion.estado)}
       abajoDerecha={accion.nombre_cliente}
     />
   );

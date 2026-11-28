@@ -7,13 +7,16 @@ import {
 import { Incidencia } from "../diseño.ts";
 import { getIncidencias } from "../infraestructura.ts";
 import { ContextoMaestroIncidencias, EstadoMaestroIncidencias } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
+import { descripcionEstadoIncidencia } from "../../comun/componentes/EstadoIncidencia.tsx";
+import { descripcionPrioridadIncidencia } from "../../comun/valores/prioridad_incidencia.ts";
 
 export const metaTablaIncidencia: MetaTabla<Incidencia> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripcion" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "estado", cabecera: "Estado" },
-    { id: "prioridad", cabecera: "Prioridad" },
+    { id: "id", get cabecera() { return tCrm("incidencia.codigo"); } },
+    { id: "descripcion", get cabecera() { return tCrm("incidencia.descripcion2"); } },
+    { id: "nombre", get cabecera() { return tCrm("incidencia.nombre"); } },
+    { id: "estado", get cabecera() { return tCrm("incidencia.estado"); }, render: (i) => descripcionEstadoIncidencia(i.estado) },
+    { id: "prioridad", get cabecera() { return tCrm("incidencia.prioridad"); }, render: (i) => descripcionPrioridadIncidencia(i.prioridad) },
 ];
 
 export const estadosIncidenciaOcultosPorDefecto = ["rechazada", "cerrada"];

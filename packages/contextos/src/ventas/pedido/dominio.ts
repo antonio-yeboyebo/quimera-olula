@@ -1,20 +1,21 @@
 import { MetaTabla } from "@olula/componentes/index.js";
 import { cambioClienteVentaVacio, clienteVentaVacio, ventaVacia, widgetsDocumentoVenta } from "../venta/dominio.ts";
 import { CambioClientePedido, Pedido } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
-export const metaTablaPedido: MetaTabla<Pedido> = [
+export const metaTablaPedido = (): MetaTabla<Pedido> => [
     {
         id: "codigo",
-        cabecera: "Código",
+        cabecera: tVentas("documento.maestro.codigo"),
     },
     {
         id: "nombre_cliente",
-        cabecera: "Cliente",
+        cabecera: tVentas("documento.maestro.cliente"),
         render: (p) => p.cliente.nombre_cliente,
     },
     {
         id: "total",
-        cabecera: "Total",
+        cabecera: tVentas("documento.maestro.total"),
         tipo: "moneda",
         divisa: (pedido) => pedido.divisa_id,
     },
@@ -52,8 +53,8 @@ export const pedidoPendiente = (pedido: { servido?: string }): boolean => {
 };
 
 /** Widgets por defecto del maestro de pedidos (totales según el filtro activo). */
-export const widgetsPedido = widgetsDocumentoVenta("ventas.pedido", {
-    plural: "Pedidos",
-    total: "Importe total",
-    medio: "Pedido medio",
+export const widgetsPedido = () => widgetsDocumentoVenta("ventas.pedido", {
+    plural: tVentas("pedido.widgets.plural"),
+    total: tVentas("pedido.widgets.total"),
+    medio: tVentas("pedido.widgets.medio"),
 });

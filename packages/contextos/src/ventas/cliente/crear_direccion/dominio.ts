@@ -1,3 +1,4 @@
+import { tVentas } from "../../i18n/index.ts";
 import { MetaModelo } from "@olula/lib/dominio.js";
 import { NuevaDireccion } from "../diseño.ts";
 
@@ -20,3 +21,9 @@ export const nuevaDireccionVacia: NuevaDireccion = {
     apartado: '',
     telefono: '',
 }
+
+/** El valor se guarda tal cual (en español, como en Eneboo); solo se traduce lo que se ve. */
+const TIPOS_VIA = ["Calle", "Avenida", "Plaza", "Paseo", "Camino", "Carretera"] as const;
+
+export const opcionesTipoVia = () =>
+    TIPOS_VIA.map((valor) => ({ valor, descripcion: tVentas(`cliente.direccion.tiposVia.${valor}`) }));

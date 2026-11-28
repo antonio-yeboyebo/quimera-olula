@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.js";
 import { PagoRecibo } from "./diseño.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 export const pagoReciboVacio: PagoRecibo = {
     cuenta_pago_id: "",
@@ -17,7 +18,7 @@ export const metaPagoRecibo = (enDivisa: boolean): MetaModelo<PagoRecibo> => ({
             tipo: "numero",
             requerido: enDivisa,
             validacion: (m) => !enDivisa || m.tasa_conversion > 0
-                ? true : "La tasa de cambio debe ser mayor que 0",
+                ? true : tTesoreria("recibo_venta.laTasaDeCambioDebeSer"),
         },
     },
 });

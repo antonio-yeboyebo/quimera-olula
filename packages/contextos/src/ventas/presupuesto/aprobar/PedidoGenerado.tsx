@@ -5,6 +5,7 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
 import { PedidoCreado } from "../diseño.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 type UrlPorId = (id: string) => string;
 
@@ -15,6 +16,7 @@ export const PedidoGenerado = ({
     publicar: EmitirEvento;
     pedido: PedidoCreado;
 }) => {
+    const t = useTVentas();
     const navigate = useNavigate();
     const { app } = useContext(FactoryCtx);
     const urlPedido =
@@ -27,18 +29,18 @@ export const PedidoGenerado = ({
         <QModal
             nombre="pedidoGenerado"
             abierto={true}
-            titulo="Pedido generado"
+            titulo={t("presupuesto.aprobar.pedidoGenerado")}
             onCerrar={cerrar}
         >
             <div className="mensaje" style={{ whiteSpace: "pre-line" }}>
-                El pedido se ha generado correctamente.
+                {t("presupuesto.aprobar.pedidoGeneradoOk")}
             </div>
             <div className="botones">
                 <QBoton variante="texto" onClick={cerrar}>
-                    Seguir en el presupuesto
+                    {t("presupuesto.aprobar.seguirEnPresupuesto")}
                 </QBoton>
                 <QBoton onClick={() => navigate(urlPedido(pedido.id))}>
-                    Ir al pedido {pedido.codigo}
+                    {t("presupuesto.aprobar.irAlPedido", { codigo: pedido.codigo })}
                 </QBoton>
             </div>
         </QModal>

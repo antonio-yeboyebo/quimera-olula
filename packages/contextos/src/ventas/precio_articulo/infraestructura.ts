@@ -10,6 +10,7 @@ import {
     PostPrecioArticulo,
     PrecioArticulo,
 } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().PRECIO_ARTICULO;
 
@@ -90,14 +91,14 @@ export const getPreciosArticuloCliente: GetPreciosArticuloCliente = async (clien
         baseUrl,
         criteriaDeCliente(clienteId),
         precioArticuloDesdeApi,
-        "Error al obtener los precios por artículo del cliente"
+        tVentas("precioArticulo.errores.obtener")
     );
 
 export const postPrecioArticulo: PostPrecioArticulo = async (clienteId, nuevo) => {
     const respuesta = await RestAPI.post<NuevoPrecioArticuloApi>(
         baseUrl,
         nuevoPrecioArticuloAApi(clienteId, nuevo),
-        "Error al crear el precio por artículo"
+        tVentas("precioArticulo.errores.crear")
     );
     return respuesta.id;
 };
@@ -109,10 +110,10 @@ export const patchPrecioArticulo: PatchPrecioArticulo = async (id, cambios) => {
     await RestAPI.patch<{ cambios: CambiosPrecioArticuloApi }>(
         `${baseUrl}/${id}`,
         { cambios: cambiosPrecioArticuloAApi(cambios) },
-        "Error al cambiar el precio por artículo"
+        tVentas("precioArticulo.errores.cambiar")
     );
 };
 
 export const deletePrecioArticulo: DeletePrecioArticulo = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el precio por artículo");
+    await RestAPI.delete(`${baseUrl}/${id}`, tVentas("precioArticulo.errores.borrar"));
 };

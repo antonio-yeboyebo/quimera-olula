@@ -29,6 +29,7 @@ import {
     metaLineaEditableEntrada,
 } from "./recibir_albaran.ts";
 import "./RecibirAlbaran.css";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // Paso 1 — fila de detección (cantidad + lote + caducidad)
@@ -133,6 +134,7 @@ const FilaConfigPalet = ({
     idProveedor: string;
     onCambio: (actualizada: ConfigPaletSku) => void;
 }) => {
+    const t = useTAlmacen();
     const togglePalet = useCallback(() => {
         onCambio({ ...config, es_palet: !config.es_palet });
     }, [config, onCambio]);
@@ -162,14 +164,14 @@ const FilaConfigPalet = ({
                     onClick={togglePalet}
                     variante={config.es_palet ? "solido" : "borde"}
                 >
-                    {config.es_palet ? "Paletizado ✓" : "Paletizado"}
+                    {config.es_palet ? t("pedido_compra.paletizado") : t("pedido_compra.paletizado2")}
                 </QBoton>
             </td>
             {config.es_palet && (
                 <>
                     <td className="recibir-input">
                         <QInput
-                            label="Nº palets"
+                            label={t("pedido_compra.nPalets")}
                             nombre="num_palets"
                             valor={String(config.num_palets)}
                             tipo="numero"
@@ -178,7 +180,7 @@ const FilaConfigPalet = ({
                     </td>
                     <td className="recibir-input" colSpan={2}>
                         <TipoCajaProv
-                            label="Caja interior"
+                            label={t("pedido_compra.cajaInterior")}
                             nombre="subcaja_compra_id"
                             valor={config.subcaja_compra_id ?? ""}
                             idProveedor={idProveedor}
@@ -291,7 +293,7 @@ const FilaLotePalet = ({
             <td className="recibir-cantidad">{lineaEditada.cantidad}</td>
             <td colSpan={3} className="recibir-asignar-palet">
                 {numPalets === 1 ? (
-                    <span className="recibir-palet-auto">Palet 1 (auto)</span>
+                    <span className="recibir-palet-auto">{tAlmacen("pedido_compra.palet1Auto")}</span>
                 ) : (
                     <div className="recibir-botones-palet">
                         {Array.from({ length: numPalets }, (_, i) => i + 1).map((n) => (
@@ -327,6 +329,7 @@ export const RecibirAlbaran = ({
     lineasPedido: LineaPedidoCompra[];
     lineasDetectadas: LineaNuevaEntradaDesdePedido[];
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaFormEntrada, formEntradaVacia);
 
     const [paso, setPaso] = useState<1 | 2>(1);
@@ -472,7 +475,7 @@ export const RecibirAlbaran = ({
         <QModal
             abierto={true}
             nombre="recibirAlbaran"
-            titulo={paso === 1 ? "Recibir albarán (1/2)" : "Cajas destino (2/2)"}
+            titulo={paso === 1 ? t("pedido_compra.recibirAlbaran12") : t("pedido_compra.cajasDestino22")}
             onCerrar={cancelar}
         >
             <div className="recibir-albaran">
@@ -481,13 +484,13 @@ export const RecibirAlbaran = ({
                     <table className="recibir-tabla">
                         <thead>
                             <tr>
-                                <th>SKU</th>
-                                <th>Descripción</th>
-                                <th>Por recibir</th>
-                                <th>Detectado</th>
-                                <th>Lote</th>
-                                <th>Caducidad</th>
-                                <th>Diferencia</th>
+                                <th>{t("pedido_compra.sku")}</th>
+                                <th>{t("pedido_compra.descripcion")}</th>
+                                <th>{t("pedido_compra.porRecibir")}</th>
+                                <th>{t("pedido_compra.detectado")}</th>
+                                <th>{t("pedido_compra.lote")}</th>
+                                <th>{t("pedido_compra.caducidad")}</th>
+                                <th>{t("pedido_compra.diferencia")}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -522,13 +525,13 @@ export const RecibirAlbaran = ({
                         <table className="recibir-tabla">
                             <thead>
                                 <tr>
-                                    <th>SKU</th>
-                                    <th>Descripción</th>
-                                    <th>Lote</th>
-                                    <th>Cantidad</th>
-                                    <th>Tipo caja</th>
-                                    <th>Cant./caja</th>
-                                    <th>Nº cajas / Palet</th>
+                                    <th>{t("pedido_compra.sku")}</th>
+                                    <th>{t("pedido_compra.descripcion")}</th>
+                                    <th>{t("pedido_compra.lote")}</th>
+                                    <th>{t("pedido_compra.cantidad")}</th>
+                                    <th>{t("pedido_compra.tipoCaja")}</th>
+                                    <th>{t("pedido_compra.cantCaja")}</th>
+                                    <th>{t("pedido_compra.nCajasPalet")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -583,7 +586,7 @@ export const RecibirAlbaran = ({
                         </table>
 
                         <quimera-formulario>
-                            <Ubicacion label="Ubicación de entrada" {...uiProps("ubicacionId")} />
+                            <Ubicacion label={t("pedido_compra.ubicacionDeEntrada")} {...uiProps("ubicacionId")} />
                         </quimera-formulario>
                     </>
                 )}
@@ -593,20 +596,20 @@ export const RecibirAlbaran = ({
                 {paso === 1 && (
                     <>
                         <QBoton onClick={cancelar} variante='borde'>
-                            Cancelar
+                            {t("pedido_compra.cancelar")}
                         </QBoton>
                         <QBoton onClick={irAPaso2} deshabilitado={!todasCantidadesValidas || !todosLotesValidos}>
-                            Siguiente
+                            {t("pedido_compra.siguiente")}
                         </QBoton>
                     </>
                 )}
                 {paso === 2 && (
                     <>
                         <QBoton onClick={() => setPaso(1)} variante='borde'>
-                            Atrás
+                            {t("pedido_compra.atras")}
                         </QBoton>
                         <QBoton onClick={crear} deshabilitado={!valido || !todasCajasValidas}>
-                            Crear entrada
+                            {t("pedido_compra.crearEntrada")}
                         </QBoton>
                     </>
                 )}

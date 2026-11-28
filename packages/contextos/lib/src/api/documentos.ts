@@ -1,6 +1,7 @@
 import { Filtro, Orden, Paginacion } from "../diseño.js";
 import { criteriaQuery } from "../infraestructura.js";
 import { RestAPI } from "./rest_api.js";
+import { tLib } from "../i18n/textos.ts";
 
 const DOCUMENTAL_BASE_URL = "/documental/documento";
 
@@ -157,7 +158,7 @@ export const DocumentosAPI = {
         const respuesta = await RestAPI.post(
             DOCUMENTAL_BASE_URL,
             formData,
-            "Error al guardar documento"
+            tLib("gen.api.errorAlGuardarDocumento")
         );
         return (respuesta as { id: string }).id;
     },
@@ -178,7 +179,7 @@ export const DocumentosAPI = {
                 vinculo_tipo: vinculoTipo,
                 vinculo_id: vinculoId,
             },
-            "Error al crear carpeta"
+            tLib("gen.api.errorAlCrearCarpeta")
         );
         return (respuesta as { id: string }).id;
     },
@@ -196,7 +197,7 @@ export const DocumentosAPI = {
      * @param documentoId ID del documento a eliminar
      */
     async eliminar(documentoId: string): Promise<void> {
-        await RestAPI.delete(`${DOCUMENTAL_BASE_URL}/${documentoId}`, "Error al borrar documento");
+        await RestAPI.delete(`${DOCUMENTAL_BASE_URL}/${documentoId}`, tLib("gen.api.errorAlBorrarDocumento"));
     },
 };
 

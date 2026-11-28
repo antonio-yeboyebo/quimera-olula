@@ -11,6 +11,7 @@ import {
 } from "@olula/componentes/index.js";
 import { HookModelo } from "@olula/lib/useModelo.js";
 import { Incidencia } from "../../diseño.ts";
+import { tCrm } from "../../../i18n/index.ts";
 
 export const TabGeneral = ({
   incidencia,
@@ -22,28 +23,28 @@ export const TabGeneral = ({
   return (
     <div className="TabGeneral">
       <quimera-formulario>
-        <QInput label="Descripción" {...uiProps("descripcion")} />
-        <QInput label="Nombre" {...uiProps("nombre")} />
-        <QDate label="Fecha" {...uiProps("fecha")} />
+        <QInput label={tCrm("incidencia.descripcion")} {...uiProps("descripcion")} />
+        <QInput label={tCrm("incidencia.nombre")} {...uiProps("nombre")} />
+        <QDate label={tCrm("incidencia.fecha")} {...uiProps("fecha")} />
         <PrioridadIncidencia {...uiProps("prioridad")} />
         <EstadoIncidencia {...uiProps("estado")} />
         <TipoIncidencia {...uiProps("tipo_incidencia")} />
         <Usuario
           {...uiProps("responsable_id", "nombre_responsable")}
-          label="Responsable"
+          label={tCrm("incidencia.responsable")}
         />
         <div className="Tabs">
           <Tabs>
-            <Tab label="Descripción">
+            <Tab label={tCrm("incidencia.descripcion")}>
               <QTextArea
-                label="Descripción larga"
+                label={tCrm("incidencia.descripcionLarga")}
                 rows={5}
                 {...uiProps("descripcion_larga")}
               />
             </Tab>
-            <Tab label="Resolución">
+            <Tab label={tCrm("incidencia.resolucion")}>
               <QTextArea
-                label="Resolución"
+                label={tCrm("incidencia.resolucion")}
                 rows={5}
                 {...uiProps("resolucion")}
               />

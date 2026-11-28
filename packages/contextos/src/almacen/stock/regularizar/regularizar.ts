@@ -1,9 +1,10 @@
 import { MetaModelo } from "@olula/lib/dominio.js";
 import { NuevaRegularizacionStock } from "../diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 const cantidadNoNegativa = (m: NuevaRegularizacionStock): boolean | string =>
     m.cantidad === null || m.cantidad === undefined || m.cantidad < 0
-        ? "La cantidad debe ser mayor o igual que cero"
+        ? tAlmacen("stock.laCantidadDebeSerMayorO")
         : true;
 
 export const metaNuevaRegularizacionStock: MetaModelo<NuevaRegularizacionStock> = {

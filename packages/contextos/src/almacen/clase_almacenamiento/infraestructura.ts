@@ -9,6 +9,7 @@ import {
     PatchClaseAlmacenamiento,
     PostClaseAlmacenamiento,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/clase_almacenamiento`;
 
@@ -49,7 +50,7 @@ export const postClaseAlmacenamiento: PostClaseAlmacenamiento = async (nueva) =>
     const respuesta = await RestAPI.post<NuevaClaseAlmacenamientoApi>(
         baseUrl,
         nuevaClaseAApi(nueva),
-        "Error al crear clase de almacenamiento"
+        tAlmacen("clase_almacenamiento.errorAlCrearClaseDeAlmacenamiento")
     );
     return respuesta.id;
 };
@@ -58,10 +59,10 @@ export const patchClaseAlmacenamiento: PatchClaseAlmacenamiento = async (id, cam
     await RestAPI.patch<CambiosClaseAlmacenamientoApi>(
         `${baseUrl}/${id}`,
         cambiosClaseAApi(cambios),
-        "Error al actualizar clase de almacenamiento"
+        tAlmacen("clase_almacenamiento.errorAlActualizarClaseDeAlmacenamiento")
     );
 };
 
 export const deleteClaseAlmacenamiento: DeleteClaseAlmacenamiento = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar clase de almacenamiento");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("clase_almacenamiento.errorAlBorrarClaseDeAlmacenamiento"));
 };

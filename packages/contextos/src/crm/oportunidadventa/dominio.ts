@@ -1,5 +1,6 @@
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { EstadoOportunidad, OportunidadVenta } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 export type SerieEstadoPrevision = {
     estadoId: string;
@@ -116,7 +117,7 @@ export const agruparPrevisionPorEstado = (
             acumulado.set(estadoId, {
                 estadoId,
                 estadoDescripcion:
-                    oportunidad.descripcion_estado ?? `Estado ${estadoId}`,
+                    oportunidad.descripcion_estado ?? tCrm("oportunidadventa.estadoEstadoid", { estadoId }),
                 probabilidad,
                 oportunidades: totales?.oportunidades ?? 0,
                 importeTotal: totales?.totalImporte ?? 0,

@@ -33,6 +33,8 @@ import { GenerarEnlaceCobroReciboVenta } from "./enlace_cobro/GenerarEnlaceCobro
 import { getMaquina } from "./maquina.js";
 import { PagarReciboVenta } from "./pagar/PagarReciboVenta.tsx";
 import { PagosReciboVenta } from "./pagos/PagosReciboVenta.tsx";
+import { useTTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 export const DetalleReciboVenta = ({
   id,
@@ -41,6 +43,7 @@ export const DetalleReciboVenta = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const { ctx, emitir } = useMaquina(
     getMaquina,
     contextoDetalleReciboVentaInicial,
@@ -56,7 +59,7 @@ export const DetalleReciboVenta = ({
 
   if (!ctx.recibo.id) return null;
 
-  const titulo = (r: ReciboVenta) => r.codigo || `Recibo ${r.id}`;
+  const titulo = (r: ReciboVenta) => r.codigo || t("recibo_venta.reciboId", { id: r.id });
   const ultimo = [...ctx.recibo.pagos]
     .sort((a, b) => (a.fecha?.getTime() ?? 0) - (b.fecha?.getTime() ?? 0) || Number(a.id) - Number(b.id))
     .at(-1);
@@ -67,37 +70,37 @@ export const DetalleReciboVenta = ({
   const acciones = [
     reciboDevolvible(ctx.recibo)
       ? {
-          texto: "Devolver",
+          texto: t("recibo_venta.devolver"),
           onClick: () => emitir("devolucion_solicitada"),
         }
       : {
-          texto: "Pagar",
+          texto: t("recibo_venta.pagar"),
           onClick: () => emitir("pagar_solicitado"),
           deshabilitado: !reciboPagable(ctx.recibo),
         },
     pasarelaHabilitada && {
-      texto: "Enlace de pago con tarjeta",
+      texto: t("recibo_venta.enlaceDePagoConTarjeta"),
       onClick: () => emitir("enlace_tarjeta_solicitado"),
       deshabilitado: !reciboPagable(ctx.recibo),
     },
     bancaHabilitada && {
-      texto: "Enviar enlace de cobro",
+      texto: t("recibo_venta.enviarEnlaceDeCobro"),
       onClick: () => emitir("enlace_cobro_solicitado"),
       deshabilitado: !reciboPagable(ctx.recibo),
     },
     {
-      texto: "Editar recibo",
+      texto: t("recibo_venta.editarRecibo"),
       onClick: () => emitir("cambio_recibo_solicitado"),
       deshabilitado: estadoRecibo === "agrupado",
     },
     {
-      texto: "Anular último pago o devolución",
+      texto: t("recibo_venta.anularUltimoPagoODevolucion"),
       onClick: () => emitir("anulacion_pago_solicitada"),
       deshabilitado: !ultimo || estadoRecibo === "remesado" || estadoRecibo === "agrupado",
       advertencia: true,
     },
     {
-      texto: "Deshacer agrupación",
+      texto: t("recibo_venta.deshacerAgrupacion"),
       onClick: () => emitir("desagrupado_solicitado"),
       deshabilitado: !reciboDesagrupable(ctx.recibo),
       advertencia: true,
@@ -121,18 +124,18 @@ export const DetalleReciboVenta = ({
         <QuimeraAcciones acciones={acciones} vertical />
 
         <quimera-formulario>
-          <QInput label="Código" {...uiProps("codigo")} />
-          <QInput label="Estado" {...uiProps("estado")} />
-          <QInput label="Importe" {...uiProps("importe")} />
-          <QInput label="Fecha de emisión" {...uiProps("fechaEmision")} />
+          <QInput label={t("recibo_venta.codigo")} {...uiProps("codigo")} />
+          <QInput label={t("recibo_venta.estado")} {...uiProps("estado")} valor={textoEstado(String(uiProps("estado").valor ?? ""))} />
+          <QInput label={t("recibo_venta.importe")} {...uiProps("importe")} />
+          <QInput label={t("recibo_venta.fechaDeEmision")} {...uiProps("fechaEmision")} />
           <QInput
-            label="Fecha de vencimiento"
+            label={t("recibo_venta.fechaDeVencimiento")}
             {...uiProps("fechaVencimiento")}
           />
           <Cliente {...uiProps("clienteId", "nombreCliente")} deshabilitado />
-          <QInput label="ID Fiscal" {...uiProps("idFiscal")} />
-          <QInput label="Factura" {...uiProps("facturaId")} />
-          <QInput label="Cuenta de domiciliación" {...uiProps("nombreCuentaDomiciliacion")} />
+          <QInput label={t("recibo_venta.idFiscal")} {...uiProps("idFiscal")} />
+          <QInput label={t("recibo_venta.factura")} {...uiProps("facturaId")} />
+          <QInput label={t("recibo_venta.cuentaDeDomiciliacion")} {...uiProps("nombreCuentaDomiciliacion")} />
         </quimera-formulario>
 
         {ctx.recibo.recibosAgrupados.length > 0 && (
@@ -149,8 +152,8 @@ export const DetalleReciboVenta = ({
 
         {ctx.estado === "ENLACE_TARJETA" && (
           <EnlacePagoTarjeta
-            titulo={`Pago con tarjeta de ${ctx.recibo.nombreCliente || "el cliente"}`}
-            descripcion={`el recibo ${ctx.recibo.codigo}`}
+            titulo={t("recibo_venta.pagoConTarjetaDeValor", { valor: ctx.recibo.nombreCliente || t("recibo_venta.elCliente") })}
+            descripcion={t("recibo_venta.elReciboCodigo", { codigo: ctx.recibo.codigo })}
             generar={(email) => postEnlacePagoRecibo(ctx.recibo.id, email)}
             onCerrar={() => emitir("enlace_tarjeta_cerrado")}
           />

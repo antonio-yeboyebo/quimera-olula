@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { CamposLibroMayor } from "../detalle/CamposLibroMayor.tsx";
 import { postLibroMayor } from "../infraestructura.ts";
 import { metaNuevoLibroMayor, nuevoLibroMayorInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearLibroMayor = ({
     publicar,
@@ -19,6 +20,7 @@ export const CrearLibroMayor = ({
 }) => {
     // Memoizado: useModelo reinicia el formulario cada vez que cambia la
     // identidad del inicial, así que pasarlo en línea entra en bucle.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoLibroMayorInicial(ejercicioId),
         [ejercicioId]
@@ -51,7 +53,7 @@ export const CrearLibroMayor = ({
         <QModal
             abierto={true}
             nombre="crearLibroMayor"
-            titulo="Nuevo libro mayor"
+            titulo={t("libro_mayor.nuevoLibroMayor")}
             onCerrar={cancelar}
         >
             <div className="CrearLibroMayor">
@@ -65,7 +67,7 @@ export const CrearLibroMayor = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("libro_mayor.crear")}
                     </QBoton>
                 </div>
             </div>

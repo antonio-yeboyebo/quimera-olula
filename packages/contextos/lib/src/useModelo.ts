@@ -3,13 +3,14 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ContextoError, QError } from "./contexto.js";
 import { Modelo, TipoInput, ValorCampoUI } from "./diseño.js";
 import { FormModelo, getFormProps, MetaModelo, modeloEsValido, modeloModificado } from "./dominio.js";
+import { tLib } from "./i18n/textos.ts";
 
 const aQError = (error: unknown): QError => {
     const apiError = error as QError;
     const errorJS = error as Error;
 
     return {
-        nombre: apiError?.nombre ?? "Error",
+        nombre: apiError?.nombre ?? tLib("gen.useModelo.error"),
         descripcion: apiError?.descripcion ?? errorJS?.message,
     };
 };

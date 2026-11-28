@@ -1,3 +1,4 @@
+import { useTVentas } from "#/ventas/i18n/index.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { CrmContacto } from "../../cliente/diseño.ts";
@@ -19,12 +20,13 @@ export const ContactoSelector = ({
   descripcion = "",
   valor,
   nombre = "contacto_id",
-  label = "Seleccionar contacto",
+  label,
   deshabilitado = false,
   excluir = [],
   obtenerContactos = getCrmContactos,
   onChange,
 }: ContactoSelectorProps) => {
+  const t = useTVentas();
   const obtenerOpciones = async (valor: string) => {
     if (valor.length < 3) return [];
 
@@ -50,7 +52,7 @@ export const ContactoSelector = ({
 
   return (
     <QAutocompletar
-      label={label}
+      label={label ?? t("comun.seleccionarContacto")}
       nombre={nombre}
       onChange={onChange}
       valor={valor}

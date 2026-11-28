@@ -18,6 +18,7 @@ import { BorrarUbicacion } from "./BorrarUbicacion.tsx";
 import "./DetalleUbicacion.css";
 import { getMaquina } from "./maquina.ts";
 import { StocksUbicacion } from "./stocks/StocksUbicacion.tsx";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 const titulo = (ubicacion: Ubicacion) => ubicacion.codigo as string;
 
@@ -28,6 +29,7 @@ export const DetalleUbicacion = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(
@@ -67,19 +69,19 @@ export const DetalleUbicacion = ({
         >
             <div className="DetalleUbicacion">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
-                    <QBoton variante="borde" enlace={urlMapa({ ubicacionId: ctx.ubicacion.id })}>Ver en el mapa</QBoton>
+                    <QBoton onClick={() => emitir("borrado_solicitado")}>{t("ubicacion.borrar")}</QBoton>
+                    <QBoton variante="borde" enlace={urlMapa({ ubicacionId: ctx.ubicacion.id })}>{t("ubicacion.verEnElMapa")}</QBoton>
                 </div>
                     <quimera-formulario>
-                        <QInput label="Código" {...modelo.uiProps("codigo")} />
+                        <QInput label={t("ubicacion.codigo")} {...modelo.uiProps("codigo")} />
                         <Zona {...modelo.uiProps("idZona")} />
                         <PasilloZona zonaId={modelo.modelo.idZona} {...modelo.uiProps("pasilloId")} />
-                        <QInput label="Módulo" {...modelo.uiProps("modulo")} />
-                        <QInput label="Cara" nombre="cara" valor={descripcionCaraUbicacion(ctx.ubicacion.cara)} soloLectura />
-                        <QInput label="Nivel" {...modelo.uiProps("nivel")} />
-                        <QInput label="Hueco" {...modelo.uiProps("hueco")} />
+                        <QInput label={t("ubicacion.modulo")} {...modelo.uiProps("modulo")} />
+                        <QInput label={t("ubicacion.cara")} nombre="cara" valor={descripcionCaraUbicacion(ctx.ubicacion.cara)} soloLectura />
+                        <QInput label={t("ubicacion.nivel")} {...modelo.uiProps("nivel")} />
+                        <QInput label={t("ubicacion.hueco")} {...modelo.uiProps("hueco")} />
                         <TipoUbicacion {...modelo.uiProps("tipoUbicacionId")} />
-                        <QSelect label="Estado" {...modelo.uiProps("estado")} opciones={estadosUbicacion} />
+                        <QSelect label={t("ubicacion.estado")} {...modelo.uiProps("estado")} opciones={estadosUbicacion} />
                     </quimera-formulario>
                     <StocksUbicacion stocks={ctx.stocks} />
             </div>

@@ -17,6 +17,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabCriterios } from "./TabCriterios.tsx";
 import { TabResultado } from "./TabResultado.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleCuentasAnuales = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleCuentasAnuales = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCuentasAnualesInicial,
@@ -52,7 +54,7 @@ export const DetalleCuentasAnuales = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("cuentas_anuales.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -74,7 +76,7 @@ export const DetalleCuentasAnuales = ({
                 <Tabs
                     children={[
                         <Tab
-                            label="Criterios"
+                            label={t("cuentas_anuales.criterios")}
                             key="tab-criterios"
                             children={
                                 <TabCriterios
@@ -84,7 +86,7 @@ export const DetalleCuentasAnuales = ({
                             }
                         />,
                         <Tab
-                            label="Resultado"
+                            label={t("cuentas_anuales.resultado")}
                             key="tab-resultado"
                             children={
                                 <TabResultado

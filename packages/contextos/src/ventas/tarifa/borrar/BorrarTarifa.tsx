@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Tarifa } from "../diseño.js";
 import { deleteTarifa } from "../infraestructura.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * El servidor rechaza con 409 el borrado de una tarifa que tenga artículos
@@ -18,6 +19,7 @@ export const BorrarTarifa = ({
   tarifa: Tarifa;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const borrar_ = useCallback(async () => {
     await deleteTarifa(tarifa.id);
     publicar("tarifa_borrada", tarifa);
@@ -34,8 +36,8 @@ export const BorrarTarifa = ({
     <QModalConfirmacion
       nombre="borrarTarifa"
       abierto={true}
-      titulo="Borrar tarifa"
-      mensaje={`¿Está seguro de que desea borrar la tarifa ${tarifa.nombre}?`}
+      titulo={t("tarifa.borrar.titulo")}
+      mensaje={t("tarifa.borrar.mensaje", { nombre: tarifa.nombre })}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

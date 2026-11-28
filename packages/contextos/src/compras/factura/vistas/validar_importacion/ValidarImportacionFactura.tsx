@@ -36,6 +36,7 @@ import { getMaquina } from "./maquina.ts";
 import { ResumenImportacion } from "./ResumenImportacion.tsx";
 import { VisorFichero } from "./VisorFichero.tsx";
 import "./ValidarImportacionFactura.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 type Props = {
     facturaLeida: FacturaLeida;
@@ -54,6 +55,7 @@ export const ValidarImportacionFactura = ({
     onConfirmar,
     onCancelar,
 }: Props) => {
+    const t = useTCompras();
     const contextoInicial = useMemo<ContextoValidarImportacion>(
         () => ({
             estado: propuestaInicial ? "EDITANDO" : "CARGANDO_PROPUESTA",
@@ -97,14 +99,14 @@ export const ValidarImportacionFactura = ({
         <QModal
             abierto={true}
             nombre="validarImportacionFactura"
-            titulo="Validar importación de factura"
+            titulo={t("factura.importacion.titulo")}
             onCerrar={onCancelar}
             pantallaCompleta
         >
             <div className="ValidarImportacionFactura">
                 <div className="panel-datos">
                     <div className="datos">
-                        {!propuesta && <div>Calculando propuesta...</div>}
+                        {!propuesta && <div>{t("factura.importacion.calculando")}</div>}
 
                         {propuesta && (
                             <>
@@ -137,13 +139,13 @@ export const ValidarImportacionFactura = ({
 
                     <div className="botones">
                         <QBoton onClick={onCancelar} variante="texto">
-                            Cancelar
+                            {t("comun.botones.cancelar")}
                         </QBoton>
                         <QBoton
                             onClick={() => emitir("confirmar_solicitado")}
                             deshabilitado={estado !== "EDITANDO" || motivos.length > 0}
                         >
-                            Confirmar
+                            {t("factura.importacion.confirmar")}
                         </QBoton>
                     </div>
 
@@ -161,9 +163,9 @@ export const ValidarImportacionFactura = ({
                         <QModalConfirmacion
                             nombre="confirmarImportacionFactura"
                             abierto={true}
-                            titulo="Importar factura"
-                            mensaje="Se creará la factura con estos datos:"
-                            labelAceptar="Importar"
+                            titulo={t("factura.importacion.importarTitulo")}
+                            mensaje={t("factura.importacion.importarMensaje")}
+                            labelAceptar={t("factura.importacion.importar")}
                             onCerrar={() => emitir("confirmacion_cancelada")}
                             onAceptar={aceptar}
                         >
@@ -190,6 +192,7 @@ const Cabecera = ({
     propuesta: PropuestaImportacion;
     emitir: Emitir;
 }) => {
+    const t = useTCompras();
     const discordante = hayTotalDiscordante(propuesta);
 
     return (
@@ -209,7 +212,7 @@ const Cabecera = ({
                     }
                 />
                 <QInput
-                    label="Nº factura proveedor"
+                    label={t("comun.documento.numeroFacturaProveedor")}
                     nombre="numeroProveedor"
                     valor={leida.numeroProveedor ?? ""}
                     onChange={(v) =>
@@ -217,7 +220,7 @@ const Cabecera = ({
                     }
                 />
                 <QInput
-                    label="Fecha"
+                    label={t("comun.campos.fecha")}
                     nombre="fecha"
                     tipo="fecha"
                     valor={leida.fecha ?? ""}
@@ -226,16 +229,16 @@ const Cabecera = ({
             </quimera-formulario>
 
             <div className="totales">
-                <span>Total leído: <strong>{formatearImporte(propuesta.totalLeido)}</strong></span>
+                <span>{t("factura.importacion.totalLeido")}: <strong>{formatearImporte(propuesta.totalLeido)}</strong></span>
                 <TotalComparado
-                    etiqueta="Total calculado"
+                    etiqueta={t("factura.importacion.totalCalculado")}
                     valor={propuesta.totalCalculado}
                     leido={propuesta.totalLeido}
                 />
                 {/* Sin precio teórico en todas las líneas no hay total teórico. */}
                 {propuesta.totalTeorico !== null && (
                     <TotalComparado
-                        etiqueta="Total teórico"
+                        etiqueta={t("factura.importacion.totalTeorico")}
                         valor={propuesta.totalTeorico}
                         leido={propuesta.totalLeido}
                     />
@@ -250,7 +253,7 @@ const Cabecera = ({
 
             {discordante && (
                 <QCheckbox
-                    label="Aceptar diferencia"
+                    label={t("factura.importacion.aceptarDiferencia")}
                     nombre="aceptarTotalDiscordante"
                     valor={leida.aceptarTotalDiscordante === true}
                     onChange={(v) =>
@@ -274,6 +277,7 @@ const LineasImportacion = ({
     propuesta: PropuestaImportacion;
     emitir: Emitir;
 }) => {
+    const t = useTCompras();
     const editar = (indice: number, cambios: Partial<LineaFacturaLeida>) =>
         emitir("leida_editada", cambiarLinea(leida, indice, cambios));
 
@@ -286,14 +290,14 @@ const LineasImportacion = ({
 
     return (
         <div className="lineas">
-            <h4>Líneas</h4>
+            <h4>{t("comun.documento.pestanas.lineas")}</h4>
             {hayCuentaEspecial && (
                 <div className="aviso">
-                    Hay líneas que se contabilizarán en la cuenta especial de compras
-                    {cuentaEspecial
-                        ? ` (${cuentaEspecial.codigo} - ${cuentaEspecial.descripcion})`
-                        : ""}
-                    . Asigne un artículo con subcuenta si no es lo deseado.
+                    {t("factura.importacion.cuentaEspecial", {
+                        cuenta: cuentaEspecial
+                            ? ` (${cuentaEspecial.codigo} - ${cuentaEspecial.descripcion})`
+                            : "",
+                    })}
                 </div>
             )}
             <table className="tabla-lineas">
@@ -339,6 +343,7 @@ const FilaLinea = ({
     reproponer: () => Promise<void>;
     emitir: Emitir;
 }) => {
+    const t = useTCompras();
     const i = pl.indice;
     const sc = pl.subcuenta;
     // Sin coste de proveedor el teórico es un cero sin significado: no se muestra.
@@ -356,7 +361,7 @@ const FilaLinea = ({
                     <div className="articulo-linea">
                         <Articulo
                             nombre={`articulo_${i}`}
-                            label="Artículo"
+                            label={t("comun.campos.articulo")}
                             valor={l.articuloId ?? ""}
                             onChange={(op) =>
                                 emitir(
@@ -373,22 +378,22 @@ const FilaLinea = ({
                                 tamaño="pequeño"
                                 onClick={() => emitir("crear_articulo_solicitado", i)}
                             >
-                                Crear artículo
+                                {t("factura.importacion.crearArticulo")}
                             </QBoton>
                         )}
                     </div>
                 </td>
                 <td>
                     <div className="datos-linea">
-                        <Dato etiqueta="Grupo IVA" valor={pl.grupoIvaProductoId ?? "—"} />
+                        <Dato etiqueta={t("factura.importacion.grupoIva")} valor={pl.grupoIvaProductoId ?? "—"} />
                         <div className={`dato subcuenta${sc?.origen === "cuenta_especial" ? " destacado" : ""}`}>
-                            <span className="etiqueta">Subcuenta de gasto</span>
+                            <span className="etiqueta">{t("factura.importacion.subcuentaGasto")}</span>
                             <span className="valor">
                                 {sc ? (
                                     <>
                                         {sc.origen === "cuenta_especial" && "⚠ "}
                                         {sc.codigo} {sc.descripcion}
-                                        <small> ({sc.origen.replace("_", " ")})</small>
+                                        <small> ({t(`factura.importacion.origenes.${sc.origen}`)})</small>
                                     </>
                                 ) : (
                                     "—"
@@ -396,7 +401,7 @@ const FilaLinea = ({
                             </span>
                         </div>
                         <Dato
-                            etiqueta="Línea de albarán"
+                            etiqueta={t("factura.importacion.lineaAlbaran")}
                             valor={textoAlbaranLinea(propuesta.albaranes, pl.albaranLineaId) || "—"}
                         />
                         {pl.alertas.length > 0 && (
@@ -414,7 +419,7 @@ const FilaLinea = ({
             <tr className="fila-inferior">
                 <td>
                     <QInput
-                        label="Descripción"
+                        label={t("comun.campos.descripcion")}
                         nombre={`descripcion_${i}`}
                         valor={l.descripcion ?? ""}
                         onChange={(v) => editar(i, { descripcion: v })}
@@ -424,7 +429,7 @@ const FilaLinea = ({
                 <td>
                     <div className="importes-linea">
                         <QInput
-                            label="Cantidad"
+                            label={t("comun.lineas.cantidad")}
                             nombre={`cantidad_${i}`}
                             tipo="decimal"
                             decimales={2}
@@ -433,7 +438,7 @@ const FilaLinea = ({
                             onBlur={reproponer}
                         />
                         <QInput
-                            label="Precio leído"
+                            label={t("factura.importacion.precioLeido")}
                             nombre={`precio_${i}`}
                             tipo="decimal"
                             decimales={4}
@@ -443,7 +448,7 @@ const FilaLinea = ({
                             onBlur={reproponer}
                         />
                         <QInput
-                            label="Dto. leído %"
+                            label={t("factura.importacion.dtoLeido")}
                             nombre={`dto_leido_${i}`}
                             tipo="decimal"
                             decimales={2}
@@ -452,7 +457,7 @@ const FilaLinea = ({
                             erroneo={dtoErroneo}
                         />
                         <QInput
-                            label="Total leído"
+                            label={t("factura.importacion.totalLeido")}
                             nombre={`total_leido_${i}`}
                             tipo="moneda"
                             valor={aTexto(pl.totalLeido)}
@@ -460,7 +465,7 @@ const FilaLinea = ({
                         />
                         {conTeoricos && (
                             <QInput
-                                label="Precio teórico"
+                                label={t("factura.importacion.precioTeorico")}
                                 nombre={`precio_teorico_${i}`}
                                 tipo="decimal"
                                 decimales={4}
@@ -470,7 +475,7 @@ const FilaLinea = ({
                         )}
                         {conTeoricos && (
                             <QInput
-                                label="Dto. teórico %"
+                                label={t("factura.importacion.dtoTeorico")}
                                 nombre={`dto_teorico_${i}`}
                                 tipo="decimal"
                                 decimales={2}
@@ -495,12 +500,13 @@ const TotalComparado = ({
     valor: number | null;
     leido: number | null;
 }) => {
+    const t = useTCompras();
     const estado = estadoTotal(leido, valor);
     return (
         <span className={estado ? `total-${estado}` : ""}>
             {etiqueta}: <strong>{formatearImporte(valor)}</strong>
-            {estado === "ok" && <span className="icono-total" title="Cuadra con el total leído"> ✓</span>}
-            {estado === "error" && <span className="icono-total" title="No cuadra con el total leído"> ✗</span>}
+            {estado === "ok" && <span className="icono-total" title={t("factura.importacion.cuadra")}> ✓</span>}
+            {estado === "error" && <span className="icono-total" title={t("factura.importacion.noCuadra")}> ✗</span>}
         </span>
     );
 };
@@ -532,11 +538,12 @@ const AlbaranesPendientes = ({
     propuesta: PropuestaImportacion;
     emitir: Emitir;
 }) => {
+    const t = useTCompras();
     if (propuesta.albaranes.length === 0) return null;
 
     return (
         <div className="albaranes">
-            <h4>Albaranes pendientes</h4>
+            <h4>{t("factura.importacion.albaranesPendientes")}</h4>
             {propuesta.albaranes.map((a) => (
                 <details key={a.id}>
                     <summary className="albaran-resumen">
@@ -557,21 +564,21 @@ const AlbaranesPendientes = ({
                             }
                         />
                         <QInput
-                            label="Fecha"
+                            label={t("comun.campos.fecha")}
                             nombre={`albaran_fecha_${a.id}`}
                             tipo="fecha"
                             valor={formatearFechaString(a.fecha)}
                             soloLectura
                         />
                         <QInput
-                            label="Total"
+                            label={t("comun.campos.total")}
                             nombre={`albaran_total_${a.id}`}
                             tipo="moneda"
                             valor={aTexto(a.total)}
                             soloLectura
                         />
-                        <span>Cobertura {porcentaje(a.cobertura)}</span>
-                        {!a.coincide && <span className="insignia">No coincide</span>}
+                        <span>{t("factura.importacion.cobertura", { porcentaje: porcentaje(a.cobertura) })}</span>
+                        {!a.coincide && <span className="insignia">{t("factura.importacion.noCoincide")}</span>}
                     </summary>
                     <ul>
                         {a.lineas.map((al) => (
@@ -579,7 +586,7 @@ const AlbaranesPendientes = ({
                                 {al.descripcion} · {formatearCantidad(al.cantidad)} ×{" "}
                                 {formatearPrecio(al.precio)}
                                 {al.lineaFactura !== null &&
-                                    ` → línea ${al.lineaFactura + 1}`}
+                                    t("factura.importacion.aLinea", { linea: al.lineaFactura + 1 })}
                             </li>
                         ))}
                     </ul>

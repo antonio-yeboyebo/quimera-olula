@@ -1,6 +1,7 @@
 import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmacion.tsx";
 import { CuentaBanco } from "../../diseño.ts";
 import { deleteCuentaBanco } from "../../infraestructura.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 interface BorrarCuentaBancoProps {
   clienteId: string;
@@ -15,6 +16,7 @@ export const BorrarCuentaBanco = ({
   abierto,
   emitir,
 }: BorrarCuentaBancoProps) => {
+  const t = useTVentas();
   const handleBorrar = async () => {
     await deleteCuentaBanco(clienteId, cuenta.id);
     emitir("cuenta_borrada", cuenta.id);
@@ -24,8 +26,8 @@ export const BorrarCuentaBanco = ({
     <QModalConfirmacion
       nombre="confirmarBorradoCuenta"
       abierto={abierto}
-      titulo="Confirmar borrar"
-      mensaje="¿Está seguro de que desea borrar esta cuenta bancaria?"
+      titulo={t("cliente.cuentas.borrarTitulo")}
+      mensaje={t("cliente.cuentas.borrarMensaje")}
       onCerrar={() => emitir("borrado_cancelado")}
       onAceptar={handleBorrar}
     />

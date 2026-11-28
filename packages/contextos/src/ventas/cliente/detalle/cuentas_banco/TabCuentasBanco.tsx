@@ -10,6 +10,7 @@ import { EdicionCuentaBanco } from "./EdicionCuentaBanco.tsx";
 import { SeleccionarRemesa } from "./SeleccionarRemesa.tsx";
 import { getMaquina } from "./maquina.ts";
 import { TabCuentasBancoLista } from "./TabCuentasBancoLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const TabCuentasBanco = ({
   cliente,
@@ -18,6 +19,7 @@ export const TabCuentasBanco = ({
   cliente: Cliente;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const clienteId = cliente.id;
 
   const { ctx, emitir } = useMaquina(
@@ -40,17 +42,17 @@ export const TabCuentasBanco = ({
 
   const acciones = [
     {
-      texto: "Desmarcar domiciliación",
+      texto: t("cliente.cuentas.desmarcarDomiciliacion"),
       onClick: () => emitir("desmarcar_domiciliacion"),
     },
     {
-      texto: "Cuenta de domiciliación",
+      texto: t("cliente.cuentas.cuentaDomiciliacion"),
       onClick: () => emitir("domiciliar_solicitada"),
       deshabilitado: !ctx.cuentas.activo,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("cliente.botones.borrar"),
       advertencia: true,
       onClick: () => emitir("borrado_solicitado"),
       deshabilitado: !ctx.cuentas.activo,
@@ -73,7 +75,7 @@ export const TabCuentasBanco = ({
       <QModal
         nombre="altaCuentaBanco"
         abierto={estado === "alta"}
-        titulo="Nueva Cuenta Bancaria"
+        titulo={t("cliente.cuentas.nueva")}
         onCerrar={() => emitir("alta_cancelada")}
       >
         <CrearCuentaBanco clienteId={clienteId} emitir={emitir} />
@@ -82,7 +84,7 @@ export const TabCuentasBanco = ({
       <QModal
         nombre="edicionCuentaBanco"
         abierto={estado === "edicion"}
-        titulo="Editar Cuenta Bancaria"
+        titulo={t("cliente.cuentas.editar")}
         onCerrar={() => emitir("edicion_cancelada")}
       >
         {ctx.cuentas.activo && (
@@ -106,7 +108,7 @@ export const TabCuentasBanco = ({
       <QModal
         nombre="seleccionarRemesa"
         abierto={estado === "remesa"}
-        titulo="Cuenta de remesa"
+        titulo={t("cliente.cuentas.cuentaRemesa")}
         onCerrar={() => emitir("remesa_cancelada")}
       >
         <SeleccionarRemesa

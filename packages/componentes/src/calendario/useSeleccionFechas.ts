@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react';
 import { ConfiguracionSeleccion, EstadoSeleccion } from './tipos';
+import { useTComponentes } from "../i18n/textos.ts";
 
 /**
  * Hook para manejar la selección de fechas en el calendario
  * Funciona de forma genérica para cualquier aplicación empresarial
  */
 export function useSeleccionFechas(configuracion?: ConfiguracionSeleccion) {
+  const t = useTComponentes();
   const [seleccion, setSeleccion] = useState<EstadoSeleccion>({
     tipo: configuracion?.tipo || 'simple',
     fechas: [],
@@ -38,14 +40,14 @@ export function useSeleccionFechas(configuracion?: ConfiguracionSeleccion) {
     if (configuracion.minDias && fechas.length < configuracion.minDias) {
       return {
         esValida: false,
-        error: configuracion.mensajeError || `Selecciona al menos ${configuracion.minDias} días`
+        error: configuracion.mensajeError || t("ui.calendario.seleccionaAlMenosMindiasDias", { minDias: configuracion.minDias })
       };
     }
 
     if (configuracion.maxDias && fechas.length > configuracion.maxDias) {
       return {
         esValida: false,
-        error: configuracion.mensajeError || `Máximo ${configuracion.maxDias} días permitidos`
+        error: configuracion.mensajeError || t("ui.calendario.maximoMaxdiasDiasPermitidos", { maxDias: configuracion.maxDias })
       };
     }
 
@@ -53,12 +55,12 @@ export function useSeleccionFechas(configuracion?: ConfiguracionSeleccion) {
     if (configuracion.validador && !configuracion.validador(fechas)) {
       return {
         esValida: false,
-        error: configuracion.mensajeError || 'Selección no válida'
+        error: configuracion.mensajeError || t("ui.calendario.seleccionNoValida")
       };
     }
 
     return { esValida: true };
-  }, [configuracion]);
+  }, [configuracion, t]);
 
   // Obtener rango de fechas entre dos fechas, excluyendo fechas deshabilitadas
   const obtenerRangoFechas = useCallback((inicio: Date, fin: Date): Date[] => {

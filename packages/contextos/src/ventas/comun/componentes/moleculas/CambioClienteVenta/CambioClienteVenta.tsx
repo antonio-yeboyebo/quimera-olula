@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import "./CambioClienteVenta.css";
 import { CambioCliente } from "./diseño.ts";
 import { metaCambioCliente, metaCambioClienteNoRegistrado } from "./dominio.ts";
+import { useTVentas } from "../../../../i18n/index.ts";
 
 export interface VentaConCliente extends Modelo {
   id: string;
@@ -33,9 +34,11 @@ export const CambioClienteVenta = <T extends VentaConCliente>({
   activo = true,
   onGuardar,
   onCancelar,
-  titulo = "Cambiar cliente",
+  titulo: tituloProp,
   permitirClienteNoRegistrado = true,
 }: CambioClienteProps<T>) => {
+  const t = useTVentas();
+  const titulo = tituloProp ?? t("comun.cambiarCliente");
   const { cliente_id, nombre_cliente, direccion_id, id_fiscal, direccion } =
     venta.modelo.cliente;
 
@@ -126,10 +129,10 @@ export const CambioClienteVenta = <T extends VentaConCliente>({
           {clienteNoRegistrado ? (
             <>
               <QInput
-                label="Nombre del Cliente"
+                label={t("comun.campos.nombreCliente")}
                 {...uiProps("nombre_cliente")}
               />
-              <QInput label="ID Fiscal" {...uiProps("id_fiscal")} />
+              <QInput label={t("comun.campos.idFiscalCliente")} {...uiProps("id_fiscal")} />
               <CamposDireccionVenta uiProps={uiProps} />
             </>
           ) : (
@@ -149,7 +152,7 @@ export const CambioClienteVenta = <T extends VentaConCliente>({
 
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Guardar
+            {t("comun.guardar")}
           </QBoton>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { EstadoLinea, LineaPedidoVenta } from "../diseño.ts";
 import { ESTILO_DISPONIBILIDAD } from "../dominio.ts";
 import "./TabLineas.css";
+import { tAlmacen } from "../../i18n/index.ts";
 
 const BotonPrioridad = ({
     linea,
@@ -14,7 +15,7 @@ const BotonPrioridad = ({
     linea: LineaPedidoVenta;
     onCambiar: (linea: LineaPedidoVenta) => void;
 }) => {
-    const etiqueta = linea.prioritaria ? "Quitar prioridad" : "Dar prioridad";
+    const etiqueta = linea.prioritaria ? tAlmacen("pedido_venta.quitarPrioridad") : tAlmacen("pedido_venta.darPrioridad");
     return (
         <button
             type="button"
@@ -44,17 +45,17 @@ const metaTablaLineas = (
         ...(onCambiarPrioridad
             ? [{
                 id: "prioritaria",
-                cabecera: "Prior.",
+                cabecera: tAlmacen("pedido_venta.prior"),
                 render: (l: LineaPedidoVenta) => <BotonPrioridad linea={l} onCambiar={onCambiarPrioridad} />,
             }]
             : []),
-        { id: "referencia", cabecera: "Ref.", enlace: (l) => urlFicha.articulo(l.referencia) },
-        { id: "descripcion", cabecera: "Descripción", tipo: "texto" },
-        { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
-        { id: "servida", cabecera: "Servida", tipo: "numero" },
+        { id: "referencia", cabecera: tAlmacen("pedido_venta.ref"), enlace: (l) => urlFicha.articulo(l.referencia) },
+        { id: "descripcion", cabecera: tAlmacen("pedido_venta.descripcion"), tipo: "texto" },
+        { id: "cantidad", cabecera: tAlmacen("pedido_venta.cantidad"), tipo: "numero" },
+        { id: "servida", cabecera: tAlmacen("pedido_venta.servida"), tipo: "numero" },
         {
             id: "pendiente",
-            cabecera: "Pendiente",
+            cabecera: tAlmacen("pedido_venta.pendiente"),
             tipo: "numero",
             render: (l) => (l.cerrada ? "" : String(Math.max(l.cantidad - l.servida, 0))),
         },
@@ -62,7 +63,7 @@ const metaTablaLineas = (
             // Lo que el reparto de "Comprobar disponibilidad" asigna a la línea
             // (en salida: lo ya comprometido en la orden). Vacío si no se ha comprobado.
             id: "disponible",
-            cabecera: "Disponible",
+            cabecera: tAlmacen("pedido_venta.disponible"),
             tipo: "numero",
             render: (l) => {
                 const estado = estados[l.id];
@@ -71,7 +72,7 @@ const metaTablaLineas = (
         },
         {
             id: "stock",
-            cabecera: "Stock",
+            cabecera: tAlmacen("pedido_venta.stock"),
             render: (l) => {
                 const estado = estados[l.id];
                 if (!estado) return null;
@@ -79,7 +80,7 @@ const metaTablaLineas = (
                 return <span style={{ color, fontWeight: 600 }}>{label}</span>;
             },
         },
-        { id: "cerrada", cabecera: "Cerrada", tipo: "booleano" },
+        { id: "cerrada", cabecera: tAlmacen("pedido_venta.cerrada"), tipo: "booleano" },
     ],
 });
 

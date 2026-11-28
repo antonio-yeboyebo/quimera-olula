@@ -13,6 +13,7 @@ import {
     StockItem,
     StockUbicacion,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrlStock = `/almacen/stock`;
 const baseUrlRegularizacion = `/almacen/regularizacion_stock`;
@@ -135,11 +136,11 @@ export const postRegularizacionStock: PostRegularizacionStock = async (stock, nu
             hora: nueva.hora,
             motivo: nueva.motivo || null,
         },
-        "Error al regularizar el stock"
+        tAlmacen("stock.errorAlRegularizarElStock")
     );
     return respuesta.id;
 };
 
 export const deleteRegularizacionStock: DeleteRegularizacionStock = async (id) => {
-    await RestAPI.delete(`${baseUrlRegularizacion}/${id}`, "Error al borrar la regularización");
+    await RestAPI.delete(`${baseUrlRegularizacion}/${id}`, tAlmacen("stock.errorAlBorrarLaRegularizacion"));
 };

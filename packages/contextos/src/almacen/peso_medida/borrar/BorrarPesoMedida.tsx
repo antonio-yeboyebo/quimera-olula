@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { PesoMedida } from "../diseño.ts";
 import { deletePesoMedida } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarPesoMedida = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarPesoMedida = ({
     pesoMedida: PesoMedida;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deletePesoMedida(pesoMedida.id);
         publicar("peso_medida_borrada", pesoMedida.id);
@@ -25,8 +27,8 @@ export const BorrarPesoMedida = ({
         <QModalConfirmacion
             nombre="borrarPesoMedida"
             abierto={true}
-            titulo="Borrar unidad"
-            mensaje={`¿Está seguro de que desea borrar la unidad "${pesoMedida.id}"?`}
+            titulo={t("peso_medida.borrarUnidad")}
+            mensaje={t("peso_medida.estaSeguroDeQueDeseaBorrar", { id: pesoMedida.id })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

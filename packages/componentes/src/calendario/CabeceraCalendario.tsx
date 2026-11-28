@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import { SelectorModo } from "./SelectorModo.tsx";
 import { ModoCalendario } from "./tipos.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 interface CabeceraBotones {
   izqModo?: React.ReactNode[];
@@ -38,6 +39,7 @@ const ComponenteSeguro: React.FC<{ children: React.ReactNode }> = ({
 export const CabeceraCalendario: React.FC<CabeceraCalendarioProps> = (
   props: CabeceraCalendarioProps
 ) => {
+  const t = useTComponentes();
   const {
     modoAnio,
     modoVista,
@@ -104,10 +106,10 @@ export const CabeceraCalendario: React.FC<CabeceraCalendarioProps> = (
             <div className="dropdown-modo" ref={dropdownRef}>
               <QBoton onClick={() => setDropdownAbierto(!dropdownAbierto)}>
                 {modoVista === "semana"
-                  ? "Semana"
+                  ? t("ui.calendario.semana")
                   : modoVista === "mes"
-                  ? "Mes"
-                  : "Año"}
+                  ? t("ui.calendario.mes")
+                  : t("ui.calendario.ano")}
                 <span style={{ marginLeft: "8px" }}>
                   {dropdownAbierto ? "▲" : "▼"}
                 </span>
@@ -159,7 +161,7 @@ export const CabeceraCalendario: React.FC<CabeceraCalendarioProps> = (
               {componente}
             </ComponenteSeguro>
           ))}
-          {_mostrarBotonHoy && <QBoton onClick={irAHoy}>Hoy</QBoton>}
+          {_mostrarBotonHoy && <QBoton onClick={irAHoy}>{t("ui.calendario.hoy")}</QBoton>}
           {playground && (
             <QBoton onClick={onAbrirPlayground} variante="borde">
               📚 Playground

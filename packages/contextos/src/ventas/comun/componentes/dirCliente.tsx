@@ -2,6 +2,7 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { formatearDireccionUnaLinea } from "@olula/lib/dominio.ts";
 import { useEffect, useRef, useState } from "react";
 import { getDirecciones } from "../../cliente/infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 interface DireccionesProps {
   clienteId: string | undefined;
   valor?: string;
@@ -16,12 +17,14 @@ export const DirCliente = ({
   clienteId,
   valor,
   nombre = "direccion_id",
-  label = "Dirección",
+  label: labelProp,
   deshabilitado = false,
   valorDefecto = "facturacion",
   onChange,
   ...props
 }: DireccionesProps) => {
+  const t = useTVentas();
+  const label = labelProp ?? t("comun.campos.direccion");
   const [opcionesDireccion, setOpcionesDireccion] = useState<
     { valor: string; descripcion: string }[]
   >([]);

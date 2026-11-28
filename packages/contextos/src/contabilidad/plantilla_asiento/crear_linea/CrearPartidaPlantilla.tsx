@@ -8,6 +8,7 @@ import { FormPartidaPlantilla } from "../comun/FormPartidaPlantilla.tsx";
 import { PlantillaAsiento } from "../diseño.ts";
 import { metaPartidaPlantilla, nuevaPartidaPlantillaVacia } from "../dominio.ts";
 import { postPartidaPlantilla } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearPartidaPlantilla = ({
     plantilla,
@@ -17,6 +18,7 @@ export const CrearPartidaPlantilla = ({
     publicar: EmitirEvento;
 }) => {
     // Memoizado: useModelo se reinicia si cambia la identidad del inicial.
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaPartidaPlantillaVacia, []);
     const { modelo, uiProps, valido } = useModelo(metaPartidaPlantilla, inicial);
 
@@ -30,11 +32,11 @@ export const CrearPartidaPlantilla = ({
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
     return (
-        <QModal abierto={true} nombre="crearPartidaPlantilla" titulo="Nueva partida predefinida" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearPartidaPlantilla" titulo={t("plantilla_asiento.nuevaPartidaPredefinida")} onCerrar={cancelar}>
             <FormPartidaPlantilla modelo={modelo} uiProps={uiProps} />
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Crear
+                    {t("plantilla_asiento.crear")}
                 </QBoton>
             </div>
         </QModal>

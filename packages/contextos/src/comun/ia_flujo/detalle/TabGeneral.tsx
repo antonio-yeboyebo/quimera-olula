@@ -2,6 +2,7 @@ import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { QInput } from "@olula/componentes/index.js";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabGeneral.css";
+import { tComun } from "../../i18n/index.ts";
 
 /**
  * Tab General: formulario de edición del flujo de trabajo.
@@ -22,9 +23,9 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Nombre" {...uiProps("nombre")} />
-                <QInput label="Descripción corta" {...uiProps("descripcionCorta")} />
-                <QTextArea label="Contenido (pasos)" rows={12} {...uiProps("contenido")} />
+                <QInput label={tComun("iaFlujo.nombre")} {...uiProps("nombre")} />
+                <QInput label={tComun("iaFlujo.descripcionCorta")} {...uiProps("descripcionCorta")} />
+                <QTextArea label={tComun("iaFlujo.contenidoPasos")} rows={12} {...uiProps("contenido")} />
             </quimera-formulario>
         </div>
     );

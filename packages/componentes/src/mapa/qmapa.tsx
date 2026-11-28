@@ -9,6 +9,7 @@ import {
   VistaMapa,
 } from "./dominio.ts";
 import "./qmapa.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export type PuntoMapa = {
   id: string;
@@ -69,6 +70,7 @@ export const QMapa = ({
   onSeleccionar,
   onMover,
 }: QMapaProps) => {
+  const t = useTComponentes();
   const contenedor = useRef<HTMLDivElement>(null);
   const mapa = useRef<MapaLibre | null>(null);
   const popup = useRef<Popup | null>(null);
@@ -252,9 +254,9 @@ export const QMapa = ({
         ref={contenedor}
         className="lienzo"
         role="region"
-        aria-label={`Mapa con ${puntos.length} puntos`}
+        aria-label={t("ui.mapa.mapaConLengthPuntos", { length: puntos.length })}
       />
-      {error && <p className="aviso">No se ha podido cargar el mapa.</p>}
+      {error && <p className="aviso">{t("ui.mapa.noSeHaPodidoCargarEl")}</p>}
     </div>
   );
 };

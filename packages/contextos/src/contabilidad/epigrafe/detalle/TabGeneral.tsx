@@ -2,6 +2,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { GrupoEpigrafeSelector } from "#/contabilidad/comun/componentes/GrupoEpigrafeSelector.tsx";
 import { Epigrafe } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 interface TabGeneralProps {
     form: FormModelo;
@@ -15,8 +16,8 @@ export const TabGeneral = ({ form, epigrafe }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Código" {...uiProps("codigo")} />
-                <QInput label="Descripción" {...uiProps("descripcion")} />
+                <QInput label={tContabilidad("epigrafe.codigo")} {...uiProps("codigo")} />
+                <QInput label={tContabilidad("epigrafe.descripcion")} {...uiProps("descripcion")} />
                 {/* El segundo campo de uiProps guarda el código del grupo
                     junto al id, que es lo que muestra el autocompletar. */}
                 <GrupoEpigrafeSelector
@@ -24,7 +25,7 @@ export const TabGeneral = ({ form, epigrafe }: TabGeneralProps) => {
                     {...uiProps("grupoId", "codigoGrupo")}
                 />
                 <QInput
-                    label="Ejercicio"
+                    label={tContabilidad("epigrafe.ejercicio")}
                     nombre="ejercicio_id"
                     valor={epigrafe.ejercicioId}
                     soloLectura

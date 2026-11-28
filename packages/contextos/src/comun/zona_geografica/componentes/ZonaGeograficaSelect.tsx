@@ -2,6 +2,7 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { getZonasGeograficasMaestro } from "../infraestructura.ts";
+import { tComun } from "../../i18n/index.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
@@ -17,7 +18,7 @@ interface ZonaGeograficaSelectProps {
 export const ZonaGeograficaSelect = ({
     valor,
     nombre = "zona_id",
-    label = "Zona geográfica",
+    label = tComun("zonaGeografica.zonaGeografica"),
     deshabilitado = false,
     onChange,
     ...props

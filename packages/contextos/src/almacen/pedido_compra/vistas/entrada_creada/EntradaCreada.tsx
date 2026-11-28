@@ -1,6 +1,7 @@
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { Link } from "react-router";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 export const EntradaCreada = ({
     publicar,
@@ -15,14 +16,14 @@ export const EntradaCreada = ({
         <QModal
             nombre="entradaCreada"
             abierto={true}
-            titulo="Entrada creada"
+            titulo={tAlmacen("pedido_compra.entradaCreada")}
             onCerrar={cerrar}
         >
             <div className="mensaje">
-                La entrada se ha creado correctamente.
+                {tAlmacen("pedido_compra.laEntradaSeHaCreadoCorrectamente")}
             </div>
             <Link to={`/almacen/ordenes?id=${idOrden}`}>
-                Ver orden de entrada {idOrden}
+                {tAlmacen("pedido_compra.verOrdenDeEntradaIdorden", { idOrden })}
             </Link>
 
         </QModal>

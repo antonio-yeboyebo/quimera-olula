@@ -6,6 +6,7 @@ import {
     PatchCredencialExterna, PostCredencialExterna, RotarSecretoCredencialExterna, SecretoCredencialExterna,
     TipoAuthCredencialExterna,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 export interface CredencialExternaApi {
     id: string;
@@ -96,7 +97,7 @@ export const postCredencialExterna: PostCredencialExterna = async (nuevaCredenci
             personal: nuevaCredencial.personal,
             categoria: nuevaCredencial.categoria,
         },
-        "Error al crear la credencial",
+        tComun("credencialExterna.errorAlCrearLaCredencial"),
     );
     return respuesta.id;
 };
@@ -105,7 +106,7 @@ export const patchCredencialExterna: PatchCredencialExterna = async (id, cambios
     await RestAPI.patch<CambiosCredencialExternaApi>(
         `${baseUrl}/${id}`,
         cambiosCredencialExternaAApi(cambios),
-        "Error al guardar la credencial",
+        tComun("credencialExterna.errorAlGuardarLaCredencial"),
     );
 };
 
@@ -113,14 +114,14 @@ export const rotarSecretoCredencialExterna: RotarSecretoCredencialExterna = asyn
     await RestAPI.patch<CambiosCredencialExternaApi>(
         `${baseUrl}/${id}`,
         { secreto },
-        "Error al rotar la credencial",
+        tComun("credencialExterna.errorAlRotarLaCredencial"),
     );
 };
 
 export const deleteCredencialExterna: DeleteCredencialExterna = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar la credencial",
+        tComun("credencialExterna.errorAlEliminarLaCredencial"),
     );
 };
 
@@ -128,7 +129,7 @@ export const reconectarTelegram = async (id: string): Promise<void> => {
     await RestAPI.post(
         `${baseUrl}/${id}/reconectar-telegram`,
         {},
-        "Error al reconectar con Telegram",
+        tComun("credencialExterna.errorAlReconectarConTelegram"),
     );
 };
 
@@ -148,7 +149,7 @@ export const probarStripe = async (id: string): Promise<ConexionStripe> => {
     const r = (await RestAPI.post(
         `${baseUrl}/${id}/probar-stripe`,
         {},
-        "Error al conectar con Stripe",
+        tComun("credencialExterna.errorAlConectarConStripe"),
     )) as unknown as {
         modo: "test" | "live";
         modo_forzado: boolean;
@@ -179,7 +180,7 @@ export const buscarArchivosDrive: BuscarArchivosDrive = async (id, texto) => {
     const q = texto ? `?q=${encodeURIComponent(texto)}` : "";
     const respuesta = await RestAPI.get<{ datos: ItemArchivoConectorApi[] }>(
         `${baseUrl}/${id}/drive/buscar${q}`,
-        "Error al buscar archivos en Google Drive",
+        tComun("credencialExterna.errorAlBuscarArchivosEnGoogle"),
     );
     return respuesta.datos.map((a): ItemArchivoConector => ({
         id: a.id,
@@ -198,7 +199,7 @@ export const iniciarOauthGoogle = async (id: string): Promise<string> => {
     const respuesta = (await RestAPI.post(
         `${baseUrl}/${id}/oauth/iniciar`,
         {},
-        "Error al iniciar la conexión con Google",
+        tComun("credencialExterna.errorAlIniciarLaConexionCon"),
     )) as unknown as { url: string };
     return respuesta.url;
 };

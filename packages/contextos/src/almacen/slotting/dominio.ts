@@ -2,6 +2,7 @@ import { validarReposicionPickingFijo } from "#/almacen/picking_fijo/dominio.ts"
 import {
     ClasesPicking, FilaPickingFijo, OrigenRotacion, PropuestaPickingFijo, PropuestaUbicacion, Recolocacion, ResultadoMigracion,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const DIAS_POR_DEFECTO = 90;
 export const LIMITE_PROPUESTA_POR_DEFECTO = 5;
@@ -10,8 +11,8 @@ export const LIMITE_RECOLOCACION_POR_DEFECTO = 20;
 export const ORIGEN_POR_DEFECTO: OrigenRotacion = "ORDENES";
 
 export const origenesRotacion: { valor: OrigenRotacion; descripcion: string }[] = [
-    { valor: "ORDENES", descripcion: "Órdenes de salida" },
-    { valor: "VENTAS", descripcion: "Ventas (albaranes)" },
+    { valor: "ORDENES", get descripcion() { return tAlmacen("slotting.ordenesDeSalida"); } },
+    { valor: "VENTAS", get descripcion() { return tAlmacen("slotting.ventasAlbaranes"); } },
 ];
 
 /** El valor del selector, o el origen por defecto si no es uno conocido. */
@@ -37,7 +38,7 @@ export const construirQuery = (parametros: Record<string, string | number | null
 /** Texto de "con quién o adónde" de una recolocación. */
 export const textoDestinoRecolocacion = (r: Pick<Recolocacion, "accion" | "conArticuloId" | "conUbicacion">): string => {
     if (r.accion === "INTERCAMBIAR") {
-        return `con ${r.conArticuloId ?? "?"} (${r.conUbicacion ?? "?"})`;
+        return tAlmacen("slotting.conValorValor2", { valor: r.conArticuloId ?? "?", valor2: r.conUbicacion ?? "?" });
     }
     return r.conUbicacion ? `a ${r.conUbicacion}` : "";
 };
@@ -47,8 +48,8 @@ export const REPOSICION_POR_DEFECTO = 1;
 export const CLASES_PICKING_POR_DEFECTO: ClasesPicking = "AB";
 
 export const clasesPicking: { valor: ClasesPicking; descripcion: string }[] = [
-    { valor: "A", descripcion: "Solo A" },
-    { valor: "AB", descripcion: "A y B" },
+    { valor: "A", get descripcion() { return tAlmacen("slotting.soloA"); } },
+    { valor: "AB", get descripcion() { return tAlmacen("slotting.aYB"); } },
 ];
 
 /** El valor del selector, o "AB" si no es uno conocido. */
@@ -82,7 +83,7 @@ export const filasPickingACrear = (filas: FilaPickingFijo[]): FilaPickingFijo[] 
 
 /** Texto "Creados N de M" tras intentar crear M filas. */
 export const resumenCreacionPicking = (filas: FilaPickingFijo[], intentadas: number): string =>
-    `Creados ${filas.filter((f) => f.estado === "CREADO").length} de ${intentadas}`;
+    tAlmacen("slotting.creadosLengthDeIntentadas", { length: filas.filter((f) => f.estado === "CREADO").length, intentadas });
 
 /** Mensaje legible de un error de la API ({ nombre, descripcion } con cuerpo JSON o texto). */
 export const mensajeErrorApi = (e: unknown): string => {
@@ -100,7 +101,7 @@ export const mensajeErrorApi = (e: unknown): string => {
         if (nombre) return nombre;
         if (e instanceof Error) return e.message;
     }
-    return "Error al crear picking fijo";
+    return tAlmacen("slotting.errorAlCrearPickingFijo");
 };
 
 /** Las filas que se pueden marcar: con hueco y aún sin crear. */
@@ -120,19 +121,19 @@ export const marcarTodasPicking = (filas: FilaPickingFijo[], marcar: boolean): F
 /** Cómo se obtiene la clasificación ABC, para explicarlo en la pantalla. */
 export const explicacionAbc = (origen: OrigenRotacion, dias: number): string[] => [
     origen === "VENTAS"
-        ? `Cuenta cuántas líneas de albarán de venta tiene cada artículo en este almacén en los últimos ${dias} días (cada línea es un envío; las devoluciones no cuentan).`
-        : `Cuenta cuántas líneas de órdenes de salida del SGA, con algo recogido, tiene cada artículo en este almacén en los últimos ${dias} días.`,
-    "Se cuentan visitas al hueco (líneas), no unidades: es lo que cuesta tiempo al preparar.",
-    "Ordenados de más a menos líneas: A son los que suman el primer 80 % de las líneas, B los siguientes hasta el 95 % y C el resto, incluidos los que tienen stock y no han salido.",
-    "No entran los artículos sin stock (servicios, portes, gastos). La clasificación no se guarda: se calcula cada vez.",
+        ? tAlmacen("slotting.cuentaCuantasLineasDeAlbaranDe", { dias })
+        : tAlmacen("slotting.cuentaCuantasLineasDeOrdenesDe", { dias }),
+    tAlmacen("slotting.seCuentanVisitasAlHuecoLineas"),
+    tAlmacen("slotting.ordenadosDeMasAMenosLineas"),
+    tAlmacen("slotting.noEntranLosArticulosSinStock"),
 ];
 
 /** Resumen del resultado de la migración. */
 export const resumenMigracion = (r: ResultadoMigracion): string => {
-    if (r.ajustes.length === 0) return "No hay nada que ubicar: todo el stock del almacén ya está en ubicaciones.";
-    const partes = [`${r.lineasUbicadas} líneas a ubicar (${r.unidadesUbicadas} unidades)`];
-    if (r.lineasRetiradas) partes.push(`${r.lineasRetiradas} a retirar (${r.unidadesRetiradas} unidades)`);
-    return `${r.simulado ? "Simulación" : "Hecho"}: ${partes.join(", ")}.`;
+    if (r.ajustes.length === 0) return tAlmacen("slotting.noHayNadaQueUbicarTodo");
+    const partes = [tAlmacen("slotting.lineasubicadasLineasAUbicarUnidadesubica", { lineasUbicadas: r.lineasUbicadas, unidadesUbicadas: r.unidadesUbicadas })];
+    if (r.lineasRetiradas) partes.push(tAlmacen("slotting.lineasretiradasARetirarUnidadesretiradas", { lineasRetiradas: r.lineasRetiradas, unidadesRetiradas: r.unidadesRetiradas }));
+    return `${r.simulado ? tAlmacen("slotting.simulacion") : tAlmacen("slotting.hecho")}: ${partes.join(", ")}.`;
 };
 
 /** Se puede ubicar tras una simulación con algo que hacer. */
@@ -141,8 +142,8 @@ export const puedeUbicarMigracion = (r: ResultadoMigracion | null): boolean =>
 
 /** Cómo se calculan mínimo, máximo y unidad de la propuesta de picking fijo. */
 export const explicacionCantidadesPicking = (cobertura: number, reposicion: number): string[] => [
-    "Consumo diario: unidades del periodo entre los días laborables (5 de cada 7) del tramo con salidas, del primer al último día con movimiento.",
-    `Mínimo: lo que se consume en ${reposicion} día(s) laborable(s) de reposición, y nunca menos que la línea más grande del periodo, para poder servir cualquier pedido habitual desde el hueco.`,
-    `Máximo: el mínimo más el consumo de ${cobertura} día(s) laborable(s) de cobertura.`,
-    "Unidad: la caja de proveedor por defecto del artículo (la menor si hay varias) o 1; mínimo y máximo van en múltiplos de ella.",
+    tAlmacen("slotting.consumoDiarioUnidadesDelPeriodoEntre"),
+    tAlmacen("slotting.minimoLoQueSeConsumeEn", { reposicion }),
+    tAlmacen("slotting.maximoElMinimoMasElConsumo", { cobertura }),
+    tAlmacen("slotting.unidadLaCajaDeProveedorPor"),
 ];

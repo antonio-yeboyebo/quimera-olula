@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { LineaFactura } from "../../factura/diseño.ts";
 import { getLineas } from "../../factura/infraestructura.ts";
 import { articuloDeLineaVenta } from "./linea_venta_texto.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 /** Línea que sí lleva artículo: las de texto libre no son seleccionables. */
 type LineaConArticulo = LineaFactura & { referencia: string };
@@ -44,12 +45,14 @@ export const ArticuloFactura = ({
   divisa = "EUR",
   valor,
   nombre = "linea_factura_id",
-  label = "Artículo de la factura",
+  label: labelProp,
   deshabilitado = false,
   renderOpcion,
   onChange,
   ...props
 }: ArticuloFacturaProps) => {
+  const t = useTVentas();
+  const label = labelProp ?? t("comun.campos.articuloFactura");
   const [lineas, setLineas] = useState<LineaConArticulo[]>([]);
   const hayFactura = !!facturaId && facturaId.trim() !== "";
 
@@ -111,7 +114,7 @@ export const ArticuloFactura = ({
       opciones={opciones}
       onChange={handleChange}
       deshabilitado={deshabilitado || !hayFactura}
-      placeholder={hayFactura ? undefined : "Selecciona antes la factura"}
+      placeholder={hayFactura ? undefined : t("comun.factura.seleccionaAntes")}
       {...props}
     />
   );

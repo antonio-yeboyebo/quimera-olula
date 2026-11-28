@@ -12,6 +12,7 @@ import { Factura } from "../diseño.ts";
 import { facturaEditable } from "../dominio.ts";
 import { descripcionOrigenFactura } from "../dominio.ts";
 import "./TabDatos.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const TabDatos = ({
     form,
@@ -20,26 +21,27 @@ export const TabDatos = ({
     form: HookModelo<Factura>;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { uiProps, modelo } = form;
     const puedeCambiarDivisa = facturaEditable(modelo);
 
     return (
         <div className="TabDatos">
             <quimera-formulario>
-                <QInput label="Código" {...uiProps("codigo")} />
+                <QInput label={t("comun.campos.codigo")} {...uiProps("codigo")} />
                 <QInput
-                    label="Origen"
+                    label={t("factura.detalle.origen")}
                     {...uiProps("automatica")}
                     valor={descripcionOrigenFactura(modelo)}
                     deshabilitado={true}
                 />
                 <Almacen {...uiProps("almacenId", "nombreAlmacen")} nombre="almacenId" />
                 <Divisa {...uiProps("divisaId")} nombre="divisaId" />
-                <QInput label="T. Conversión" {...uiProps("tasaConversion")} />
+                <QInput label={t("comun.campos.tasaConversion")} {...uiProps("tasaConversion")} />
         {puedeCambiarDivisa && (
           <div className="TabDatos-accion">
             <BotonCambiar
-              titulo="Cambiar divisa y tasa de conversión"
+              titulo={t("comun.documento.cambiarDivisa")}
               onClick={() => publicar("cambio_divisa_solicitado")}
             />
           </div>
@@ -53,14 +55,14 @@ export const TabDatos = ({
                     nombre="grupoIvaNegocioId"
                 />
                 {/* Solo lectura: la serie se fija al crear la factura (ver metaFactura). */}
-                <QInput label="Serie" {...uiProps("serieId")} />
-                <QInput label="Rectifica a" {...uiProps("codigoRectificativa")} />
-                <QCheckbox label="De abono" {...uiProps("deAbono")} />
-                <QCheckbox label="Servicios" {...uiProps("servicios")} />
-                <QCheckbox label="No generar asiento" {...uiProps("noGenerarAsiento")} />
+                <QInput label={t("comun.campos.serie")} {...uiProps("serieId")} />
+                <QInput label={t("comun.documento.rectificaA")} {...uiProps("codigoRectificativa")} />
+                <QCheckbox label={t("factura.detalle.deAbono")} {...uiProps("deAbono")} />
+                <QCheckbox label={t("factura.detalle.servicios")} {...uiProps("servicios")} />
+                <QCheckbox label={t("factura.detalle.noGenerarAsiento")} {...uiProps("noGenerarAsiento")} />
                 {/* Eneboo contauto_isp: solo con el plugin activo. */}
                 {plugin("contauto_isp") === "activo" && (
-                    <QCheckbox label="Factura ISP (inversión del sujeto pasivo)" {...uiProps("inversionSujetoPasivo")} />
+                    <QCheckbox label={t("factura.detalle.isp")} {...uiProps("inversionSujetoPasivo")} />
                 )}
             </quimera-formulario>
         </div>

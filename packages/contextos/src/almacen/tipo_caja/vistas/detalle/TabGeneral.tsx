@@ -5,6 +5,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { HookModelo } from "@olula/lib/useModelo.js";
 import { TipoCaja } from "../../diseño.js";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 /**
  * Tab General: formulario del tipo de caja.
@@ -29,26 +30,26 @@ export const TabGeneral = ({
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QInput label="Prefijo" {...uiProps("prefijo")} maxLength={2} />
+                <QInput label={tAlmacen("tipo_caja.descripcion")} {...uiProps("descripcion")} />
+                <QInput label={tAlmacen("tipo_caja.prefijo")} {...uiProps("prefijo")} maxLength={2} />
             </quimera-formulario>
 
             <div className="tipo-caja-sku-seccion">
                 <dl>
-                    <dt>SKU</dt>
+                    <dt>{tAlmacen("tipo_caja.sku")}</dt>
                     <dd>
-                        <ValorConEnlace href={urlFicha.articulo(tipoCaja.sku)} etiqueta={`Abrir artículo ${tipoCaja.sku ?? ""}`}>
+                        <ValorConEnlace href={urlFicha.articulo(tipoCaja.sku)} etiqueta={tAlmacen("tipo_caja.abrirArticuloValor", { valor: tipoCaja.sku ?? "" })}>
                             {tipoCaja.sku ?? "—"}
                         </ValorConEnlace>
                     </dd>
-                    <dt>Capacidad</dt>
+                    <dt>{tAlmacen("tipo_caja.capacidad")}</dt>
                     <dd>{tipoCaja.capacidad !== null ? tipoCaja.capacidad : "—"}</dd>
                 </dl>
                 <QBoton
                     tamaño="pequeño"
                     onClick={() => publicar("cambio_de_sku_solicitado")}
                 >
-                    Cambiar SKU
+                    {tAlmacen("tipo_caja.cambiarSku")}
                 </QBoton>
             </div>
         </div>

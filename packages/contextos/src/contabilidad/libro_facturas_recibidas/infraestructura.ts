@@ -23,6 +23,7 @@ import {
     PatchLibroFacturasRecibidas,
     PostLibroFacturasRecibidas,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.LIBRO_FACTURAS_RECIBIDAS;
@@ -132,7 +133,7 @@ export const getResultadoLibroFacturasRecibidas: GetResultadoLibroFacturasRecibi
         RestAPI.getItem<ResultadoLibroIva, ResultadoLibroIvaApi>(
             urls.LIBRO_FACTURAS_RECIBIDAS_DATOS(id),
             resultadoLibroIvaDesdeApi,
-            "Error al calcular el libro de facturas recibidas"
+            tContabilidad("libro_facturas_recibidas.errorAlCalcularElLibroDe")
         );
 
 export const postLibroFacturasRecibidas: PostLibroFacturasRecibidas = async (
@@ -141,7 +142,7 @@ export const postLibroFacturasRecibidas: PostLibroFacturasRecibidas = async (
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoLibroFacturasRecibidasAApi(nuevo),
-        "Error al crear el libro de facturas recibidas"
+        tContabilidad("libro_facturas_recibidas.errorAlCrearElLibroDe")
     );
     return String(respuesta.id);
 };
@@ -153,7 +154,7 @@ export const patchLibroFacturasRecibidas: PatchLibroFacturasRecibidas = async (
     await RestAPI.patch(
         `${baseUrl}/${informe.id}`,
         cambiosLibroFacturasRecibidasAApi(cambios, informe),
-        "Error al guardar el libro de facturas recibidas"
+        tContabilidad("libro_facturas_recibidas.errorAlGuardarElLibroDe")
     );
 };
 
@@ -162,7 +163,7 @@ export const deleteLibroFacturasRecibidas: DeleteLibroFacturasRecibidas = async 
 ) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al borrar el libro de facturas recibidas"
+        tContabilidad("libro_facturas_recibidas.errorAlBorrarElLibroDe")
     );
 };
 
@@ -170,5 +171,5 @@ export const getReportLibroFacturasRecibidas: GetReportLibroFacturasRecibidas =
     async (id) =>
         RestAPI.blob(
             urls.LIBRO_FACTURAS_RECIBIDAS_REPORT(id),
-            "Error al descargar el PDF del libro de facturas recibidas"
+            tContabilidad("libro_facturas_recibidas.errorAlDescargarElPdfDel")
         );

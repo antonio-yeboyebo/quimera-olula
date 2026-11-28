@@ -5,15 +5,16 @@ import {
     GeometriaPasilloPlanta, Giro, Lado, MapaAlmacen, MedidasPlanta, MedidasPropias, PasilloEnPlanta,
     PasilloMapa, PlantaAlmacen, PuntoRecorrido, Rect, TipoElemento, Tono, UbicacionMapa, ZonaMapa,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const capasMapa: { valor: CapaMapa; descripcion: string }[] = [
-    { valor: "OCUPACION", descripcion: "Ocupación" },
-    { valor: "ABC_UBICACION", descripcion: "ABC de la ubicación" },
-    { valor: "ABC_ARTICULO", descripcion: "ABC del artículo" },
-    { valor: "SLOTTING", descripcion: "Slotting (artículo vs. ubicación)" },
-    { valor: "CLASE_ALMACENAMIENTO", descripcion: "Clase de almacenamiento" },
-    { valor: "PICKING", descripcion: "Picking fijo" },
-    { valor: "BLOQUEO", descripcion: "Bloqueo" },
+    { valor: "OCUPACION", get descripcion() { return tAlmacen("mapa.ocupacion"); } },
+    { valor: "ABC_UBICACION", get descripcion() { return tAlmacen("mapa.abcDeLaUbicacion"); } },
+    { valor: "ABC_ARTICULO", get descripcion() { return tAlmacen("mapa.abcDelArticulo"); } },
+    { valor: "SLOTTING", get descripcion() { return tAlmacen("mapa.slottingArticuloVsUbicacion"); } },
+    { valor: "CLASE_ALMACENAMIENTO", get descripcion() { return tAlmacen("mapa.claseDeAlmacenamiento"); } },
+    { valor: "PICKING", get descripcion() { return tAlmacen("mapa.pickingFijo"); } },
+    { valor: "BLOQUEO", get descripcion() { return tAlmacen("mapa.bloqueo"); } },
 ];
 
 export const CAPA_POR_DEFECTO: CapaMapa = "OCUPACION";
@@ -213,48 +214,48 @@ export const leyenda = (capa: CapaMapa, paleta: Map<string, number>): EntradaLey
     switch (capa) {
         case "OCUPACION":
             return [
-                { tono: "vacio", texto: "Vacío" },
-                { tono: "parcial", texto: "Parcial (módulo)" },
-                { tono: "lleno", texto: "Con stock" },
+                { tono: "vacio", texto: tAlmacen("mapa.vacio") },
+                { tono: "parcial", texto: tAlmacen("mapa.parcialModulo") },
+                { tono: "lleno", texto: tAlmacen("mapa.conStock") },
             ];
         case "ABC_UBICACION":
             return [
-                { tono: "a", texto: "A: más accesible" },
+                { tono: "a", texto: tAlmacen("mapa.aMasAccesible") },
                 { tono: "b", texto: "B" },
-                { tono: "c", texto: "C: menos accesible" },
-                { tono: "sin-dato", texto: "Sin pasillo" },
+                { tono: "c", texto: tAlmacen("mapa.cMenosAccesible") },
+                { tono: "sin-dato", texto: tAlmacen("mapa.sinPasillo") },
             ];
         case "ABC_ARTICULO":
             return [
-                { tono: "a", texto: "Artículo A" },
-                { tono: "b", texto: "Artículo B" },
-                { tono: "c", texto: "Artículo C" },
-                { tono: "sin-dato", texto: "Vacía" },
+                { tono: "a", texto: tAlmacen("mapa.articuloA") },
+                { tono: "b", texto: tAlmacen("mapa.articuloB") },
+                { tono: "c", texto: tAlmacen("mapa.articuloC") },
+                { tono: "sin-dato", texto: tAlmacen("mapa.vacia") },
             ];
         case "SLOTTING":
             return [
-                { tono: "ok", texto: "Rotación acorde al hueco" },
-                { tono: "rota-mas", texto: "Rota más que su hueco (moverlo a uno mejor)" },
-                { tono: "rota-menos", texto: "Rota menos que su hueco (ocupa uno bueno)" },
-                { tono: "sin-dato", texto: "Vacía o sin pasillo" },
+                { tono: "ok", texto: tAlmacen("mapa.rotacionAcordeAlHueco") },
+                { tono: "rota-mas", texto: tAlmacen("mapa.rotaMasQueSuHuecoMoverlo") },
+                { tono: "rota-menos", texto: tAlmacen("mapa.rotaMenosQueSuHuecoOcupa") },
+                { tono: "sin-dato", texto: tAlmacen("mapa.vaciaOSinPasillo") },
             ];
         case "CLASE_ALMACENAMIENTO":
             return [
                 ...[...paleta.entries()].map(([codigo, i]) => ({ tono: `clase-${i}`, texto: codigo })),
-                { tono: "mezcla", texto: "Varias clases" },
-                { tono: "sin-dato", texto: "Vacía o sin clase" },
+                { tono: "mezcla", texto: tAlmacen("mapa.variasClases") },
+                { tono: "sin-dato", texto: tAlmacen("mapa.vaciaOSinClase") },
             ];
         case "PICKING":
             return [
-                { tono: "picking", texto: "Picking fijo" },
-                { tono: "bajo-minimo", texto: "Bajo mínimo" },
-                { tono: "sin-dato", texto: "Sin picking fijo" },
+                { tono: "picking", texto: tAlmacen("mapa.pickingFijo") },
+                { tono: "bajo-minimo", texto: tAlmacen("mapa.bajoMinimo") },
+                { tono: "sin-dato", texto: tAlmacen("mapa.sinPickingFijo") },
             ];
         case "BLOQUEO":
             return [
-                { tono: "activa", texto: "Activa" },
-                { tono: "parcial-bloqueada", texto: "Alguna bloqueada (módulo)" },
-                { tono: "bloqueada", texto: "Bloqueada" },
+                { tono: "activa", texto: tAlmacen("mapa.activa") },
+                { tono: "parcial-bloqueada", texto: tAlmacen("mapa.algunaBloqueadaModulo") },
+                { tono: "bloqueada", texto: tAlmacen("mapa.bloqueada") },
             ];
     }
 };
@@ -266,18 +267,18 @@ const MAX_EN_LISTA = 5;
 /** Los primeros códigos y cuántos más hay (una ubicación de migración puede tener cientos). */
 export const listaCorta = (codigos: string[]): string =>
     codigos.slice(0, MAX_EN_LISTA).join(", ") +
-    (codigos.length > MAX_EN_LISTA ? ` y ${codigos.length - MAX_EN_LISTA} más` : "");
+    (codigos.length > MAX_EN_LISTA ? tAlmacen("mapa.yValorMas", { valor: codigos.length - MAX_EN_LISTA }) : "");
 
 /** Texto del tooltip de una ubicación. */
 export const resumenUbicacion = (u: UbicacionMapa): string => {
-    const partes = [u.ubicacion + (u.bloqueada ? " (bloqueada)" : "")];
-    partes.push(u.articulos.length ? `${listaCorta(u.articulos)}: ${fmt(u.cantidad)}` : "Vacía");
+    const partes = [u.ubicacion + (u.bloqueada ? tAlmacen("mapa.bloqueada2") : "")];
+    partes.push(u.articulos.length ? `${listaCorta(u.articulos)}: ${fmt(u.cantidad)}` : tAlmacen("mapa.vacia"));
     if (u.pickingFijo) {
-        partes.push(`Picking fijo ${u.pickingFijo.articuloId} (mín. ${fmt(u.pickingFijo.minimo)}, máx. ${fmt(u.pickingFijo.maximo)})`);
+        partes.push(tAlmacen("mapa.pickingFijoArticuloidMinMinimoMax", { articuloId: u.pickingFijo.articuloId, minimo: fmt(u.pickingFijo.minimo), maximo: fmt(u.pickingFijo.maximo) }));
     }
-    if (u.claseUbicacion) partes.push(`Hueco ${u.claseUbicacion}`);
-    if (u.claseArticulo) partes.push(`Artículo ${u.claseArticulo}`);
-    if (u.clasesAlmacenamiento.length) partes.push(`Clase ${u.clasesAlmacenamiento.join(", ")}`);
+    if (u.claseUbicacion) partes.push(tAlmacen("mapa.huecoClaseubicacion", { claseUbicacion: u.claseUbicacion }));
+    if (u.claseArticulo) partes.push(tAlmacen("mapa.articuloClasearticulo", { claseArticulo: u.claseArticulo }));
+    if (u.clasesAlmacenamiento.length) partes.push(tAlmacen("mapa.claseJoin", { join: u.clasesAlmacenamiento.join(", ") }));
     return partes.join("\n");
 };
 
@@ -287,8 +288,8 @@ export const resumenModulo = (pasillo: string, modulo: number, us: UbicacionMapa
     const bloqueadas = us.filter((u) => u.bloqueada).length;
     const articulos = [...new Set(us.flatMap((u) => u.articulos))];
     return [
-        `Pasillo ${pasillo}, módulo ${modulo}`,
-        `${us.length} huecos, ${llenas} con stock${bloqueadas ? `, ${bloqueadas} bloqueados` : ""}`,
+        tAlmacen("mapa.pasilloPasilloModuloModulo", { pasillo, modulo }),
+        tAlmacen("mapa.lengthHuecosLlenasConStockValor", { length: us.length, llenas, valor: bloqueadas ? tAlmacen("mapa.bloqueadasBloqueados", { bloqueadas }) : "" }),
         ...(articulos.length ? [listaCorta(articulos)] : []),
     ].join("\n");
 };
@@ -352,11 +353,11 @@ export const METROS_NIVEL_POR_DEFECTO = 3;
 export const GIROS: Giro[] = [0, 90, 180, 270];
 
 export const tiposElemento: { valor: TipoElemento; descripcion: string }[] = [
-    { valor: "MUELLE", descripcion: "Muelle" },
-    { valor: "PUERTA", descripcion: "Puerta" },
-    { valor: "OFICINA", descripcion: "Oficina" },
-    { valor: "COLUMNA", descripcion: "Columna" },
-    { valor: "OTRO", descripcion: "Otro" },
+    { valor: "MUELLE", get descripcion() { return tAlmacen("mapa.muelle"); } },
+    { valor: "PUERTA", get descripcion() { return tAlmacen("mapa.puerta"); } },
+    { valor: "OFICINA", get descripcion() { return tAlmacen("mapa.oficina"); } },
+    { valor: "COLUMNA", get descripcion() { return tAlmacen("mapa.columna"); } },
+    { valor: "OTRO", get descripcion() { return tAlmacen("mapa.otro"); } },
 ];
 
 /** Encaje de la rejilla al arrastrar. */
@@ -519,7 +520,7 @@ interface PiezaPlanta {
 const piezas = (mapa: Pick<MapaAlmacen, "zonas">, planta: PlantaAlmacen): PiezaPlanta[] => [
     ...planta.pasillos.flatMap((c) => {
         const rect = rectPasillo(mapa, planta, c);
-        return rect ? [{ nombre: `Pasillo ${rotuloPasillo(mapa, c.pasilloId)}`, rect }] : [];
+        return rect ? [{ nombre: tAlmacen("mapa.pasilloMapa", { mapa: rotuloPasillo(mapa, c.pasilloId) }), rect }] : [];
     }),
     ...planta.elementos.map((e) => ({ nombre: e.nombre, rect: e })),
 ];
@@ -527,9 +528,9 @@ const piezas = (mapa: Pick<MapaAlmacen, "zonas">, planta: PlantaAlmacen): PiezaP
 /** Avisos del editor: solapes y piezas fuera de la nave (el servidor rechaza estas últimas). */
 export const avisosPlanta = (mapa: Pick<MapaAlmacen, "zonas">, planta: PlantaAlmacen): string[] => {
     const todas = piezas(mapa, planta);
-    const fuera = todas.filter((p) => !cabeEnNave(planta, p.rect)).map((p) => `${p.nombre} se sale de la nave`);
+    const fuera = todas.filter((p) => !cabeEnNave(planta, p.rect)).map((p) => tAlmacen("mapa.nombreSeSaleDeLaNave", { nombre: p.nombre }));
     const solapes = todas.flatMap((a, i) =>
-        todas.slice(i + 1).filter((b) => solapan(a.rect, b.rect)).map((b) => `${a.nombre} se solapa con ${b.nombre}`)
+        todas.slice(i + 1).filter((b) => solapan(a.rect, b.rect)).map((b) => tAlmacen("mapa.nombreSeSolapaConNombre2", { nombre: a.nombre, nombre2: b.nombre }))
     );
     return [...fuera, ...solapes];
 };
@@ -687,16 +688,16 @@ const FUNCIONES_ENTRADA = ["RECEPCION"];
 /** Aviso de una zona con pasillos que no usa la distancia real a la salida; null si la usa. */
 export const avisoAccesibilidad = (zona: ZonaMapa): string | null => {
     if (zona.pasillos.length === 0 || zona.accesibilidad.calculo === "DISTANCIA") return null;
-    const prefijo = `${zona.zona}: accesibilidad estimada (fórmula)`;
+    const prefijo = tAlmacen("mapa.zonaAccesibilidadEstimadaFormula", { zona: zona.zona });
     switch (zona.accesibilidad.motivo) {
         case "PASILLOS_SIN_COLOCAR": {
             const sin = zona.accesibilidad.pasillosSinColocar;
-            return `${prefijo}; falta colocar en la planta ${sin.length === 1 ? "el pasillo" : "los pasillos"} ${sin.join(", ")}`;
+            return tAlmacen("mapa.prefijoFaltaColocarEnLaPlanta", { prefijo, valor: sin.length === 1 ? tAlmacen("mapa.elPasillo") : tAlmacen("mapa.losPasillos"), join: sin.join(", ") });
         }
         case "SIN_SALIDA":
-            return `${prefijo}; no hay punto de salida en la planta (un elemento con ubicaciones de preparación o expedición)`;
+            return tAlmacen("mapa.prefijoNoHayPuntoDeSalida", { prefijo });
         case "SIN_PLANTA":
-            return `${prefijo}; el almacén no tiene planta`;
+            return tAlmacen("mapa.prefijoElAlmacenNoTienePlanta", { prefijo });
         default:
             return prefijo;
     }
@@ -707,7 +708,7 @@ export const avisosAccesibilidad = (mapa: MapaAlmacen): string[] => {
     const conPasillos = mapa.zonas.filter((z) => z.pasillos.length > 0);
     if (!mapa.planta) {
         return conPasillos.length
-            ? ["Accesibilidad estimada (fórmula): el almacén no tiene planta. Créala para medir la distancia real a la salida."]
+            ? [tAlmacen("mapa.accesibilidadEstimadaFormulaElAlmacenNo")]
             : [];
     }
     // Sin punto de salida afecta a todas por igual: un solo aviso con todas las zonas.
@@ -715,7 +716,7 @@ export const avisosAccesibilidad = (mapa: MapaAlmacen): string[] => {
     const resto = conPasillos.filter((z) => !sinSalida.includes(z));
     return [
         ...(sinSalida.length
-            ? [`${sinSalida.map((z) => z.zona).join(", ")}: accesibilidad estimada (fórmula); no hay punto de salida en la planta (un elemento con ubicaciones de preparación o expedición)`]
+            ? [tAlmacen("mapa.joinAccesibilidadEstimadaFormulaNoHay", { join: sinSalida.map((z) => z.zona).join(", ") })]
             : []),
         ...resto.map(avisoAccesibilidad).filter((a): a is string => a !== null),
     ];
@@ -725,10 +726,10 @@ export const avisosAccesibilidad = (mapa: MapaAlmacen): string[] => {
 export const textoCalculo = (mapa: MapaAlmacen): string => {
     const conPasillos = mapa.zonas.filter((z) => z.pasillos.length > 0);
     const reales = conPasillos.filter((z) => z.accesibilidad.calculo === "DISTANCIA").length;
-    if (reales === 0) return "Accesibilidad estimada (fórmula)";
+    if (reales === 0) return tAlmacen("mapa.accesibilidadEstimadaFormula");
     return reales === conPasillos.length
-        ? "Accesibilidad por distancia a la salida"
-        : "Accesibilidad por distancia a la salida en parte de las zonas (ver avisos)";
+        ? tAlmacen("mapa.accesibilidadPorDistanciaALaSalida")
+        : tAlmacen("mapa.accesibilidadPorDistanciaALaSalida2");
 };
 
 const fmtMetros = (m: number) => `${Math.round(m).toLocaleString("es-ES")} m`;
@@ -736,8 +737,8 @@ const fmtMetros = (m: number) => `${Math.round(m).toLocaleString("es-ES")} m`;
 /** «A 23 m de la salida · 41 m de la recepción», o null sin distancia real. */
 export const textoDistancias = (u: Pick<UbicacionMapa, "metrosSalida" | "metrosEntrada">): string | null => {
     const partes = [
-        ...(u.metrosSalida !== null ? [`${fmtMetros(u.metrosSalida)} de la salida`] : []),
-        ...(u.metrosEntrada !== null ? [`${fmtMetros(u.metrosEntrada)} de la recepción`] : []),
+        ...(u.metrosSalida !== null ? [tAlmacen("mapa.metrossalidaDeLaSalida", { metrosSalida: fmtMetros(u.metrosSalida) })] : []),
+        ...(u.metrosEntrada !== null ? [tAlmacen("mapa.metrosentradaDeLaRecepcion", { metrosEntrada: fmtMetros(u.metrosEntrada) })] : []),
     ];
     return partes.length ? `A ${partes.join(" · ")}` : null;
 };
@@ -788,11 +789,11 @@ export const usoElemento = (
 export const avisosDistancia = (mapa: MapaAlmacen, planta: PlantaAlmacen): string[] => {
     const avisos: string[] = [];
     if (!planta.elementos.some((e) => usoElemento(mapa, e).salida)) {
-        avisos.push("No hay punto de salida: vincula a un elemento las ubicaciones de preparación o expedición");
+        avisos.push(tAlmacen("mapa.noHayPuntoDeSalidaVincula"));
     }
     const sueltas = sinVincular(mapa, planta);
     if (sueltas.length) {
-        avisos.push(`Ubicaciones sin pasillo sin situar en la planta: ${listaCorta(sueltas.map((u) => u.ubicacion))}`);
+        avisos.push(tAlmacen("mapa.ubicacionesSinPasilloSinSituarEn", { valor: listaCorta(sueltas.map((u) => u.ubicacion)) }));
     }
     return avisos;
 };

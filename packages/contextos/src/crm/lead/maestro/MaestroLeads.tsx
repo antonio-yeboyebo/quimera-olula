@@ -12,8 +12,10 @@ import { metaTablaLead } from "./maestro.ts";
 import "./MaestroLeads.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaLead } from "./TarjetaLead.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroLeads = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroLeads = () => {
       <MaestroDetalle<Lead>
         Maestro={
           <>
-            <h2>Leads</h2>
+            <h2>{t("lead.leads")}</h2>
 
             <Listado<Lead>
               metaTabla={metaTablaLead}
@@ -46,7 +48,7 @@ export const MaestroLeads = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("creacion_de_lead_solicitada")}>
-                    Nuevo
+                    {t("lead.nuevo")}
                   </QBoton>
                 </div>
               )}

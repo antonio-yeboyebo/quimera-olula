@@ -7,6 +7,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useMemo } from "react";
 import { CambiarDescuento as CambiarDescuentoType } from "./diseño.ts";
 import { cambiarDescuentoVacio, metaCambiarDescuento } from "./dominio.ts";
+import { useTVentas } from "../../../../i18n/index.ts";
 
 interface CambiarDescuentoProps {
   publicar: EmitirEvento;
@@ -17,6 +18,7 @@ export const CambiarDescuento = ({
   publicar,
   venta,
 }: CambiarDescuentoProps) => {
+  const t = useTVentas();
   const descuentoInicial = useMemo(
     () => ({
       ...cambiarDescuentoVacio,
@@ -47,16 +49,19 @@ export const CambiarDescuento = ({
     <QModal
       abierto={true}
       nombre="cambiar_descuento"
-      titulo="Descuento"
+      titulo={t("comun.campos.descuento")}
       onCerrar={cancelar}
     >
       <div className="CambiarDescuento">
         <quimera-formulario>
-          <QInput label="Descuento (%)" {...uiProps("dto_porcentual")} />
+          <QInput
+            label={t("comun.campos.descuentoPorcentaje")}
+            {...uiProps("dto_porcentual")}
+          />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Aplicar
+            {t("comun.aplicar")}
           </QBoton>
         </div>
       </div>

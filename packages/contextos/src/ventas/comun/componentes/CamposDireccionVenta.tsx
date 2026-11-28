@@ -2,6 +2,7 @@ import { PaisSelector } from "#/comun/componentes/pais/pais.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { UiProps } from "@olula/lib/useModelo.ts";
 import "./CamposDireccionVenta.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Campos de dirección en snake_case, compartidos por el alta de documento de
@@ -15,16 +16,28 @@ export const CamposDireccionVenta = ({
   uiProps,
 }: {
   uiProps: (campo: string, secundario?: string) => UiProps;
-}) => (
-  <>
-    <QInput label="Tipo de Vía" {...uiProps("tipo_via")} />
-    <QInput label="Nombre de la Vía" {...uiProps("nombre_via")} />
-    <QInput label="Número" {...uiProps("numero")} />
-    <QInput label="Otros" {...uiProps("otros")} />
-    <QInput label="Cód. Postal" {...uiProps("cod_postal")} />
-    <QInput label="Ciudad" {...uiProps("ciudad")} />
-    <QInput label="Provincia" {...uiProps("provincia")} />
-    <PaisSelector label="País" {...uiProps("pais_id")} />
-    <QInput label="Teléfono" {...uiProps("telefono")} />
-  </>
-);
+}) => {
+  const t = useTVentas();
+  return (
+    <>
+      <QInput label={t("comun.direccion.tipoVia")} {...uiProps("tipo_via")} />
+      <QInput
+        label={t("comun.direccion.nombreVia")}
+        {...uiProps("nombre_via")}
+      />
+      <QInput label={t("comun.direccion.numero")} {...uiProps("numero")} />
+      <QInput label={t("comun.direccion.otros")} {...uiProps("otros")} />
+      <QInput
+        label={t("comun.direccion.codPostal")}
+        {...uiProps("cod_postal")}
+      />
+      <QInput label={t("comun.direccion.ciudad")} {...uiProps("ciudad")} />
+      <QInput
+        label={t("comun.direccion.provincia")}
+        {...uiProps("provincia")}
+      />
+      <PaisSelector label={t("comun.direccion.pais")} {...uiProps("pais_id")} />
+      <QInput label={t("comun.direccion.telefono")} {...uiProps("telefono")} />
+    </>
+  );
+};

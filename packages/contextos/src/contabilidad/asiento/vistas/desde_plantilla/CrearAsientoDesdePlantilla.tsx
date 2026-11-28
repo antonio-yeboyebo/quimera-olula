@@ -28,6 +28,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import "./CrearAsientoDesdePlantilla.css";
+import { tContabilidad, useTContabilidad } from "../../../i18n/index.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
@@ -59,6 +60,7 @@ export const CrearAsientoDesdePlantilla = ({
     publicar: EmitirEvento;
     ejercicioId: string;
 }) => {
+    const tx = useTContabilidad();
     const { intentar } = useContext(ContextoError);
 
     const [opciones, setOpciones] = useState<Opcion[]>([]);
@@ -171,21 +173,21 @@ export const CrearAsientoDesdePlantilla = ({
         <QModal
             abierto={true}
             nombre="crearAsientoDesdePlantilla"
-            titulo={creados > 0 ? `Siguiente asiento (${creados} creado/s)` : "Asiento desde plantilla"}
+            titulo={creados > 0 ? tx("asiento.siguienteAsientoCreadosCreadoS", { creados }) : tx("asiento.asientoDesdePlantilla")}
             onCerrar={() => terminar(ultimoAsientoId)}
         >
             <div className="CrearAsientoDesdePlantilla">
                 <quimera-formulario>
-                    <QInput label="Ejercicio" nombre="ejercicioId" valor={ejercicioId} soloLectura />
+                    <QInput label={tx("asiento.ejercicio")} nombre="ejercicioId" valor={ejercicioId} soloLectura />
                     <QSelect
-                        label="Plantilla"
+                        label={tx("asiento.plantilla")}
                         nombre="plantillaId"
                         valor={plantillaId}
                         opciones={opciones}
                         onChange={(opcion) => setPlantillaId(opcion?.valor ?? "")}
                     />
                     <QInput
-                        label="Fecha"
+                        label={tx("asiento.fecha")}
                         nombre="fecha"
                         tipo="fecha"
                         valor={fecha}
@@ -195,7 +197,7 @@ export const CrearAsientoDesdePlantilla = ({
                         }}
                     />
                     <QInput
-                        label="Concepto del asiento (vacío: el de la primera partida)"
+                        label={tx("asiento.conceptoDelAsientoVacioElDe")}
                         nombre="concepto"
                         valor={concepto}
                         onChange={(v) => setConcepto(v)}
@@ -220,13 +222,13 @@ export const CrearAsientoDesdePlantilla = ({
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Nº</th>
-                                    <th>Subcuenta</th>
-                                    <th>Debe</th>
-                                    <th>Haber</th>
-                                    <th>Concepto</th>
-                                    <th>Contrapartida</th>
-                                    <th>Base IVA</th>
+                                    <th>{tx("asiento.n")}</th>
+                                    <th>{tx("asiento.subcuenta")}</th>
+                                    <th>{tx("asiento.debe")}</th>
+                                    <th>{tx("asiento.haber")}</th>
+                                    <th>{tx("asiento.concepto")}</th>
+                                    <th>{tx("asiento.contrapartida")}</th>
+                                    <th>{tx("asiento.baseIva")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -236,7 +238,7 @@ export const CrearAsientoDesdePlantilla = ({
                                         <td>{p.codigoSubcuenta}</td>
                                         <td className="importe">{formatear(p.debe)}</td>
                                         <td className="importe">{formatear(p.haber)}</td>
-                                        <td>{p.omitida ? "(se omite: importe cero)" : p.concepto}</td>
+                                        <td>{p.omitida ? tx("asiento.seOmiteImporteCero") : p.concepto}</td>
                                         <td>{p.codigoContrapartida}</td>
                                         <td className="importe">
                                             {p.esIva && p.baseImponible !== null ? formatear(p.baseImponible) : ""}
@@ -247,13 +249,13 @@ export const CrearAsientoDesdePlantilla = ({
                             {totales && (
                                 <tfoot>
                                     <tr>
-                                        <td colSpan={2}>Total</td>
+                                        <td colSpan={2}>{tx("asiento.total")}</td>
                                         <td className="importe">{formatear(totales.debe)}</td>
                                         <td className="importe">{formatear(totales.haber)}</td>
                                         <td colSpan={3}>
                                             {cuadrado
-                                                ? "Cuadrado"
-                                                : `Descuadre: ${formatear(resultado.descuadre)}`}
+                                                ? tx("asiento.cuadrado")
+                                                : tx("asiento.descuadreDescuadre", { descuadre: formatear(resultado.descuadre) })}
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -264,7 +266,7 @@ export const CrearAsientoDesdePlantilla = ({
                         ))}
                         {resultado.siguientePlantillaId && (
                             <p className="aviso">
-                                Al crearlo se propondrá el siguiente asiento: plantilla{" "}
+                                {tx("asiento.alCrearloSePropondraElSiguiente")}{" "}
                                 {resultado.siguientePlantillaId}.
                             </p>
                         )}
@@ -273,10 +275,10 @@ export const CrearAsientoDesdePlantilla = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={calcular} deshabilitado={!plantilla || ocupado} variante="borde">
-                        Calcular
+                        {tx("asiento.calcular")}
                     </QBoton>
                     <QBoton onClick={crear} deshabilitado={!cuadrado || ocupado}>
-                        Crear asiento
+                        {tx("asiento.crearAsiento")}
                     </QBoton>
                 </div>
             </div>
@@ -303,7 +305,7 @@ const DatosPedidos = ({
 }) => {
     const conDatos = partidas.filter(pideAlgo);
     if (conDatos.length === 0) {
-        return <p>La plantilla no pide datos: pulse Calcular.</p>;
+        return <p>{tContabilidad("asiento.laPlantillaNoPideDatosPulse")}</p>;
     }
     return (
         <div className="datos-pedidos">
@@ -313,13 +315,13 @@ const DatosPedidos = ({
                 return (
                     <fieldset key={partida.id}>
                         <legend>
-                            Partida {partida.numeroOrden} ({partida.debeHaber})
+                            {tContabilidad("asiento.partidaNumeroordenDebehaber", { numeroOrden: partida.numeroOrden, debeHaber: partida.debeHaber })}
                         </legend>
                         <quimera-formulario>
                             {pedidos.subcuenta && (
                                 <SubcuentaSelector
                                     ejercicioId={ejercicioId}
-                                    label={`Subcuenta${partida.codigoSubcuenta ? ` (${partida.codigoSubcuenta}…)` : ""}`}
+                                    label={tContabilidad("asiento.subcuentaValor", { valor: partida.codigoSubcuenta ? ` (${partida.codigoSubcuenta}…)` : "" })}
                                     nombre={`subcuenta_${partida.id}`}
                                     valor={textos[`${partida.id}.subcuenta`] ?? ""}
                                     descripcion={v.codigoSubcuenta ?? ""}
@@ -331,7 +333,7 @@ const DatosPedidos = ({
                             )}
                             {pedidos.importe && (
                                 <QInput
-                                    label="Importe"
+                                    label={tContabilidad("asiento.importe")}
                                     nombre={`importe_${partida.id}`}
                                     valor={textos[`${partida.id}.importe`] ?? ""}
                                     onChange={(t) => cambiarNumero(partida.id, "importe", t)}
@@ -339,7 +341,7 @@ const DatosPedidos = ({
                             )}
                             {pedidos.concepto && (
                                 <QInput
-                                    label="Concepto"
+                                    label={tContabilidad("asiento.concepto")}
                                     nombre={`concepto_${partida.id}`}
                                     valor={v.concepto ?? partida.concepto}
                                     onChange={(t) => cambiarValor(partida.id, { concepto: t })}
@@ -347,7 +349,7 @@ const DatosPedidos = ({
                             )}
                             {pedidos.documento && (
                                 <QInput
-                                    label="Documento"
+                                    label={tContabilidad("asiento.documento")}
                                     nombre={`documento_${partida.id}`}
                                     valor={v.documento ?? partida.documento}
                                     onChange={(t) => cambiarValor(partida.id, { documento: t })}
@@ -356,7 +358,7 @@ const DatosPedidos = ({
                             {pedidos.contrapartida && (
                                 <SubcuentaSelector
                                     ejercicioId={ejercicioId}
-                                    label="Contrapartida"
+                                    label={tContabilidad("asiento.contrapartida")}
                                     nombre={`contrapartida_${partida.id}`}
                                     valor={textos[`${partida.id}.contrapartida`] ?? ""}
                                     descripcion={v.codigoContrapartida ?? ""}
@@ -368,7 +370,7 @@ const DatosPedidos = ({
                             )}
                             {pedidos.baseImponible && (
                                 <QInput
-                                    label="Base imponible (si es de IVA)"
+                                    label={tContabilidad("asiento.baseImponibleSiEsDeIva")}
                                     nombre={`base_${partida.id}`}
                                     valor={textos[`${partida.id}.baseImponible`] ?? ""}
                                     onChange={(t) => cambiarNumero(partida.id, "baseImponible", t)}
@@ -376,7 +378,7 @@ const DatosPedidos = ({
                             )}
                             {pedidos.numeroFactura && (
                                 <QInput
-                                    label="Nº de factura (si es de IVA)"
+                                    label={tContabilidad("asiento.nDeFacturaSiEsDe")}
                                     nombre={`factura_${partida.id}`}
                                     valor={v.numeroFactura ?? ""}
                                     onChange={(t) => cambiarValor(partida.id, { numeroFactura: t })}

@@ -8,6 +8,7 @@ import {
   puedoMarcarDireccionEnvio,
   puedoMarcarDireccionFacturacion,
 } from "./dominio.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 import { TarjetaDireccion } from "./TarjetaDireccion.tsx";
 import "./TabDirecciones.css";
 
@@ -23,22 +24,23 @@ export const TabDireccionesLista = ({
   emitir: (evento: string, payload?: unknown) => void;
   cargando: boolean;
 }) => {
+  const t = useTVentas();
   const acciones = [
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("cliente.botones.borrar"),
       advertencia: true,
       onClick: () => seleccionada && emitir("borrado_solicitado"),
       deshabilitado: !seleccionada,
     },
     {
-      texto: "Facturación",
+      texto: t("cliente.direccion.facturacion"),
       onClick: () => seleccionada && emitir("facturacion_solicitada"),
       deshabilitado:
         !seleccionada || !puedoMarcarDireccionFacturacion(seleccionada),
     },
     {
-      texto: "Envío",
+      texto: t("cliente.direccion.envio"),
       onClick: () => seleccionada && emitir("envio_solicitada"),
       deshabilitado: !seleccionada || !puedoMarcarDireccionEnvio(seleccionada),
     },
@@ -46,7 +48,7 @@ export const TabDireccionesLista = ({
 
   return (
     <ListadoSemiControlado
-      metaTabla={metaTablaDirecciones}
+      metaTabla={metaTablaDirecciones()}
       tarjeta={TarjetaDireccion}
       entidades={direcciones}
       totalEntidades={direcciones.length}
@@ -57,13 +59,13 @@ export const TabDireccionesLista = ({
       onCriteriaChanged={() => null}
       renderAcciones={() => (
         <div className="TabDireccionesLista maestro-botones">
-          <QBoton onClick={() => emitir("alta_solicitada")}>Nueva</QBoton>
+          <QBoton onClick={() => emitir("alta_solicitada")}>{t("cliente.botones.nueva")}</QBoton>
           <QBoton
             variante="borde"
             deshabilitado={!seleccionada}
             onClick={() => seleccionada && emitir("edicion_solicitada")}
           >
-            Editar
+            {t("cliente.botones.editar")}
           </QBoton>
           <QuimeraAcciones acciones={acciones} vertical />
         </div>

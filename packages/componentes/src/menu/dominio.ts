@@ -73,6 +73,20 @@ export const aplanarMenu = (
   );
 };
 
+/** Pantalla con nombre y grupo traducidos; los nombres en español quedan como
+ *  sinónimos, así que la búsqueda encuentra la pantalla en los dos idiomas. */
+export const traducirPantalla = (
+  pantalla: PantallaMenu,
+  traducir: (nombre: string) => string
+): PantallaMenu => {
+  const nombre = traducir(pantalla.nombre);
+  const grupo = pantalla.grupo ? traducir(pantalla.grupo) : pantalla.grupo;
+  const originales = [pantalla.nombre, pantalla.grupo].filter(
+    (texto, i) => texto && texto !== [nombre, grupo][i]
+  );
+  return { ...pantalla, nombre, grupo, alias: [...pantalla.alias, ...originales] };
+};
+
 /** La pantalla del menú que corresponde a la ruta (incluye detalles: /x/123). */
 export const urlActiva = (
   urls: string[],

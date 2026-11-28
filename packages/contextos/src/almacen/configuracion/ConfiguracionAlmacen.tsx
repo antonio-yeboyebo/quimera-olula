@@ -5,6 +5,7 @@ import { useState } from "react";
 import { MaestroConDetalleClaseAlmacenamiento } from "../clase_almacenamiento/maestro/MaestroConDetalleClaseAlmacenamiento.tsx";
 import { MaestroConDetalleTipoCaja } from "../tipo_caja/vistas/maestro/MaestroConDetalleTipoCaja.tsx";
 import { MaestroConDetalleTipoUbicacion } from "../tipo_ubicacion/maestro/MaestroConDetalleTipoUbicacion.tsx";
+import { useTAlmacen } from "../i18n/index.ts";
 
 const preferencias = preferenciasPantalla("configuracion", { pestana: 0 });
 
@@ -13,10 +14,11 @@ const preferencias = preferenciasPantalla("configuracion", { pestana: 0 });
  * pestañas como «CRM/Otros». Las rutas de cada una siguen existiendo para los enlaces a ficha.
  */
 export const ConfiguracionAlmacen = () => {
+    const t = useTAlmacen();
     const pestanas = [
-        { label: "Tipos de ubicación", regla: "almacen.tipo_ubicacion", Maestro: MaestroConDetalleTipoUbicacion },
-        { label: "Tipos de caja", regla: "almacen.tipo_caja", Maestro: MaestroConDetalleTipoCaja },
-        { label: "Clases de almacenamiento", regla: "almacen.clase_almacenamiento", Maestro: MaestroConDetalleClaseAlmacenamiento },
+        { label: t("configuracion.tiposDeUbicacion"), regla: "almacen.tipo_ubicacion", Maestro: MaestroConDetalleTipoUbicacion },
+        { label: t("configuracion.tiposDeCaja"), regla: "almacen.tipo_caja", Maestro: MaestroConDetalleTipoCaja },
+        { label: t("configuracion.clasesDeAlmacenamiento"), regla: "almacen.clase_almacenamiento", Maestro: MaestroConDetalleClaseAlmacenamiento },
     ].filter((p) => puede(p.regla));
     const [inicial] = useState(() => Math.min(preferencias.obtener().pestana, Math.max(pestanas.length - 1, 0)));
 
@@ -30,7 +32,7 @@ export const ConfiguracionAlmacen = () => {
     return (
         // Sin h2 propio: cada pestaña ya trae el suyo (el del maestro) y repetiría el título tres veces.
         // El nombre de la página queda como región para lectores de pantalla.
-        <section className="ConfiguracionAlmacen" aria-label="Configuración del almacén">
+        <section className="ConfiguracionAlmacen" aria-label={t("configuracion.configuracionDelAlmacen")}>
             <Tabs
                 tabInicial={inicial}
                 onCambio={cambiar}

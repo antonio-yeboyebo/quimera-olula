@@ -24,6 +24,7 @@ import {
     SaldoCuentaConexionBancaria,
     TipoProductoBancario,
 } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface CuentaConexionBancariaApi {
     id: string;
@@ -123,7 +124,7 @@ export const getConexionBancaria: GetConexionBancaria = async (id) => {
     return await RestAPI.getItem<ConexionBancaria, ConexionBancariaApi>(
         `${baseUrl}/${id}`,
         conexionBancariaDesdeApi,
-        "Error al obtener la conexión bancaria"
+        tTesoreria("conexion_bancaria.errorAlObtenerLaConexionBancaria")
     );
 };
 
@@ -132,7 +133,7 @@ export const getConexionesBancarias: GetConexionesBancarias = async (criteria) =
         baseUrl,
         criteria,
         conexionBancariaDesdeApi,
-        "Error al obtener las conexiones bancarias"
+        tTesoreria("conexion_bancaria.errorAlObtenerLasConexionesBancarias")
     );
 };
 
@@ -153,7 +154,7 @@ export const postIniciarConexionBancaria: PostIniciarConexionBancaria = async (c
             // Wealth Reader autoriza el widget por este origin; si ≠ API lo registra.
             origen: window.location.origin,
         },
-        "Error al iniciar la conexión con el banco"
+        tTesoreria("conexion_bancaria.errorAlIniciarLaConexionCon")
     );
     return { proveedor: respuesta.proveedor, datos: respuesta.datos };
 };
@@ -162,7 +163,7 @@ export const patchReautenticarConexionBancaria: PatchReautenticarConexionBancari
     await RestAPI.patch(
         `${baseUrl}/${id}/reautenticar`,
         { datos },
-        "Error al reautenticar la conexión bancaria"
+        tTesoreria("conexion_bancaria.errorAlReautenticarLaConexionBancaria")
     );
 };
 
@@ -170,7 +171,7 @@ export const postConexionBancaria: PostConexionBancaria = async (datos) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         { datos },
-        "Error al conectar el banco"
+        tTesoreria("conexion_bancaria.errorAlConectarElBanco")
     );
     return respuesta.id;
 };
@@ -179,14 +180,14 @@ export const patchCuentaConexionBancaria: PatchCuentaConexionBancaria = async (c
     await RestAPI.patch<CambiosCuentaConexionBancariaApi>(
         `${baseUrl}/${conexionId}/cuenta/${cuentaId}`,
         { cuenta_banco_id: cambios.cuentaBancoId, activa: cambios.activa },
-        "Error al asociar la cuenta bancaria"
+        tTesoreria("conexion_bancaria.errorAlAsociarLaCuentaBancaria")
     );
 };
 
 export const deleteConexionBancaria: DeleteConexionBancaria = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al desconectar el banco"
+        tTesoreria("conexion_bancaria.errorAlDesconectarElBanco")
     );
 };
 
@@ -256,7 +257,7 @@ const saldoCuentaDesdeApi = (api: SaldoCuentaConexionBancariaApi): SaldoCuentaCo
 export const getSaldosConexionBancaria: GetSaldosConexionBancaria = async () => {
     const api = await RestAPI.get<ResumenSaldosConexionBancariaApi>(
         `${baseUrl}/saldos`,
-        "Error al obtener los saldos de las cuentas bancarias"
+        tTesoreria("conexion_bancaria.errorAlObtenerLosSaldosDe")
     );
     return {
         cuentas: (api.cuentas ?? []).map(saldoCuentaDesdeApi),
@@ -274,7 +275,7 @@ export const patchTiposProductoConexionBancaria: PatchTiposProductoConexionBanca
     await RestAPI.patch(
         `${baseUrl}/${id}/tipos_producto`,
         { tipos_producto: tiposProducto },
-        "Error al cambiar los productos de la conexión bancaria"
+        tTesoreria("conexion_bancaria.errorAlCambiarLosProductosDe")
     );
 };
 
@@ -314,7 +315,7 @@ export const getPrestamosBancarios: GetPrestamosBancarios = async (conexionId) =
     return await RestAPI.getLista<PrestamoBancario, PrestamoBancarioApi>(
         `${urlPrestamos}?conexion_id=${encodeURIComponent(conexionId)}`,
         prestamoBancarioDesdeApi,
-        "Error al obtener los préstamos de la conexión bancaria"
+        tTesoreria("conexion_bancaria.errorAlObtenerLosPrestamosDe")
     );
 };
 
@@ -322,7 +323,7 @@ export const getPrestamoBancario: GetPrestamoBancario = async (id) => {
     return await RestAPI.getItem<PrestamoBancario, PrestamoBancarioApi>(
         `${urlPrestamos}/${id}`,
         prestamoBancarioDesdeApi,
-        "Error al obtener el préstamo"
+        tTesoreria("conexion_bancaria.errorAlObtenerElPrestamo")
     );
 };
 
@@ -333,6 +334,6 @@ export const patchPrestamoBancario: PatchPrestamoBancario = async (id, subcuenta
             codigo_subcuenta_capital: subcuentas.codigoSubcuentaCapital,
             codigo_subcuenta_intereses: subcuentas.codigoSubcuentaIntereses,
         },
-        "Error al guardar las subcuentas del préstamo"
+        tTesoreria("conexion_bancaria.errorAlGuardarLasSubcuentasDel")
     );
 };

@@ -14,7 +14,7 @@ import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   filtroAgente,
   filtroAlmacen,
@@ -32,20 +32,21 @@ import {
 } from "../dominio.ts";
 import "./MaestroConDetalleAlbaran.css";
 import { getMaquina } from "./maquina.ts";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 
 const PENDIENTE = "false";
 const FACTURADO = "true";
 
 const filtroPendientes: ClausulaFiltro[] = [["facturado", "=", PENDIENTE]];
 
-const campoFiltroFacturado: MetaFiltro = {
+const campoFiltroFacturado = (): MetaFiltro => ({
   facturado: {
     id: "facturado",
-    label: "Estado",
+    label: tVentas("documento.maestro.estado"),
     tipo: "multiseleccion",
     opciones: [
-      { valor: PENDIENTE, descripcion: "Pendiente" },
-      { valor: FACTURADO, descripcion: "Facturado" },
+      { valor: PENDIENTE, descripcion: tVentas("albaran.estado.pendiente") },
+      { valor: FACTURADO, descripcion: tVentas("albaran.estado.facturado") },
     ],
     filtro: (valor) => {
       const elegidos = (valor as string[]) ?? [];
@@ -53,9 +54,13 @@ const campoFiltroFacturado: MetaFiltro = {
       return ["facturado", "=", elegidos[0]];
     },
   },
-};
+});
 
 export const MaestroConDetalleAlbaran = () => {
+  const t = useTVentas();
+  // Se recalculan al cambiar de idioma (t cambia).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const widgets = useMemo(() => widgetsAlbaran(), [t]);
   const { id, criteria } = getUrlParams();
   const criteriaInicial =
     criteria.filtro.length === 0
@@ -77,12 +82,12 @@ export const MaestroConDetalleAlbaran = () => {
   const metaTablaAlbaran = [
     {
       id: "estado",
-      cabecera: "Estado",
+      cabecera: t("documento.maestro.estado"),
       render: (albaran: Albaran) => (
         <EtiquetaEstado {...etiquetaEstadoAlbaran(albaran)} />
       ),
     },
-    ...metaTablaBase,
+    ...metaTablaBase(),
   ] as MetaTabla<Albaran>;
 
   const metaFiltroAlbaran: MetaFiltro = {
@@ -93,11 +98,11 @@ export const MaestroConDetalleAlbaran = () => {
     almacen_id: filtroAlmacen,
     de_abono: {
       id: "de_abono",
-      label: "Abono",
+      label: t("albaran.maestro.abono"),
       tipo: "checkbox",
       filtro: (v) => (v ? filtroBooleanos("de_abono", v) : null),
     },
-    ...campoFiltroFacturado,
+    ...campoFiltroFacturado(),
   };
 
   return (
@@ -105,11 +110,11 @@ export const MaestroConDetalleAlbaran = () => {
       <MaestroDetalle<Albaran>
         Maestro={
           <>
-            <h2>Albaranes</h2>
+            <h2>{t("albaran.maestro.titulo")}</h2>
             <Listado<Albaran>
               metaTabla={metaTablaAlbaran}
               metaFiltro={metaFiltroAlbaran}
-              widgets={widgetsAlbaran}
+              widgets={widgets}
               tarjeta={(albaran) => (
                 <TarjetaDocumentoVenta
                   codigo={albaran.codigo}
@@ -123,7 +128,9 @@ export const MaestroConDetalleAlbaran = () => {
                   etiquetaEstado={etiquetaEstadoAlbaran(albaran)}
                   etiqueta={
                     albaran.de_abono ? (
-                      <QEtiqueta variante="advertencia">Abono</QEtiqueta>
+                      <QEtiqueta variante="advertencia">
+                        {t("albaran.maestro.abono")}
+                      </QEtiqueta>
                     ) : undefined
                   }
                 />
@@ -132,7 +139,7 @@ export const MaestroConDetalleAlbaran = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("crear_albaran_solicitado")}>
-                    Nuevo Albarán
+                    {t("albaran.maestro.nuevo")}
                   </QBoton>
                 </div>
               )}
@@ -158,7 +165,7 @@ export const MaestroConDetalleAlbaran = () => {
         nombre="modal"
         abierto={ctx.estado === "CREANDO_ALBARAN"}
         onCerrar={() => emitir("creacion_cancelada")}
-        titulo="Nuevo Albarán"
+        titulo={t("albaran.maestro.nuevo")}
       >
         {ctx.estado === "CREANDO_ALBARAN" && <CrearAlbaran publicar={emitir} />}
       </QModal>

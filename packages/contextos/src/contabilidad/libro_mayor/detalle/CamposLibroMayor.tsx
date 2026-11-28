@@ -7,6 +7,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { useFocus } from "@olula/lib/useFocus.ts";
 import { LibroMayor } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 /** Criterios del libro mayor, iguales en el alta y en la ficha. */
 export const CamposLibroMayor = ({
@@ -19,34 +20,34 @@ export const CamposLibroMayor = ({
     refDescripcion?: ReturnType<typeof useFocus>;
 }) => (
     <>
-        <QInput label="Descripción" {...uiProps("descripcion")} ref={refDescripcion} />
+        <QInput label={tContabilidad("libro_mayor.descripcion")} {...uiProps("descripcion")} ref={refDescripcion} />
         <FilaFormulario>
-            <QInput label="Ejercicio" {...uiProps("ejercicioId")} />
-            <FechaInforme label="Desde fecha" {...uiProps("fechaDesde")} />
-            <FechaInforme label="Hasta fecha" {...uiProps("fechaHasta")} />
+            <QInput label={tContabilidad("libro_mayor.ejercicio")} {...uiProps("ejercicioId")} />
+            <FechaInforme label={tContabilidad("libro_mayor.desdeFecha")} {...uiProps("fechaDesde")} />
+            <FechaInforme label={tContabilidad("libro_mayor.hastaFecha")} {...uiProps("fechaHasta")} />
         </FilaFormulario>
         <FilaFormulario>
-            <QCheckbox label="Todas las subcuentas" {...uiProps("todasSubcuentas")} />
+            <QCheckbox label={tContabilidad("libro_mayor.todasLasSubcuentas")} {...uiProps("todasSubcuentas")} />
             <QInput
-                label="Desde subcuenta Nº"
+                label={tContabilidad("libro_mayor.desdeSubcuentaN")}
                 {...uiProps("subcuentaDesde")}
                 soloLectura={informe.todasSubcuentas}
                 opcional
             />
             <QInput
-                label="Hasta subcuenta Nº"
+                label={tContabilidad("libro_mayor.hastaSubcuentaN")}
                 {...uiProps("subcuentaHasta")}
                 soloLectura={informe.todasSubcuentas}
                 opcional
             />
         </FilaFormulario>
         <FilaFormulario>
-            <QCheckbox label="Calcular saldo inicial" {...uiProps("saldoInicial")} />
-            <QCheckbox label="Excluir partidas a cero" {...uiProps("excluirPartidasCero")} />
+            <QCheckbox label={tContabilidad("libro_mayor.calcularSaldoInicial")} {...uiProps("saldoInicial")} />
+            <QCheckbox label={tContabilidad("libro_mayor.excluirPartidasACero")} {...uiProps("excluirPartidasCero")} />
         </FilaFormulario>
         <FilaFormulario>
-            <CriterioOrdenMayor label="Criterio" {...uiProps("orden")} />
-            <SentidoOrdenInforme label="Orden" {...uiProps("tipoOrden")} />
+            <CriterioOrdenMayor label={tContabilidad("libro_mayor.criterio")} {...uiProps("orden")} />
+            <SentidoOrdenInforme label={tContabilidad("libro_mayor.orden")} {...uiProps("tipoOrden")} />
         </FilaFormulario>
     </>
 );

@@ -10,6 +10,7 @@ import {
     PatchGrupoContableAmortizacion,
     PostGrupoContableAmortizacion,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.GRUPO_CONTABLE_AMORTIZACION;
@@ -85,7 +86,7 @@ export const getGrupoContableAmortizacion: GetGrupoContableAmortizacion = async 
 
 export const postGrupoContableAmortizacion: PostGrupoContableAmortizacion = async (nuevo, ejercicioId) => {
     const respuesta = await RestAPI.post(
-        baseUrl, nuevoGrupoAApi(nuevo, ejercicioId), "Error al crear el grupo contable de amortización"
+        baseUrl, nuevoGrupoAApi(nuevo, ejercicioId), tContabilidad("grupo_contable_amortizacion.errorAlCrearElGrupoContable")
     );
     return String(respuesta.id);
 };
@@ -96,10 +97,10 @@ export const patchGrupoContableAmortizacion: PatchGrupoContableAmortizacion = as
     await RestAPI.patch(
         urlGrupo(id),
         { ...cambiosGrupoAApi(cambios), ejercicio_id: ejercicioId },
-        "Error al guardar el grupo contable de amortización"
+        tContabilidad("grupo_contable_amortizacion.errorAlGuardarElGrupoContable")
     );
 };
 
 export const deleteGrupoContableAmortizacion: DeleteGrupoContableAmortizacion = async (id) => {
-    await RestAPI.delete(urlGrupo(id), "Error al borrar el grupo contable de amortización");
+    await RestAPI.delete(urlGrupo(id), tContabilidad("grupo_contable_amortizacion.errorAlBorrarElGrupoContable"));
 };

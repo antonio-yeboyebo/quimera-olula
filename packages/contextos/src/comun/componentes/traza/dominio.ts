@@ -10,28 +10,29 @@ import {
     UrlPorId,
     UrlsTraza,
 } from "./diseño.ts";
+import { tComun } from "../../i18n/index.ts";
 
 /** Columnas del grafo, en el orden en que se generan los documentos. */
 const COLUMNAS: { id: string; titulo: string; tipos: TipoDocumentoTraza[] }[] = [
-    { id: "presupuesto", titulo: "Presupuestos", tipos: ["presupuesto_venta"] },
-    { id: "pedido", titulo: "Pedidos", tipos: ["pedido_venta", "pedido_compra"] },
-    { id: "albaran", titulo: "Albaranes", tipos: ["albaran_venta", "albaran_compra"] },
-    { id: "factura", titulo: "Facturas", tipos: ["factura_venta", "factura_compra"] },
-    { id: "recibo", titulo: "Recibos", tipos: ["recibo_cobro", "recibo_pago"] },
-    { id: "pago", titulo: "Pagos", tipos: ["pago_cobro"] },
+    { id: "presupuesto", get titulo() { return tComun("componentes.presupuestos"); }, tipos: ["presupuesto_venta"] },
+    { id: "pedido", get titulo() { return tComun("componentes.pedidos"); }, tipos: ["pedido_venta", "pedido_compra"] },
+    { id: "albaran", get titulo() { return tComun("componentes.albaranes"); }, tipos: ["albaran_venta", "albaran_compra"] },
+    { id: "factura", get titulo() { return tComun("componentes.facturas"); }, tipos: ["factura_venta", "factura_compra"] },
+    { id: "recibo", get titulo() { return tComun("componentes.recibos"); }, tipos: ["recibo_cobro", "recibo_pago"] },
+    { id: "pago", get titulo() { return tComun("componentes.pagos"); }, tipos: ["pago_cobro"] },
 ];
 
 const NOMBRES_TIPO: Record<TipoDocumentoTraza, string> = {
-    presupuesto_venta: "Presupuesto de venta",
-    pedido_venta: "Pedido de venta",
-    albaran_venta: "Albarán de venta",
-    factura_venta: "Factura de venta",
-    recibo_cobro: "Recibo de cobro",
-    pago_cobro: "Pago / devolución",
-    pedido_compra: "Pedido de compra",
-    albaran_compra: "Albarán de compra",
-    factura_compra: "Factura de compra",
-    recibo_pago: "Recibo de pago",
+    get presupuesto_venta() { return tComun("componentes.presupuestoDeVenta"); },
+    get pedido_venta() { return tComun("componentes.pedidoDeVenta"); },
+    get albaran_venta() { return tComun("componentes.albaranDeVenta"); },
+    get factura_venta() { return tComun("componentes.facturaDeVenta"); },
+    get recibo_cobro() { return tComun("componentes.reciboDeCobro"); },
+    get pago_cobro() { return tComun("componentes.pagoDevolucion"); },
+    get pedido_compra() { return tComun("componentes.pedidoDeCompra"); },
+    get albaran_compra() { return tComun("componentes.albaranDeCompra"); },
+    get factura_compra() { return tComun("componentes.facturaDeCompra"); },
+    get recibo_pago() { return tComun("componentes.reciboDePago"); },
 };
 
 const URLS_POR_DEFECTO: Record<TipoDocumentoTraza, UrlPorId | null> = {
@@ -75,7 +76,7 @@ export const grafoDesdeTraza = (respuesta: unknown): GrafoTraza => {
     const recorrer = (nivel: unknown): string => {
         const valores = Object.values(nivel as Record<string, unknown>);
         const datos = valores.find(esDatosDocumento);
-        if (!datos) throw new Error("La traza no trae los datos del documento");
+        if (!datos) throw new Error(tComun("componentes.laTrazaNoTraeLosDatos"));
 
         const clave = claveDe(datos);
         if (!nodos.has(clave)) nodos.set(clave, { clave, datos });
@@ -194,13 +195,13 @@ export const nombreTipo = (tipo: TipoDocumentoTraza): string => NOMBRES_TIPO[tip
 /** Texto del nodo en el grafo. Un pago no tiene código propio: se nombra por su tipo y fecha. */
 export const etiquetaNodo = (datos: DatosDocumentoTraza): string =>
     datos.tipo === "pago_cobro" && datos.visible
-        ? `${texto(datos.tipo_pago) ?? "Pago"} ${datos.fecha ? formatearFechaString(datos.fecha) : ""}`.trim()
+        ? `${texto(datos.tipo_pago) ?? tComun("componentes.pago")} ${datos.fecha ? formatearFechaString(datos.fecha) : ""}`.trim()
         : datos.codigo;
 
 const APROBACION: Record<string, string> = {
-    PENDIENTE: "Pendiente",
-    PARCIAL: "Parcial",
-    TOTAL: "Aprobado",
+    get PENDIENTE() { return tComun("componentes.pendiente"); },
+    get PARCIAL() { return tComun("componentes.parcial"); },
+    get TOTAL() { return tComun("componentes.aprobado"); },
 };
 
 const texto = (valor: unknown): string | null =>
@@ -217,17 +218,17 @@ export const resumenDocumento = (datos: DatosDocumentoTraza): DatoResumen[] => {
     if (!datos.visible) return [];
 
     const candidatos: [string, string | null][] = [
-        ["Tipo", texto(datos.tipo_pago)],
-        ["Recibo", datos.tipo === "pago_cobro" ? datos.codigo : null],
-        ["Cliente", tercero(datos.cliente_id, datos.nombre_cliente)],
-        ["Proveedor", tercero(datos.proveedor_id, datos.nombre_proveedor)],
-        ["Fecha", datos.fecha ? formatearFechaString(datos.fecha) : null],
-        ["Total", importe(datos.total, datos.divisa_id)],
-        ["Importe", importe(datos.importe, datos.divisa_id)],
-        ["Estado", texto(datos.estado)],
-        ["Aprobación", APROBACION[String(datos.estado_aprobado)] ?? null],
-        ["Servido", texto(datos.servido)],
-        ["Recibido", texto(datos.recibido)],
+        [tComun("componentes.tipo"), texto(datos.tipo_pago)],
+        [tComun("componentes.recibo"), datos.tipo === "pago_cobro" ? datos.codigo : null],
+        [tComun("componentes.cliente"), tercero(datos.cliente_id, datos.nombre_cliente)],
+        [tComun("componentes.proveedor"), tercero(datos.proveedor_id, datos.nombre_proveedor)],
+        [tComun("componentes.fecha"), datos.fecha ? formatearFechaString(datos.fecha) : null],
+        [tComun("componentes.total"), importe(datos.total, datos.divisa_id)],
+        [tComun("componentes.importe"), importe(datos.importe, datos.divisa_id)],
+        [tComun("componentes.estado"), texto(datos.estado)],
+        [tComun("componentes.aprobacion"), APROBACION[String(datos.estado_aprobado)] ?? null],
+        [tComun("componentes.servido"), texto(datos.servido)],
+        [tComun("componentes.recibido"), texto(datos.recibido)],
     ];
 
     return candidatos

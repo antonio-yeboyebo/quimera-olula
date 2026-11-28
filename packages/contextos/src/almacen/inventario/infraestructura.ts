@@ -25,6 +25,7 @@ import {
     PostLineaInventario,
     ResultadoCargaFichero,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/inventario`;
 
@@ -70,7 +71,7 @@ export const postInventario: PostInventario = async (nuevo) => {
             hora: nuevo.hora,
             observaciones: nuevo.observaciones || null,
         },
-        "Error al crear el inventario"
+        tAlmacen("inventario.errorAlCrearElInventario")
     );
     return respuesta.id;
 };
@@ -79,12 +80,12 @@ export const patchInventario: PatchInventario = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosInventarioAApi(cambios),
-        "Error al actualizar el inventario"
+        tAlmacen("inventario.errorAlActualizarElInventario")
     );
 };
 
 export const deleteInventario: DeleteInventario = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el inventario");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("inventario.errorAlBorrarElInventario"));
 };
 
 export const getLineasInventario: GetLineasInventario = async (id) => {
@@ -108,7 +109,7 @@ export const postLineaInventario: PostLineaInventario = async (id, linea) => {
             cantidad: linea.cantidad,
             motivo: linea.motivo || null,
         },
-        "Error al crear la línea de inventario"
+        tAlmacen("inventario.errorAlCrearLaLineaDe")
     );
     return respuesta.id;
 };
@@ -116,7 +117,7 @@ export const postLineaInventario: PostLineaInventario = async (id, linea) => {
 export const deleteLineaInventario: DeleteLineaInventario = async (id, lineaId) => {
     await RestAPI.delete(
         `${baseUrl}/${id}/linea/${lineaId}`,
-        "Error al borrar la línea de inventario"
+        tAlmacen("inventario.errorAlBorrarLaLineaDe")
     );
 };
 
@@ -143,7 +144,7 @@ export const patchLineaInventario: PatchLineaInventario = async (id, linea, camb
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${linea.id}`,
         cambiosLineaAApi(linea, cambios),
-        "Error al cambiar la línea de inventario"
+        tAlmacen("inventario.errorAlCambiarLaLineaDe")
     );
     return linea.id;
 };
@@ -197,7 +198,7 @@ export const postFicheroInventario: PostFicheroInventario = async (id, fichero, 
     const respuesta = await RestAPI.query<FormData, ResultadoCargaFicheroApi>(
         `${baseUrl}/${id}/fichero`,
         cargaFicheroAFormData(fichero, opciones),
-        "Error al cargar el fichero de inventario"
+        tAlmacen("inventario.errorAlCargarElFicheroDe")
     );
     return resultadoCargaFicheroDesdeApi(respuesta);
 };
@@ -206,7 +207,7 @@ export const patchRegularizarRestoInventario: PatchRegularizarRestoInventario = 
     const respuesta = await RestAPI.patch(
         `${baseUrl}/${id}/regularizar_resto`,
         {},
-        "Error al regularizar el resto del inventario"
+        tAlmacen("inventario.errorAlRegularizarElRestoDel")
     ) as unknown as { lineas: number };
     return respuesta.lineas;
 };

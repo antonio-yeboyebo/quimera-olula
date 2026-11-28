@@ -2,6 +2,7 @@ import { MaestroConDetalleGruposReglas } from '@olula/ctx/auth/grupos/maestro/Ma
 import { MaestroApiKeys } from './apikey/maestro/MaestroApiKeys.tsx';
 import { MaestroConDetalleEventoCola } from "./evento_cola/maestro/MaestroConDetalleEventoCola.tsx";
 import { Login } from './login/vistas/Login.tsx';
+import { MiCuenta } from './mi_cuenta/detalle/MiCuenta.tsx';
 import { ResetPassword } from './login/vistas/ResetPassword.tsx';
 import { VerificarEnlaceMagicoPasskey } from './passkey/vistas/VerificarEnlaceMagicoPasskey.tsx';
 import { Logout } from './usuario/logout/Logout.tsx';
@@ -13,6 +14,7 @@ export const routerAuth = {
     "auth/grupo": MaestroConDetalleGruposReglas,
     "auth/evento_cola": MaestroConDetalleEventoCola,
     "auth/apikey": MaestroApiKeys,
+    "auth/mi_cuenta": MiCuenta,
     "login": Login,
     "logout": Logout,
     "usuario/perfil": Perfil,

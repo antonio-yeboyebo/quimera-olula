@@ -35,6 +35,7 @@ import { getMaquina } from "./maquina.ts";
 import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const DetalleAlbaran = ({
   id,
@@ -43,6 +44,7 @@ export const DetalleAlbaran = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const albaranId = id ?? params.id;
 
@@ -88,21 +90,21 @@ export const DetalleAlbaran = ({
 
   const acciones = [
     {
-      texto: "Facturar",
+      texto: t("albaran.detalle.facturar"),
       onClick: () => emitir("facturar_solicitado"),
       deshabilitado: !esEditable,
     },
     {
-      texto: "Imprimir",
+      texto: t("documento.detalle.imprimir"),
       onClick: imprimir,
     },
     {
-      texto: "Documentos relacionados",
+      texto: t("documento.detalle.documentosRelacionados"),
       onClick: () => emitir("traza_solicitada"),
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: !esEditable,
@@ -131,7 +133,7 @@ export const DetalleAlbaran = ({
       </div>
 
       <Tabs>
-        <Tab label="Líneas">
+        <Tab label={t("documento.detalle.pestanas.lineas")}>
           <Lineas
             albaran={ctx.albaran}
             lineaActiva={lineaActiva}
@@ -140,15 +142,15 @@ export const DetalleAlbaran = ({
           />
         </Tab>
 
-        <Tab label="Cliente">
+        <Tab label={t("documento.detalle.pestanas.cliente")}>
           <TabCliente albaran={albaran} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Datos">
+        <Tab label={t("documento.detalle.pestanas.datos")}>
           <TabDatos albaran={albaran} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Observaciones">
+        <Tab label={t("documento.detalle.pestanas.observaciones")}>
           <TabObservaciones albaran={albaran} />
         </Tab>
       </Tabs>

@@ -6,9 +6,11 @@ import { crearDashboard, getDashboards } from "../infraestructura.ts";
 import { useIaDisponible } from "../useIaDisponible.ts";
 import "./Dashboard.css";
 import { NuevoDashboard } from "./NuevoDashboard.tsx";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 /** Mis dashboards y los que ha compartido el resto de la empresa. */
 export const PaginaDashboards = () => {
+  const t = useTComun();
   const [dashboards, setDashboards] = useState<ResumenDashboard[] | null>(null);
   const [eligiendo, setEligiendo] = useState(false);
   const navegar = useNavigate();
@@ -26,7 +28,7 @@ export const PaginaDashboards = () => {
       setEligiendo(true);
       return;
     }
-    abrir(await crearDashboard({ nombre: "Nuevo dashboard", componentes: [] }));
+    abrir(await crearDashboard({ nombre: t("dashboard.nuevoDashboard"), componentes: [] }));
   };
 
   // Las versiones personales de los dashboards de módulo se abren desde su módulo.
@@ -37,24 +39,24 @@ export const PaginaDashboards = () => {
     <div className="pagina-dashboard" aria-busy={dashboards === null || undefined}>
       <header className="pagina-dashboard-cabecera">
         <div className="pagina-dashboard-titulo">
-          <h1>Dashboards</h1>
+          <h1>{t("dashboard.dashboards")}</h1>
         </div>
         <div className="pagina-dashboard-botones">
-          <QBoton onClick={nuevo}>Nuevo dashboard</QBoton>
+          <QBoton onClick={nuevo}>{t("dashboard.nuevoDashboard")}</QBoton>
         </div>
       </header>
 
       {dashboards !== null && (
         <div className="lista-dashboards">
           <ListaDashboards
-            titulo="Mis dashboards"
+            titulo={t("dashboard.misDashboards")}
             dashboards={propios}
-            vacio="Aún no has creado ninguno."
+            vacio={t("dashboard.aunNoHasCreadoNinguno")}
           />
           <ListaDashboards
-            titulo="Compartidos por la empresa"
+            titulo={t("dashboard.compartidosPorLaEmpresa")}
             dashboards={compartidos}
-            vacio="Nadie ha compartido ninguno todavía."
+            vacio={t("dashboard.nadieHaCompartidoNingunoTodavia")}
           />
         </div>
       )}
@@ -88,9 +90,9 @@ const ListaDashboards = ({
               <span>
                 {d.esPropio
                   ? d.compartido
-                    ? "Compartido con la empresa"
-                    : "Privado"
-                  : `De ${d.propietario}`}
+                    ? tComun("dashboard.compartidoConLaEmpresa")
+                    : tComun("dashboard.privado")
+                  : tComun("dashboard.dePropietario", { propietario: d.propietario })}
                 {" · "}
                 {new Date(d.actualizadoEn).toLocaleDateString("es-ES")}
               </span>

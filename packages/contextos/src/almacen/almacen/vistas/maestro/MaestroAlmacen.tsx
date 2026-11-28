@@ -12,8 +12,10 @@ import { CrearAlmacen } from "../CrearAlmacen.tsx";
 import { DetalleAlmacen } from "../detalle/DetalleAlmacen.tsx";
 import { metaTablaAlmacen } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const MaestroAlmacen = () => {
+  const t = useTAlmacen();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -35,9 +37,9 @@ export const MaestroAlmacen = () => {
         layout="TABLA"
         Maestro={
           <>
-            <h2>Almacenes</h2>
+            <h2>{t("almacen.almacenes")}</h2>
             <div className="maestro-botones">
-              <QBoton onClick={() => emitir("crear")}>Nuevo</QBoton>
+              <QBoton onClick={() => emitir("crear")}>{t("almacen.nuevo")}</QBoton>
             </div>
             <Listado<Almacen>
               metaTabla={metaTablaAlmacen}

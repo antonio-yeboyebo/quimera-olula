@@ -9,6 +9,7 @@ import {
   mostrarImporte,
 } from "../dominio.ts";
 import "./TotalesVenta.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 interface TotalesVentaProps<T extends Venta> {
   modeloVenta: HookModelo<T>;
@@ -23,6 +24,7 @@ export const TotalesVenta = <T extends Venta>({
   publicar,
   formato = "ticket",
 }: TotalesVentaProps<T>) => {
+  const t = useTVentas();
   const venta = modeloVenta.modelo;
   const pluginDtoCabeceraVentaActivo =
     plugin("dto_cabecera_venta") === "activo";
@@ -32,7 +34,7 @@ export const TotalesVenta = <T extends Venta>({
       {modeloVenta.editable && pluginDtoCabeceraVentaActivo && (
         <div className="botones maestro-botones ">
           <QBoton onClick={() => publicar("descuento_solicitado", venta)}>
-            Descuento
+            {t("documento.totales.descuento")}
           </QBoton>
         </div>
       )}
@@ -40,11 +42,13 @@ export const TotalesVenta = <T extends Venta>({
       {venta.dtoPorcentual !== 0 && (
         <>
           <div className="totales-venta-item">
-            <label>Neto s/dto</label>
+            <label>{t("documento.totales.netoSinDto")}</label>
             <span>{formatearMoneda(venta.netoSinDto, venta.divisa_id)}</span>
           </div>
           <div className="totales-venta-item">
-            <label>Dto. ({venta.dtoPorcentual}%)</label>
+            <label>
+              {t("documento.totales.dto", { porcentaje: venta.dtoPorcentual })}
+            </label>
             <span>
               {formatearMoneda(venta.netoSinDto - venta.neto, venta.divisa_id)}
             </span>
@@ -52,32 +56,34 @@ export const TotalesVenta = <T extends Venta>({
         </>
       )}
       <div className="totales-venta-item">
-        <label>Base imponible</label>
+        <label>{t("documento.totales.baseImponible")}</label>
         <span>{formatearMoneda(venta.neto, venta.divisa_id)}</span>
       </div>
       <div className="totales-venta-item">
-        <label>IVA</label>
+        <label>{t("documento.totales.iva")}</label>
         <span>{formatearMoneda(venta.total_iva, venta.divisa_id)}</span>
       </div>
       {mostrarImporte(venta.total_recargo) && (
         <div className="totales-venta-item">
-          <label>R. Equivalencia</label>
+          <label>{t("documento.totales.recargo")}</label>
           <span>{formatearMoneda(venta.total_recargo, venta.divisa_id)}</span>
         </div>
       )}
       {mostrarImporte(venta.total_irpf) && (
         <div className="totales-venta-item">
-          <label>IRPF</label>
+          <label>{t("documento.totales.irpf")}</label>
           <span>{formatearMoneda(venta.total_irpf, venta.divisa_id)}</span>
         </div>
       )}
       <div className="totales-venta-item totales-venta-item--total">
-        <label>Total</label>
+        <label>{t("documento.totales.total")}</label>
         <span>{formatearMoneda(venta.total, venta.divisa_id)}</span>
       </div>
       {enDivisaExtranjera(venta) && (
         <div className="totales-venta-item totales-venta-item--divisa-empresa">
-          <label>{`Total en ${DIVISA_EMPRESA}`}</label>
+          <label>
+            {t("documento.totales.totalEn", { divisa: DIVISA_EMPRESA })}
+          </label>
           <span>
             {formatearMoneda(venta.total_divisa_empresa, DIVISA_EMPRESA)}
           </span>

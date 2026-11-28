@@ -8,6 +8,7 @@ import {
   pieTarjeta,
   variacion,
 } from "../../dominio.ts";
+import { tComun } from "../../../i18n/index.ts";
 
 /**
  * Tarjeta de indicador con el mismo diseño que los widgets del maestro:
@@ -70,12 +71,12 @@ export const Objetivo = ({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.min(porcentaje, 100)}
-        aria-label={`${porcentaje} % del objetivo`}
+        aria-label={tComun("dashboard.porcentajeDelObjetivo", { porcentaje })}
       >
         <div style={{ width: `${Math.min(porcentaje, 100)}%`, background: COLORES_SERIE[0] }} />
       </div>
       <span className="pie">
-        {formatearValor(actual, formato)} de {formatearValor(meta, formato)}
+        {tComun("dashboard.valorDeValor2", { valor: formatearValor(actual, formato), valor2: formatearValor(meta, formato) })}
       </span>
     </quimera-tarjeta-resumen>
   );

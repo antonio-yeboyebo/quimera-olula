@@ -10,20 +10,22 @@ import { DetalleMandato } from "../detalle/DetalleMandato.js";
 import { Mandato } from "../diseño.js";
 import "./MaestroConDetalleMandato.css";
 import { getMaquina } from "./maquina.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 const metaTablaMandato: MetaTabla<Mandato> = [
-    { id: 'referencia', cabecera: 'Referencia' },
-    { id: 'descripcion', cabecera: 'Descripción' },
-    { id: 'clienteId', cabecera: 'Cliente' },
-    { id: 'tipo', cabecera: 'Tipo' },
-    { id: 'tipoPago', cabecera: 'T. Pago' },
-    { id: 'numEfectos', cabecera: 'Efectos', tipo: 'numero' },
-    { id: 'fechaFirma', cabecera: 'F. Firma', tipo: 'fecha' },
-    { id: 'fechaCaducidad', cabecera: 'F. Caducidad', tipo: 'fecha' },
+    { id: 'referencia', get cabecera() { return tTesoreria("mandato.referencia"); } },
+    { id: 'descripcion', get cabecera() { return tTesoreria("mandato.descripcion"); } },
+    { id: 'clienteId', get cabecera() { return tTesoreria("mandato.cliente"); } },
+    { id: 'tipo', get cabecera() { return tTesoreria("mandato.tipo"); } },
+    { id: 'tipoPago', get cabecera() { return tTesoreria("mandato.tPago"); } },
+    { id: 'numEfectos', get cabecera() { return tTesoreria("mandato.efectos"); }, tipo: 'numero' },
+    { id: 'fechaFirma', get cabecera() { return tTesoreria("mandato.fFirma"); }, tipo: 'fecha' },
+    { id: 'fechaCaducidad', get cabecera() { return tTesoreria("mandato.fCaducidad"); }, tipo: 'fecha' },
 ];
 
 export const MaestroConDetalleMandato = () => {
 
+    const t = useTTesoreria();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -48,7 +50,7 @@ export const MaestroConDetalleMandato = () => {
             <MaestroDetalle<Mandato>
                 Maestro={
                     <>
-                        <h2>Mandatos</h2>
+                        <h2>{t("mandato.mandatos")}</h2>
                         <Listado<Mandato>
                             metaTabla={metaTablaMandato}
                             criteria={mandatos.criteria}

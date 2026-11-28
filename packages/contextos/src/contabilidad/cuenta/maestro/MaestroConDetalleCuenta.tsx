@@ -11,6 +11,7 @@ import { DetalleCuenta } from "../detalle/DetalleCuenta.tsx";
 import { Cuenta } from "../diseño.ts";
 import { criteriaCuentasDefecto, metaFiltroCuenta, metaTablaCuenta } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Maestro de cuentas del PGC.
@@ -23,6 +24,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleCuenta = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaCuentasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetalleCuenta = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las cuentas del plan contable.</p>;
+        return <p>{t("cuenta.noTienesPermisoParaVerLas")}</p>;
     }
 
     const ejercicioId = ejercicioIdEnCriteria(cuentas.criteria) ?? ejercicioActual();
@@ -63,7 +65,7 @@ export const MaestroConDetalleCuenta = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_cuenta_solicitada")}>
-                                        Nueva cuenta
+                                        {t("cuenta.nuevaCuenta")}
                                     </QBoton>
                                 </div>
                             )}

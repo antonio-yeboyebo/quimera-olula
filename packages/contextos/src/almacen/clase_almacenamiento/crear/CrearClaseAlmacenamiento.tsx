@@ -9,8 +9,10 @@ import { useCallback } from "react";
 import { metaNuevaClaseAlmacenamiento, nuevaClaseAlmacenamientoVacia } from "../dominio.ts";
 import { postClaseAlmacenamiento } from "../infraestructura.ts";
 import "./CrearClaseAlmacenamiento.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearClaseAlmacenamiento = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaNuevaClaseAlmacenamiento, nuevaClaseAlmacenamientoVacia);
 
     const crear_ = useCallback(async () => {
@@ -31,18 +33,18 @@ export const CrearClaseAlmacenamiento = ({ publicar }: { publicar: EmitirEvento 
         <QModal
             abierto={true}
             nombre="crearClaseAlmacenamiento"
-            titulo="Crear clase de almacenamiento"
+            titulo={t("clase_almacenamiento.crearClaseDeAlmacenamiento")}
             onCerrar={cancelar}
         >
             <div className="CrearClaseAlmacenamiento">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("codigo")} maxLength={10} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("clase_almacenamiento.codigo")} {...uiProps("codigo")} maxLength={10} ref={focus} />
+                    <QInput label={t("clase_almacenamiento.descripcion")} {...uiProps("descripcion")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("clase_almacenamiento.crear")}
                     </QBoton>
                 </div>
             </div>

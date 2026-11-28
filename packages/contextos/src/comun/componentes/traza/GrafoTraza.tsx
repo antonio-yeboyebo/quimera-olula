@@ -2,6 +2,7 @@ import { formatearFechaString } from "@olula/lib/dominio.ts";
 import { KeyboardEvent, useMemo } from "react";
 import { GrafoTraza as Grafo } from "./diseño.ts";
 import { etiquetaNodo, layoutPorColumnas, nombreTipo } from "./dominio.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 const NODO_ANCHO = 156;
 const NODO_ALTO = 48;
@@ -21,6 +22,7 @@ export const GrafoTraza = ({
   seleccionado: string;
   onSeleccionar: (clave: string) => void;
 }) => {
+  const t = useTComun();
   const columnas = useMemo(() => layoutPorColumnas(grafo), [grafo]);
 
   const posiciones = useMemo(() => {
@@ -53,7 +55,7 @@ export const GrafoTraza = ({
         height={alto}
         viewBox={`0 0 ${ancho} ${alto}`}
         role="group"
-        aria-label="Grafo de documentos relacionados"
+        aria-label={t("componentes.grafoDeDocumentosRelacionados")}
       >
         {columnas.map((columna, indice) => (
           <text
@@ -99,7 +101,7 @@ export const GrafoTraza = ({
             ].filter(Boolean).join(" ");
             const etiqueta = etiquetaNodo(datos);
             const detalle = !datos.visible
-              ? "Sin acceso"
+              ? t("componentes.sinAcceso")
               : datos.tipo === "pago_cobro"
                 ? datos.codigo
                 : datos.fecha

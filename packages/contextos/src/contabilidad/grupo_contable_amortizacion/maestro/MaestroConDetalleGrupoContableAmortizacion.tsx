@@ -14,6 +14,7 @@ import {
     metaTablaGrupoContableAmortizacion,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Grupos contables de amortización (Eneboo `co_gruposcontablesamo`): las
@@ -22,6 +23,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleGrupoContableAmortizacion = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaGruposDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -40,7 +42,7 @@ export const MaestroConDetalleGrupoContableAmortizacion = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los grupos contables de amortización.</p>;
+        return <p>{t("grupo_contable_amortizacion.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -49,7 +51,7 @@ export const MaestroConDetalleGrupoContableAmortizacion = () => {
                 seleccionada={grupos.activo}
                 Maestro={
                     <>
-                        <h2>Grupos contables de amortización</h2>
+                        <h2>{t("grupo_contable_amortizacion.gruposContablesDeAmortizacion")}</h2>
                         <Listado<GrupoContableAmortizacion>
                             metaTabla={metaTablaGrupoContableAmortizacion}
                             metaFiltro={metaFiltroGrupoContableAmortizacion}
@@ -61,7 +63,7 @@ export const MaestroConDetalleGrupoContableAmortizacion = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_grupo_solicitado")}>
-                                        Nuevo grupo
+                                        {t("grupo_contable_amortizacion.nuevoGrupo")}
                                     </QBoton>
                                 </div>
                             )}

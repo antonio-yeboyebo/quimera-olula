@@ -1,35 +1,43 @@
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
+import { localeActual } from "@olula/lib/i18n/i18n.ts";
+import { tLib } from "@olula/lib/i18n/textos.ts";
+import { tComponentes } from "../../i18n/textos.ts";
 import type { MetaCampoFiltro, MetaFiltro } from "./MaestroFiltrosActivoControlado.tsx";
 
-/** Textos de los atajos de fecha (los mismos que ofrece QDateInterval). */
-const ATAJOS_FECHA: Record<string, string> = {
-  "@hoy": "Hoy",
-  "@ayer": "Ayer",
-  "@mañana": "Mañana",
-  "@esta-semana": "Esta semana",
-  "@semana-anterior": "Semana anterior",
-  "@semana-siguiente": "Semana siguiente",
-  "@este-mes": "Este mes",
-  "@mes-anterior": "Mes anterior",
-  "@mes-siguiente": "Mes siguiente",
-  "@este-año": "Este año",
-  "@año-anterior": "Año anterior",
-  "@año-siguiente": "Año siguiente",
+/** Textos de los atajos de fecha (los mismos que ofrece QDateInterval), en el idioma activo. */
+const ATAJOS_FECHA = {
+  "@hoy": "hoy",
+  "@ayer": "ayer",
+  "@mañana": "manana",
+  "@esta-semana": "estaSemana",
+  "@semana-anterior": "semanaAnterior",
+  "@semana-siguiente": "semanaSiguiente",
+  "@este-mes": "esteMes",
+  "@mes-anterior": "mesAnterior",
+  "@mes-siguiente": "mesSiguiente",
+  "@este-año": "esteAno",
+  "@año-anterior": "anoAnterior",
+  "@año-siguiente": "anoSiguiente",
+} as const;
+
+const atajoFecha = (valor: string): string | undefined => {
+  const clave = ATAJOS_FECHA[valor as keyof typeof ATAJOS_FECHA];
+  return clave ? tComponentes(`filtros.atajos.${clave}`) : undefined;
 };
 
-const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
-  "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const nombreMes = (mes: number): string =>
+  tComponentes(`filtros.meses.m${mes}` as `filtros.meses.m${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12}`);
 
 const vacio = (v: unknown) => v === undefined || v === null || v === "" || Number.isNaN(v);
 
 const fecha = (v: unknown): string | null => {
   if (vacio(v)) return null;
   const d = v instanceof Date ? v : new Date(String(v));
-  return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleDateString("es-ES");
+  return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleDateString("es-ES"); // dd/mm/aaaa también en inglés (pendiente de decidir)
 };
 
 const numero = (v: unknown): string | null =>
-  vacio(v) ? null : Number(v).toLocaleString("es-ES");
+  vacio(v) ? null : Number(v).toLocaleString(localeActual());
 
 /** «desde–hasta», «≥ desde» o «≤ hasta»; null si no hay ninguno. */
 const intervalo = (desde: string | null, hasta: string | null): string | null => {
@@ -53,7 +61,7 @@ export const describirValorFiltro = (
   const tipo = campo.tipo as string | undefined;
   if (tipo === "intervalo_fechas") {
     if (Array.isArray(valor)) return intervalo(fecha(valor[0]), fecha(valor[1]));
-    return ATAJOS_FECHA[String(valor)] ?? fecha(valor);
+    return atajoFecha(String(valor)) ?? fecha(valor);
   }
   if (tipo === "intervalo_numeros" && Array.isArray(valor)) {
     return intervalo(numero(valor[0]), numero(valor[1]));
@@ -61,7 +69,7 @@ export const describirValorFiltro = (
   if (tipo === "mes_año") {
     if (Array.isArray(valor)) return intervalo(fecha(valor[0]), fecha(valor[1]));
     const [anyo, mes] = String(valor).split("-").map(Number);
-    return anyo && mes ? `${MESES[mes - 1]} ${anyo}` : String(valor);
+    return anyo && mes ? `${nombreMes(mes)} ${anyo}` : String(valor);
   }
   if (tipo === "multiseleccion") {
     const valores = Array.isArray(valor) ? valor.map(String) : [String(valor)];
@@ -71,7 +79,7 @@ export const describirValorFiltro = (
       .join(", ");
   }
   if (tipo === "checkbox") {
-    return valor === true || valor === "true" ? "Sí" : "No";
+    return valor === true || valor === "true" ? tLib("si") : tLib("no");
   }
   if (tipo === "fecha") return fecha(valor);
   if (Array.isArray(valor)) return valor.filter((v) => !vacio(v)).join(" – ") || null;

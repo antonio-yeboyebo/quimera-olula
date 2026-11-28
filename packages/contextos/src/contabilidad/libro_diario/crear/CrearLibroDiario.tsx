@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { CamposLibroDiario } from "../detalle/CamposLibroDiario.tsx";
 import { postLibroDiario } from "../infraestructura.ts";
 import { metaNuevoLibroDiario, nuevoLibroDiarioInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearLibroDiario = ({
     publicar,
@@ -19,6 +20,7 @@ export const CrearLibroDiario = ({
 }) => {
     // Memoizado: useModelo reinicia el formulario cada vez que cambia la
     // identidad del inicial, así que pasarlo en línea entra en bucle.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoLibroDiarioInicial(ejercicioId),
         [ejercicioId]
@@ -51,7 +53,7 @@ export const CrearLibroDiario = ({
         <QModal
             abierto={true}
             nombre="crearLibroDiario"
-            titulo="Nuevo libro diario"
+            titulo={t("libro_diario.nuevoLibroDiario")}
             onCerrar={cancelar}
         >
             <div className="CrearLibroDiario">
@@ -65,7 +67,7 @@ export const CrearLibroDiario = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("libro_diario.crear")}
                     </QBoton>
                 </div>
             </div>

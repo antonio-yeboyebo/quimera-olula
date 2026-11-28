@@ -13,16 +13,17 @@ import { IaTareaProgramada } from "../diseño.js";
 import { descripcionFrecuencia } from "../dominio.js";
 import "./MaestroConDetalleIaTareaProgramada.css";
 import { getMaquina } from "./maquina.js";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 const metaTablaIaTareaProgramada: MetaTabla<IaTareaProgramada> = [
-    { id: 'nombre', cabecera: 'Nombre' },
+    { id: 'nombre', get cabecera() { return tComun("tareaProgramadaIa.nombre"); } },
     {
         id: 'expresionCron',
-        cabecera: 'Frecuencia',
+        get cabecera() { return tComun("tareaProgramadaIa.frecuencia"); },
         render: (tarea) => descripcionFrecuencia(tarea.expresionCron),
     },
-    { id: 'activo', cabecera: 'Activa', tipo: 'booleano' },
-    { id: 'proximaEjecucion', cabecera: 'Próxima ejecución', tipo: 'fechahora' },
+    { id: 'activo', get cabecera() { return tComun("tareaProgramadaIa.activa"); }, tipo: 'booleano' },
+    { id: 'proximaEjecucion', get cabecera() { return tComun("tareaProgramadaIa.proximaEjecucion"); }, tipo: 'fechahora' },
 ];
 
 /**
@@ -30,6 +31,7 @@ const metaTablaIaTareaProgramada: MetaTabla<IaTareaProgramada> = [
  */
 export const MaestroConDetalleIaTareaProgramada = () => {
 
+    const t = useTComun();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -54,7 +56,7 @@ export const MaestroConDetalleIaTareaProgramada = () => {
             <MaestroDetalle<IaTareaProgramada>
                 Maestro={
                     <>
-                        <h2>Tareas programadas</h2>
+                        <h2>{t("tareaProgramadaIa.tareasProgramadas")}</h2>
                         <Listado<IaTareaProgramada>
                             metaTabla={metaTablaIaTareaProgramada}
                             criteria={tareas.criteria}
@@ -66,7 +68,7 @@ export const MaestroConDetalleIaTareaProgramada = () => {
                                 puede("comun.ia_tarea_programada") && (
                                     <div className="maestro-botones">
                                         <QBoton onClick={() => emitir("creacion_solicitada")}>
-                                            Nueva tarea
+                                            {t("tareaProgramadaIa.nuevaTarea")}
                                         </QBoton>
                                     </div>
                                 )

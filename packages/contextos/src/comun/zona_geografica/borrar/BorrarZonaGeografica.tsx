@@ -5,8 +5,10 @@ import { useCallback } from "react";
 import { ZonaGeografica } from "../diseño.ts";
 import { etiquetaZonaGeografica } from "../dominio.ts";
 import { deleteZonaGeografica } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarZonaGeografica = ({ publicar, zonaGeografica }: { zonaGeografica: ZonaGeografica; publicar: EmitirEvento }) => {
+    const t = useTComun();
     const borrar_ = useCallback(async () => {
         await deleteZonaGeografica(zonaGeografica.id);
         publicar("zona_geografica_borrado", zonaGeografica);
@@ -20,8 +22,8 @@ export const BorrarZonaGeografica = ({ publicar, zonaGeografica }: { zonaGeograf
         <QModalConfirmacion
             nombre="borrarZonaGeografica"
             abierto={true}
-            titulo="Borrar zona geográfica"
-            mensaje={`¿Confirma borrar ${etiquetaZonaGeografica(zonaGeografica)}? No se puede borrar si algún país la tiene como zona.`}
+            titulo={t("zonaGeografica.borrarZonaGeografica")}
+            mensaje={t("zonaGeografica.confirmaBorrarZonageograficaNoSePuede", { zonaGeografica: etiquetaZonaGeografica(zonaGeografica) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

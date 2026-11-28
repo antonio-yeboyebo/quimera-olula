@@ -1,6 +1,7 @@
 import { QEtiqueta, QTarjetaGenerica } from "@olula/componentes/index.js";
 import { ReactNode } from "react";
 import "./TarjetaConfiguracionCrm.css";
+import { tCrm } from "../../i18n/index.ts";
 
 export const TarjetaConfiguracionCrm = ({
   codigo,
@@ -17,7 +18,7 @@ export const TarjetaConfiguracionCrm = ({
 }) => {
   const badge = valorDefecto ? (
     <QEtiqueta variante="exito" className="tarjeta-config-defecto">
-      Por defecto
+      {tCrm("comun.porDefecto")}
     </QEtiqueta>
   ) : undefined;
 

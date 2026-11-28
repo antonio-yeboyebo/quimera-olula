@@ -16,6 +16,7 @@ import {
     varianteProbabilidad,
 } from "../../dominio.js";
 import "./ConciliacionesMovimiento.css";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 /** Descripción de un ítem individual dentro de una casación. */
 const DescripcionItem = ({ item, divisa }: { item: ItemConciliacion; divisa: string }) => {
@@ -28,8 +29,8 @@ const DescripcionItem = ({ item, divisa }: { item: ItemConciliacion; divisa: str
             <span className="tipo-conciliacion">
                 {etiquetaTipoConciliacion(item.tipo)}
                 {item.recibo && ` · ${item.recibo.codigo}`}
-                {item.remesa && ` · remesa ${item.remesa.id}`}
-                {item.asiento && ` · asiento ${item.asiento.numero ?? `#${item.asiento.id}`}`}
+                {item.remesa && tTesoreria("conciliacion.remesaId2", { id: item.remesa.id })}
+                {item.asiento && tTesoreria("conciliacion.asientoValor", { valor: item.asiento.numero ?? `#${item.asiento.id}` })}
             </span>
             {item.asiento && (
                 <span className="recibo-conciliacion">
@@ -40,39 +41,35 @@ const DescripcionItem = ({ item, divisa }: { item: ItemConciliacion; divisa: str
             {item.remesa && (
                 <span className="recibo-conciliacion">
                     {esConciliacionRemesaPago(item.tipo)
-                        ? `Pago ${formatearFechaDate(item.remesa.fechaCargo)} · `
-                        + `${item.remesa.numRecibos} ${esRemesaDeNominas(item.remesa) ? "nóminas" : "recibos"}`
-                        + ` · total ${formatearMoneda(item.remesa.total, divisa)}`
-                        : `Cargo ${formatearFechaDate(item.remesa.fechaCargo)} · `
-                        + (recibosRemesa
-                            ? `${recibosRemesa.length} de ${item.remesa.numRecibos} recibos`
-                            : `recibos pendientes de ${item.remesa.numRecibos}`)
-                        + ` · total ${formatearMoneda(item.remesa.total, divisa)}`}
+                        ? tTesoreria("conciliacion.pagoFechacargoNumrecibosValorTotalTotal", { fechaCargo: formatearFechaDate(item.remesa.fechaCargo), numRecibos: item.remesa.numRecibos, valor: esRemesaDeNominas(item.remesa) ? tTesoreria("conciliacion.nominas") : tTesoreria("conciliacion.recibos"), total: formatearMoneda(item.remesa.total, divisa) })
+                        : tTesoreria("conciliacion.cargoFechacargoValorTotalTotal", { fechaCargo: formatearFechaDate(item.remesa.fechaCargo), valor: (recibosRemesa
+                            ? tTesoreria("conciliacion.lengthDeNumrecibosRecibos", { length: recibosRemesa.length, numRecibos: item.remesa.numRecibos })
+                            : tTesoreria("conciliacion.recibosPendientesDeNumrecibos", { numRecibos: item.remesa.numRecibos })), total: formatearMoneda(item.remesa.total, divisa) })}
                 </span>
             )}
             {item.cuota && (
                 <span className="recibo-conciliacion">
-                    {`${item.cuota.contrato ?? "Préstamo"} · ${formatearFechaDate(item.cuota.fecha)} · ${formatearMoneda(item.cuota.capital, divisa)} de capital y ${formatearMoneda(item.cuota.intereses, divisa)} de intereses`}
+                    {tTesoreria("conciliacion.valorFechaCapitalDeCapitalY", { valor: item.cuota.contrato ?? tTesoreria("conciliacion.prestamo"), fecha: formatearFechaDate(item.cuota.fecha), capital: formatearMoneda(item.cuota.capital, divisa), intereses: formatearMoneda(item.cuota.intereses, divisa) })}
                 </span>
             )}
             {item.recibo && (
                 <span className="recibo-conciliacion">
-                    {`${item.recibo.tercero ?? "Sin tercero"} · ${formatearMoneda(item.recibo.importe, divisa)} · vence ${formatearFechaDate(item.recibo.fechaVencimiento)}`}
+                    {tTesoreria("conciliacion.valorImporteVenceFechavencimiento", { valor: item.recibo.tercero ?? tTesoreria("conciliacion.sinTercero"), importe: formatearMoneda(item.recibo.importe, divisa), fechaVencimiento: formatearFechaDate(item.recibo.fechaVencimiento) })}
                 </span>
             )}
             {url && (
                 <QBoton tamaño="pequeño" variante="borde" enlace={url}>
-                    Ver recibo
+                    {tTesoreria("conciliacion.verRecibo")}
                 </QBoton>
             )}
             {urlAsiento && (
                 <QBoton tamaño="pequeño" variante="borde" enlace={urlAsiento}>
-                    Ver asiento
+                    {tTesoreria("conciliacion.verAsiento")}
                 </QBoton>
             )}
             {urlRemesa && (
                 <QBoton tamaño="pequeño" variante="borde" enlace={urlRemesa}>
-                    Ver remesa
+                    {tTesoreria("conciliacion.verRemesa")}
                 </QBoton>
             )}
         </span>
@@ -99,7 +96,7 @@ export const ConciliacionesMovimiento = ({
 
     return (
         <div className="ConciliacionesMovimiento">
-            <h4>Conciliaciones propuestas</h4>
+            <h4>{tTesoreria("conciliacion.conciliacionesPropuestas")}</h4>
             <ul>
                 {conciliaciones.map((conciliacion) => (
                     <li key={conciliacion.id}>
@@ -122,7 +119,7 @@ export const ConciliacionesMovimiento = ({
                                 deshabilitado={bloqueo.bloqueado}
                                 onClick={() => publicar("conciliacion_solicitada", conciliacion)}
                             >
-                                Conciliar
+                                {tTesoreria("conciliacion.conciliar")}
                             </QBoton>
                         </div>
                     </li>

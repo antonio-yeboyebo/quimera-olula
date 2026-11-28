@@ -15,11 +15,13 @@ import {
     metaTablaLibroFacturasRecibidas,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Libros de facturas recibidas guardados: cada ficha son los criterios de un
  * informe de I.V.A. soportado. Se comparten con el ERP de escritorio, que
  * usa la misma tabla. */
 export const MaestroConDetalleLibroFacturasRecibidas = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaLibroFacturasRecibidasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetalleLibroFacturasRecibidas = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el libro de facturas recibidas.</p>;
+        return <p>{t("libro_facturas_recibidas.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
@@ -64,7 +66,7 @@ export const MaestroConDetalleLibroFacturasRecibidas = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("libro_facturas_recibidas.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}

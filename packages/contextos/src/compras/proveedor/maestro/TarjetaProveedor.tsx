@@ -1,5 +1,6 @@
 import { QAvatar, QEtiqueta, QTarjetaGenerica } from "@olula/componentes/index.js";
 import { Proveedor } from "../diseño.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 
 export const TarjetaProveedor = (proveedor: Proveedor) => (
   <QTarjetaGenerica
@@ -7,7 +8,7 @@ export const TarjetaProveedor = (proveedor: Proveedor) => (
     arribaIzquierda={proveedor.nombre}
     arribaDerecha={
       proveedor.deBaja ? (
-        <QEtiqueta variante="advertencia">De baja</QEtiqueta>
+        <QEtiqueta variante="advertencia">{tCompras("proveedor.maestro.deBaja")}</QEtiqueta>
       ) : undefined
     }
     abajoIzquierda={proveedor.email}

@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { ConexionBancaria } from "../diseño.js";
 import { nombreInstitucion } from "../dominio.js";
 import { deleteConexionBancaria } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const DesconectarConexionBancaria = ({
     publicar,
@@ -13,6 +14,7 @@ export const DesconectarConexionBancaria = ({
     conexion: ConexionBancaria;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const desconectar_ = useCallback(
         async () => {
             await deleteConexionBancaria(conexion.id);
@@ -32,8 +34,8 @@ export const DesconectarConexionBancaria = ({
         <QModalConfirmacion
             nombre="desconectarConexionBancaria"
             abierto={true}
-            titulo="Desconectar banco"
-            mensaje={`¿Está seguro de que desea desconectar "${nombreInstitucion(conexion)}"? Se revocará el acceso en el proveedor bancario y se perderá el histórico de la conexión.`}
+            titulo={t("conexion_bancaria.desconectarBanco")}
+            mensaje={t("conexion_bancaria.estaSeguroDeQueDeseaDesconectar", { conexion: nombreInstitucion(conexion) })}
             onCerrar={cancelar}
             onAceptar={desconectar}
         />

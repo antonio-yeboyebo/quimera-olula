@@ -1,4 +1,5 @@
 import { ComponenteDashboard, ConsultaComponente, TipoComponente } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Dashboards por defecto: la Inicio y uno por módulo. Viven en código (no en la base
@@ -56,7 +57,7 @@ const evolucionMensual = (recurso: string, titulo: string, medida = "total", fec
   });
 
 const mapaVentas = (y: number) =>
-  componente("mapa_ventas", "mapa", "Ventas y clientes del año por provincia", [0, y, 12, 12], {
+  componente("mapa_ventas", "mapa", tComun("dashboard.ventasYClientesDelAnoPor"), [0, y, 12, 12], {
     recurso: "ventas.factura",
     metricas: "suma:total,conteo_distinto:cliente",
     agrupar: "provincia",
@@ -73,32 +74,32 @@ const recibosPendientes = (recurso: string, titulo: string, x: number) =>
 
 export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
   inicio: {
-    nombre: "Inicio",
-    componentes: [
-      facturadoMes("ventas.factura", "Facturado este mes", 0),
-      componente("pedidos_pendientes", "tarjeta", "Pedidos pendientes de servir", [3, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.inicio"); },
+    get componentes(): ComponenteDashboard[] { return [
+      facturadoMes("ventas.factura", tComun("dashboard.facturadoEsteMes"), 0),
+      componente("pedidos_pendientes", "tarjeta", tComun("dashboard.pedidosPendientesDeServir"), [3, 0, 3, 2], {
         recurso: "ventas.pedido",
         metricas: "conteo",
         filtros: PENDIENTES_SERVIR,
       }),
-      recibosPendientes("tesoreria.recibo_cobro", "Cobros pendientes", 6),
-      recibosPendientes("tesoreria.recibo_pago", "Pagos pendientes", 9),
-      evolucionMensual("ventas.factura", "Facturación mensual"),
-      componente("pedidos_estado", "circular", "Pedidos del año por estado", [8, 2, 4, 8], {
+      recibosPendientes("tesoreria.recibo_cobro", tComun("dashboard.cobrosPendientes"), 6),
+      recibosPendientes("tesoreria.recibo_pago", tComun("dashboard.pagosPendientes"), 9),
+      evolucionMensual("ventas.factura", tComun("dashboard.facturacionMensual")),
+      componente("pedidos_estado", "circular", tComun("dashboard.pedidosDelAnoPorEstado"), [8, 2, 4, 8], {
         recurso: "ventas.pedido",
         metricas: "conteo",
         agrupar: "servido",
         periodo: "fecha:este_año",
         limite: 10,
       }),
-      componente("top_clientes", "ranking", "Mejores clientes del año", [0, 10, 6, 8], {
+      componente("top_clientes", "ranking", tComun("dashboard.mejoresClientesDelAno"), [0, 10, 6, 8], {
         recurso: "ventas.factura",
         metricas: "suma:total",
         agrupar: "cliente",
         periodo: "fecha:este_año",
         limite: 8,
       }),
-      componente("cobros_antiguos", "tabla", "Cobros pendientes más antiguos", [6, 10, 6, 8], {
+      componente("cobros_antiguos", "tabla", tComun("dashboard.cobrosPendientesMasAntiguos"), [6, 10, 6, 8], {
         recurso: "tesoreria.recibo_cobro",
         columnas: "recibo,nombre_cliente,fecha_vencimiento,importe",
         filtros: RECIBOS_PENDIENTES,
@@ -106,46 +107,46 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         limite: 8,
       }),
       mapaVentas(18),
-    ],
+    ]; },
   },
 
   ventas: {
-    nombre: "Ventas",
-    componentes: [
-      facturadoMes("ventas.factura", "Facturado este mes", 0),
-      componente("ticket_medio", "tarjeta", "Factura media del año", [3, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.ventas"); },
+    get componentes(): ComponenteDashboard[] { return [
+      facturadoMes("ventas.factura", tComun("dashboard.facturadoEsteMes"), 0),
+      componente("ticket_medio", "tarjeta", tComun("dashboard.facturaMediaDelAno"), [3, 0, 3, 2], {
         recurso: "ventas.factura",
         metricas: "promedio:total",
         periodo: "fecha:este_año",
         comparar: "año_anterior",
       }),
-      componente("presupuestos_mes", "tarjeta", "Presupuestos este mes", [6, 0, 3, 2], {
+      componente("presupuestos_mes", "tarjeta", tComun("dashboard.presupuestosEsteMes"), [6, 0, 3, 2], {
         recurso: "ventas.presupuesto",
         metricas: "conteo",
         periodo: "fecha:este_mes",
         comparar: "año_anterior",
       }),
-      componente("pedidos_pendientes", "tarjeta", "Pedidos pendientes de servir", [9, 0, 3, 2], {
+      componente("pedidos_pendientes", "tarjeta", tComun("dashboard.pedidosPendientesDeServir"), [9, 0, 3, 2], {
         recurso: "ventas.pedido",
         metricas: "conteo",
         filtros: PENDIENTES_SERVIR,
       }),
-      evolucionMensual("ventas.factura", "Facturación mensual"),
-      componente("por_agente", "circular", "Facturado por agente este año", [8, 2, 4, 8], {
+      evolucionMensual("ventas.factura", tComun("dashboard.facturacionMensual")),
+      componente("por_agente", "circular", tComun("dashboard.facturadoPorAgenteEsteAno"), [8, 2, 4, 8], {
         recurso: "ventas.factura",
         metricas: "suma:total",
         agrupar: "agente",
         periodo: "fecha:este_año",
         limite: 20,
       }),
-      componente("top_articulos", "ranking", "Artículos más vendidos del año", [0, 10, 6, 8], {
+      componente("top_articulos", "ranking", tComun("dashboard.articulosMasVendidosDelAno"), [0, 10, 6, 8], {
         recurso: "ventas.factura.linea",
         metricas: "suma:importe",
         agrupar: "articulo",
         periodo: "fecha:este_año",
         limite: 8,
       }),
-      componente("pedidos_por_servir", "tabla", "Pedidos pendientes de servir", [6, 10, 6, 8], {
+      componente("pedidos_por_servir", "tabla", tComun("dashboard.pedidosPendientesDeServir"), [6, 10, 6, 8], {
         recurso: "ventas.pedido",
         columnas: "pedido,nombre_cliente,fecha,total",
         filtros: PENDIENTES_SERVIR,
@@ -153,27 +154,27 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         limite: 8,
       }),
       mapaVentas(18),
-    ],
+    ]; },
   },
 
   compras: {
-    nombre: "Compras",
-    componentes: [
-      facturadoMes("compras.factura", "Compras este mes", 0),
-      componente("pedidos_pendientes", "tarjeta", "Pedidos pendientes de recibir", [3, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.compras"); },
+    get componentes(): ComponenteDashboard[] { return [
+      facturadoMes("compras.factura", tComun("dashboard.comprasEsteMes"), 0),
+      componente("pedidos_pendientes", "tarjeta", tComun("dashboard.pedidosPendientesDeRecibir"), [3, 0, 3, 2], {
         recurso: "compras.pedido",
         metricas: "conteo",
         filtros: PENDIENTES_RECIBIR,
       }),
-      recibosPendientes("tesoreria.recibo_pago", "Pagos pendientes", 6),
-      componente("albaranes_sin_facturar", "tarjeta", "Albaranes sin facturar", [9, 0, 3, 2], {
+      recibosPendientes("tesoreria.recibo_pago", tComun("dashboard.pagosPendientes"), 6),
+      componente("albaranes_sin_facturar", "tarjeta", tComun("dashboard.albaranesSinFacturar"), [9, 0, 3, 2], {
         recurso: "compras.albaran",
         metricas: "suma:total",
         filtros: [{ campo: "facturado", operador: "=", valor: false }],
       }),
-      evolucionMensual("compras.factura", "Compras por mes"),
+      evolucionMensual("compras.factura", tComun("dashboard.comprasPorMes")),
       {
-        ...componente("ciclo_compra", "embudo", "Ciclo de compra del año", [8, 2, 4, 8], {
+        ...componente("ciclo_compra", "embudo", tComun("dashboard.cicloDeCompraDelAno"), [8, 2, 4, 8], {
           recurso: "compras.pedido",
           metricas: "suma:total",
           periodo: "fecha:este_año",
@@ -185,147 +186,147 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         })),
         opciones: { circuito: "compras", formato: "moneda" },
       },
-      componente("top_proveedores", "ranking", "Principales proveedores del año", [0, 10, 6, 8], {
+      componente("top_proveedores", "ranking", tComun("dashboard.principalesProveedoresDelAno"), [0, 10, 6, 8], {
         recurso: "compras.factura",
         metricas: "suma:total",
         agrupar: "proveedor",
         periodo: "fecha:este_año",
         limite: 8,
       }),
-      componente("pagos_antiguos", "tabla", "Pagos pendientes más antiguos", [6, 10, 6, 8], {
+      componente("pagos_antiguos", "tabla", tComun("dashboard.pagosPendientesMasAntiguos"), [6, 10, 6, 8], {
         recurso: "tesoreria.recibo_pago",
         columnas: "recibo,nombre_proveedor,fecha_vencimiento,importe",
         filtros: RECIBOS_PENDIENTES,
         orden: "fecha_vencimiento:asc",
         limite: 8,
       }),
-    ],
+    ]; },
   },
 
   almacen: {
-    nombre: "Almacén",
-    componentes: [
-      componente("unidades", "tarjeta", "Unidades en stock", [0, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.almacen"); },
+    get componentes(): ComponenteDashboard[] { return [
+      componente("unidades", "tarjeta", tComun("dashboard.unidadesEnStock"), [0, 0, 3, 2], {
         recurso: "almacen.stock",
         metricas: "suma:cantidad",
       }),
-      componente("reservadas", "tarjeta", "Unidades reservadas", [3, 0, 3, 2], {
+      componente("reservadas", "tarjeta", tComun("dashboard.unidadesReservadas"), [3, 0, 3, 2], {
         recurso: "almacen.stock",
         metricas: "suma:reservada",
       }),
-      componente("pendientes", "tarjeta", "Pendientes de recibir", [6, 0, 3, 2], {
+      componente("pendientes", "tarjeta", tComun("dashboard.pendientesDeRecibir"), [6, 0, 3, 2], {
         recurso: "almacen.stock",
         metricas: "suma:pendiente_recibir",
       }),
-      componente("sin_disponible", "tarjeta", "Artículos sin disponible", [9, 0, 3, 2], {
+      componente("sin_disponible", "tarjeta", tComun("dashboard.articulosSinDisponible"), [9, 0, 3, 2], {
         recurso: "almacen.stock",
         metricas: "conteo",
         filtros: [{ campo: "disponible", operador: "<=", valor: 0 }],
       }),
-      componente("por_almacen", "barras", "Stock por almacén", [0, 2, 6, 8], {
+      componente("por_almacen", "barras", tComun("dashboard.stockPorAlmacen"), [0, 2, 6, 8], {
         recurso: "almacen.stock",
         metricas: "suma:cantidad",
         agrupar: "almacen",
         limite: 20,
       }),
-      componente("por_familia", "ranking", "Stock por familia", [6, 2, 6, 8], {
+      componente("por_familia", "ranking", tComun("dashboard.stockPorFamilia"), [6, 2, 6, 8], {
         recurso: "almacen.stock",
         metricas: "suma:cantidad",
         agrupar: "familia",
         limite: 10,
       }),
-      componente("agotados", "tabla", "Artículos sin disponible", [0, 10, 12, 8], {
+      componente("agotados", "tabla", tComun("dashboard.articulosSinDisponible"), [0, 10, 12, 8], {
         recurso: "almacen.stock",
         columnas: "articulo,descripcion_articulo,almacen,disponible,pendiente_recibir",
         filtros: [{ campo: "disponible", operador: "<=", valor: 0 }],
         orden: "disponible:asc",
         limite: 10,
       }),
-    ],
+    ]; },
   },
 
   tesoreria: {
-    nombre: "Tesorería",
-    componentes: [
-      recibosPendientes("tesoreria.recibo_cobro", "Cobros pendientes", 0),
-      recibosPendientes("tesoreria.recibo_pago", "Pagos pendientes", 3),
-      componente("cobrado_mes", "tarjeta", "Cobrado este mes", [6, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.tesoreria"); },
+    get componentes(): ComponenteDashboard[] { return [
+      recibosPendientes("tesoreria.recibo_cobro", tComun("dashboard.cobrosPendientes"), 0),
+      recibosPendientes("tesoreria.recibo_pago", tComun("dashboard.pagosPendientes"), 3),
+      componente("cobrado_mes", "tarjeta", tComun("dashboard.cobradoEsteMes"), [6, 0, 3, 2], {
         recurso: "tesoreria.recibo_cobro",
         metricas: "suma:importe",
         periodo: "fecha_pago:este_mes",
         comparar: "año_anterior",
       }),
-      componente("pagado_mes", "tarjeta", "Pagado este mes", [9, 0, 3, 2], {
+      componente("pagado_mes", "tarjeta", tComun("dashboard.pagadoEsteMes"), [9, 0, 3, 2], {
         recurso: "tesoreria.recibo_pago",
         metricas: "suma:importe",
         periodo: "fecha_pago:este_mes",
         comparar: "año_anterior",
       }),
-      evolucionMensual("tesoreria.recibo_cobro", "Cobros por mes", "importe", "fecha_pago"),
-      componente("cobros_estado", "circular", "Recibos de cobro por estado", [8, 2, 4, 8], {
+      evolucionMensual("tesoreria.recibo_cobro", tComun("dashboard.cobrosPorMes"), "importe", "fecha_pago"),
+      componente("cobros_estado", "circular", tComun("dashboard.recibosDeCobroPorEstado"), [8, 2, 4, 8], {
         recurso: "tesoreria.recibo_cobro",
         metricas: "suma:importe",
         agrupar: "estado_recibo",
         periodo: "fecha_emision:este_año",
         limite: 10,
       }),
-      componente("cobros_antiguos", "tabla", "Cobros pendientes más antiguos", [0, 10, 6, 8], {
+      componente("cobros_antiguos", "tabla", tComun("dashboard.cobrosPendientesMasAntiguos"), [0, 10, 6, 8], {
         recurso: "tesoreria.recibo_cobro",
         columnas: "recibo,nombre_cliente,fecha_vencimiento,importe",
         filtros: RECIBOS_PENDIENTES,
         orden: "fecha_vencimiento:asc",
         limite: 8,
       }),
-      componente("pagos_antiguos", "tabla", "Pagos pendientes más antiguos", [6, 10, 6, 8], {
+      componente("pagos_antiguos", "tabla", tComun("dashboard.pagosPendientesMasAntiguos"), [6, 10, 6, 8], {
         recurso: "tesoreria.recibo_pago",
         columnas: "recibo,nombre_proveedor,fecha_vencimiento,importe",
         filtros: RECIBOS_PENDIENTES,
         orden: "fecha_vencimiento:asc",
         limite: 8,
       }),
-    ],
+    ]; },
   },
 
   crm: {
     nombre: "CRM",
-    componentes: [
-      componente("oportunidades", "tarjeta", "Oportunidades", [0, 0, 3, 2], {
+    get componentes(): ComponenteDashboard[] { return [
+      componente("oportunidades", "tarjeta", tComun("dashboard.oportunidades"), [0, 0, 3, 2], {
         recurso: "crm.oportunidad_venta",
         metricas: "conteo",
       }),
-      componente("importe_oportunidades", "tarjeta", "Importe en oportunidades", [3, 0, 3, 2], {
+      componente("importe_oportunidades", "tarjeta", tComun("dashboard.importeEnOportunidades"), [3, 0, 3, 2], {
         recurso: "crm.oportunidad_venta",
         metricas: "suma:total_venta",
       }),
-      componente("leads", "tarjeta", "Leads", [6, 0, 3, 2], {
+      componente("leads", "tarjeta", tComun("dashboard.leads"), [6, 0, 3, 2], {
         recurso: "crm.lead",
         metricas: "conteo",
       }),
-      componente("incidencias", "tarjeta", "Incidencias este mes", [9, 0, 3, 2], {
+      componente("incidencias", "tarjeta", tComun("dashboard.incidenciasEsteMes"), [9, 0, 3, 2], {
         recurso: "crm.incidencia",
         metricas: "conteo",
         periodo: "fecha:este_mes",
         comparar: "periodo_anterior",
       }),
-      componente("oportunidades_estado", "circular", "Oportunidades por estado", [0, 2, 4, 8], {
+      componente("oportunidades_estado", "circular", tComun("dashboard.oportunidadesPorEstado"), [0, 2, 4, 8], {
         recurso: "crm.oportunidad_venta",
         metricas: "suma:total_venta",
         agrupar: "estado",
         limite: 10,
       }),
-      componente("leads_estado", "barras", "Leads por estado", [4, 2, 4, 8], {
+      componente("leads_estado", "barras", tComun("dashboard.leadsPorEstado"), [4, 2, 4, 8], {
         recurso: "crm.lead",
         metricas: "conteo",
         agrupar: "estado",
         limite: 10,
       }),
-      componente("incidencias_prioridad", "barras", "Incidencias por prioridad", [8, 2, 4, 8], {
+      componente("incidencias_prioridad", "barras", tComun("dashboard.incidenciasPorPrioridad"), [8, 2, 4, 8], {
         recurso: "crm.incidencia",
         metricas: "conteo",
         agrupar: "prioridad",
         limite: 10,
       }),
-      componente("acciones_mes", "temporal", "Acciones comerciales por mes", [0, 10, 12, 8], {
+      componente("acciones_mes", "temporal", tComun("dashboard.accionesComercialesPorMes"), [0, 10, 12, 8], {
         recurso: "crm.accion",
         metricas: "conteo",
         agrupar: "fecha:mes",
@@ -333,46 +334,46 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         comparar: "año_anterior",
         limite: 100,
       }),
-    ],
+    ]; },
   },
   // Backoffice del SaaS (olula_saas_admin): recursos saas.* sobre la BD central.
   saas: {
-    nombre: "Resumen del SaaS",
-    componentes: [
-      componente("empresas_activas", "tarjeta", "Empresas activas", [0, 0, 3, 2], {
+    get nombre() { return tComun("dashboard.resumenDelSaas"); },
+    get componentes(): ComponenteDashboard[] { return [
+      componente("empresas_activas", "tarjeta", tComun("dashboard.empresasActivas"), [0, 0, 3, 2], {
         recurso: "saas.empresa",
         metricas: "conteo",
         filtros: EMPRESAS_ACTIVAS,
       }),
-      componente("empresas_inactivas", "tarjeta", "Empresas inactivas", [3, 0, 3, 2], {
+      componente("empresas_inactivas", "tarjeta", tComun("dashboard.empresasInactivas"), [3, 0, 3, 2], {
         recurso: "saas.empresa",
         metricas: "conteo",
         filtros: EMPRESAS_INACTIVAS,
       }),
       enMoneda(
-        componente("mrr", "tarjeta", "Ingreso mensual recurrente (MRR)", [6, 0, 3, 2], {
+        componente("mrr", "tarjeta", tComun("dashboard.ingresoMensualRecurrenteMrr"), [6, 0, 3, 2], {
           recurso: "saas.empresa",
           metricas: "suma:mrr",
         })
       ),
       enMoneda(
-        componente("facturado_total", "tarjeta", "Total facturado", [9, 0, 3, 2], {
+        componente("facturado_total", "tarjeta", tComun("dashboard.totalFacturado"), [9, 0, 3, 2], {
           recurso: "saas.factura",
           metricas: "suma:total",
           filtros: FACTURAS_PAGADAS,
         })
       ),
-      componente("en_prueba", "tarjeta", "Empresas en prueba", [0, 2, 3, 2], {
+      componente("en_prueba", "tarjeta", tComun("dashboard.empresasEnPrueba"), [0, 2, 3, 2], {
         recurso: "saas.empresa",
         metricas: "conteo",
         filtros: [{ campo: "estado_suscripcion", operador: "=", valor: "prueba" }],
       }),
-      componente("de_pago", "tarjeta", "Empresas de pago", [3, 2, 3, 2], {
+      componente("de_pago", "tarjeta", tComun("dashboard.empresasDePago"), [3, 2, 3, 2], {
         recurso: "saas.empresa",
         metricas: "suma:de_pago",
       }),
       enMoneda(
-        componente("cobrado_mes", "tarjeta", "Cobrado este mes", [6, 2, 3, 2], {
+        componente("cobrado_mes", "tarjeta", tComun("dashboard.cobradoEsteMes"), [6, 2, 3, 2], {
           recurso: "saas.factura",
           metricas: "suma:total",
           filtros: FACTURAS_PAGADAS,
@@ -381,14 +382,14 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         })
       ),
       enMoneda(
-        componente("pendiente_cobro", "tarjeta", "Pendiente de cobro", [9, 2, 3, 2], {
+        componente("pendiente_cobro", "tarjeta", tComun("dashboard.pendienteDeCobro"), [9, 2, 3, 2], {
           recurso: "saas.factura",
           metricas: "suma:total",
           filtros: [{ campo: "estado", operador: "in", valor: ["pendiente", "fallida", "devuelta"] }],
         })
       ),
       enMoneda(
-        componente("facturacion_mensual", "temporal", "Facturación mensual", [0, 4, 8, 8], {
+        componente("facturacion_mensual", "temporal", tComun("dashboard.facturacionMensual"), [0, 4, 8, 8], {
           recurso: "saas.factura",
           metricas: "suma:total",
           filtros: FACTURAS_PAGADAS,
@@ -398,41 +399,41 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
           limite: 100,
         })
       ),
-      componente("empresas_estado", "circular", "Empresas por estado", [8, 4, 4, 8], {
+      componente("empresas_estado", "circular", tComun("dashboard.empresasPorEstado"), [8, 4, 4, 8], {
         recurso: "saas.empresa",
         metricas: "conteo",
         agrupar: "estado",
         limite: 10,
       }),
-      componente("altas_mes", "temporal", "Altas de empresas por mes", [0, 12, 8, 8], {
+      componente("altas_mes", "temporal", tComun("dashboard.altasDeEmpresasPorMes"), [0, 12, 8, 8], {
         recurso: "saas.empresa",
         metricas: "conteo",
         agrupar: "fecha_alta:mes",
         periodo: "fecha_alta:ultimos_12_meses",
         limite: 100,
       }),
-      componente("suscripciones_estado", "circular", "Suscripciones por estado", [8, 12, 4, 8], {
+      componente("suscripciones_estado", "circular", tComun("dashboard.suscripcionesPorEstado"), [8, 12, 4, 8], {
         recurso: "saas.empresa",
         metricas: "conteo",
         agrupar: "estado_suscripcion",
         limite: 10,
       }),
       enMoneda(
-        componente("mrr_plan", "ranking", "Ingreso mensual por plan", [0, 20, 4, 8], {
+        componente("mrr_plan", "ranking", tComun("dashboard.ingresoMensualPorPlan"), [0, 20, 4, 8], {
           recurso: "saas.empresa",
           metricas: "suma:mrr",
           agrupar: "plan",
           limite: 10,
         })
       ),
-      componente("pruebas", "tabla", "Pruebas que terminan antes", [4, 20, 4, 8], {
+      componente("pruebas", "tabla", tComun("dashboard.pruebasQueTerminanAntes"), [4, 20, 4, 8], {
         recurso: "saas.empresa",
         columnas: "nombre,nombre_plan,fin_prueba,mrr_prueba",
         filtros: [{ campo: "estado_suscripcion", operador: "=", valor: "prueba" }],
         orden: "fin_prueba:asc",
         limite: 8,
       }),
-      componente("impagos", "tabla", "Impagos", [8, 20, 4, 8], {
+      componente("impagos", "tabla", tComun("dashboard.impagos"), [8, 20, 4, 8], {
         recurso: "saas.empresa",
         columnas: "nombre,nombre_plan,impagada_desde,mrr",
         filtros: [{ campo: "estado_suscripcion", operador: "in", valor: ["impagada", "solo_lectura"] }],
@@ -440,7 +441,7 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
         limite: 8,
       }),
       enMoneda(
-        componente("top_empresas", "ranking", "Empresas que más han pagado", [0, 28, 4, 8], {
+        componente("top_empresas", "ranking", tComun("dashboard.empresasQueMasHanPagado"), [0, 28, 4, 8], {
           recurso: "saas.factura",
           metricas: "suma:total",
           filtros: FACTURAS_PAGADAS,
@@ -448,20 +449,20 @@ export const DASHBOARDS_POR_DEFECTO: Record<string, DashboardPorDefecto> = {
           limite: 8,
         })
       ),
-      componente("consumo_mes", "barras", "Consumo del mes", [4, 28, 4, 8], {
+      componente("consumo_mes", "barras", tComun("dashboard.consumoDelMes"), [4, 28, 4, 8], {
         recurso: "saas.consumo",
         metricas: "suma:cantidad",
         agrupar: "limite",
         periodo: "mes:este_mes",
         limite: 10,
       }),
-      componente("ultimas_altas", "tabla", "Últimas altas", [8, 28, 4, 8], {
+      componente("ultimas_altas", "tabla", tComun("dashboard.ultimasAltas"), [8, 28, 4, 8], {
         recurso: "saas.empresa",
         columnas: "nombre,fecha_alta,nombre_plan,estado",
         orden: "fecha_alta:desc",
         limite: 8,
       }),
-    ],
+    ]; },
   },
 };
 

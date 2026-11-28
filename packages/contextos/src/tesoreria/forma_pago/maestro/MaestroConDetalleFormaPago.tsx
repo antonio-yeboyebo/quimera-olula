@@ -11,10 +11,12 @@ import { FormaPago } from "../diseño.ts";
 import { REGLA_FORMA_PAGO } from "../dominio.ts";
 import { criteriaFormasPagoDefecto, metaFiltroFormaPago, metaTablaFormaPago } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /** Formas de pago (Eneboo `formaspago.ui` con su tabla de plazos). */
 export const MaestroConDetalleFormaPago = () => {
 
+    const t = useTTesoreria();
     const criteriaInicial = useMemo(criteriaFormasPagoDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleFormaPago = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las formas de pago.</p>;
+        return <p>{t("forma_pago.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetalleFormaPago = () => {
                 seleccionada={formasPago.activo}
                 Maestro={
                     <>
-                        <h2>Formas de pago</h2>
+                        <h2>{t("forma_pago.formasDePago")}</h2>
                         <Listado<FormaPago>
                             metaTabla={metaTablaFormaPago}
                             metaFiltro={metaFiltroFormaPago}
@@ -54,7 +56,7 @@ export const MaestroConDetalleFormaPago = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_forma_pago_solicitada")}>
-                                        Nueva forma de pago
+                                        {t("forma_pago.nuevaFormaDePago")}
                                     </QBoton>
                                 </div>
                             )}

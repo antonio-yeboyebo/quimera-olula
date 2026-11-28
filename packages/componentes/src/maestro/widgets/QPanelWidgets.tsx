@@ -1,3 +1,4 @@
+import { useTComponentes } from "../../i18n/textos.ts";
 import { QBoton } from "../../atomos/qboton.tsx";
 import { QTarjetaResumen } from "../../atomos/qtarjeta_resumen.tsx";
 import { CampoWidget, DefinicionWidget, SeriesWidgets, ValoresWidgets } from "./diseño.ts";
@@ -20,7 +21,9 @@ export const QPanelWidgets = ({
   series?: SeriesWidgets;
   cargando: boolean;
   onPersonalizar?: () => void;
-}) => (
+}) => {
+  const t = useTComponentes();
+  return (
   <section
     className="panel-widgets"
     aria-labelledby="panel-widgets-titulo"
@@ -28,11 +31,11 @@ export const QPanelWidgets = ({
   >
     <header className="panel-widgets-cabecera">
       <h3 id="panel-widgets-titulo">
-        Resumen <span>· según los filtros actuales</span>
+        {t("widgets.resumen")} <span>{t("widgets.segunFiltros")}</span>
       </h3>
       {onPersonalizar && (
         <QBoton variante="texto" tamaño="pequeño" onClick={onPersonalizar}>
-          {widgets.length === 0 ? "Añadir widgets" : "Personalizar"}
+          {widgets.length === 0 ? t("widgets.anadir") : t("widgets.personalizar")}
         </QBoton>
       )}
     </header>
@@ -64,7 +67,7 @@ export const QPanelWidgets = ({
               cargando={cargando}
               aviso={
                 valor === null
-                  ? "No disponible con los filtros actuales"
+                  ? t("widgets.noDisponible")
                   : undefined
               }
             />
@@ -73,4 +76,5 @@ export const QPanelWidgets = ({
       </div>
     )}
   </section>
-);
+  );
+};

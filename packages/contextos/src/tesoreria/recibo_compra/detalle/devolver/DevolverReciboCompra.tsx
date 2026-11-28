@@ -8,6 +8,7 @@ import { DevolucionRecibo } from "../../../recibo_venta/detalle/devolver/diseño
 import { metaDevolucionRecibo } from "../../../recibo_venta/detalle/devolver/dominio.js";
 import { ReciboCompra } from "../../diseño.js";
 import { cuentaUltimoPagoCompra, enDivisaExtranjeraCompra } from "../../dominio.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 /** TES-02: devolución del recibo pagado, por la cuenta del último pago. */
 export const DevolverReciboCompra = ({
@@ -18,6 +19,7 @@ export const DevolverReciboCompra = ({
   publicar: EmitirEvento;
 }) => {
   // Memoizado: useModelo reinicia el modelo cada vez que cambia el inicial.
+  const t = useTTesoreria();
   const devolucionInicial = useMemo((): DevolucionRecibo => {
     const cuenta = cuentaUltimoPagoCompra(recibo);
     return {
@@ -48,27 +50,27 @@ export const DevolverReciboCompra = ({
     <QModal
       abierto={true}
       nombre="devolver_recibo_compra"
-      titulo="Devolver recibo"
+      titulo={t("recibo_compra.devolverRecibo")}
       onCerrar={cancelar}
     >
       <div className="DevolverReciboCompra">
         <quimera-formulario>
           <CuentaBancariaSelect
-            label="Cuenta de pago"
+            label={t("recibo_compra.cuentaDePago")}
             {...uiProps("cuenta_pago_id", "nombre_cuenta_pago")}
             deshabilitado
           />
-          <QDate label="Fecha" {...uiProps("fecha")} />
+          <QDate label={t("recibo_compra.fecha")} {...uiProps("fecha")} />
           {enDivisa && (
             <QInput
-              label={`Tasa de cambio ${recibo.divisaId} → ${recibo.divisaEmpresaId}`}
+              label={t("recibo_compra.tasaDeCambioDivisaidDivisaempresaid", { divisaId: recibo.divisaId, divisaEmpresaId: recibo.divisaEmpresaId })}
               {...uiProps("tasa_conversion")}
             />
           )}
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={devolver} deshabilitado={!valido}>
-            Devolver
+            {t("recibo_compra.devolver")}
           </QBoton>
         </div>
       </div>

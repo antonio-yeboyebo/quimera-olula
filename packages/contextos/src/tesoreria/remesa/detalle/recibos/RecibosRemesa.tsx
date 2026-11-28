@@ -4,22 +4,24 @@ import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ReciboDeRemesa } from "../../diseño.js";
+import { tTesoreria } from "../../../i18n/index.ts";
+import { textoEstado } from "../../../comun/estados.ts";
 
 const metaTablaRecibos: MetaTabla<ReciboDeRemesa> = [
-  { id: "codigo", cabecera: "Código" },
-  { id: "nombreCliente", cabecera: "Cliente" },
-  { id: "fechaVencimiento", cabecera: "F. Vencimiento", tipo: "fecha" },
+  { id: "codigo", get cabecera() { return tTesoreria("remesa.codigo"); } },
+  { id: "nombreCliente", get cabecera() { return tTesoreria("remesa.cliente"); } },
+  { id: "fechaVencimiento", get cabecera() { return tTesoreria("remesa.fVencimiento"); }, tipo: "fecha" },
   {
     id: "estado",
-    cabecera: "Estado",
+    get cabecera() { return tTesoreria("remesa.estado"); },
     render: (recibo: ReciboDeRemesa) => (
       <QEtiqueta variante={varianteEstadoReciboVenta(recibo.estado)}>
-        {recibo.estado}
+        {textoEstado(recibo.estado)}
       </QEtiqueta>
     ),
   },
-  { id: "situacion", cabecera: "Situación" },
-  { id: "importe", cabecera: "Importe", tipo: "moneda" },
+  { id: "situacion", get cabecera() { return tTesoreria("remesa.situacion"); } },
+  { id: "importe", get cabecera() { return tTesoreria("remesa.importe"); }, tipo: "moneda" },
 ];
 
 export const RecibosRemesa = ({ recibos }: { recibos: ReciboDeRemesa[] }) => (

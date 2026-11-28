@@ -19,6 +19,7 @@ import {
     PostCajaProveedor,
     SkuLote
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrlArticulo = "/almacen/articulo";
 
@@ -150,7 +151,7 @@ export const postArticulo: PostArticulo = async (Articulo) => {
             descripcion: Articulo.descripcion ?? "",
             ...(Articulo.grupoIvaProductoId ? { grupo_iva_producto_id: Articulo.grupoIvaProductoId } : {}),
         },
-        "Error al guardar Articulo"
+        tAlmacen("articulo.errorAlGuardarArticulo")
     ).then((respuesta) => respuesta.id);
 };
 
@@ -158,12 +159,12 @@ export const patchArticulo: PatchArticulo = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrlArticulo}/${id}`,
         cambiosArticuloAApi(cambios),
-        "Error al guardar el artículo"
+        tAlmacen("articulo.errorAlGuardarElArticulo")
     );
 };
 
 export const deleteArticulo: DeleteArticulo = async (id) => {
-    await RestAPI.delete(`${baseUrlArticulo}/${id}`, "Error al borrar Articulo");
+    await RestAPI.delete(`${baseUrlArticulo}/${id}`, tAlmacen("articulo.errorAlBorrarArticulo"));
 };
 
 const baseUrlCajaProveedor = (articuloId: string, proveedorId: string) =>
@@ -173,14 +174,14 @@ export const postCajaProveedor: PostCajaProveedor = async (articuloId, proveedor
     await RestAPI.post(
         `${baseUrlCajaProveedor(articuloId, proveedorId)}/crear_caja`,
         { descripcion: nueva.descripcion, cantidad: nueva.cantidad },
-        "Error al crear la caja"
+        tAlmacen("articulo.errorAlCrearLaCaja")
     );
 };
 
 export const deleteCajaProveedor: DeleteCajaProveedor = async (articuloId, proveedorId, cajaId) => {
     await RestAPI.delete(
         `${baseUrlCajaProveedor(articuloId, proveedorId)}/borrar_caja/${cajaId}`,
-        "Error al borrar la caja",
+        tAlmacen("articulo.errorAlBorrarLaCaja"),
     );
 };
 
@@ -191,7 +192,7 @@ export const patchCajaProveedor: PatchCajaProveedor = async (articuloId, proveed
     await RestAPI.patch(
         `${baseUrlCajaProveedor(articuloId, proveedorId)}/cambiar_caja/${cajaId}`,
         body,
-        "Error al cambiar la caja"
+        tAlmacen("articulo.errorAlCambiarLaCaja")
     );
 };
 
@@ -199,7 +200,7 @@ export const patchCajaProveedorDefecto: PatchCajaProveedorDefecto = async (artic
     await RestAPI.patch(
         `${baseUrlCajaProveedor(articuloId, proveedorId)}/cambiar_caja_defecto/`,
         { caja_id: cajaId },
-        "Error al marcar la caja como defecto"
+        tAlmacen("articulo.errorAlMarcarLaCajaComo")
     );
 };
 

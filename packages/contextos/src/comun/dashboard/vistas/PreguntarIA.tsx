@@ -13,12 +13,13 @@ import {
 import { proponerComponente } from "../infraestructura.ts";
 import { Componente } from "./componentes/Componente.tsx";
 import "./ConfigurarComponente.css";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
-const EJEMPLOS = [
-  "Ventas de este año por provincia",
-  "Los 5 clientes que más nos han comprado este año",
-  "Facturación mensual de los últimos 12 meses frente al año anterior",
-  "Recibos pendientes de cobro más antiguos",
+const ejemplos = () => [
+  tComun("dashboard.ventasDeEsteAnoPorProvincia"),
+  tComun("dashboard.los5ClientesQueMasNos"),
+  tComun("dashboard.facturacionMensualDeLosUltimos12"),
+  tComun("dashboard.recibosPendientesDeCobroMasAntiguos"),
 ];
 
 /**
@@ -37,6 +38,7 @@ export const PreguntarIA = ({
   onAjustar: (componente: ComponenteDashboard) => void;
   onCancelar: () => void;
 }) => {
+  const t = useTComun();
   const [pregunta, setPregunta] = useState("");
   const [preguntando, setPreguntando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export const PreguntarIA = ({
       setPropuesta(nueva);
       setResultado(componenteDesdePropuesta(componente, nueva, texto));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No se ha podido preguntar a la IA.");
+      setError(e instanceof Error ? e.message : t("dashboard.noSeHaPodidoPreguntarA2"));
     } finally {
       setPreguntando(false);
     }
@@ -62,7 +64,7 @@ export const PreguntarIA = ({
   return (
     <QModal
       nombre="preguntar-ia"
-      titulo="Crear componente preguntando"
+      titulo={t("dashboard.crearComponentePreguntando")}
       abierto={true}
       onCerrar={onCancelar}
       anchoEstable
@@ -77,7 +79,7 @@ export const PreguntarIA = ({
             }}
           >
             <QInput
-              label="¿Qué quieres ver?"
+              label={t("dashboard.queQuieresVer")}
               nombre="pregunta_ia"
               valor={pregunta}
               maxLength={500}
@@ -85,14 +87,14 @@ export const PreguntarIA = ({
               onChange={setPregunta}
             />
             <QBoton tipo="submit" deshabilitado={!pregunta.trim() || preguntando}>
-              {preguntando ? "Preguntando…" : "Preguntar"}
+              {preguntando ? t("dashboard.preguntando") : t("dashboard.preguntar")}
             </QBoton>
           </form>
 
           {!propuesta && !preguntando && (
             <div className="preguntar-ia-ejemplos">
-              <span>Por ejemplo:</span>
-              {EJEMPLOS.map((ejemplo) => (
+              <span>{t("dashboard.porEjemplo")}</span>
+              {ejemplos().map((ejemplo) => (
                 <QBoton
                   key={ejemplo}
                   variante="borde"
@@ -114,12 +116,12 @@ export const PreguntarIA = ({
           {propuesta && resultado && (
             <>
               <div className="preguntar-ia-entendido">
-                <span className="configurar-componente-etiqueta">Lo he entendido así</span>
+                <span className="configurar-componente-etiqueta">{t("dashboard.loHeEntendidoAsi")}</span>
                 <p>{propuesta.explicacion}</p>
               </div>
               {alternativasTipo(resultado.consultas[0]).length > 1 && (
                 <fieldset className="preguntar-ia-tipos">
-                  <legend>Mostrar como</legend>
+                  <legend>{t("dashboard.mostrarComo")}</legend>
                   {alternativasTipo(resultado.consultas[0]).map((tipo) => (
                     <QBoton
                       key={tipo}
@@ -136,8 +138,8 @@ export const PreguntarIA = ({
           )}
         </div>
 
-        <div className="configurar-componente-vista-previa" aria-label="Vista previa">
-          <span className="configurar-componente-etiqueta">Vista previa con datos reales</span>
+        <div className="configurar-componente-vista-previa" aria-label={t("dashboard.vistaPrevia")}>
+          <span className="configurar-componente-etiqueta">{t("dashboard.vistaPreviaConDatosReales")}</span>
           <div
             className="configurar-componente-marco"
             style={{ height: `${Math.min(resultado?.h ?? 8, 10) * ALTO_FILA_DASHBOARD}px` }}
@@ -146,7 +148,7 @@ export const PreguntarIA = ({
               <Componente componente={resultado} />
             ) : (
               <p className="preguntar-ia-vacio">
-                {preguntando ? "Pensando la consulta…" : "Aquí verás el resultado."}
+                {preguntando ? t("dashboard.pensandoLaConsulta") : t("dashboard.aquiVerasElResultado")}
               </p>
             )}
           </div>
@@ -155,15 +157,15 @@ export const PreguntarIA = ({
 
       <footer className="configurar-componente-pie">
         <QBoton variante="borde" onClick={onCancelar}>
-          Cancelar
+          {t("dashboard.cancelar")}
         </QBoton>
         {resultado && (
           <QBoton variante="borde" onClick={() => onAjustar(resultado)}>
-            Ajustar a mano
+            {t("dashboard.ajustarAMano")}
           </QBoton>
         )}
         <QBoton deshabilitado={!resultado} onClick={() => resultado && onGuardar(resultado)}>
-          Añadir
+          {t("dashboard.anadir")}
         </QBoton>
       </footer>
     </QModal>

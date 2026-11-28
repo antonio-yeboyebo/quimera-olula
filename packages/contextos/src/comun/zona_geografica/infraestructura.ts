@@ -7,6 +7,7 @@ import {
     PostZonaGeografica,
     ZonaGeografica,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 const baseUrl = "/comun/zona_geografica";
 
@@ -34,7 +35,7 @@ export const postZonaGeografica: PostZonaGeografica = async (nueva) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         { id: nueva.id.trim(), descripcion: descripcionAApi(nueva.descripcion) },
-        "Error al crear la zona geográfica"
+        tComun("zonaGeografica.errorAlCrearLaZonaGeografica")
     );
     return String(respuesta.id);
 };
@@ -43,10 +44,10 @@ export const patchZonaGeografica: PatchZonaGeografica = async (id, cambios) => {
     await RestAPI.patch(
         urlZona(id),
         { descripcion: descripcionAApi(cambios.descripcion ?? "") },
-        "Error al guardar la zona geográfica"
+        tComun("zonaGeografica.errorAlGuardarLaZonaGeografica")
     );
 };
 
 export const deleteZonaGeografica: DeleteZonaGeografica = async (id) => {
-    await RestAPI.delete(urlZona(id), "Error al borrar la zona geográfica");
+    await RestAPI.delete(urlZona(id), tComun("zonaGeografica.errorAlBorrarLaZonaGeografica"));
 };

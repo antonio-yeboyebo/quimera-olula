@@ -10,6 +10,7 @@ import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { metaNuevaLinea } from "../../dominio.ts";
 import { patchLineaOrden } from "../../infraestructura.ts";
 import { flujoDePasos } from "../../pasos/flujos.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CambiarLineaOrden = ({
     publicar,
@@ -20,6 +21,7 @@ export const CambiarLineaOrden = ({
     linea: LineaOrdenAlmacen;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido, set } = useModelo(metaNuevaLinea, linea);
 
     // El flujo de palé crea cajas al dar de alta la línea: no se puede elegir ni abandonar al editar.
@@ -41,14 +43,14 @@ export const CambiarLineaOrden = ({
         <QModal
             abierto={true}
             nombre="cambiarLineaOrden"
-            titulo="Edición de línea"
+            titulo={t("orden.edicionDeLinea")}
             onCerrar={cancelar}
         >
             <div className="CambiarLineaOrden">
                 <quimera-formulario>
                     <QInput label="SKU" {...uiProps("sku")} />
-                    <QInput label="Cantidad prevista" {...uiProps("cantidadPrevista")} />
-                    <QInput label="Cantidad real" {...uiProps("cantidadReal")} soloLectura />
+                    <QInput label={t("orden.cantidadPrevista")} {...uiProps("cantidadPrevista")} />
+                    <QInput label={t("orden.cantidadReal")} {...uiProps("cantidadReal")} soloLectura />
                     {flujoEditable ? (
                         <SelectorFlujo
                             tipo={orden.tipo}
@@ -68,7 +70,7 @@ export const CambiarLineaOrden = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={guardar} deshabilitado={!valido}>
-                        Guardar
+                        {t("orden.guardar")}
                     </QBoton>
                 </div>
             </div>

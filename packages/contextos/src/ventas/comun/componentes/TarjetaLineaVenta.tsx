@@ -10,6 +10,7 @@ import {
   type LineaVentaTarjeta,
 } from "./linea_venta_texto.ts";
 import "./TarjetaLineaVenta.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 export type { LineaVentaTarjeta };
 
@@ -24,6 +25,7 @@ export const TarjetaLineaVenta = <L extends LineaVentaTarjeta>({
   onCambioCantidad?: (linea: L, cantidad: number) => void;
   divisa?: string;
 }) => {
+  const t = useTVentas();
   const cantidad = Number(linea.cantidad) || 0;
   const [cantidadInput, setCantidadInput] = useState(String(cantidad));
 
@@ -65,7 +67,7 @@ export const TarjetaLineaVenta = <L extends LineaVentaTarjeta>({
         variante="borde"
         tamaño="pequeño"
         onClick={() => actualizarCantidad(cantidad - 1)}
-        props={{ "aria-label": "Disminuir cantidad" }}
+        props={{ "aria-label": t("comun.linea.disminuirCantidad") }}
       >
         -
       </QBoton>
@@ -85,7 +87,7 @@ export const TarjetaLineaVenta = <L extends LineaVentaTarjeta>({
         variante="borde"
         tamaño="pequeño"
         onClick={() => actualizarCantidad(cantidad + 1)}
-        props={{ "aria-label": "Aumentar cantidad" }}
+        props={{ "aria-label": t("comun.linea.aumentarCantidad") }}
       >
         +
       </QBoton>

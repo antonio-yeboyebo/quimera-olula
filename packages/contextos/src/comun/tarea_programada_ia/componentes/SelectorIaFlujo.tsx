@@ -2,6 +2,7 @@ import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { useEffect, useState } from "react";
 import { getIaFlujos } from "../../ia_flujo/infraestructura.js";
+import { tComun } from "../../i18n/index.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
@@ -12,7 +13,7 @@ type Opcion = { valor: string; descripcion: string };
  * búsqueda incremental.
  */
 export const SelectorIaFlujo = ({
-    label = "Flujo de trabajo",
+    label = tComun("tareaProgramadaIa.flujoDeTrabajo"),
     ...props
 }: Omit<QSelectProps, "opciones" | "label"> & { label?: string }) => {
     const [opciones, setOpciones] = useState<Opcion[]>([]);

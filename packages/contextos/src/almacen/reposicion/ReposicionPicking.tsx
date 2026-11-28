@@ -15,8 +15,10 @@ import {
 import { contextoReposicionDeEntrada, getMaquina } from "./maquina.ts";
 import "#/comun/estilos/pagina_proceso.css";
 import "./ReposicionPicking.css";
+import { tAlmacen, useTAlmacen } from "../i18n/index.ts";
 
 export const ReposicionPicking = () => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(getMaquina, contextoReposicionDeEntrada());
 
     // Con almacén de trabajo o un enlace, se calcula de entrada (es una simulación: no crea nada).
@@ -28,11 +30,11 @@ export const ReposicionPicking = () => {
 
     return (
         <div className="ReposicionPicking PaginaProceso">
-            <h2>Reposición de picking</h2>
+            <h2>{t("reposicion.reposicionDePicking")}</h2>
 
             <quimera-formulario>
                 <Almacen
-                    label="Almacén"
+                    label={t("reposicion.almacen")}
                     nombre="almacenId"
                     valor={almacenId}
                     onChange={(opcion) => emitir("almacen_cambiado", opcion?.valor ?? "")}
@@ -41,14 +43,14 @@ export const ReposicionPicking = () => {
 
             <div className="botones maestro-botones">
                 <QBoton deshabilitado={!almacenId} onClick={() => emitir("calculo_solicitado")}>
-                    Calcular
+                    {t("reposicion.calcular")}
                 </QBoton>
                 {estado === "CALCULADO" && puedeGenerarTraspaso(reposicion) && (
                     <QBoton
                         variante="texto"
                         onClick={() => emitir("seleccion_todas_cambiada", !todasSeleccionadas(reposicion, seleccion))}
                     >
-                        {todasSeleccionadas(reposicion, seleccion) ? "Desmarcar todos" : "Marcar todos"}
+                        {todasSeleccionadas(reposicion, seleccion) ? t("reposicion.desmarcarTodos") : t("reposicion.marcarTodos")}
                     </QBoton>
                 )}
                 {estado === "CALCULADO" && (
@@ -56,15 +58,14 @@ export const ReposicionPicking = () => {
                         deshabilitado={!puedeGenerarSeleccion(reposicion, seleccion)}
                         onClick={() => emitir("generacion_solicitada")}
                     >
-                        Generar traspaso
+                        {t("reposicion.generarTraspaso")}
                     </QBoton>
                 )}
             </div>
 
             {estado === "CALCULADO" && reposicion.necesidades.length > 0 && !puedeGenerarTraspaso(reposicion) && (
                 <p className="mensaje">
-                    No se puede generar el traspaso: ninguno de estos artículos tiene stock libre en
-                    ubicaciones activas de zonas de reserva del almacén desde donde reponer.
+                    {t("reposicion.noSePuedeGenerarElTraspaso")}
                 </p>
             )}
 
@@ -72,20 +73,20 @@ export const ReposicionPicking = () => {
                 <div className="mensaje">
                     {reposicion.ordenId ? (
                         <>
-                            Traspaso generado:{" "}
+                            {t("reposicion.traspasoGenerado")}{" "}
                             <Link to={`/almacen/ordenes?id=${reposicion.ordenId}`}>
-                                orden {reposicion.ordenId}
+                                {t("reposicion.ordenOrdenid", { ordenId: reposicion.ordenId })}
                             </Link>
                         </>
                     ) : (
-                        "No había nada que reponer con origen: no se ha creado ninguna orden."
+                        t("reposicion.noHabiaNadaQueReponerCon")
                     )}
                 </div>
             )}
 
             {estado !== "INICIAL" &&
                 (reposicion.necesidades.length === 0 ? (
-                    <p>No hay necesidades de reposición.</p>
+                    <p>{t("reposicion.noHayNecesidadesDeReposicion")}</p>
                 ) : (
                     <TablaNecesidades
                         necesidades={reposicion.necesidades}
@@ -101,7 +102,7 @@ type FilaNecesidad = Entidad & NecesidadReposicion;
 
 const flechaSituacion: Record<ParteSituacion["tipo"], string> = { fisico: "", entrante: "↓", saliente: "↑" };
 const nombreSituacion: Record<ParteSituacion["tipo"], string> = {
-    fisico: "Físico", entrante: "Entrante", saliente: "Saliente",
+    get fisico() { return tAlmacen("reposicion.fisico"); }, get entrante() { return tAlmacen("reposicion.entrante"); }, get saliente() { return tAlmacen("reposicion.saliente"); },
 };
 
 const Situacion = ({ necesidad }: { necesidad: NecesidadReposicion }) => (
@@ -120,36 +121,36 @@ const Situacion = ({ necesidad }: { necesidad: NecesidadReposicion }) => (
 const columnasNecesidades: MetaTabla<FilaNecesidad> = [
     {
         id: "articuloId",
-        cabecera: "Artículo",
+        get cabecera() { return tAlmacen("reposicion.articulo"); },
         estilo: "destacado",
         render: (n) => textoArticulo(n),
         enlace: (n) => urlFicha.articulo(n.articuloId),
     },
-    { id: "ubicacion", cabecera: "Ubicación de picking", enlace: (n) => urlFicha.pickingFijo(n.pickingFijoId) },
+    { id: "ubicacion", get cabecera() { return tAlmacen("reposicion.ubicacionDePicking"); }, enlace: (n) => urlFicha.pickingFijo(n.pickingFijoId) },
     {
         id: "situacion",
-        cabecera: "Situación",
+        get cabecera() { return tAlmacen("reposicion.situacion"); },
         render: (n) => <Situacion necesidad={n} />,
     },
-    { id: "disponible", cabecera: "Disponible", tipo: "numero", estilo: "destacado" },
-    { id: "minimo", cabecera: "Mínimo", tipo: "numero" },
-    { id: "maximo", cabecera: "Máximo", tipo: "numero" },
-    { id: "cantidad", cabecera: "A reponer", tipo: "numero", estilo: "destacado" },
-    { id: "falta", cabecera: "Falta", tipo: "numero" },
+    { id: "disponible", get cabecera() { return tAlmacen("reposicion.disponible"); }, tipo: "numero", estilo: "destacado" },
+    { id: "minimo", get cabecera() { return tAlmacen("reposicion.minimo"); }, tipo: "numero" },
+    { id: "maximo", get cabecera() { return tAlmacen("reposicion.maximo"); }, tipo: "numero" },
+    { id: "cantidad", get cabecera() { return tAlmacen("reposicion.aReponer"); }, tipo: "numero", estilo: "destacado" },
+    { id: "falta", get cabecera() { return tAlmacen("reposicion.falta"); }, tipo: "numero" },
     {
         id: "origenes",
-        cabecera: "Orígenes",
+        get cabecera() { return tAlmacen("reposicion.origenes"); },
         ancho: "25%",
         render: (n) => (n.origenes.length
             ? n.origenes.map((o, i) => (
                 <span key={o.ubicacionId}>
                     {i > 0 && ", "}
-                    <ValorConEnlace href={urlFicha.ubicacion(o.ubicacionId)} etiqueta={`Abrir ubicación ${o.ubicacion}`}>
+                    <ValorConEnlace href={urlFicha.ubicacion(o.ubicacionId)} etiqueta={tAlmacen("reposicion.abrirUbicacionUbicacion", { ubicacion: o.ubicacion })}>
                         {o.ubicacion} ({o.cantidad.toLocaleString("es-ES")})
                     </ValorConEnlace>
                 </span>
             ))
-            : "Sin stock en reserva"),
+            : tAlmacen("reposicion.sinStockEnReserva")),
     },
 ];
 

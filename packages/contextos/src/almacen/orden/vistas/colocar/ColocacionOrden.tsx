@@ -6,6 +6,7 @@ import { useCallback, useContext, useState } from "react";
 import { Link } from "react-router";
 import { OrdenAlmacen } from "../../diseño.ts";
 import { postColocacion } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const ColocacionOrden = ({
     publicar,
@@ -14,6 +15,7 @@ export const ColocacionOrden = ({
     publicar: EmitirEvento;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [idOrdenColocacion, setIdOrdenColocacion] = useState<string | null>(null);
 
@@ -29,17 +31,17 @@ export const ColocacionOrden = ({
             <QModal
                 abierto={true}
                 nombre="colocacionCreada"
-                titulo="Orden de colocación creada"
+                titulo={t("orden.ordenDeColocacionCreada")}
                 onCerrar={() => publicar("colocacion_creada")}
             >
-                <p>Orden de colocación <strong>{idOrdenColocacion}</strong> creada con éxito.</p>
+                <p>{t("orden.ordenDeColocacion")}{" "}<strong>{idOrdenColocacion}</strong>{" "}{t("orden.creadaConExito")}</p>
                 <p>
                     <Link to={`/almacen/ordenes?id=${idOrdenColocacion}`} onClick={() => publicar("colocacion_creada")}>
-                        Ir a la orden de colocación
+                        {t("orden.irALaOrdenDeColocacion")}
                     </Link>
                 </p>
                 <div className="maestro-botones">
-                    <QBoton onClick={() => publicar("colocacion_creada")}>Cerrar</QBoton>
+                    <QBoton onClick={() => publicar("colocacion_creada")}>{t("orden.cerrar")}</QBoton>
                 </div>
             </QModal>
         );
@@ -49,13 +51,13 @@ export const ColocacionOrden = ({
         <QModal
             abierto={true}
             nombre="confirmarColocacion"
-            titulo="Crear orden de colocación"
+            titulo={t("orden.crearOrdenDeColocacion")}
             onCerrar={() => publicar("colocacion_cancelada")}
         >
-            <p>Se creará una orden de traspaso para la colocación de esta entrada. ¿Desea continuar?</p>
+            <p>{t("orden.seCrearaUnaOrdenDeTraspaso")}</p>
             <div className="maestro-botones">
-                <QBoton variante="borde" onClick={() => publicar("colocacion_cancelada")}>Cancelar</QBoton>
-                <QBoton onClick={crearColocacion}>Crear orden de colocación</QBoton>
+                <QBoton variante="borde" onClick={() => publicar("colocacion_cancelada")}>{t("orden.cancelar")}</QBoton>
+                <QBoton onClick={crearColocacion}>{t("orden.crearOrdenDeColocacion")}</QBoton>
             </div>
         </QModal>
     );

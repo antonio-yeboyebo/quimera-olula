@@ -11,6 +11,7 @@ import {
     reciboIdsConciliacionRemesa,
     restoConciliacionParcial,
 } from "../dominio.js";
+import { tTesoreria, useTTesoreria } from "../../i18n/index.ts";
 
 /** Línea descriptiva de un ítem de conciliación para el cuerpo del modal. */
 const lineaItem = (item: ItemConciliacion, movimiento: MovimientoBancario): string => {
@@ -19,24 +20,22 @@ const lineaItem = (item: ItemConciliacion, movimiento: MovimientoBancario): stri
         const recibo = item.recibo;
         const parcial = esConciliacionParcial(item.tipo);
         return parcial
-            ? `${etiquetaTipoConciliacion(item.tipo)}: ${recibo.codigo} · ${formatearMoneda(Math.abs(movimiento.importe), divisa)} de ${formatearMoneda(recibo.importe, divisa)} · resto ${formatearMoneda(restoConciliacionParcial(movimiento, recibo.importe), divisa)}`
-            : `${etiquetaTipoConciliacion(item.tipo)}: ${recibo.codigo} · ${recibo.tercero ?? "Sin tercero"} · vence ${formatearFechaDate(recibo.fechaVencimiento)} · ${formatearMoneda(recibo.importe, divisa)}`;
+            ? tTesoreria("conciliacion.tipoCodigoValorDeImporteResto", { tipo: etiquetaTipoConciliacion(item.tipo), codigo: recibo.codigo, valor: formatearMoneda(Math.abs(movimiento.importe), divisa), importe: formatearMoneda(recibo.importe, divisa), valor2: formatearMoneda(restoConciliacionParcial(movimiento, recibo.importe), divisa) })
+            : tTesoreria("conciliacion.tipoCodigoValorVenceFechavencimientoImpo", { tipo: etiquetaTipoConciliacion(item.tipo), codigo: recibo.codigo, valor: recibo.tercero ?? tTesoreria("conciliacion.sinTercero"), fechaVencimiento: formatearFechaDate(recibo.fechaVencimiento), importe: formatearMoneda(recibo.importe, divisa) });
     }
     if (item.remesa) {
         const recibos = reciboIdsConciliacionRemesa(item);
         // En una conciliación de varios ítems la remesa cubre su `importe`, no todo el movimiento.
         const importe = item.params.importe !== undefined ? Number(item.params.importe) : Math.abs(movimiento.importe);
-        return `${etiquetaTipoConciliacion(item.tipo)}: remesa ${item.remesa.id} · cargo ${formatearFechaDate(item.remesa.fechaCargo)} · `
-            + (recibos ? `${recibos.length} de ${item.remesa.numRecibos} recibos` : "todos los recibos pendientes")
-            + ` · ${formatearMoneda(importe, divisa)}`;
+        return tTesoreria("conciliacion.tipoRemesaIdCargoFechacargoValor", { tipo: etiquetaTipoConciliacion(item.tipo), id: item.remesa.id, fechaCargo: formatearFechaDate(item.remesa.fechaCargo), valor: (recibos ? tTesoreria("conciliacion.lengthDeNumrecibosRecibos", { length: recibos.length, numRecibos: item.remesa.numRecibos }) : tTesoreria("conciliacion.todosLosRecibosPendientes")), importe: formatearMoneda(importe, divisa) });
     }
     if (item.asiento) {
         const asiento = item.asiento;
-        return `${etiquetaTipoConciliacion(item.tipo)}: asiento ${asiento.numero ?? `#${asiento.id}`} · ${formatearFechaDate(asiento.fecha)} · ${formatearMoneda(asiento.importe, divisa)}`;
+        return tTesoreria("conciliacion.tipoAsientoValorFechaImporte", { tipo: etiquetaTipoConciliacion(item.tipo), valor: asiento.numero ?? `#${asiento.id}`, fecha: formatearFechaDate(asiento.fecha), importe: formatearMoneda(asiento.importe, divisa) });
     }
     if (item.cuota) {
         const cuota = item.cuota;
-        return `Cuota ${cuota.contrato ?? ""} ${formatearFechaDate(cuota.fecha)}: ${formatearMoneda(cuota.capital, divisa)} capital y ${formatearMoneda(cuota.intereses, divisa)} intereses`;
+        return tTesoreria("conciliacion.cuotaValorFechaCapitalCapitalY", { valor: cuota.contrato ?? "", fecha: formatearFechaDate(cuota.fecha), capital: formatearMoneda(cuota.capital, divisa), intereses: formatearMoneda(cuota.intereses, divisa) });
     }
     return etiquetaTipoConciliacion(item.tipo);
 };
@@ -55,6 +54,7 @@ export const ConciliarMovimientoBancario = ({
     conciliacion: ConciliacionSeleccionada;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const conciliar_ = useCallback(async () => publicar("conciliacion_confirmada"), [publicar]);
     const cancelar_ = useCallback(() => publicar("conciliacion_cancelada"), [publicar]);
 
@@ -64,25 +64,25 @@ export const ConciliarMovimientoBancario = ({
     const item0 = conciliacion.items[0];
     const varios = conciliacion.items.length > 1;
     const titulo = varios
-        ? `Conciliar con ${conciliacion.items.length} candidatos`
-        : item0 ? etiquetaTipoConciliacion(item0.tipo) : "Conciliación";
+        ? t("conciliacion.conciliarConLengthCandidatos", { length: conciliacion.items.length })
+        : item0 ? etiquetaTipoConciliacion(item0.tipo) : t("conciliacion.conciliacion");
 
     const lineasItems = conciliacion.items.map((item) => lineaItem(item, movimiento));
     const mensaje = [
-        `Movimiento: ${formatearFechaDate(movimiento.fecha)} · ${movimiento.concepto} · ${formatearMoneda(movimiento.importe, divisa)}`,
+        t("conciliacion.movimientoFechaConceptoImporte", { fecha: formatearFechaDate(movimiento.fecha), concepto: movimiento.concepto, importe: formatearMoneda(movimiento.importe, divisa) }),
         "",
         ...lineasItems,
-        conciliacion.justificacion ? `Motivo: ${conciliacion.justificacion}` : "",
+        conciliacion.justificacion ? t("conciliacion.motivoJustificacion", { justificacion: conciliacion.justificacion }) : "",
         "",
         varios
-            ? "Los recibos y remesas quedarán pagados con la fecha del movimiento y las partidas, vinculadas; el movimiento quedará conciliado con todos."
+            ? t("conciliacion.losRecibosYRemesasQuedaranPagados")
             : item0?.cuota
-            ? "Se generará el asiento de la cuota: el capital contra la deuda y los intereses contra el gasto, y el banco por el total."
+            ? t("conciliacion.seGeneraraElAsientoDeLa")
             : item0?.remesa
-            ? "Los recibos de la remesa quedarán pagados con la fecha del movimiento; la remesa solo pasa a pagada cuando lo están todos."
+            ? t("conciliacion.losRecibosDeLaRemesaQuedaran")
             : item0?.recibo && esConciliacionParcial(item0.tipo)
-            ? `Se pagarán ${formatearMoneda(Math.abs(movimiento.importe), divisa)} del recibo con la fecha del movimiento y el resto quedará en un recibo nuevo.`
-            : "El recibo quedará pagado con la fecha del movimiento y el movimiento, conciliado.",
+            ? t("conciliacion.sePagaranValorDelReciboCon", { valor: formatearMoneda(Math.abs(movimiento.importe), divisa) })
+            : t("conciliacion.elReciboQuedaraPagadoConLa"),
     ].filter((linea, i, lineas) => linea !== "" || lineas[i - 1] !== "").join("\n");
 
     return (
@@ -93,7 +93,7 @@ export const ConciliarMovimientoBancario = ({
             mensaje={mensaje}
             onCerrar={cancelar}
             onAceptar={conciliar}
-            labelAceptar="Conciliar"
+            labelAceptar={t("conciliacion.conciliar")}
         />
     );
 };

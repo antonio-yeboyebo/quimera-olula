@@ -9,6 +9,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postCaja } from "../infraestructura.ts";
 import { getNuevaCajaInicial, metaNuevaCaja } from "./crear_caja.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearCaja = ({
     publicar,
@@ -18,6 +19,7 @@ export const CrearCaja = ({
     publicar: EmitirEvento;
 }) => {
 
+    const t = useTAlmacen();
     const nuevaCajaInicial = useMemo(() => getNuevaCajaInicial(idUbicacion), [idUbicacion]);
     const { modelo: nuevaCaja, uiProps, valido } = useModelo(
         metaNuevaCaja,
@@ -45,16 +47,16 @@ export const CrearCaja = ({
         <QModal
             abierto={true}
             nombre="crear_caja"
-            titulo="Nueva Caja"
+            titulo={t("caja.nuevaCaja")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Ubicacion label="Ubicación" {...uiProps("idUbicacion")} ref={focus} />
+                <Ubicacion label={t("caja.ubicacion")} {...uiProps("idUbicacion")} ref={focus} />
                 <TipoCaja {...uiProps("idTipoCaja")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Crear
+                    {t("caja.crear")}
                 </QBoton>
             </div>
         </QModal>

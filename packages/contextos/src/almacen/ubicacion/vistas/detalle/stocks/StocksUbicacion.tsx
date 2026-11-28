@@ -4,6 +4,7 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MovimientosStockUbicacion } from "#/almacen/comun/componentes/MovimientosStockUbicacion.tsx";
 import { StockUbicacionItem } from "../../../diseño.ts";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 const ExpansionMovimientos = ({ entidad }: { entidad: StockUbicacionItem }) => (
     <MovimientosStockUbicacion stockUbicacionId={entidad.id} />
@@ -11,8 +12,8 @@ const ExpansionMovimientos = ({ entidad }: { entidad: StockUbicacionItem }) => (
 
 const metaTablaStocks: MetaTabla<StockUbicacionItem> = {
     cols: [
-        { id: "articulo", cabecera: "Artículo", enlace: (s) => urlFicha.articulo(s.articuloId) },
-        { id: "cantidadFisica", cabecera: "Cantidad física", tipo: "numero" },
+        { id: "articulo", get cabecera() { return tAlmacen("ubicacion.articulo"); }, enlace: (s) => urlFicha.articulo(s.articuloId) },
+        { id: "cantidadFisica", get cabecera() { return tAlmacen("ubicacion.cantidadFisica"); }, tipo: "numero" },
     ],
     expansion: ExpansionMovimientos,
 };

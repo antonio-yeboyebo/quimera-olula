@@ -23,8 +23,10 @@ import { EditorPlanta } from "./planta_real/EditorPlanta.tsx";
 import { PlantaReal } from "./planta_real/PlantaReal.tsx";
 import "#/comun/estilos/pagina_proceso.css";
 import "./MapaAlmacen.css";
+import { tAlmacen, useTAlmacen } from "../i18n/index.ts";
 
 export const MapaAlmacen = () => {
+    const t = useTAlmacen();
     const { ctx, emitir, setCtx } = useMaquina(getMaquina, contextoMapaDeEntrada());
 
     // Con almacén de trabajo o un enlace, carga directamente.
@@ -56,40 +58,40 @@ export const MapaAlmacen = () => {
 
     return (
         <div className="MapaAlmacen PaginaProceso">
-            <h2>Mapa del almacén</h2>
+            <h2>{t("mapa.mapaDelAlmacen")}</h2>
 
             <quimera-formulario>
                 <Almacen
-                    label="Almacén"
+                    label={t("mapa.almacen")}
                     nombre="almacenId"
                     valor={ctx.almacenId}
                     onChange={(opcion) => emitir("almacen_cambiado", opcion?.valor ?? "")}
                 />
                 <QSelect
-                    label="Zona"
+                    label={t("mapa.zona")}
                     nombre="zonaId"
                     valor={ctx.zonaId}
                     opciones={[
-                        { valor: "", descripcion: "Todas" },
+                        { valor: "", descripcion: t("mapa.todas") },
                         ...(mapa?.zonas ?? []).map((z) => ({ valor: z.zonaId, descripcion: `${z.zona} · ${z.funcion}` })),
                     ]}
                     deshabilitado={!mapa}
                     onChange={(opcion) => emitir("zona_cambiada", opcion?.valor ?? "")}
                 />
                 <QSelect
-                    label="Capa"
+                    label={t("mapa.capa")}
                     nombre="capa"
                     valor={capa}
                     opciones={capasMapa}
                     onChange={(opcion) => emitir("capa_cambiada", opcion?.valor ?? "")}
                 />
                 <QSelect
-                    label="Vista"
+                    label={t("mapa.vista")}
                     nombre="vista"
                     valor={enPlanta ? "PLANTA" : "ESQUEMA"}
                     opciones={[
-                        { valor: "ESQUEMA", descripcion: "Esquema por zonas" },
-                        ...(mapa?.planta ? [{ valor: "PLANTA", descripcion: "Planta real" }] : []),
+                        { valor: "ESQUEMA", descripcion: t("mapa.esquemaPorZonas") },
+                        ...(mapa?.planta ? [{ valor: "PLANTA", descripcion: t("mapa.plantaReal") }] : []),
                     ]}
                     deshabilitado={!mapa?.planta || editando}
                     onChange={(opcion) => emitir("vista_cambiada", opcion?.valor ?? "")}
@@ -99,7 +101,7 @@ export const MapaAlmacen = () => {
             {mapa && puedeEditar && !editando && (
                 <div className="botones mapa-botones-planta">
                     <QBoton variante="borde" onClick={() => emitir("edicion_solicitada")}>
-                        {mapa.planta ? "Editar planta" : "Crear planta"}
+                        {mapa.planta ? t("mapa.editarPlanta") : t("mapa.crearPlanta")}
                     </QBoton>
                 </div>
             )}
@@ -108,21 +110,21 @@ export const MapaAlmacen = () => {
                 <div className="mapa-barra-campos">
                     <quimera-formulario>
                         <QSelect
-                            label="Rotación según"
+                            label={t("mapa.rotacionSegun")}
                             nombre="origen"
                             valor={ctx.origen}
                             opciones={origenesRotacion}
                             onChange={(opcion) => emitir("origen_cambiado", opcion?.valor ?? "")}
                         />
                         <QInput
-                            label="Días" nombre="dias" tipo="numero" valor={ctx.dias}
+                            label={t("mapa.dias")} nombre="dias" tipo="numero" valor={ctx.dias}
                             onChange={(v: string) => emitir("dias_cambiados", v)}
                         />
                     </quimera-formulario>
                 </div>
                 <div className="botones">
                     <QBoton deshabilitado={!ctx.almacenId} onClick={() => emitir("actualizacion_solicitada")}>
-                        {mapa ? `Recalcular (${enteroPositivo(ctx.dias, DIAS_POR_DEFECTO)} días)` : "Cargar"}
+                        {mapa ? t("mapa.recalcularDiasDias", { dias: enteroPositivo(ctx.dias, DIAS_POR_DEFECTO) }) : t("mapa.cargar")}
                     </QBoton>
                 </div>
             </div>
@@ -131,7 +133,7 @@ export const MapaAlmacen = () => {
                 <div className="mapa-barra-campos">
                     <quimera-formulario>
                         <OrdenAbierta
-                            label="Recorrido de la orden"
+                            label={t("mapa.recorridoDeLaOrden")}
                             nombre="ordenId"
                             almacenId={ctx.almacenId}
                             valor={ctx.ordenId}
@@ -146,18 +148,18 @@ export const MapaAlmacen = () => {
                         deshabilitado={!mapa || !ctx.ordenId.trim()}
                         onClick={() => emitir("recorrido_solicitado")}
                     >
-                        Ver recorrido
+                        {t("mapa.verRecorrido")}
                     </QBoton>
                     {ctx.recorrido && (
                         <QBoton variante="texto" onClick={() => emitir("recorrido_quitado")}>
-                            Quitar recorrido
+                            {t("mapa.quitarRecorrido")}
                         </QBoton>
                     )}
                 </div>
             </div>
 
             {mapa && (
-                <ul className="mapa-leyenda" aria-label="Leyenda">
+                <ul className="mapa-leyenda" aria-label={t("mapa.leyenda")}>
                     {leyenda(capa, paleta).map((e) => (
                         <li key={e.tono}>
                             <span className={`mapa-muestra tono-${e.tono}`} aria-hidden="true" />
@@ -169,23 +171,23 @@ export const MapaAlmacen = () => {
                         <>
                             <li>
                                 <span className="mapa-muestra mapa-muestra-recorrido" aria-hidden="true" />
-                                Recorrido{" "}
-                                <ValorConEnlace href={urlFicha.orden(ctx.recorrido.ordenId)} etiqueta={`Abrir orden ${ctx.recorrido.ordenId}`}>
+                                {t("mapa.recorrido")}{" "}
+                                <ValorConEnlace href={urlFicha.orden(ctx.recorrido.ordenId)} etiqueta={t("mapa.abrirOrdenOrdenid", { ordenId: ctx.recorrido.ordenId })}>
                                     {ctx.recorrido.ordenId}
-                                </ValorConEnlace>: {ctx.recorrido.paradas.length} paradas,{" "}
+                                </ValorConEnlace>: {ctx.recorrido.paradas.length}{" "}{t("mapa.paradas")}{" "}
                                 {ctx.recorrido.calculo === "DISTANCIA" && ctx.recorrido.metros != null
-                                    ? `${Math.round(ctx.recorrido.metros).toLocaleString("es-ES")} m a pie, ordenado por la planta`
+                                    ? t("mapa.tolocalestringMAPieOrdenadoPor", { toLocaleString: Math.round(ctx.recorrido.metros).toLocaleString("es-ES") })
                                     : enPlanta && ctx.trazado?.metros != null
-                                        ? `${Math.round(ctx.trazado.metros).toLocaleString("es-ES")} m a pie`
-                                        : `${ctx.recorrido.modulosRecorridos} módulos`}
+                                        ? t("mapa.tolocalestringMAPie", { toLocaleString: Math.round(ctx.trazado.metros).toLocaleString("es-ES") })
+                                        : t("mapa.modulosrecorridosModulos", { modulosRecorridos: ctx.recorrido.modulosRecorridos })}
                             </li>
                             <li>
                                 <span className="mapa-muestra mapa-muestra-parada mapa-parada-recoger" aria-hidden="true" />
-                                Recoger
+                                {t("mapa.recoger")}
                             </li>
                             <li>
                                 <span className="mapa-muestra mapa-muestra-parada mapa-parada-dejar" aria-hidden="true" />
-                                Dejar
+                                {t("mapa.dejar")}
                             </li>
                         </>
                     )}
@@ -198,18 +200,18 @@ export const MapaAlmacen = () => {
 
             {sinPosicion.length > 0 && (
                 <p className="mapa-aviso">
-                    Paradas fuera de pasillo:{" "}
-                    {sinPosicion.map((p) => `${p.secuencia}. ${textoAccionParada[p.accion]} en ${p.ubicacion}`).join(", ")}
+                    {t("mapa.paradasFueraDePasillo")}{" "}
+                    {sinPosicion.map((p) => t("mapa.secuenciaValorEnUbicacion", { secuencia: p.secuencia, valor: textoAccionParada[p.accion], ubicacion: p.ubicacion })).join(", ")}
                 </p>
             )}
 
             {avisosCalculo.length > 0 && (
-                <ul className="mapa-avisos-calculo" aria-label="Cálculo de la accesibilidad">
+                <ul className="mapa-avisos-calculo" aria-label={t("mapa.calculoDeLaAccesibilidad")}>
                     {avisosCalculo.map((a) => <li key={a}>{a}</li>)}
                 </ul>
             )}
 
-            {mapa && mapa.zonas.length === 0 && <p>El almacén no tiene zonas.</p>}
+            {mapa && mapa.zonas.length === 0 && <p>{t("mapa.elAlmacenNoTieneZonas")}</p>}
 
             <div className="mapa-vistas">
                 {enPlanta && mapa && planta && (
@@ -262,7 +264,7 @@ export const MapaAlmacen = () => {
                 )}
 
                 {!enPlanta && (
-                <div className="mapa-zonas" aria-label="Zonas del almacén" role="group">
+                <div className="mapa-zonas" aria-label={t("mapa.zonasDelAlmacen")} role="group">
                     {zonas.map((z) => (
                         <PlantaZona
                             key={z.zonaId}
@@ -285,11 +287,11 @@ export const MapaAlmacen = () => {
                         <div className="mapa-panel-cabecera">
                             <h3>
                                 <ValorConEnlace href={urlListado.ubicacionesDePasillo(pasillo.pasilloId)} etiqueta={`Ver las ubicaciones del pasillo ${pasillo.pasillo}`}>
-                                    Pasillo {pasillo.pasillo}
+                                    {t("mapa.pasilloPasillo", { pasillo: pasillo.pasillo })}
                                 </ValorConEnlace>
                             </h3>
                             <QBoton variante="texto" onClick={() => emitir("pasillo_seleccionado", null)}>
-                                Cerrar
+                                {t("mapa.cerrar")}
                             </QBoton>
                         </div>
                         <AlzadoPasillo
@@ -322,7 +324,7 @@ const FichasSueltas = ({ ubicaciones, capa, paleta, ubicacionId, onUbicacion }: 
     ubicacionId: string | null;
     onUbicacion: (id: string) => void;
 }) => (
-    <div className="mapa-sueltas" aria-label="Ubicaciones fuera de pasillo" role="group">
+    <div className="mapa-sueltas" aria-label={tAlmacen("mapa.ubicacionesFueraDePasillo")} role="group">
         {ubicaciones.map((u) => (
             <button
                 key={u.ubicacionId}

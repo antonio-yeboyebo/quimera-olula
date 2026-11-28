@@ -1,6 +1,7 @@
 import { getPedidos } from "#/almacen/pedido_compra/infraestructura.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 
 interface PedidoCompraProps {
@@ -17,7 +18,7 @@ export const PedidoCompra = ({
   descripcion = "",
   valor,
   nombre = "pedido_compra_id",
-  label = "Pedido de compra",
+  label = tAlmacen("comun.pedidoDeCompra"),
   onChange,
   ...props
 }: PedidoCompraProps) => {

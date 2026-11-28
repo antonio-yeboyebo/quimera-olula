@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { postCuentaBancaria } from "../infraestructura.js";
 import "./CrearCuentaBancaria.css";
 import { metaNuevaCuentaBancaria, nuevaCuentaBancariaInicial } from "./crear.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const CrearCuentaBancaria = ({
     publicar,
@@ -17,6 +18,7 @@ export const CrearCuentaBancaria = ({
 }) => {
     // useModelo reinicia el modelo cuando cambia la identidad del inicial, así que
     // crearlo en cada render entra en bucle y borra lo escrito.
+    const t = useTTesoreria();
     const inicial = useMemo(nuevaCuentaBancariaInicial, []);
 
     const { modelo: cuenta, uiProps, valido } = useModelo(
@@ -45,18 +47,18 @@ export const CrearCuentaBancaria = ({
         <QModal
             abierto={true}
             nombre="mostrar"
-            titulo="Crear cuenta bancaria"
+            titulo={t("cuentas_bancarias.crearCuentaBancaria")}
             onCerrar={cancelar}
         >
             <div className="CrearCuentaBancaria">
                 <quimera-formulario>
-                    <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
+                    <QInput label={t("cuentas_bancarias.descripcion")} {...uiProps("descripcion")} ref={focus} />
                     <QInput label="IBAN" {...uiProps("iban")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("cuentas_bancarias.crear")}
                     </QBoton>
                 </div>
             </div>

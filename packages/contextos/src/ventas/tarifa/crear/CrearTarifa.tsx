@@ -10,6 +10,7 @@ import { useCallback, useMemo } from "react";
 import { postTarifa } from "../infraestructura.js";
 import "./CrearTarifa.css";
 import { metaNuevaTarifa, nuevaTarifaInicial } from "./crear.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Modal de alta de tarifa.
@@ -29,6 +30,7 @@ export const CrearTarifa = ({
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const inicial = useMemo(nuevaTarifaInicial, []);
 
     const { modelo: tarifa, uiProps, valido } = useModelo(
@@ -57,12 +59,12 @@ export const CrearTarifa = ({
         <QModal
             abierto={true}
             nombre="crear_tarifa"
-            titulo="Crear tarifa"
+            titulo={t("tarifa.crear")}
             onCerrar={cancelar}
         >
             <div className="CrearTarifa">
                 <quimera-formulario>
-                    <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
+                    <QInput label={t("tarifa.maestro.nombre")} {...uiProps("nombre")} ref={focus} />
                     <Divisa {...uiProps("divisaId")} nombre="tarifa/divisa_id" />
                 </quimera-formulario>
 

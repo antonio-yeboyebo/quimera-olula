@@ -1,3 +1,4 @@
+import { nombreMenu, useTComponentes } from "../i18n/textos.ts";
 import { disponibleEnSaas, ElementoMenu, ElementoMenuHijo, pluginsActivos } from "@olula/lib/menu.ts";
 import { puedeAlguna } from "@olula/lib/dominio.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
@@ -41,6 +42,9 @@ const Resaltado = ({ texto, filtro }: { texto: string; filtro: string }) => {
 };
 
 export const MenuLateral = () => {
+  // Nombres de las entradas en el idioma activo (repinta al cambiarlo).
+  const t = useTComponentes();
+  useTComponentes();
   const control = useMenuControl();
   const esMovil = useEsMovil();
   const { menu, urlActual, favoritos, recientes } = usePantallasMenu();
@@ -87,7 +91,9 @@ export const MenuLateral = () => {
       : [];
   });
 
-  const coincide = (texto: string) => !q || normalizar(texto).includes(q);
+  // Se filtra por el nombre en el idioma activo y por el original en español.
+  const coincide = (texto: string) =>
+    !q || normalizar(nombreMenu(texto)).includes(q) || normalizar(texto).includes(q);
   const gruposFiltrados = grupos
     .map((g) => ({
       ...g,
@@ -132,7 +138,7 @@ export const MenuLateral = () => {
           >
             <QIcono nombre={g.icono} tamaño="md" />
             <span className="menu-grupo-nombre">
-              <Resaltado texto={g.nombre} filtro={filtro} />
+              <Resaltado texto={nombreMenu(g.nombre)} filtro={filtro} />
             </span>
           </Link>
         </li>
@@ -152,10 +158,10 @@ export const MenuLateral = () => {
         >
           <QIcono nombre={g.icono} tamaño="md" />
           <span className="menu-grupo-nombre">
-            <Resaltado texto={g.nombre} filtro={filtro} />
+            <Resaltado texto={nombreMenu(g.nombre)} filtro={filtro} />
           </span>
           {actual && !abierto && (
-            <span className="menu-grupo-punto" title="Contiene la pantalla actual" />
+            <span className="menu-grupo-punto" title={t("ui.menu.contieneLaPantallaActual")} />
           )}
           <span className="menu-grupo-cuenta">{g.items.length}</span>
           <span className="menu-grupo-flecha" aria-hidden="true">
@@ -174,7 +180,7 @@ export const MenuLateral = () => {
                     aria-current={i.url === urlActual ? "page" : undefined}
                     onClick={cerrarEnMovil}
                   >
-                    <Resaltado texto={i.nombre} filtro={filtro} />
+                    <Resaltado texto={nombreMenu(i.nombre)} filtro={filtro} />
                   </Link>
                   <button
                     type="button"
@@ -183,8 +189,8 @@ export const MenuLateral = () => {
                     aria-pressed={esFavorito}
                     aria-label={
                       esFavorito
-                        ? `Quitar ${i.nombre} de favoritos`
-                        : `Añadir ${i.nombre} a favoritos`
+                        ? t("ui.menu.quitarNombreDeFavoritos", { nombre: nombreMenu(i.nombre) })
+                        : t("ui.menu.anadirNombreAFavoritos", { nombre: nombreMenu(i.nombre) })
                     }
                     onClick={() => control.alternarFavorito(i.url)}
                   >
@@ -210,21 +216,21 @@ export const MenuLateral = () => {
           nombre="filtro_menu"
           label=""
           condensado
-          placeholder="Filtrar el menú…"
+          placeholder={t("ui.menu.filtrarElMenu")}
           valor={filtro}
           onChange={(v) => setFiltro(v)}
         />
       </div>
-      <nav className="menu-cuerpo" aria-label="Menú principal">
+      <nav className="menu-cuerpo" aria-label={t("ui.menu.menuPrincipal")}>
         {!q && favoritos.length > 0 && (
           <section className="menu-seccion" aria-labelledby="menu-favoritos">
-            <h2 id="menu-favoritos">Favoritos</h2>
+            <h2 id="menu-favoritos">{t("ui.menu.favoritos")}</h2>
             <ul>{favoritos.map((p) => fila(p, "estrella_rellena"))}</ul>
           </section>
         )}
         {!q && recientes.length > 0 && (
           <section className="menu-seccion" aria-labelledby="menu-recientes">
-            <h2 id="menu-recientes">Recientes</h2>
+            <h2 id="menu-recientes">{t("ui.menu.recientes")}</h2>
             <ul>{recientes.map((p) => fila(p, "reloj"))}</ul>
           </section>
         )}
@@ -232,17 +238,17 @@ export const MenuLateral = () => {
           <section
             key={area || "sin-area"}
             className="menu-seccion"
-            aria-label={area || "General"}
+            aria-label={area ? nombreMenu(area) : t("ui.menu.general")}
           >
-            {area && <h2>{area}</h2>}
+            {area && <h2>{nombreMenu(area)}</h2>}
             <ul>{delArea.map(renderGrupo)}</ul>
           </section>
         ))}
         {gruposFiltrados.length === 0 && (
           <div className="menu-sin-resultados">
-            <span>Ninguna pantalla contiene «{filtro}».</span>
+            <span>{t("ui.menu.ningunaPantallaContieneFiltro", { filtro })}</span>
             <button type="button" onClick={control.abrirBusqueda}>
-              Buscar en todo (Ctrl K)
+              {t("ui.menu.buscarEnTodoCtrlK")}
             </button>
           </div>
         )}
@@ -255,7 +261,7 @@ export const MenuLateral = () => {
             onClick={control.alternarLateralExpandido}
           >
             <QIcono nombre="menu_contraer" tamaño="sm" />
-            Contraer menú
+            {t("ui.menu.contraerMenu")}
           </button>
         </div>
       )}
@@ -267,12 +273,12 @@ export const MenuLateral = () => {
   const gruposCarril = agruparPorArea(grupos).flatMap((a) => a.grupos);
 
   const renderCarril = () => (
-    <nav className="menu-carril" aria-label="Menú principal" ref={refCarril}>
+    <nav className="menu-carril" aria-label={t("ui.menu.menuPrincipal")} ref={refCarril}>
       <button
         type="button"
         className="menu-carril-boton"
-        aria-label="Buscar (Ctrl K)"
-        title="Buscar (Ctrl K)"
+        aria-label={t("ui.menu.buscarCtrlK")}
+        title={t("ui.menu.buscarCtrlK")}
         onClick={control.abrirBusqueda}
       >
         <QIcono nombre="buscar" tamaño="md" />
@@ -285,8 +291,8 @@ export const MenuLateral = () => {
             to={g.url}
             className="menu-carril-boton"
             data-actual={contieneActual(g) || undefined}
-            aria-label={g.nombre}
-            title={g.nombre}
+            aria-label={nombreMenu(g.nombre)}
+            title={nombreMenu(g.nombre)}
           >
             <QIcono nombre={g.icono} tamaño="md" />
           </Link>
@@ -297,9 +303,9 @@ export const MenuLateral = () => {
             className="menu-carril-boton"
             data-actual={contieneActual(g) || undefined}
             data-abierto={flyout?.grupo === g.nombre || undefined}
-            aria-label={g.nombre}
+            aria-label={nombreMenu(g.nombre)}
             aria-expanded={flyout?.grupo === g.nombre}
-            title={g.nombre}
+            title={nombreMenu(g.nombre)}
             onClick={(e) =>
               setFlyout(
                 flyout?.grupo === g.nombre
@@ -315,8 +321,8 @@ export const MenuLateral = () => {
       <button
         type="button"
         className="menu-carril-boton menu-carril-expandir"
-        aria-label="Expandir menú"
-        title="Expandir menú"
+        aria-label={t("ui.menu.expandirMenu")}
+        title={t("ui.menu.expandirMenu")}
         onClick={control.alternarLateralExpandido}
       >
         <QIcono nombre="menu_expandir" tamaño="md" />
@@ -325,10 +331,10 @@ export const MenuLateral = () => {
         <div
           className="menu-flyout"
           role="dialog"
-          aria-label={grupoFlyout.nombre}
+          aria-label={nombreMenu(grupoFlyout.nombre)}
           style={{ top: flyout.top }}
         >
-          <span className="menu-flyout-titulo">{grupoFlyout.nombre}</span>
+          <span className="menu-flyout-titulo">{nombreMenu(grupoFlyout.nombre)}</span>
           <ul>
             {grupoFlyout.items.map((i) => (
               <li key={i.url}>
@@ -337,7 +343,7 @@ export const MenuLateral = () => {
                   className="menu-pantalla"
                   aria-current={i.url === urlActual ? "page" : undefined}
                 >
-                  {i.nombre}
+                  {nombreMenu(i.nombre)}
                   {control.favoritos.includes(i.url) && (
                     <QIcono nombre="estrella_rellena" tamaño="xs" />
                   )}

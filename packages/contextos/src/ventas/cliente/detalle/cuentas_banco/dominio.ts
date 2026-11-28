@@ -1,6 +1,7 @@
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
-import { ERR_IBAN_NO_VALIDO, ERR_IBAN_REQUERIDO, ibanValido } from "@olula/lib/iban.js";
+import { errorIbanNoValido, errorIbanRequerido, ibanValido } from "@olula/lib/iban.js";
+import { tVentas } from "../../../i18n/index.ts";
 import { accionesListaEntidades, ProcesarListaEntidades } from "@olula/lib/ListaEntidades.js";
 import { CuentaBanco, NuevaCuentaBanco } from "../../diseño.ts";
 import {
@@ -11,8 +12,8 @@ import {
 import { ContextoCuentasBanco, EstadoCuentasBanco } from "./diseño.ts";
 
 const ibanCuentaValido = (cuenta: CuentaBanco | NuevaCuentaBanco): boolean | string => {
-    if (!stringNoVacio(cuenta.iban)) return ERR_IBAN_REQUERIDO;
-    if (!ibanValido(cuenta.iban)) return ERR_IBAN_NO_VALIDO;
+    if (!stringNoVacio(cuenta.iban)) return errorIbanRequerido();
+    if (!ibanValido(cuenta.iban)) return errorIbanNoValido();
     return true;
 };
 
@@ -34,16 +35,17 @@ export const nuevaCuentaBancoVacia: NuevaCuentaBanco = {
     iban: '',
 }
 
-export const metaTablaCuentasBanco = [
-    { id: "descripcion", cabecera: "Descripcion" },
-    { id: "iban", cabecera: "IBAN" },
-    { id: "bic", cabecera: "BIC" },
-    { id: "codigo_cuenta", cabecera: "Código cuenta" },
-    { id: "pais_id", cabecera: "País" },
-    { id: "entidad", cabecera: "Entidad" },
-    { id: "agencia", cabecera: "Agencia" },
-    { id: "digito_control", cabecera: "D.C." },
-    { id: "cuenta", cabecera: "Cuenta" },
+/** Columnas de las cuentas, en el idioma activo (se piden al pintar). */
+export const metaTablaCuentasBanco = () => [
+    { id: "descripcion", cabecera: tVentas("cliente.cuentas.descripcion") },
+    { id: "iban", cabecera: tVentas("cliente.cuentas.iban") },
+    { id: "bic", cabecera: tVentas("cliente.cuentas.bic") },
+    { id: "codigo_cuenta", cabecera: tVentas("cliente.cuentas.codigoCuenta") },
+    { id: "pais_id", cabecera: tVentas("cliente.cuentas.pais") },
+    { id: "entidad", cabecera: tVentas("cliente.cuentas.entidad") },
+    { id: "agencia", cabecera: tVentas("cliente.cuentas.agencia") },
+    { id: "digito_control", cabecera: tVentas("cliente.cuentas.dc") },
+    { id: "cuenta", cabecera: tVentas("cliente.cuentas.cuenta") },
 ];
 
 type ProcesarCuentasBanco = ProcesarContexto<EstadoCuentasBanco, ContextoCuentasBanco>;

@@ -2,6 +2,7 @@ import { CapaMapa, Lado, PasilloMapa, UbicacionMapa } from "../diseño.ts";
 import {
     huecosDe, ladosDePasillo, letraUbicacion, modulosDeLado, resumenUbicacion, tonoUbicacion, ubicacionesPorModulo,
 } from "../dominio.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type Props = {
     pasillo: PasilloMapa;
@@ -13,8 +14,8 @@ type Props = {
 };
 
 const textoLado: Record<Lado, string> = {
-    IZQUIERDA: "Cara izquierda (impares)",
-    DERECHA: "Cara derecha (pares)",
+    get IZQUIERDA() { return tAlmacen("mapa.caraIzquierdaImpares"); },
+    get DERECHA() { return tAlmacen("mapa.caraDerechaPares"); },
 };
 
 /** Alzado de las caras de un pasillo: módulos en el sentido de avance, niveles de abajo arriba. */
@@ -22,7 +23,7 @@ export const AlzadoPasillo = ({ pasillo, ubicaciones, capa, paleta, ubicacionId,
     const porModulo = ubicacionesPorModulo(ubicaciones, pasillo.pasilloId);
     const niveles = Array.from({ length: pasillo.niveles }, (_, i) => pasillo.niveles - 1 - i);
 
-    if (pasillo.niveles === 0) return <p>El pasillo {pasillo.pasillo} no tiene ubicaciones.</p>;
+    if (pasillo.niveles === 0) return <p>{tAlmacen("mapa.elPasilloPasilloNoTieneUbicaciones", { pasillo: pasillo.pasillo })}</p>;
 
     return (
         <div className="mapa-alzado">
@@ -36,7 +37,7 @@ export const AlzadoPasillo = ({ pasillo, ubicaciones, capa, paleta, ubicacionId,
                                 <tbody>
                                     {niveles.map((nivel) => (
                                         <tr key={nivel}>
-                                            <th scope="row">N{nivel}</th>
+                                            <th scope="row">{tAlmacen("mapa.nNivel", { nivel })}</th>
                                             {modulos.map((modulo) => {
                                                 const huecos = huecosDe(porModulo.get(modulo) ?? [], nivel);
                                                 return (

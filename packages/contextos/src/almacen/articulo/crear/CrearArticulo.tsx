@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { Articulo } from "../diseño.ts";
 import { getArticulo, postArticulo } from "../infraestructura.ts";
 import { metaNuevoArticulo, nuevoArticuloVacio } from "./dominio.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 interface CrearArticuloProps {
   publicar?: EmitirEvento;
@@ -23,6 +24,7 @@ export const CrearArticulo = ({
   onCancelar = () => {},
   activo = false,
 }: CrearArticuloProps) => {
+  const t = useTAlmacen();
   const nuevoArticulo = useModelo(metaNuevoArticulo, nuevoArticuloVacio);
   const impuestoDefecto = useAplicarImpuestoDefecto(
     nuevoArticulo,
@@ -49,14 +51,14 @@ export const CrearArticulo = ({
     <QModal
       abierto={activo}
       nombre="crear_articulo"
-      titulo="Nuevo Artículo"
+      titulo={t("articulo.nuevoArticulo")}
       onCerrar={onCancelar}
     >
       <>
         <quimera-formulario>
-          <QInput label="Referencia" autoSeleccion={true} {...nuevoArticulo.uiProps("id")} />
+          <QInput label={t("articulo.referencia")} autoSeleccion={true} {...nuevoArticulo.uiProps("id")} />
           <QInput
-            label="Descripción"
+            label={t("articulo.descripcion")}
             {...nuevoArticulo.uiProps("descripcion")}
           />
           <GrupoIvaProducto {...nuevoArticulo.uiProps("grupoIvaProductoId")} />
@@ -66,10 +68,10 @@ export const CrearArticulo = ({
             onClick={guardar}
             deshabilitado={nuevoArticulo.valido === false}
           >
-            Guardar
+            {t("articulo.guardar")}
           </QBoton>
           <QBoton variante="texto" onClick={onCancelar}>
-            Cancelar
+            {t("articulo.cancelar")}
           </QBoton>
         </div>
       </>

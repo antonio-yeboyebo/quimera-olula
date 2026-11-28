@@ -19,6 +19,7 @@ import {
     nuevaRegularizacionIvaInicial,
 } from "./crear.ts";
 import "./CrearRegularizacionIva.css";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearRegularizacionIva = ({
     publicar,
@@ -27,6 +28,7 @@ export const CrearRegularizacionIva = ({
     publicar: EmitirEvento;
     regularizaciones: RegularizacionIva[];
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevaRegularizacionIvaInicial(regularizaciones),
         [regularizaciones]
@@ -76,36 +78,36 @@ export const CrearRegularizacionIva = ({
         <QModal
             abierto={true}
             nombre="crearRegularizacionIva"
-            titulo="Nueva regularización de IVA"
+            titulo={t("regularizacion_iva.nuevaRegularizacionDeIva")}
             onCerrar={cancelar}
         >
             <div className="CrearRegularizacionIva">
                 <quimera-formulario>
-                    <QInput label="Ejercicio" {...uiProps("ejercicioId")} ref={focus} />
+                    <QInput label={t("regularizacion_iva.ejercicio")} {...uiProps("ejercicioId")} ref={focus} />
                     <QSelect
-                        label="Periodo"
+                        label={t("regularizacion_iva.periodo")}
                         opciones={opcionesTrimestre}
                         {...uiProps("trimestre")}
                     />
-                    <QDate label="Fecha desde" {...uiProps("fechaInicio")} />
-                    <QDate label="Fecha hasta" {...uiProps("fechaFin")} />
+                    <QDate label={t("regularizacion_iva.fechaDesde")} {...uiProps("fechaInicio")} />
+                    <QDate label={t("regularizacion_iva.fechaHasta")} {...uiProps("fechaFin")} />
                     <QDate
-                        label="Fecha del asiento (por defecto, fin del periodo)"
+                        label={t("regularizacion_iva.fechaDelAsientoPorDefectoFin")}
                         {...uiProps("fechaAsiento")}
                     />
                     <QInput
-                        label="Subcuenta H.P. deudora"
+                        label={t("regularizacion_iva.subcuentaHPDeudora")}
                         {...uiProps("codigoSubcuentaDeudora")}
                     />
                     <QInput
-                        label="Subcuenta H.P. acreedora"
+                        label={t("regularizacion_iva.subcuentaHPAcreedora")}
                         {...uiProps("codigoSubcuentaAcreedora")}
                     />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Regularizar
+                        {t("regularizacion_iva.regularizar")}
                     </QBoton>
                 </div>
             </div>

@@ -5,12 +5,13 @@ import { useState } from "react";
 import { componentesDesdePropuestaDashboard } from "../dominio.ts";
 import { crearDashboard, proponerDashboard } from "../infraestructura.ts";
 import "./ConfigurarComponente.css";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
-const EJEMPLOS = [
-  "Seguimiento de ventas y clientes",
-  "Tesorería: cobros y pagos pendientes",
-  "Compras y proveedores de este año",
-  "Stock y artículos sin disponible",
+const ejemplos = () => [
+  tComun("dashboard.seguimientoDeVentasYClientes"),
+  tComun("dashboard.tesoreriaCobrosYPagosPendientes"),
+  tComun("dashboard.comprasYProveedoresDeEsteAno"),
+  tComun("dashboard.stockYArticulosSinDisponible"),
 ];
 
 /**
@@ -24,6 +25,7 @@ export const NuevoDashboard = ({
   onCreado: (id: string) => void;
   onCancelar: () => void;
 }) => {
+  const t = useTComun();
   const [peticion, setPeticion] = useState("");
   const [creando, setCreando] = useState<"blanco" | "ia" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export const NuevoDashboard = ({
   const enBlanco = async () => {
     setCreando("blanco");
     try {
-      onCreado(await crearDashboard({ nombre: "Nuevo dashboard", componentes: [] }));
+      onCreado(await crearDashboard({ nombre: t("dashboard.nuevoDashboard"), componentes: [] }));
     } finally {
       setCreando(null);
     }
@@ -51,18 +53,17 @@ export const NuevoDashboard = ({
         })
       );
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No se ha podido preguntar a la IA.");
+      setError(e instanceof Error ? e.message : t("dashboard.noSeHaPodidoPreguntarA2"));
     } finally {
       setCreando(null);
     }
   };
 
   return (
-    <QModal nombre="nuevo-dashboard" titulo="Nuevo dashboard" abierto={true} onCerrar={onCancelar}>
+    <QModal nombre="nuevo-dashboard" titulo={t("dashboard.nuevoDashboard")} abierto={true} onCerrar={onCancelar}>
       <div className="configurar-componente nuevo-dashboard">
         <p className="nuevo-dashboard-intro">
-          Cuéntale a la IA qué quieres seguir y te propondrá los indicadores y gráficos. Lo
-          abrirás en edición para ajustarlo antes de guardar.
+          {t("dashboard.cuentaleALaIaQueQuieres")}
         </p>
         <form
           className="preguntar-ia-pregunta"
@@ -72,7 +73,7 @@ export const NuevoDashboard = ({
           }}
         >
           <QInput
-            label="¿Qué quieres seguir?"
+            label={t("dashboard.queQuieresSeguir")}
             nombre="peticion_dashboard"
             valor={peticion}
             maxLength={500}
@@ -80,14 +81,14 @@ export const NuevoDashboard = ({
             onChange={setPeticion}
           />
           <QBoton tipo="submit" deshabilitado={!peticion.trim() || creando !== null}>
-            {creando === "ia" ? "Montando…" : "Proponer"}
+            {creando === "ia" ? t("dashboard.montando") : t("dashboard.proponer")}
           </QBoton>
         </form>
 
         {creando !== "ia" && (
           <div className="preguntar-ia-ejemplos">
-            <span>Por ejemplo:</span>
-            {EJEMPLOS.map((ejemplo) => (
+            <span>{t("dashboard.porEjemplo")}</span>
+            {ejemplos().map((ejemplo) => (
               <QBoton
                 key={ejemplo}
                 variante="borde"
@@ -103,7 +104,7 @@ export const NuevoDashboard = ({
 
         {creando === "ia" && (
           <p className="nuevo-dashboard-progreso" role="status">
-            Eligiendo los indicadores y comprobando cada consulta… puede tardar unos segundos.
+            {t("dashboard.eligiendoLosIndicadoresYComprobandoCada")}
           </p>
         )}
 
@@ -116,10 +117,10 @@ export const NuevoDashboard = ({
 
       <footer className="configurar-componente-pie">
         <QBoton variante="borde" onClick={onCancelar}>
-          Cancelar
+          {t("dashboard.cancelar")}
         </QBoton>
         <QBoton variante="borde" deshabilitado={creando !== null} onClick={enBlanco}>
-          Empezar en blanco
+          {t("dashboard.empezarEnBlanco")}
         </QBoton>
       </footer>
     </QModal>

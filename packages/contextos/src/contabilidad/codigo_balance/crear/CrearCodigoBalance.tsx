@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposCodigoBalance } from "../detalle/CamposCodigoBalance.tsx";
 import { postCodigoBalance } from "../infraestructura.ts";
 import { metaNuevoCodigoBalance, nuevoCodigoBalanceInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearCodigoBalance = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevoCodigoBalanceInicial, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoCodigoBalance, inicial);
@@ -33,18 +35,18 @@ export const CrearCodigoBalance = ({ publicar }: { publicar: EmitirEvento }) => 
         <QModal
             abierto={true}
             nombre="crearCodigoBalance"
-            titulo="Nuevo código de balance 2008"
+            titulo={t("codigo_balance.nuevoCodigoDeBalance2008")}
             onCerrar={cancelar}
         >
             <div className="CrearCodigoBalance">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("codigo_balance.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposCodigoBalance uiProps={uiProps} />
-                    <QInput label="Descripción balance abreviado" {...uiProps("descripcion4ba")} />
+                    <QInput label={t("codigo_balance.descripcionBalanceAbreviado")} {...uiProps("descripcion4ba")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("codigo_balance.crear")}
                     </QBoton>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Banco, Sucursal } from "../diseño.ts";
 import { etiquetaSucursal } from "../dominio.ts";
 import { deleteSucursal } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const BorrarSucursalBanco = ({
     banco,
@@ -15,6 +16,7 @@ export const BorrarSucursalBanco = ({
     sucursal: Sucursal;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const borrar_ = useCallback(async () => {
         await deleteSucursal(banco.id, sucursal.id);
         publicar("sucursal_borrada", sucursal.id);
@@ -28,8 +30,8 @@ export const BorrarSucursalBanco = ({
         <QModalConfirmacion
             nombre="borrarSucursalBanco"
             abierto={true}
-            titulo="Borrar sucursal"
-            mensaje={`¿Confirma borrar la sucursal ${etiquetaSucursal(sucursal)}? No se puede borrar si alguna cuenta bancaria la usa.`}
+            titulo={t("banco.borrarSucursal")}
+            mensaje={t("banco.confirmaBorrarLaSucursalSucursalNo", { sucursal: etiquetaSucursal(sucursal) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

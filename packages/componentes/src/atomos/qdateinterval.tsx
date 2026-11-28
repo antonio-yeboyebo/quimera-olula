@@ -3,31 +3,32 @@ import { QBoton } from "./qboton.tsx";
 import { QDate, QDateProps } from "./qdate.tsx";
 import { Opcion } from "./qmulticheckbox.tsx";
 import { QSelect } from "./qselect.tsx";
+import { tComponentes } from "../i18n/textos.ts";
 
 const opcionesIntervaloFechas: Opcion[][] = [
   [
-    { valor: "grupo", descripcion: "Días" },
-    { valor: "@hoy", descripcion: "Hoy" },
-    { valor: "@ayer", descripcion: "Ayer" },
-    { valor: "@mañana", descripcion: "Mañana" },
+    { valor: "grupo", get descripcion() { return tComponentes("ui.atomos.dias"); } },
+    { valor: "@hoy", get descripcion() { return tComponentes("ui.atomos.hoy"); } },
+    { valor: "@ayer", get descripcion() { return tComponentes("ui.atomos.ayer"); } },
+    { valor: "@mañana", get descripcion() { return tComponentes("ui.atomos.manana"); } },
   ],
   [
-    { valor: "grupo", descripcion: "Semanas" },
-    { valor: "@esta-semana", descripcion: "Esta semana" },
-    { valor: "@semana-anterior", descripcion: "Semana anterior" },
-    { valor: "@semana-siguiente", descripcion: "Semana siguiente" },
+    { valor: "grupo", get descripcion() { return tComponentes("ui.atomos.semanas"); } },
+    { valor: "@esta-semana", get descripcion() { return tComponentes("ui.atomos.estaSemana"); } },
+    { valor: "@semana-anterior", get descripcion() { return tComponentes("ui.atomos.semanaAnterior"); } },
+    { valor: "@semana-siguiente", get descripcion() { return tComponentes("ui.atomos.semanaSiguiente"); } },
   ],
   [
-    { valor: "grupo", descripcion: "Meses" },
-    { valor: "@este-mes", descripcion: "Este mes" },
-    { valor: "@mes-anterior", descripcion: "Mes anterior" },
-    { valor: "@mes-siguiente", descripcion: "Mes siguiente" },
+    { valor: "grupo", get descripcion() { return tComponentes("ui.atomos.meses"); } },
+    { valor: "@este-mes", get descripcion() { return tComponentes("ui.atomos.esteMes"); } },
+    { valor: "@mes-anterior", get descripcion() { return tComponentes("ui.atomos.mesAnterior"); } },
+    { valor: "@mes-siguiente", get descripcion() { return tComponentes("ui.atomos.mesSiguiente"); } },
   ],
   [
-    { valor: "grupo", descripcion: "Años" },
-    { valor: "@este-año", descripcion: "Este año" },
-    { valor: "@año-anterior", descripcion: "Año anterior" },
-    { valor: "@año-siguiente", descripcion: "Año siguiente" },
+    { valor: "grupo", get descripcion() { return tComponentes("ui.atomos.anos"); } },
+    { valor: "@este-año", get descripcion() { return tComponentes("ui.atomos.esteAno"); } },
+    { valor: "@año-anterior", get descripcion() { return tComponentes("ui.atomos.anoAnterior"); } },
+    { valor: "@año-siguiente", get descripcion() { return tComponentes("ui.atomos.anoSiguiente"); } },
   ],
 ];
 
@@ -69,7 +70,7 @@ export const QDateInterval = ({
           onChange={manejarChangeIntervalo}
           opciones={opcionesIntervaloFechas}
         />
-        <QBoton onClick={manejarChangeManual}>Manual</QBoton>
+        <QBoton onClick={manejarChangeManual}>{tComponentes("ui.atomos.manual")}</QBoton>
       </>
     );
   }

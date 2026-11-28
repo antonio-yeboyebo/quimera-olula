@@ -1,3 +1,4 @@
+import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import { widgetsPedido } from "#/ventas/pedido/dominio.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -12,7 +13,7 @@ import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   filtroAgente,
   filtroAlmacen,
@@ -20,18 +21,18 @@ import {
   filtroCodigo,
   filtroFechaDocumento,
 } from "../../comun/filtros.tsx";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 import { CrearPedido } from "../crear/CrearPedido.tsx";
 import { DetallePedido } from "../detalle/DetallePedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { AlbaranarPedidos } from "./AlbaranarPedidos.tsx";
-import "./MaestroConDetallePedido.css";
-import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import {
   agruparPorCliente,
   estadoServidoPedido,
   etiquetaEstadoPedido,
   todosPuedenAlbaranarse,
 } from "./maestro.ts";
+import "./MaestroConDetallePedido.css";
 import { getMaquina } from "./maquina.ts";
 import { getMetaTablaPedido } from "./metatabla_pedido.tsx";
 import { ResultadoAlbaranado } from "./ResultadoAlbaranado.tsx";
@@ -44,15 +45,15 @@ const filtroSinServir: ClausulaFiltro[] = [
   ["servido", "in", [SERVIDO_NO, SERVIDO_PARCIAL] as unknown as string],
 ];
 
-const campoFiltroServido: MetaFiltro = {
+const campoFiltroServido = (): MetaFiltro => ({
   servido: {
     id: "servido",
-    label: "Servido",
+    label: tVentas("pedido.maestro.servido"),
     tipo: "multiseleccion",
     opciones: [
-      { valor: SERVIDO_NO, descripcion: "Pendiente" },
-      { valor: SERVIDO_PARCIAL, descripcion: "Parcial" },
-      { valor: SERVIDO_SI, descripcion: "Servido" },
+      { valor: SERVIDO_NO, descripcion: tVentas("pedido.estado.pendiente") },
+      { valor: SERVIDO_PARCIAL, descripcion: tVentas("pedido.estado.parcial") },
+      { valor: SERVIDO_SI, descripcion: tVentas("pedido.estado.servido") },
     ],
     filtro: (valor) => {
       const elegidos = (valor as string[]) ?? [];
@@ -60,9 +61,13 @@ const campoFiltroServido: MetaFiltro = {
       return ["servido", "in", elegidos as unknown as string];
     },
   },
-};
+});
 
 export const MaestroConDetallePedido = () => {
+  const t = useTVentas();
+  // Se recalculan al cambiar de idioma (t cambia).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const widgets = useMemo(() => widgetsPedido(), [t]);
   const { id, criteria } = getUrlParams();
   const criteriaInicial =
     criteria.filtro.length === 0
@@ -92,12 +97,12 @@ export const MaestroConDetallePedido = () => {
     fecha: filtroFechaDocumento,
     fecha_salida: {
       id: "fecha_salida",
-      label: "Fecha salida",
+      label: t("pedido.maestro.fechaSalida"),
       tipo: "intervalo_fechas",
       filtro: (v) => filtroFechas("fecha_salida", v),
     },
     almacen_id: filtroAlmacen,
-    ...campoFiltroServido,
+    ...campoFiltroServido(),
   };
 
   return (
@@ -105,11 +110,11 @@ export const MaestroConDetallePedido = () => {
       <MaestroDetalle<Pedido>
         Maestro={
           <>
-            <h2>Pedidos</h2>
+            <h2>{t("pedido.maestro.titulo")}</h2>
             <Listado<Pedido>
               metaTabla={metaTablaPedido}
               metaFiltro={metaFiltroPedido}
-              widgets={widgetsPedido}
+              widgets={widgets}            
               pantalla="ventas.pedido"
               tarjeta={(pedido) => (
                 <TarjetaDocumentoVenta
@@ -133,7 +138,7 @@ export const MaestroConDetallePedido = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("crear_pedido_solicitado")}>
-                    Nuevo Pedido
+                    {t("pedido.maestro.nuevo")}
                   </QBoton>
                   {todosPuedenAlbaranarse(ctx.seleccionados, ctx.pedidos.lista) && (
                     <QBoton onClick={() => emitir("albaranado_multiple_solicitado")}>
@@ -159,7 +164,7 @@ export const MaestroConDetallePedido = () => {
       <QModal
         nombre="altaPedido"
         abierto={ctx.estado === "CREANDO_PEDIDO"}
-        titulo="Nuevo Pedido"
+        titulo={t("pedido.maestro.nuevo")}
         onCerrar={() => emitir("creacion_pedido_cancelada")}
       >
         {ctx.estado === "CREANDO_PEDIDO" && <CrearPedido publicar={emitir} />}

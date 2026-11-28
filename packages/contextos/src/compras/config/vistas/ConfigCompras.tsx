@@ -4,36 +4,38 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { ActualizarArticulosProveedor } from "../diseño.ts";
 import { explicacionActualizarArticulosProveedor, opcionesActualizarArticulosProveedor } from "../dominio.ts";
 import { getConfigCompras, patchConfigCompras } from "../infraestructura.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 /**
  * Configuración de compras: las opciones de compras de los datos generales de
  * facturación del escritorio (`facturac_general`).
  */
 export const ConfigCompras = () => {
+    const t = useTCompras();
     const { config, cambiar, cambiada, guardando, guardar } = useConfig(getConfigCompras, patchConfigCompras);
 
     if (!config) return null;
 
     return (
         <PantallaConfig
-            titulo="Configuración de compras"
-            descripcion="Datos generales de facturación que afectan a las compras."
+            titulo={t("config.titulo")}
+            descripcion={t("config.descripcion")}
             onGuardar={guardar}
             cambiada={cambiada}
             guardando={guardando}
         >
             <section className="grupo-config">
-                <h3>Artículos de proveedor</h3>
+                <h3>{t("config.articulosProveedor")}</h3>
                 <QSelect
-                    label="Actualizar artículos de proveedor automáticamente desde"
+                    label={t("config.actualizarDesde")}
                     nombre="actualizar_articulos_proveedor"
-                    opciones={opcionesActualizarArticulosProveedor}
+                    opciones={opcionesActualizarArticulosProveedor(t)}
                     valor={config.actualizarArticulosProveedor}
                     onChange={(opcion) => opcion && cambiar(
                         "actualizarArticulosProveedor", opcion.valor as ActualizarArticulosProveedor)}
                 />
                 <p className="descripcion-config">
-                    {explicacionActualizarArticulosProveedor(config.actualizarArticulosProveedor)}
+                    {explicacionActualizarArticulosProveedor(config.actualizarArticulosProveedor, t)}
                 </p>
             </section>
         </PantallaConfig>

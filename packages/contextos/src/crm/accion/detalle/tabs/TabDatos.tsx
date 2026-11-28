@@ -9,6 +9,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QTarjetaGenerica } from "@olula/componentes/moleculas/qtarjeta_generica.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Accion } from "../../diseño.ts";
+import { tCrm } from "../../../i18n/index.ts";
 
 const limpiarTelefono = (telefono: string) => telefono.replace(/[^+\d]/g, "");
 const telefonoWhatsapp = (telefono: string) => telefono.replace(/\D/g, "");
@@ -28,7 +29,7 @@ const AccionesRapidas = ({
   return (
     <div className="contacto-acciones">
       {telefonoLimpio && (
-        <a href={`tel:${telefonoLimpio}`} title="Llamar" aria-label="Llamar">
+        <a href={`tel:${telefonoLimpio}`} title={tCrm("accion.llamar")} aria-label={tCrm("accion.llamar")}>
           <QIcono nombre="telefono" tamaño="sm" />
         </a>
       )}
@@ -37,14 +38,14 @@ const AccionesRapidas = ({
           href={`https://wa.me/${telefonoWa}`}
           target="_blank"
           rel="noreferrer"
-          title="WhatsApp"
-          aria-label="WhatsApp"
+          title={tCrm("accion.whatsapp")}
+          aria-label={tCrm("accion.whatsapp")}
         >
           <QIcono nombre="whatsapp" tamaño="sm" />
         </a>
       )}
       {email && (
-        <a href={`mailto:${email}`} title="Email" aria-label="Email">
+        <a href={`mailto:${email}`} title={tCrm("accion.email")} aria-label={tCrm("accion.email")}>
           <QIcono nombre="correo" tamaño="sm" />
         </a>
       )}
@@ -85,8 +86,8 @@ export const TabDatos = ({ accion }: { accion: HookModelo<Accion> }) => {
   return (
     <div className="TabDatos">
       <quimera-formulario>
-        <QInput label="Tarea" {...uiProps("descripcion")} />
-        <QInput label="Fecha" {...uiProps("fecha")} />
+        <QInput label={tCrm("accion.tarea")} {...uiProps("descripcion")} />
+        <QInput label={tCrm("accion.fecha")} {...uiProps("fecha")} />
         <EstadoAccion {...uiProps("estado")} />
         <TipoAccion {...uiProps("tipo")} />
       </quimera-formulario>
@@ -116,12 +117,12 @@ export const TabDatos = ({ accion }: { accion: HookModelo<Accion> }) => {
             telefono={cliente.telefono}
           />
 
-          <h4>Contactos</h4>
+          <h4>{tCrm("accion.contactos")}</h4>
           {contactosCliente.length === 0 && (
             <p className="contactos-vacio">
               {esTarjeta
-                ? "Esta tarjeta no tiene contactos."
-                : "Este cliente no tiene contactos."}
+                ? tCrm("accion.estaTarjetaNoTieneContactos")
+                : tCrm("accion.esteClienteNoTieneContactos")}
             </p>
           )}
 
@@ -136,7 +137,7 @@ export const TabDatos = ({ accion }: { accion: HookModelo<Accion> }) => {
           ))}
         </div>
       ) : (
-        <p className="contactos-vacio">Sin cliente vinculado en esta acción.</p>
+        <p className="contactos-vacio">{tCrm("accion.sinClienteVinculadoEnEstaAccion")}</p>
       )}
     </div>
   );

@@ -16,7 +16,7 @@ export const EstadoExpedicion = ({ factura }: { factura: Factura }) => {
     return (
         <span
             className="estado-expedicion"
-            title={descripcionEstadoExpedicion[factura.estadoExpedicion]}
+            title={descripcionEstadoExpedicion(factura.estadoExpedicion)}
         >
             <QIcono nombre="circulo_relleno" tamaño="sm" color={color} />
         </span>

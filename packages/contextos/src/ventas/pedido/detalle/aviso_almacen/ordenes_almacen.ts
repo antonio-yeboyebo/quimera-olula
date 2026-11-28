@@ -1,10 +1,9 @@
 import { plugin } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { getOrdenesAlmacenDePedido, OrdenAlmacenDePedido } from "../../infraestructura.ts";
+import { tVentas } from "../../../i18n/index.ts";
 
-export const TEXTO_CAMBIOS_EN_PREPARACION =
-    "Los cambios en las líneas se ajustan solos en la orden; si ya se ha recogido material, " +
-    "almacén tendrá que devolver lo que sobre.";
+export const textoCambiosEnPreparacion = (): string => tVentas("pedido.almacen.cambiosEnPreparacion");
 
 /**
  * Hook: órdenes de almacén activas del pedido (solo con el plugin SGA activo).

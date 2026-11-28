@@ -17,6 +17,7 @@ import {
     getHojaPatrimonioNeto,
     getReportPatrimonioNeto,
 } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Pestaña «Datos» de `co_i_patrimonio.ui`: la tabla de 12 filas x 11
  * columnas, con «Recalcular» e «Imprimir resultados». */
@@ -29,6 +30,7 @@ export const TabResultado = ({
     datos: EstadoPatrimonioNeto | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [calculando, setCalculando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -70,32 +72,32 @@ export const TabResultado = ({
         <div className="TabResultado">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={ocupado}>
-                    {calculando ? "Calculando…" : "Calcular"}
+                    {calculando ? t("patrimonio_neto.calculando") : t("patrimonio_neto.calcular")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("pdf")}
                     deshabilitado={ocupado}
                 >
-                    Descargar PDF
+                    {t("patrimonio_neto.descargarPdf")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("xlsx")}
                     deshabilitado={ocupado}
                 >
-                    Descargar Excel
+                    {t("patrimonio_neto.descargarExcel")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={() => descargar("ods")}
                     deshabilitado={ocupado}
                 >
-                    Descargar ODS
+                    {t("patrimonio_neto.descargarOds")}
                 </QBoton>
             </div>
 
-            {!datos && <p>Pulsa «Calcular» para obtener los importes.</p>}
+            {!datos && <p>{t("patrimonio_neto.pulsaCalcularParaObtenerLosImportes")}</p>}
 
             {datos && (
                 <>

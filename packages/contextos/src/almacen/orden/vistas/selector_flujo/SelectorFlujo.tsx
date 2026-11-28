@@ -1,5 +1,6 @@
 import { Flujo, flujoPorCodigo, flujosDeTipo } from "../../pasos/flujos.ts";
 import "./SelectorFlujo.css";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 const Explicacion = ({ texto }: { texto: string }) => (
     <p className="SelectorFlujo__explicacion">{texto}</p>
@@ -10,7 +11,7 @@ export const SelectorFlujo = ({
     tipo,
     valor,
     onChange,
-    label = "Flujo",
+    label = tAlmacen("orden.flujo"),
     excluirPalet = false,
 }: {
     tipo: string;
@@ -39,7 +40,7 @@ export const DescripcionFlujo = ({
     flujo,
     pasosPick,
     pasosDrop,
-    label = "Flujo",
+    label = tAlmacen("orden.flujo"),
 }: {
     flujo: Flujo | null;
     pasosPick: string | null;
@@ -54,7 +55,7 @@ export const DescripcionFlujo = ({
                 <Explicacion texto={flujo.explicacion} />
             </>
         ) : (
-            <Explicacion texto={`Pasos personalizados: pick ${pasosPick ?? "—"} / drop ${pasosDrop ?? "—"}`} />
+            <Explicacion texto={tAlmacen("orden.pasosPersonalizadosPickValorDropValor2", { valor: pasosPick ?? "—", valor2: pasosDrop ?? "—" })} />
         )}
     </div>
 );

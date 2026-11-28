@@ -3,6 +3,7 @@ import type { EmitirEvento } from "@olula/lib/diseño.ts";
 import { formatearFechaDate } from "@olula/lib/dominio.js";
 import { Accion } from "../diseño.ts";
 import "./TarjetaAccionRapida.css";
+import { textoEstadoAccion } from "../../comun/valores/texto_opcion.ts";
 
 const iconoTipoAccion = (tipo: string) => {
   const icono: Record<string, string> = {
@@ -56,8 +57,8 @@ export const TarjetaAccionRapida = ({
       }
       abajoIzquierda={
         accion.estado === "Hecha" && accion.fecha_fin
-          ? `${accion.estado} · ${formatearFechaDate(accion.fecha_fin)}`
-          : accion.estado
+          ? `${textoEstadoAccion(accion.estado)} · ${formatearFechaDate(accion.fecha_fin)}`
+          : textoEstadoAccion(accion.estado)
       }
       abajoDerecha={accion.nombre_cliente}
       // expansion={

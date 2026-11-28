@@ -1,4 +1,5 @@
 import "./qpasos.css";
+import { tComponentes } from "../i18n/textos.ts";
 
 interface QPasosProps {
     total: number;
@@ -9,7 +10,7 @@ export const QPasos = ({ total, actual }: QPasosProps) => {
     if (total <= 1) return null;
 
     return (
-        <ol className="q-pasos" aria-label={`Paso ${actual + 1} de ${total}`}>
+        <ol className="q-pasos" aria-label={tComponentes("ui.atomos.pasoValorDeTotal", { valor: actual + 1, total })}>
             {Array.from({ length: total }, (_, i) => {
                 const estado =
                     i < actual ? "completado" : i === actual ? "activo" : "pendiente";

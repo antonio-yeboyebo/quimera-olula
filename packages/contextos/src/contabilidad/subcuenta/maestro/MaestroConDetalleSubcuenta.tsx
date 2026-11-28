@@ -15,6 +15,7 @@ import {
     metaTablaSubcuenta,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Maestro de subcuentas (plan de cuentas).
@@ -26,6 +27,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleSubcuenta = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaSubcuentasDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -44,7 +46,7 @@ export const MaestroConDetalleSubcuenta = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el plan de cuentas.</p>;
+        return <p>{t("subcuenta.noTienesPermisoParaVerEl")}</p>;
     }
 
     const ejercicioId =
@@ -67,7 +69,7 @@ export const MaestroConDetalleSubcuenta = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_subcuenta_solicitada")}>
-                                        Nueva subcuenta
+                                        {t("subcuenta.nuevaSubcuenta")}
                                     </QBoton>
                                 </div>
                             )}

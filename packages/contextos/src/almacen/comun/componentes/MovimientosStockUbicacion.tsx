@@ -4,6 +4,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Fragment, useEffect, useState } from "react";
 import { DesgloseCajaStockUbicacion, MoviStockUbicacion } from "#/almacen/ubicacion/diseño.ts";
 import { getDesgloseCajaStockUbicacion, getStockUbicacion } from "#/almacen/ubicacion/infraestructura.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 type ModoVista = "plana" | "cajas";
 
@@ -42,11 +43,11 @@ const TablaMovimientosPlana = ({ movimientos }: { movimientos: MoviStockUbicacio
     <table>
         <thead>
             <tr>
-                <th>Fecha/Hora</th>
-                <th>Lote</th>
-                <th>Caja</th>
-                <th>Concepto</th>
-                <th>Cantidad</th>
+                <th>{tAlmacen("comun.fechaHora")}</th>
+                <th>{tAlmacen("comun.lote")}</th>
+                <th>{tAlmacen("comun.caja")}</th>
+                <th>{tAlmacen("comun.concepto")}</th>
+                <th>{tAlmacen("comun.cantidad")}</th>
             </tr>
         </thead>
         <tbody>
@@ -56,8 +57,8 @@ const TablaMovimientosPlana = ({ movimientos }: { movimientos: MoviStockUbicacio
                     <td>{m.lote}</td>
                     <td>
                         {m.caja
-                            ? <ValorConEnlace href={urlFicha.caja(m.idCaja)} etiqueta={`Abrir caja ${m.caja}`}>{m.caja}</ValorConEnlace>
-                            : "Sin caja"}
+                            ? <ValorConEnlace href={urlFicha.caja(m.idCaja)} etiqueta={tAlmacen("comun.abrirCajaCaja", { caja: m.caja })}>{m.caja}</ValorConEnlace>
+                            : tAlmacen("comun.sinCaja")}
                     </td>
                     <td>{m.concepto}</td>
                     <td>{m.cantidad.toLocaleString("es-ES")}</td>
@@ -74,6 +75,7 @@ const CajasArticulo = ({
     desglose: DesgloseCajaStockUbicacion[];
     movimientos: MoviStockUbicacion[];
 }) => {
+    const t = useTAlmacen();
     const grupos = agruparPorCaja(desglose, movimientos);
     const [desplegadas, setDesplegadas] = useState<Set<string>>(new Set());
 
@@ -85,14 +87,14 @@ const CajasArticulo = ({
             return nuevas;
         });
 
-    if (!grupos.length) return <p>Sin cajas con stock</p>;
+    if (!grupos.length) return <p>{t("comun.sinCajasConStock")}</p>;
 
     return (
         <table className="cajas-articulo">
             <thead>
                 <tr>
-                    <th>Caja</th>
-                    <th>Cantidad</th>
+                    <th>{t("comun.caja")}</th>
+                    <th>{t("comun.cantidad")}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -105,8 +107,8 @@ const CajasArticulo = ({
                             <tr>
                                 <td>
                                     {grupo.caja
-                                        ? <ValorConEnlace href={urlFicha.caja(grupo.idCaja)} etiqueta={`Abrir caja ${grupo.caja}`}>{grupo.caja}</ValorConEnlace>
-                                        : "Sin caja"}
+                                        ? <ValorConEnlace href={urlFicha.caja(grupo.idCaja)} etiqueta={t("comun.abrirCajaCaja", { caja: grupo.caja })}>{grupo.caja}</ValorConEnlace>
+                                        : t("comun.sinCaja")}
                                 </td>
                                 <td>{grupo.cantidad.toLocaleString("es-ES")}</td>
                                 <td>
@@ -115,7 +117,7 @@ const CajasArticulo = ({
                                         variante="borde"
                                         onClick={() => alternar(clave)}
                                     >
-                                        {desplegada ? "Ocultar movimientos" : "Ver movimientos"}
+                                        {desplegada ? t("comun.ocultarMovimientos") : t("comun.verMovimientos")}
                                     </QBoton>
                                 </td>
                             </tr>
@@ -139,6 +141,7 @@ const CajasArticulo = ({
  * agrupados por caja. Pensado para la expansión de una fila de tabla.
  */
 export const MovimientosStockUbicacion = ({ stockUbicacionId }: { stockUbicacionId: string }) => {
+    const t = useTAlmacen();
     const [movimientos, setMovimientos] = useState<MoviStockUbicacion[]>([]);
     const [desglose, setDesglose] = useState<DesgloseCajaStockUbicacion[]>([]);
     const [cargando, setCargando] = useState(true);
@@ -154,8 +157,8 @@ export const MovimientosStockUbicacion = ({ stockUbicacionId }: { stockUbicacion
             .finally(() => setCargando(false));
     }, [stockUbicacionId]);
 
-    if (cargando) return <p>Cargando movimientos...</p>;
-    if (!movimientos.length) return <p>Sin movimientos</p>;
+    if (cargando) return <p>{t("comun.cargandoMovimientos")}</p>;
+    if (!movimientos.length) return <p>{t("comun.sinMovimientos")}</p>;
 
     return (
         <div className="ExpansionMovimientos">
@@ -165,14 +168,14 @@ export const MovimientosStockUbicacion = ({ stockUbicacionId }: { stockUbicacion
                     variante={modo === "plana" ? "solido" : "borde"}
                     onClick={() => setModo("plana")}
                 >
-                    Lista plana
+                    {t("comun.listaPlana")}
                 </QBoton>
                 <QBoton
                     tamaño="pequeño"
                     variante={modo === "cajas" ? "solido" : "borde"}
                     onClick={() => setModo("cajas")}
                 >
-                    Por cajas
+                    {t("comun.porCajas")}
                 </QBoton>
             </div>
             {modo === "plana" ? (

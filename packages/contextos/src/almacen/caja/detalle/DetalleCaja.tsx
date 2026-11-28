@@ -12,8 +12,9 @@ import { ArbolContenidoCaja } from "./ArbolContenidoCaja.tsx";
 import "./DetalleCaja.css";
 import { contextoDetalleCajaInicial, esCajaMonoproducto, guardarCaja, metaCaja } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
-const titulo = ( caja : Caja ) => `Caja ${caja.lpn} en ${caja.ubicacion}`;
+const titulo = ( caja : Caja ) => tAlmacen("caja.cajaLpnEnUbicacion", { lpn: caja.lpn, ubicacion: caja.ubicacion });
 
 export const DetalleCaja = ({
     id,
@@ -22,6 +23,7 @@ export const DetalleCaja = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCajaInicial,
@@ -50,7 +52,7 @@ export const DetalleCaja = ({
 
     const accionesCaja = [
         {
-            texto: "Borrar",
+            texto: t("caja.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             advertencia: true,
         },
@@ -67,8 +69,8 @@ export const DetalleCaja = ({
             <div className="DetalleCaja">
                 <QuimeraAcciones acciones={accionesCaja} />
                 <p className="DetalleCaja-ubicacion">
-                    En{" "}
-                    <ValorConEnlace href={urlFicha.ubicacion(caja.idUbicacion)} etiqueta={`Abrir ubicación ${caja.ubicacion}`}>
+                    {t("caja.en")}{" "}
+                    <ValorConEnlace href={urlFicha.ubicacion(caja.idUbicacion)} etiqueta={t("caja.abrirUbicacionUbicacion", { ubicacion: caja.ubicacion })}>
                         {caja.ubicacion}
                     </ValorConEnlace>
                 </p>
@@ -77,13 +79,13 @@ export const DetalleCaja = ({
                         <>
                             <div className="DetalleCaja-monoproducto-info">
                                 <span className="DetalleCaja-monoproducto-sku">
-                                    <ValorConEnlace href={urlFicha.articulo(caja.sku)} etiqueta={`Abrir artículo ${caja.sku ?? ""}`}>
+                                    <ValorConEnlace href={urlFicha.articulo(caja.sku)} etiqueta={t("caja.abrirArticuloValor", { valor: caja.sku ?? "" })}>
                                         {caja.sku ?? "—"}
                                     </ValorConEnlace>
                                 </span>
-                                <span className="DetalleCaja-monoproducto-cantidad">{caja.cantidad} ud.</span>
+                                <span className="DetalleCaja-monoproducto-cantidad">{t("caja.cantidadUd", { cantidad: caja.cantidad })}</span>
                                 {caja.idLote && (
-                                    <span className="DetalleCaja-monoproducto-lote">Lote: {caja.idLote}</span>
+                                    <span className="DetalleCaja-monoproducto-lote">{t("caja.loteIdlote", { idLote: caja.idLote })}</span>
                                 )}
                             </div>
                             <ArbolContenidoCaja contenido={caja.materiales} />

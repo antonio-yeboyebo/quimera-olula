@@ -1,6 +1,7 @@
 import { OrdenAlmacen, TipoOrden } from "#/almacen/orden/diseño.ts";
 import { Modelo } from "@olula/lib/diseño.js";
 import { MetaModelo } from "@olula/lib/dominio.js";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 export interface ModeloLecturaOrden extends Modelo {
     cantidad: number;
@@ -17,14 +18,14 @@ export const getMetaLecturaOrden = (tipo: TipoOrden): MetaModelo<ModeloLecturaOr
     campos: {
         sku: {
             validacion: (lectura) => {
-                if (!lectura.sku) return "El SKU es requerido";
+                if (!lectura.sku) return tAlmacen("orden.elSkuEsRequerido");
                 return true;
             },
         },
         cantidad: {
             tipo: "numero",
             validacion: (lectura) => {
-                if (!lectura.cantidad) return "La cantidad es requerida";
+                if (!lectura.cantidad) return tAlmacen("orden.laCantidadEsRequerida");
                 return true;
             },
         },

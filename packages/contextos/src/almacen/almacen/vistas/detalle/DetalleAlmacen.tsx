@@ -15,6 +15,7 @@ import { BorrarAlmacen } from "./BorrarAlmacen.tsx";
 import "./DetalleAlmacen.css";
 import { almacenVacio, metaAlmacen } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 const titulo = (almacen: Almacen) => almacen.nombre as string;
 
@@ -25,6 +26,7 @@ export const DetalleAlmacen = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTAlmacen();
   const params = useParams();
   const almacenId = id ?? params.id;
   const { intentar } = useContext(ContextoError);
@@ -78,20 +80,20 @@ export const DetalleAlmacen = ({
       {!!ctx.almacen.id && (
         <>
           <div className="maestro-botones ">
-            <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
+            <QBoton onClick={() => emitir("borrar")}>{t("almacen.borrar")}</QBoton>
             {mostrarCambiarAlmacen && (
               <QBoton onClick={handleCambiarAlmacenLocal}>
-                Cambiar almacén
+                {t("almacen.cambiarAlmacen")}
               </QBoton>
             )}
           </div>
           <div className="DetalleAlmacen">
             <Tabs
               children={[
-                <Tab key="general" label="General">
+                <Tab key="general" label={t("almacen.general")}>
                   <quimera-formulario>
-                    <QInput label="Código" {...almacen.uiProps("id")} />
-                    <QInput label="Nombre" {...almacen.uiProps("nombre")} />
+                    <QInput label={t("almacen.codigo")} {...almacen.uiProps("id")} />
+                    <QInput label={t("almacen.nombre")} {...almacen.uiProps("nombre")} />
                   </quimera-formulario>
                 </Tab>,
               ]}
@@ -100,7 +102,7 @@ export const DetalleAlmacen = ({
           {almacen.modificado && (
             <div className="botones maestro-botones">
               <QBoton onClick={handleGuardar} deshabilitado={!almacen.valido}>
-                Guardar
+                {t("almacen.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
@@ -108,7 +110,7 @@ export const DetalleAlmacen = ({
                 onClick={handleCancelar}
                 deshabilitado={!almacen.modificado}
               >
-                Cancelar
+                {t("almacen.cancelar")}
               </QBoton>
             </div>
           )}

@@ -4,6 +4,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useRef } from "react";
 import { getUbicaciones } from "../../ubicacion/infraestructura.ts";
 import { getZonas } from "../../zona/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 interface UbicacionPickingProps {
     descripcion?: string;
@@ -20,7 +21,7 @@ export const UbicacionPicking = ({
     descripcion = "",
     valor,
     nombre = "ubicacion_id",
-    label = "Ubicación de picking",
+    label = tAlmacen("comun.ubicacionDePicking"),
     onChange,
     ...props
 }: UbicacionPickingProps) => {

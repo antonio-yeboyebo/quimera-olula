@@ -19,6 +19,7 @@ import {
     PostRegenerarCodigosBalance,
 } from "./diseño.ts";
 import { criteriaCuentasDeCodigo } from "./dominio.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.CODIGO_BALANCE;
@@ -129,24 +130,24 @@ export const getCodigoBalance: GetCodigoBalance = async (id) =>
 
 export const postCodigoBalance: PostCodigoBalance = async (nuevo) => {
     const respuesta = await RestAPI.post(
-        baseUrl, nuevoCodigoBalanceAApi(nuevo), "Error al crear el código de balance"
+        baseUrl, nuevoCodigoBalanceAApi(nuevo), tContabilidad("codigo_balance.errorAlCrearElCodigoDe")
     );
     return String(respuesta.id);
 };
 
 export const patchCodigoBalance: PatchCodigoBalance = async (id, cambios) => {
     await RestAPI.patch(
-        urlCodigo(id), cambiosCodigoBalanceAApi(cambios), "Error al guardar el código de balance"
+        urlCodigo(id), cambiosCodigoBalanceAApi(cambios), tContabilidad("codigo_balance.errorAlGuardarElCodigoDe")
     );
 };
 
 export const deleteCodigoBalance: DeleteCodigoBalance = async (id) => {
-    await RestAPI.delete(urlCodigo(id), "Error al borrar el código de balance");
+    await RestAPI.delete(urlCodigo(id), tContabilidad("codigo_balance.errorAlBorrarElCodigoDe"));
 };
 
 export const postRegenerarCodigosBalance: PostRegenerarCodigosBalance = async (alcance) => {
     await RestAPI.post(
-        urls.CODIGO_BALANCE_REGENERAR, { alcance }, "Error al regenerar los códigos de balance"
+        urls.CODIGO_BALANCE_REGENERAR, { alcance }, tContabilidad("codigo_balance.errorAlRegenerarLosCodigosDe")
     );
 };
 
@@ -163,7 +164,7 @@ export const postCuentaCodigoBalance: PostCuentaCodigoBalance = async (
     const respuesta = await RestAPI.post(
         urlCuentas(formato),
         { codigo_balance_id: codigoBalanceId, ...cuentaCodigoBalanceAApi(nueva) },
-        "Error al asignar la cuenta al código de balance"
+        tContabilidad("codigo_balance.errorAlAsignarLaCuentaAl")
     );
     return String(respuesta.id);
 };
@@ -172,13 +173,13 @@ export const patchCuentaCodigoBalance: PatchCuentaCodigoBalance = async (formato
     await RestAPI.patch(
         `${urlCuentas(formato)}/${id}`,
         cuentaCodigoBalanceAApi(cambios),
-        "Error al guardar la cuenta del código de balance"
+        tContabilidad("codigo_balance.errorAlGuardarLaCuentaDel")
     );
 };
 
 export const deleteCuentaCodigoBalance: DeleteCuentaCodigoBalance = async (formato, id) => {
     await RestAPI.delete(
         `${urlCuentas(formato)}/${id}`,
-        "Error al quitar la cuenta del código de balance"
+        tContabilidad("codigo_balance.errorAlQuitarLaCuentaDel")
     );
 };

@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { Caja } from "../diseño.ts";
 import { deleteCaja } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarCaja = ({
     caja,
@@ -12,6 +13,7 @@ export const BorrarCaja = ({
     caja: Caja;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(
         async () => {
             await deleteCaja(caja.id);
@@ -31,8 +33,8 @@ export const BorrarCaja = ({
         <QModalConfirmacion
             nombre="borrarCaja"
             abierto={true}
-            titulo="Borrar caja"
-            mensaje={`¿Está seguro de que desea borrar la caja "${caja.lpn || caja.id}"?`}
+            titulo={t("caja.borrarCaja")}
+            mensaje={t("caja.estaSeguroDeQueDeseaBorrar", { valor: caja.lpn || caja.id })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

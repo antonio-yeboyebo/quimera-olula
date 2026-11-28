@@ -1,3 +1,5 @@
+import { localeActual } from "@olula/lib/i18n/i18n.ts";
+import { tComponentes, useTComponentes } from "../i18n/textos.ts";
 import { Criteria, Entidad, Paginacion } from "@olula/lib/diseño.ts";
 import { calcularPaginacionSimplificada } from "@olula/lib/dominio.ts";
 import { ReactNode, useId } from "react";
@@ -30,8 +32,11 @@ const paginacionControlador = (
   return (
     <quimera-tabla-paginacion>
       <span className="paginacion-rango">
-        {desde.toLocaleString("es-ES")}–{hasta.toLocaleString("es-ES")} de{" "}
-        {totalEntidades.toLocaleString("es-ES")}
+        {tComponentes("listado.rango", {
+          desde: desde.toLocaleString(localeActual()),
+          hasta: hasta.toLocaleString(localeActual()),
+          total: totalEntidades.toLocaleString(localeActual()),
+        })}
       </span>
       <QBoton
         deshabilitado={pagina === 1 || totalPaginas === 0}
@@ -117,6 +122,7 @@ export const QTarjetas = <T extends Entidad>({
   seleccionadasIds,
   onMultiSeleccionToggle,
 }: QTarjetasProps<T>) => {
+  const t = useTComponentes();
   const scrollId = `qs-${useId().replace(/:/g, "")}`;
   // const tarjetaItems = datos.map((entidad) => (
   //   <quimera-tarjeta
@@ -165,7 +171,7 @@ export const QTarjetas = <T extends Entidad>({
               })
             }
             hasMore={datos.length < totalEntidades}
-            loader={<div className="cargando">Cargando...</div>}
+            loader={<div className="cargando">{t("comun.cargando")}</div>}
             scrollableTarget={scrollId}
           >
             {tarjetaItems}
@@ -180,9 +186,9 @@ export const QTarjetas = <T extends Entidad>({
   return (
     <quimera-tarjetas id={scrollId}>
       {cargando ? (
-        <div className="cargando">Cargando...</div>
+        <div className="cargando">{t("comun.cargando")}</div>
       ) : datos.length === 0 ? (
-        <div className="no-datos">No hay datos</div>
+        <div className="no-datos">{t("comun.sinDatos")}</div>
       ) : (
         renderLista()
       )}

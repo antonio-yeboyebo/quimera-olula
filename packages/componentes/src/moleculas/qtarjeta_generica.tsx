@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import "./qtarjeta_generica.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 type QTarjetaGenericaProps = {
   mostrarTodo?: boolean;
@@ -21,6 +22,7 @@ export const QTarjetaGenerica = ({
   abajoDerecha,
   expansion,
 }: QTarjetaGenericaProps) => {
+  const t = useTComponentes();
   const [expandida, setExpandida] = useState(mostrarTodo);
 
   return (
@@ -33,7 +35,7 @@ export const QTarjetaGenerica = ({
 
         <section
           className="qtarjeta-generica-grid"
-          aria-label="Campos prioritarios"
+          aria-label={t("ui.moleculas.camposPrioritarios")}
         >
           {(arribaIzquierda || arribaDerecha) && (
             <section className="qtarjeta-generica-grid-arriba">
@@ -60,7 +62,7 @@ export const QTarjetaGenerica = ({
               setExpandida((estado) => !estado);
             }}
           >
-            {expandida ? "Ver menos" : "Ver más"}
+            {expandida ? t("ui.moleculas.verMenos") : t("ui.moleculas.verMas")}
           </QBoton>
         </footer>
       )}

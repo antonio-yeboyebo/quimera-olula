@@ -10,12 +10,14 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { postZona } from "../../infraestructura.js";
 import { metaNuevaZona, nuevaZonaVacia } from "./crear.js";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CrearZona = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo: zona, uiProps, valido } = useModelo(metaNuevaZona, nuevaZonaVacia);
 
     const crear_ = useCallback(async () => {
@@ -36,20 +38,20 @@ export const CrearZona = ({
         <QModal
             abierto={true}
             nombre="crearZona"
-            titulo="Crear zona"
+            titulo={t("zona.crearZona")}
             onCerrar={cancelar}
         >
             <div className="CrearZona">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("codigo")} ref={focus} />
+                    <QInput label={t("zona.codigo")} {...uiProps("codigo")} ref={focus} />
                     <Almacen {...uiProps("almacenId")} />
                     <FuncionZona {...uiProps("funcion")} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("zona.descripcion")} {...uiProps("descripcion")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("zona.crear")}
                     </QBoton>
                 </div>
             </div>

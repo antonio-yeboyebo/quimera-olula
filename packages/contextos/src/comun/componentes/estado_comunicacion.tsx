@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { ESTADOS_COMUNICACION } from "../comunicacion/diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 interface EstadoComunicacionProps {
   valor: string;
@@ -9,14 +10,14 @@ interface EstadoComunicacionProps {
 }
 
 const opcionesEstadoComunicacion = [
-  { valor: ESTADOS_COMUNICACION.NO_LEIDA, descripcion: "No leida" },
-  { valor: ESTADOS_COMUNICACION.LEIDA, descripcion: "Leida" },
+  { valor: ESTADOS_COMUNICACION.NO_LEIDA, get descripcion() { return tComun("componentes.noLeida"); } },
+  { valor: ESTADOS_COMUNICACION.LEIDA, get descripcion() { return tComun("componentes.leida"); } },
 ];
 
 export const EstadoComunicacion = ({
   valor,
   nombre = "estado",
-  label = "Estado",
+  label = tComun("componentes.estado"),
   onChange,
   ...props
 }: EstadoComunicacionProps) => {
@@ -27,7 +28,7 @@ export const EstadoComunicacion = ({
       valor={valor}
       onChange={onChange}
       opciones={opcionesEstadoComunicacion}
-      placeholder="Todas"
+      placeholder={tComun("componentes.todas")}
       {...props}
     />
   );

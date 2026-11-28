@@ -8,6 +8,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { carpetaVacia, metaNuevaCarpeta } from "./crear_carpeta.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 
 /**
  * Modal de alta de carpeta dentro del árbol documental.
@@ -26,6 +27,7 @@ export interface CrearCarpetaProps {
 }
 
 export const CrearCarpeta = ({ vinculoTipo, vinculoId, publicar }: CrearCarpetaProps) => {
+    const t = useTComponentes();
     const { modelo: carpeta, uiProps, valido } = useModelo(metaNuevaCarpeta, carpetaVacia);
 
     const crear_ = useCallback(async () => {
@@ -40,15 +42,15 @@ export const CrearCarpeta = ({ vinculoTipo, vinculoId, publicar }: CrearCarpetaP
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="mostrar" titulo="Nueva carpeta" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="mostrar" titulo={t("ui.arbolDocumentos.nuevaCarpeta")} onCerrar={cancelar}>
             <div className="CrearCarpeta">
                 <quimera-formulario>
-                    <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
+                    <QInput label={t("ui.arbolDocumentos.nombre")} {...uiProps("nombre")} ref={focus} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("ui.arbolDocumentos.crear")}
                     </QBoton>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { formatearMoneda } from "@olula/lib/dominio.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback, useState } from "react";
 import { ReciboVenta } from "../diseño.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const RemesarRecibos = ({
   recibos,
@@ -14,6 +15,7 @@ export const RemesarRecibos = ({
   recibos: ReciboVenta[];
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const [cuentaId, setCuentaId] = useState("");
 
   const remesar_ = useCallback(
@@ -37,25 +39,25 @@ export const RemesarRecibos = ({
     <QModal
       abierto={true}
       nombre="remesar_recibos"
-      titulo="Crear remesa de cobro"
+      titulo={t("recibo_venta.crearRemesaDeCobro")}
       onCerrar={cancelar}
     >
       <div className="RemesarRecibos">
-        <p>{`Se creará una remesa de cobro con ${cuantos} por ${formatearMoneda(
+        <p>{t("recibo_venta.seCrearaUnaRemesaDeCobro", { cuantos, total: formatearMoneda(
           total,
           "EUR"
-        )}.`}</p>
+        ) })}</p>
         <quimera-formulario>
           <CuentaBancariaSelect
             nombre="cuenta_id"
-            label="Cuenta de cargo"
+            label={t("recibo_venta.cuentaDeCargo")}
             valor={cuentaId}
             onChange={(opcion) => setCuentaId(opcion?.valor ?? "")}
           />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={remesar} deshabilitado={!cuentaId}>
-            Remesar
+            {t("recibo_venta.remesar")}
           </QBoton>
         </div>
       </div>

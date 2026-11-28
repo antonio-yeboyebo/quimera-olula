@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { FichaInforme, PestañaInforme } from "../diseño.ts";
 import { etiquetaFichaInforme } from "../dominio.ts";
 import { deleteFichaInforme } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarInforme = ({
     pestaña,
@@ -15,6 +16,7 @@ export const BorrarInforme = ({
     ficha: FichaInforme;
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const borrar_ = useCallback(async () => {
         await deleteFichaInforme(pestaña, ficha.id);
         publicar("informe_borrado", ficha);
@@ -28,8 +30,8 @@ export const BorrarInforme = ({
         <QModalConfirmacion
             nombre={`borrarInforme-${pestaña.clave}`}
             abierto={true}
-            titulo="Borrar informe"
-            mensaje={`¿Confirma borrar ${etiquetaFichaInforme(pestaña, ficha)}? Solo se borran los criterios del informe, no los documentos.`}
+            titulo={t("informeDocumentos.borrarInforme")}
+            mensaje={t("informeDocumentos.confirmaBorrarPestanaSoloSeBorran", { pestaña: etiquetaFichaInforme(pestaña, ficha) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

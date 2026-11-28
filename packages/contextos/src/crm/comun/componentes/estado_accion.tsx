@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { opcionesEstadoAccion } from "../valores/estado_accion.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface EstadoAccionProps {
   valor: string;
@@ -14,7 +15,7 @@ export const EstadoAccion = ({
 }: EstadoAccionProps) => {
   return (
     <QSelect
-      label="Estado"
+      label={tCrm("comun.estado")}
       nombre="estado"
       valor={valor}
       onChange={onChange}

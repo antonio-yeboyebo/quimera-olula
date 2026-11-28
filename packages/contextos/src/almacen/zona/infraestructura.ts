@@ -4,6 +4,7 @@ import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { getUbicaciones } from "../ubicacion/infraestructura.ts";
 import { Ubicacion } from "../ubicacion/diseño.ts";
 import { FuncionZona, DeleteZona, GetZona, GetZonas, NuevaZona, PatchZona, PostZona, Zona } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrl = `/almacen/zona`;
 
@@ -72,7 +73,7 @@ export const postZona: PostZona = async (nuevaZona) => {
     const respuesta = await RestAPI.post<NuevaZonaApi>(
         baseUrl,
         nuevaZonaAApi(nuevaZona),
-        "Error al crear zona"
+        tAlmacen("zona.errorAlCrearZona")
     );
     return respuesta.id;
 };
@@ -81,12 +82,12 @@ export const patchZona: PatchZona = async (id, cambios) => {
     await RestAPI.patch<CambiosZonaApi>(
         `${baseUrl}/${id}`,
         cambiosZonaAApi(cambios),
-        "Error al actualizar zona"
+        tAlmacen("zona.errorAlActualizarZona")
     );
 };
 
 export const deleteZona: DeleteZona = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al eliminar zona");
+    await RestAPI.delete(`${baseUrl}/${id}`, tAlmacen("zona.errorAlEliminarZona"));
 };
 
 /** Una página de las ubicaciones de la zona, según el criterio (orden y paginación) del listado. */

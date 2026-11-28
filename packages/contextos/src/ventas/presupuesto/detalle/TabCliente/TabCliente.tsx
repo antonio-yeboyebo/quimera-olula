@@ -9,6 +9,7 @@ import { Presupuesto } from "../../diseño.ts";
 import { EstadoPresupuesto } from "../diseño.ts";
 import "./TabCliente.css";
 import { aprobado } from "../../dominio.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 interface TabClienteProps {
   presupuesto: HookModelo<Presupuesto>;
@@ -21,6 +22,7 @@ export const TabCliente = ({
   estado,
   publicar = async () => {},
 }: TabClienteProps) => {
+  const t = useTVentas();
   const { modelo } = presupuesto;
   const puedeEditarCliente = !aprobado(modelo);
   const mostrarBotonCambiarCliente = estado === "ABIERTO" && puedeEditarCliente;
@@ -40,7 +42,7 @@ export const TabCliente = ({
         />
         <QInput
           nombre="id_fiscal"
-          label="ID Fiscal"
+          label={t("documento.detalle.idFiscal")}
           valor={modelo.cliente.id_fiscal}
           soloLectura={true}
         />
@@ -48,7 +50,7 @@ export const TabCliente = ({
         {mostrarBotonCambiarCliente && (
           <div className="TabCliente-accion">
             <BotonCambiar
-              titulo="Cambiar cliente y dirección"
+              titulo={t("documento.detalle.cambiarCliente")}
               onClick={() => publicar("cambio_cliente_solicitado")}
             />
           </div>
@@ -56,7 +58,7 @@ export const TabCliente = ({
 
         <QInput
           soloLectura={true}
-          label="Dirección"
+          label={t("documento.detalle.direccion")}
           nombre="direccion_cliente"
           valor={formatearDireccionVenta(modelo.cliente.direccion)}
         />

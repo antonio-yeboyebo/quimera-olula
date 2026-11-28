@@ -12,6 +12,7 @@ import { etiquetaPais, metaPais, REGLA_PAIS } from "../dominio.ts";
 import { CamposPais } from "./CamposPais.tsx";
 import { contextoDetallePaisInicial, guardarPais } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `paises.ui` (sin bandera ni el botón de normalizar provincias). */
 export const DetallePais = ({
@@ -21,6 +22,7 @@ export const DetallePais = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePaisInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -44,7 +46,7 @@ export const DetallePais = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("paises.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede(REGLA_PAIS),
             advertencia: true,
@@ -64,7 +66,7 @@ export const DetallePais = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" nombre="id" valor={pais.id} soloLectura />
+                    <QInput label={t("paises.codigo")} nombre="id" valor={pais.id} soloLectura />
                     <CamposPais uiProps={formModelo.uiProps} />
                 </quimera-formulario>
             </div>

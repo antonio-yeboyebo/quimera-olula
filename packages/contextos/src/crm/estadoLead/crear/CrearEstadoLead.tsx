@@ -8,8 +8,10 @@ import { useCallback } from "react";
 import { getEstadoLead, postEstadoLead } from "../infraestructura.ts";
 import "./CrearEstadoLead.css";
 import { metaNuevoEstadoLead, nuevoEstadoLeadVacio } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearEstadoLead = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevoEstadoLead,
     nuevoEstadoLeadVacio
@@ -31,21 +33,21 @@ export const CrearEstadoLead = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nuevo Estado de Lead"
+      titulo={t("estadoLead.nuevoEstadoDeLead")}
       onCerrar={cancelar}
     >
       <div className="CrearEstadoLead">
         <quimera-formulario>
-          <QInput label="Código" maxLength={10} {...uiProps("id")} />
-          <QInput label="Descripción" {...uiProps("descripcion")} />
+          <QInput label={t("estadoLead.codigo")} maxLength={10} {...uiProps("id")} />
+          <QInput label={t("estadoLead.descripcion")} {...uiProps("descripcion")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("estadoLead.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("estadoLead.cancelar")}
           </QBoton>
         </div>
       </div>

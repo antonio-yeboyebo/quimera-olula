@@ -15,6 +15,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import "./qkanban.css";
 import { MetaTabla } from "./qtablacontrolada.tsx";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export type QKanbanColumna = {
   id: string;
@@ -91,6 +92,7 @@ const QKanbanColumnaVista = <T extends Entidad>({
   seleccionadaId,
   onSeleccion,
 }: QKanbanColumnaVistaProps<T>) => {
+  const t = useTComponentes();
   const { setNodeRef, isOver } = useDroppable({ id: columna.id });
 
   return (
@@ -112,7 +114,7 @@ const QKanbanColumnaVista = <T extends Entidad>({
 
       <div ref={setNodeRef} className="qkanban-columna-cuerpo">
         {entidades.length === 0 ? (
-          <div className="qkanban-vacio">Sin tarjetas</div>
+          <div className="qkanban-vacio">{t("ui.atomos.sinTarjetas")}</div>
         ) : (
           entidades.map((entidad) => (
             <QKanbanTarjeta
@@ -140,6 +142,7 @@ export const QKanban = <T extends Entidad>({
   onSeleccion,
   onCambioEstado,
 }: QKanbanProps<T>) => {
+  const t = useTComponentes();
   const [idActivaArrastre, setIdActivaArrastre] = useState<string | null>(null);
   const [estadoOptimista, setEstadoOptimista] = useState<Record<string, string>>(
     {}
@@ -218,7 +221,7 @@ export const QKanban = <T extends Entidad>({
   if (cargando && entidades.length === 0) {
     return (
       <div className="QKanban">
-        <div className="qkanban-cargando">Cargando...</div>
+        <div className="qkanban-cargando">{t("ui.atomos.cargando")}</div>
       </div>
     );
   }

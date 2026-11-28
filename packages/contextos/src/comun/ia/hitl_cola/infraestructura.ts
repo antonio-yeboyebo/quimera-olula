@@ -1,6 +1,7 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { GetFicheroHitlTarea, GetHitlTarea, GetHitlTareas, HitlTarea, PostRechazarHitlTarea, PostResolverHitlTarea } from "./diseño.js";
+import { tComun } from "../../i18n/index.ts";
 
 const BASE_URL = '/comun/hitl-cola';
 
@@ -44,7 +45,7 @@ export const getHitlTareas: GetHitlTareas = async (estado) => {
         BASE_URL,
         criteria,
         hitlTareaDesdeApi,
-        'Error al obtener tareas HITL',
+        tComun("ia.errorAlObtenerTareasHitl"),
     );
 };
 
@@ -52,7 +53,7 @@ export const getHitlTarea: GetHitlTarea = async (id) => {
     return await RestAPI.getItem<HitlTarea, HitlTareaApi>(
         `${BASE_URL}/${id}`,
         hitlTareaDesdeApi,
-        'Error al obtener la tarea HITL',
+        tComun("ia.errorAlObtenerLaTareaHitl"),
     );
 };
 
@@ -60,7 +61,7 @@ export const resolverHitlTarea: PostResolverHitlTarea = async (id, datos_resoluc
     await RestAPI.post<{ datos_resolucion: Record<string, unknown> }>(
         `${BASE_URL}/${id}/resolver`,
         { datos_resolucion },
-        'Error al resolver la tarea HITL',
+        tComun("ia.errorAlResolverLaTareaHitl"),
     );
 };
 
@@ -68,9 +69,9 @@ export const rechazarHitlTarea: PostRechazarHitlTarea = async (id, motivo) => {
     await RestAPI.post<{ motivo?: string }>(
         `${BASE_URL}/${id}/rechazar`,
         motivo ? { motivo } : {},
-        'Error al rechazar la tarea HITL',
+        tComun("ia.errorAlRechazarLaTareaHitl"),
     );
 };
 
 export const getFicheroHitlTarea: GetFicheroHitlTarea = async (id) =>
-    RestAPI.blob(`${BASE_URL}/${id}/fichero`, 'Error al obtener el fichero de la tarea');
+    RestAPI.blob(`${BASE_URL}/${id}/fichero`, tComun("ia.errorAlObtenerElFicheroDe"));

@@ -7,6 +7,7 @@ import { Articulo } from "../diseño.ts";
 import { EstadoDetalleArticulo } from "./diseño.ts";
 import { PreciosProveedorArticulo } from "./precios_proveedor/PreciosProveedorArticulo.tsx";
 import "./TabCompras.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const TabCompras = ({
   form,
@@ -21,6 +22,7 @@ export const TabCompras = ({
   estado: EstadoDetalleArticulo;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const { uiProps } = form;
 
   return (
@@ -28,7 +30,7 @@ export const TabCompras = ({
       <quimera-formulario>
         <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
       </quimera-formulario>
-      <h3>Precios por proveedor</h3>
+      <h3>{t("articulo.detalle.preciosProveedor")}</h3>
       <PreciosProveedorArticulo
         articulo={articulo}
         precios={precios}

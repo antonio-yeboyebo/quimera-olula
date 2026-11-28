@@ -3,18 +3,19 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { CuentaBancoProveedor } from "../../diseño.ts";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 
-const metaTablaCuentas = (cuentaPagoId: string | null): MetaTabla<CuentaBancoProveedor> => [
+const metaTablaCuentas = (cuentaPagoId: string | null, t = tCompras): MetaTabla<CuentaBancoProveedor> => [
     {
         id: "pago",
-        cabecera: "Pago",
-        render: (c: CuentaBancoProveedor) => (c.id === cuentaPagoId ? "Sí" : ""),
+        cabecera: t("proveedor.cuentas.pago"),
+        render: (c: CuentaBancoProveedor) => (c.id === cuentaPagoId ? t("comun.si") : ""),
     },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "iban", cabecera: "IBAN" },
-    { id: "bic", cabecera: "BIC" },
-    { id: "entidad", cabecera: "Entidad" },
-    { id: "agencia", cabecera: "Agencia" },
+    { id: "descripcion", cabecera: t("comun.campos.descripcion") },
+    { id: "iban", cabecera: t("proveedor.cuentas.iban") },
+    { id: "bic", cabecera: t("proveedor.cuentas.bic") },
+    { id: "entidad", cabecera: t("proveedor.cuentas.entidad") },
+    { id: "agencia", cabecera: t("proveedor.cuentas.agencia") },
 ];
 
 export const CuentasBancoLista = ({
@@ -28,9 +29,10 @@ export const CuentasBancoLista = ({
     seleccionada?: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     return (
         <ListadoSemiControlado
-            metaTabla={metaTablaCuentas(cuentaPagoId)}
+            metaTabla={metaTablaCuentas(cuentaPagoId, t)}
             entidades={cuentas}
             totalEntidades={cuentas.length}
             cargando={false}

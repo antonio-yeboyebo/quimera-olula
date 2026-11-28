@@ -4,6 +4,7 @@ import { Albaran, LineaAlbaran } from "../../diseño.ts";
 import { editable } from "../../dominio.ts";
 import { CambiarLinea } from "../../cambiar_linea/CambiarLinea.tsx";
 import { LineasLista } from "./LineasLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const Lineas = ({
   albaran,
@@ -16,6 +17,7 @@ export const Lineas = ({
   estadoAlbaran: string;
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
+  const t = useTVentas();
   const handleCambioCantidad = (linea: LineaAlbaran, cantidad: number) => {
     publicar("cambio_cantidad_linea_solicitado", {
       lineaId: linea.id,
@@ -26,17 +28,17 @@ export const Lineas = ({
   const esEditable = estadoAlbaran === "ABIERTO" && editable(albaran);
   const acciones = [
     {
-      texto: "Nueva",
+      texto: t("documento.lineas.nueva"),
       onClick: () => publicar("alta_linea_solicitada"),
     },
     {
-      texto: "Editar",
+      texto: t("documento.lineas.editar"),
       onClick: () => publicar("cambio_linea_solicitado"),
       deshabilitado: !lineaActiva,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => publicar("baja_linea_solicitada"),
       deshabilitado: !lineaActiva,

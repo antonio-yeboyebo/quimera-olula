@@ -11,7 +11,9 @@ import {
     NuevoEnvioAgencia,
     OrdenAlmacen,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
+/** Textos en español de las validaciones (la validación devuelve su traducción). */
 export const ERR_SKU_REQUERIDO = "El SKU es requerido";
 export const ERR_CANTIDAD_PREVISTA_REQUERIDA = "La cantidad prevista es requerida";
 
@@ -106,7 +108,7 @@ export const metaNuevaLinea: MetaModelo<LineaOrdenAlmacen> = {
         sku: {
             validacion: (linea) => {
                 if (linea.sku === null || linea.sku === undefined || linea.sku === "") {
-                    return ERR_SKU_REQUERIDO;
+                    return tAlmacen("orden.elSkuEsRequerido");
                 }
                 return true;
             },
@@ -115,7 +117,7 @@ export const metaNuevaLinea: MetaModelo<LineaOrdenAlmacen> = {
             tipo: "numero",
             validacion: (linea) => {
                 if (linea.cantidadPrevista === null || linea.cantidadPrevista === undefined) {
-                    return ERR_CANTIDAD_PREVISTA_REQUERIDA;
+                    return tAlmacen("orden.laCantidadPrevistaEsRequerida");
                 }
                 return true;
             },
@@ -174,13 +176,13 @@ export const textoCambioPedido = (
 ): string | null => {
     switch (linea.cambioPedido) {
         case "ANADIDA":
-            return "Añadida en pedido";
+            return tAlmacen("orden.anadidaEnPedido");
         case "BORRADA":
-            return "Borrada en pedido";
+            return tAlmacen("orden.borradaEnPedido");
         case "CAMBIADA":
             return linea.cantidadPedidoAnterior != null
-                ? `Cambiada en pedido (antes ${linea.cantidadPedidoAnterior})`
-                : "Cambiada en pedido";
+                ? tAlmacen("orden.cambiadaEnPedidoAntesCantidadpedidoanter", { cantidadPedidoAnterior: linea.cantidadPedidoAnterior })
+                : tAlmacen("orden.cambiadaEnPedido");
         default:
             return null;
     }
@@ -191,10 +193,10 @@ export const textoDiferenciaPedido = (d: DiferenciaPedidoOrden): string => {
     const articulo = [d.sku, d.descripcion].filter(Boolean).join(" ");
     const pedido = d.pedido ? `${d.pedido}: ` : "";
     if (d.tipo === "FALTA") {
-        const otras = d.enOtrasSalidas > 0 ? `, ${d.enOtrasSalidas} en otras salidas` : "";
-        return `${pedido}${articulo}. Faltan ${d.diferencia} (el pedido tiene pendiente ${d.pendientePedido}, la orden saca ${d.enOrden}${otras}).`;
+        const otras = d.enOtrasSalidas > 0 ? tAlmacen("orden.enotrassalidasEnOtrasSalidas", { enOtrasSalidas: d.enOtrasSalidas }) : "";
+        return tAlmacen("orden.pedidoArticuloFaltanDiferenciaElPedido", { pedido, articulo, diferencia: d.diferencia, pendientePedido: d.pendientePedido, enOrden: d.enOrden, otras });
     }
-    return `${pedido}${articulo}. Sobran ${d.diferencia} (el pedido tiene pendiente ${d.pendientePedido}, la orden saca ${d.enOrden}).`;
+    return tAlmacen("orden.pedidoArticuloSobranDiferenciaElPedido", { pedido, articulo, diferencia: d.diferencia, pendientePedido: d.pendientePedido, enOrden: d.enOrden });
 };
 
 export const lineasConSobrante = (orden: Pick<OrdenAlmacen, "lineas">): LineaOrdenAlmacen[] =>
@@ -207,10 +209,10 @@ export const ordenAlbaranable = (
     orden.tipo === "SALIDA" && orden.estado === "PREPARADA" && lineasConSobrante({ lineas: orden.lineas ?? [] }).length === 0;
 
 const ETIQUETAS_ESTADO_ORDEN: Record<string, EstadoEtiqueta> = {
-    PENDIENTE: { texto: "Pendiente", tono: "borrador" },
-    EN_CURSO: { texto: "En curso", tono: "pendiente" },
-    PREPARADA: { texto: "Preparada", tono: "parcial" },
-    TERMINADA: { texto: "Terminada", tono: "completado" },
+    PENDIENTE: { get texto() { return tAlmacen("orden.pendiente"); }, tono: "borrador" },
+    EN_CURSO: { get texto() { return tAlmacen("orden.enCurso"); }, tono: "pendiente" },
+    PREPARADA: { get texto() { return tAlmacen("orden.preparada"); }, tono: "parcial" },
+    TERMINADA: { get texto() { return tAlmacen("orden.terminada"); }, tono: "completado" },
 };
 
 export const etiquetaEstadoOrden = (orden: Pick<OrdenAlmacen, "estado">): EstadoEtiqueta =>
@@ -220,10 +222,10 @@ export const etiquetaEstadoOrden = (orden: Pick<OrdenAlmacen, "estado">): Estado
 export const ESTADOS_ORDEN_DEFECTO: string[] = ["EN_CURSO", "PENDIENTE", "PREPARADA"];
 
 export const opcionesEstadoOrden = [
-    { valor: "PENDIENTE", descripcion: "Pendiente" },
-    { valor: "EN_CURSO", descripcion: "En curso" },
-    { valor: "PREPARADA", descripcion: "Preparada" },
-    { valor: "TERMINADA", descripcion: "Terminada" },
+    { valor: "PENDIENTE", get descripcion() { return tAlmacen("orden.pendiente"); } },
+    { valor: "EN_CURSO", get descripcion() { return tAlmacen("orden.enCurso"); } },
+    { valor: "PREPARADA", get descripcion() { return tAlmacen("orden.preparada"); } },
+    { valor: "TERMINADA", get descripcion() { return tAlmacen("orden.terminada"); } },
 ];
 
 const comoLista = (valor: unknown): string[] =>
@@ -273,12 +275,12 @@ export const metaNuevoEnvioAgencia: MetaModelo<NuevoEnvioAgencia> = {
             tipo: "entero",
             requerido: true,
             validacion: (m) => (Number.isInteger(m.bultos) && m.bultos > 0)
-                || "Debe haber al menos un bulto",
+                || tAlmacen("orden.debeHaberAlMenosUnBulto"),
         },
         kilos: {
             tipo: "decimal",
             requerido: true,
-            validacion: (m) => m.kilos > 0 || "Los kilos deben ser mayores que 0",
+            validacion: (m) => m.kilos > 0 || tAlmacen("orden.losKilosDebenSerMayoresQue"),
         },
         fechaRecogida: { tipo: "fecha", requerido: true },
         observaciones: { requerido: false },
@@ -311,15 +313,15 @@ const plural = (n: number, singular: string, plural: string) => `${n} ${n === 1 
 /** Por qué un recorrido no tiene paradas. */
 export const motivoRecorridoVacio = (r: { ordenId: string; estado: string }): string =>
     r.estado === "TERMINADA"
-        ? `La orden ${r.ordenId} está terminada: no queda nada por recoger ni dejar.`
-        : `La orden ${r.ordenId} no tiene nada pendiente en ubicaciones${r.estado ? ` (${r.estado.toLowerCase()})` : ""}.`;
+        ? tAlmacen("orden.laOrdenOrdenidEstaTerminadaNo", { ordenId: r.ordenId })
+        : tAlmacen("orden.laOrdenOrdenidNoTieneNada", { ordenId: r.ordenId, valor: r.estado ? ` (${r.estado.toLowerCase()})` : "" });
 
-export const textoAccionParada = { RECOGER: "Recoger", DEJAR: "Dejar" } as const;
+export const textoAccionParada = { get RECOGER() { return tAlmacen("orden.recoger"); }, get DEJAR() { return tAlmacen("orden.dejar"); } } as const;
 
 const textoMotivoRecorrido: Record<MotivoRecorridoFormula, string> = {
-    SIN_PLANTA: "el almacén no tiene planta",
-    PARADAS_SIN_POSICION: "hay paradas en pasillos sin colocar en la planta",
-    SIN_CAMINO: "no hay camino a pie entre alguna de las paradas",
+    get SIN_PLANTA() { return tAlmacen("orden.elAlmacenNoTienePlanta"); },
+    get PARADAS_SIN_POSICION() { return tAlmacen("orden.hayParadasEnPasillosSinColocar"); },
+    get SIN_CAMINO() { return tAlmacen("orden.noHayCaminoAPieEntre"); },
 };
 
 export const resumenRecorrido = (r: {
@@ -330,9 +332,9 @@ export const resumenRecorrido = (r: {
     metros?: number | null;
 }): string => {
     if (r.calculo === "DISTANCIA" && r.metros != null) {
-        return `${Math.round(r.metros).toLocaleString("es-ES")} m a pie, ordenado por la planta`;
+        return tAlmacen("orden.tolocalestringMAPieOrdenadoPor", { toLocaleString: Math.round(r.metros).toLocaleString("es-ES") });
     }
-    const estimado = `${plural(r.modulosRecorridos, "módulo recorrido", "módulos recorridos")}, ` +
-        plural(r.pasillosCruzados, "pasillo cruzado", "pasillos cruzados");
-    return r.motivo && r.motivo !== "SIN_PLANTA" ? `${estimado} (estimado: ${textoMotivoRecorrido[r.motivo]})` : estimado;
+    const estimado = `${plural(r.modulosRecorridos, tAlmacen("orden.moduloRecorrido"), tAlmacen("orden.modulosRecorridos"))}, ` +
+        plural(r.pasillosCruzados, tAlmacen("orden.pasilloCruzado"), tAlmacen("orden.pasillosCruzados"));
+    return r.motivo && r.motivo !== "SIN_PLANTA" ? tAlmacen("orden.estimadoEstimadoValor", { estimado, valor: textoMotivoRecorrido[r.motivo] }) : estimado;
 };

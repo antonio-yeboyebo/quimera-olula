@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { Banco, CambiosSucursal, DatosSucursal, NuevaSucursal, NuevoBanco, Sucursal } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 export const REGLA_BANCO = "comun.banco";
 
@@ -58,7 +59,7 @@ export const metaNuevoBanco: MetaModelo<NuevoBanco> = {
             requerido: true,
             maximo: 4,
             validacion: (b: NuevoBanco) =>
-                PATRON_CUATRO_DIGITOS.test(b.id) || "El nº de entidad debe tener 4 dígitos",
+                PATRON_CUATRO_DIGITOS.test(b.id) || tTesoreria("banco.elNDeEntidadDebeTener"),
         },
         ...camposBanco,
     },
@@ -70,7 +71,7 @@ export const metaSucursal: MetaModelo<NuevaSucursal> = {
             requerido: true,
             maximo: 4,
             validacion: (s: NuevaSucursal) =>
-                PATRON_CUATRO_DIGITOS.test(s.agencia) || "El nº de oficina debe tener 4 dígitos",
+                PATRON_CUATRO_DIGITOS.test(s.agencia) || tTesoreria("banco.elNDeOficinaDebeTener"),
         },
         nombre: { requerido: false, maximo: 100 },
         direccion: { requerido: false, maximo: 100 },

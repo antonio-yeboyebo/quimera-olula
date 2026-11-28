@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposProvincia } from "../detalle/CamposProvincia.tsx";
 import { metaNuevoProvincia, nuevoProvinciaVacio } from "../dominio.ts";
 import { postProvincia } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const CrearProvincia = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTComun();
     const inicial = useMemo(nuevoProvinciaVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoProvincia, inicial);
@@ -25,14 +27,14 @@ export const CrearProvincia = ({ publicar }: { publicar: EmitirEvento }) => {
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
     return (
-        <QModal abierto={true} nombre="crearProvincia" titulo="Nueva provincia" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearProvincia" titulo={t("provincia.nuevaProvincia")} onCerrar={cancelar}>
             <div className="CrearProvincia">
                 <quimera-formulario>
                     <CamposProvincia uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("provincia.crear")}
                     </QBoton>
                 </div>
             </div>

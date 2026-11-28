@@ -15,6 +15,7 @@ import {
     metaTablaCodigoBalance,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Códigos de balance 2008 (Eneboo `co_codbalances08`, acción del menú
@@ -24,6 +25,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleCodigoBalance = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaCodigosBalanceDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -43,7 +45,7 @@ export const MaestroConDetalleCodigoBalance = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los códigos de balance.</p>;
+        return <p>{t("codigo_balance.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -52,7 +54,7 @@ export const MaestroConDetalleCodigoBalance = () => {
                 seleccionada={codigosBalance.activo}
                 Maestro={
                     <>
-                        <h2>Códigos de balance 2008</h2>
+                        <h2>{t("codigo_balance.codigosDeBalance2008")}</h2>
                         <Listado<CodigoBalance>
                             metaTabla={metaTablaCodigoBalance}
                             metaFiltro={metaFiltroCodigoBalance}
@@ -64,25 +66,25 @@ export const MaestroConDetalleCodigoBalance = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_codigo_balance_solicitado")}>
-                                        Nuevo código
+                                        {t("codigo_balance.nuevoCodigo")}
                                     </QBoton>
                                     <QBoton
                                         variante="borde"
                                         onClick={() => emitir("regeneracion_solicitada", "todo")}
                                     >
-                                        Regenerar códigos
+                                        {t("codigo_balance.regenerarCodigos")}
                                     </QBoton>
                                     <QBoton
                                         variante="borde"
                                         onClick={() => emitir("regeneracion_solicitada", "cuentas")}
                                     >
-                                        Regenerar cuentas
+                                        {t("codigo_balance.regenerarCuentas")}
                                     </QBoton>
                                     <QBoton
                                         variante="borde"
                                         onClick={() => emitir("regeneracion_solicitada", "cuentas_abreviado")}
                                     >
-                                        Regenerar cuentas abreviado
+                                        {t("codigo_balance.regenerarCuentasAbreviado")}
                                     </QBoton>
                                 </div>
                             )}

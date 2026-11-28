@@ -8,8 +8,10 @@ import { useCallback } from "react";
 import { getFuenteLead, postFuenteLead } from "../infraestructura.ts";
 import "./CrearFuenteLead.css";
 import { metaNuevaFuenteLead, nuevaFuenteLeadVacia } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearFuenteLead = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevaFuenteLead,
     nuevaFuenteLeadVacia
@@ -31,21 +33,21 @@ export const CrearFuenteLead = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nueva Fuente de Lead"
+      titulo={t("fuenteLead.nuevaFuenteDeLead")}
       onCerrar={cancelar}
     >
       <div className="CrearFuenteLead">
         <quimera-formulario>
-          <QInput label="Código" maxLength={20} {...uiProps("id")} />
-          <QInput label="Descripción" {...uiProps("descripcion")} />
+          <QInput label={t("fuenteLead.codigo")} maxLength={20} {...uiProps("id")} />
+          <QInput label={t("fuenteLead.descripcion")} {...uiProps("descripcion")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("fuenteLead.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("fuenteLead.cancelar")}
           </QBoton>
         </div>
       </div>

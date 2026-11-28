@@ -2,46 +2,46 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { puede } from "@olula/lib/dominio.ts";
 import { criteriaQueryUrl } from "@olula/lib/infraestructura.ts";
 import { usePreferencia } from "@olula/lib/usePreferencia.ts";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
 import { QKanban, type QKanbanColumna } from "../atomos/qkanban.tsx";
 import { MetaTabla, QTablaControlada } from "../atomos/qtablacontrolada.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
+import { useTComponentes } from "../i18n/textos.ts";
 import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
-import { TarjetaPlantilla } from "../vistas/TarjetaPlantilla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
-import { SelectorColumnas } from "../vistas/SelectorColumnas.tsx";
-import { useVistaListado } from "../vistas/useVistaListado.ts";
-import { conColumnasDePlugins } from "../vistas/registro_plugins.ts";
-import { useSeccionPersonalizable } from "../vistas/modo_personalizar.ts";
-import { SeccionListado } from "../vistas/SeccionListado.tsx";
-import { SelectorVista } from "../vistas/SelectorVista.tsx";
-import { REGLA_VISTA_COMPARTIDA, SeccionCompartir } from "../vistas/SeccionCompartir.tsx";
-import { puede } from "@olula/lib/dominio.ts";
-import { useVistasGuardadas } from "../vistas/useVistasGuardadas.ts";
 import { idDeVista } from "../vistas/dominio.ts";
-import { createPortal } from "react-dom";
+import { useSeccionPersonalizable } from "../vistas/modo_personalizar.ts";
+import { conColumnasDePlugins } from "../vistas/registro_plugins.ts";
+import { REGLA_VISTA_COMPARTIDA, SeccionCompartir } from "../vistas/SeccionCompartir.tsx";
+import { SeccionListado } from "../vistas/SeccionListado.tsx";
+import { SelectorColumnas } from "../vistas/SelectorColumnas.tsx";
+import { SelectorVista } from "../vistas/SelectorVista.tsx";
+import { TarjetaPlantilla } from "../vistas/TarjetaPlantilla.tsx";
+import { useVistaListado } from "../vistas/useVistaListado.ts";
+import { useVistasGuardadas } from "../vistas/useVistasGuardadas.ts";
+import { useEnMaestroPrincipal, useListadoMovilEnDetalle } from "./contexto_maestro.ts";
 import "./Listado.css";
-import { useListadoMovilEnDetalle } from "./contexto_maestro.ts";
-import { SelectorModo } from "./SelectorModo.tsx";
-import { useEsMovil } from "./useEsMovil.ts";
-import { ConfigWidgets } from "./widgets/diseño.ts";
-import { getConteo } from "./widgets/infraestructura.ts";
-import { QPanelWidgets } from "./widgets/QPanelWidgets.tsx";
-import { PersonalizarWidgets } from "./widgets/PersonalizarWidgets.tsx";
-import { useTotalesWidgets } from "./widgets/useTotalesWidgets.ts";
-import { useWidgetsUsuario } from "./widgets/useWidgetsUsuario.ts";
-import { useConfigWidgetsAuto } from "./widgets/useConfigWidgetsAuto.ts";
-import { useEnMaestroPrincipal } from "./contexto_maestro.ts";
 import {
   getMetaFiltroDefecto,
   MaestroFiltrosActivoControlado,
   MetaFiltro,
 } from "./maestroFiltros/MaestroFiltrosActivoControlado.tsx";
+import { SelectorModo } from "./SelectorModo.tsx";
+import { useEsMovil } from "./useEsMovil.ts";
 import { describirListado, ejecutarAccionListado } from "./voz_listado.ts";
+import { ConfigWidgets } from "./widgets/diseño.ts";
+import { getConteo } from "./widgets/infraestructura.ts";
+import { PersonalizarWidgets } from "./widgets/PersonalizarWidgets.tsx";
+import { QPanelWidgets } from "./widgets/QPanelWidgets.tsx";
+import { useConfigWidgetsAuto } from "./widgets/useConfigWidgetsAuto.ts";
+import { useTotalesWidgets } from "./widgets/useTotalesWidgets.ts";
+import { useWidgetsUsuario } from "./widgets/useWidgetsUsuario.ts";
 
 const datosCargando = <T extends Entidad>() =>
   new Array(10).fill(null).map(
@@ -133,6 +133,7 @@ export const Listado = <T extends Entidad>({
   widgets,
   pantalla,
 }: ListadoProps<T>) => {
+  const t = useTComponentes();
   // Las columnas que añaden los plugins activos forman parte del catálogo
   // (ocultas por defecto: el usuario las muestra si quiere).
   const metaTabla = useMemo(
@@ -643,7 +644,7 @@ export const Listado = <T extends Entidad>({
                 deshabilitado={descargando}
                 onClick={handleDescarga}
               >
-                {descargando ? "Exportando…" : "Exportar"}
+                {descargando ? t("listado.exportando") : t("listado.exportar")}
               </QBoton>
             </div>
           )}
@@ -677,8 +678,8 @@ export const Listado = <T extends Entidad>({
                   setDensidad(densidad === "comoda" ? "compacta" : "comoda")
                 }
                 aria-pressed={densidad === "compacta"}
-                aria-label="Vista compacta"
-                title="Vista compacta"
+                aria-label={t("listado.vistaCompacta")}
+                title={t("listado.vistaCompacta")}
               >
                 <QIcono nombre="densidad" tamaño="sm" />
               </button>

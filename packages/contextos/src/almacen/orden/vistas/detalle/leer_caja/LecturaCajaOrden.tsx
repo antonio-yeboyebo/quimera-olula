@@ -14,6 +14,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { registrarLecturaCajaOrden } from "../../../infraestructura.ts";
 import { getLecturaCajaOrdenVacia, getMetaLecturaCajaOrden } from "./lectura_caja_orden.ts";
 import "./LecturaCajaOrden.css";
+import { useTAlmacen } from "../../../../i18n/index.ts";
 
 export const LecturaCajaOrden = ({
     publicar,
@@ -26,6 +27,7 @@ export const LecturaCajaOrden = ({
     tipo: TipoOrden;
     modoVoz?: boolean;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const flujoVoz = useFlujoVoz();
 
@@ -74,13 +76,13 @@ export const LecturaCajaOrden = ({
             try {
                 // 1. Caja
                 const caja = await flujoVoz.preguntar({
-                    instruccion: "Dime la caja",
+                    instruccion: t("orden.dimeLaCaja"),
                     tipo: "texto",
                     resolver: async (texto) => {
                         const c = await buscarCajaPorTexto(texto);
                         return c ? { id: c.id, lpn: c.lpn } : null;
                     },
-                    confirmacion: (v) => `Caja ${v.lpn}, ¿correcto?`,
+                    confirmacion: (v) => t("orden.cajaLpnCorrecto", { lpn: v.lpn }),
                 });
                 if (cancelado) return;
 
@@ -88,9 +90,9 @@ export const LecturaCajaOrden = ({
 
                 // 2. ¿Caja completa?
                 const completa = await flujoVoz.preguntar({
-                    instruccion: "¿Caja completa?",
+                    instruccion: t("orden.cajaCompleta2"),
                     tipo: "si-no",
-                    confirmacion: (v) => v ? "Caja completa, ¿correcto?" : "Caja parcial, ¿correcto?",
+                    confirmacion: (v) => v ? t("orden.cajaCompletaCorrecto") : t("orden.cajaParcialCorrecto"),
                 });
                 if (cancelado) return;
                 parcial.cajaCompleta = completa as boolean;
@@ -98,25 +100,25 @@ export const LecturaCajaOrden = ({
                 // 3. Destino (solo traspaso)
                 if (esTraspaso) {
                     const ubi = await flujoVoz.preguntar({
-                        instruccion: "Dime la ubicación de destino",
+                        instruccion: t("orden.dimeLaUbicacionDeDestino"),
                         tipo: "texto",
                         resolver: async (texto) => {
                             const u = await buscarUbicacionPorTexto(texto);
                             return u ? { id: u.id, codigo: u.codigo } : null;
                         },
-                        confirmacion: (v) => `Ubicación ${v.codigo}, ¿correcto?`,
+                        confirmacion: (v) => t("orden.ubicacionCodigoCorrecto", { codigo: v.codigo }),
                     });
                     if (cancelado) return;
                     parcial.idUbicacionDestino = ubi.id;
 
                     const cajaDestino = await flujoVoz.preguntar({
-                        instruccion: "Dime la caja de destino",
+                        instruccion: t("orden.dimeLaCajaDeDestino"),
                         tipo: "texto",
                         resolver: async (texto) => {
                             const c = await buscarCajaPorTexto(texto);
                             return c ? { id: c.id, lpn: c.lpn } : null;
                         },
-                        confirmacion: (v) => `Caja ${v.lpn}, ¿correcto?`,
+                        confirmacion: (v) => t("orden.cajaLpnCorrecto", { lpn: v.lpn }),
                     });
                     if (cancelado) return;
                     parcial.idCajaDestino = cajaDestino.id;
@@ -139,7 +141,7 @@ export const LecturaCajaOrden = ({
     }, [modoVoz]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <QModal abierto={true} nombre="lecturaCajaOrden" titulo={modoVoz ? "Lectura de caja (voz)" : "Lectura de caja"} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_caja_cancelada"); }}>
+        <QModal abierto={true} nombre="lecturaCajaOrden" titulo={modoVoz ? t("orden.lecturaDeCajaVoz") : t("orden.lecturaDeCaja")} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_caja_cancelada"); }}>
             <div className="LecturaCajaOrden">
                 {modoVoz && (
                     <IndicadorVoz
@@ -151,20 +153,20 @@ export const LecturaCajaOrden = ({
                 <quimera-formulario>
                     <Caja
                         {...uiProps("cajaId")}
-                        label="Caja"
+                        label={t("orden.caja")}
                         nombre="cajaId"
                     />
-                    <QInput label="Caja completa" {...uiProps("cajaCompleta")} />
+                    <QInput label={t("orden.cajaCompleta")} {...uiProps("cajaCompleta")} />
                     {esTraspaso && (
                         <>
                             <Ubicacion
                                 {...uiProps("idUbicacionDestino")}
-                                label="Ubicación destino"
+                                label={t("orden.ubicacionDestino2")}
                                 nombre="idUbicacionDestino"
                             />
                             <Caja
                                 {...uiProps("idCajaDestino")}
-                                label="Caja destino"
+                                label={t("orden.cajaDestino2")}
                                 nombre="idCajaDestino"
                             />
                         </>
@@ -172,7 +174,7 @@ export const LecturaCajaOrden = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={registrar} deshabilitado={!valido}>
-                        Registrar
+                        {t("orden.registrar")}
                     </QBoton>
                 </div>
             </div>

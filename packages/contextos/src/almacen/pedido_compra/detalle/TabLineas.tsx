@@ -4,14 +4,15 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { LineaPedidoCompra } from "../diseño.ts";
 import "./TabLineas.css";
+import { tAlmacen } from "../../i18n/index.ts";
 
 const metaTablaLineas: MetaTabla<LineaPedidoCompra> = {
     cols: [
         { id: "sku", cabecera: "SKU", enlace: (l) => urlFicha.articulo(l.sku) },
-        { id: "descripcion", cabecera: "Descripción", tipo: "texto" },
-        { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
-        { id: "cantidadRecibida", cabecera: "Recibida", tipo: "numero" },
-        { id: "cerrada", cabecera: "Cerrada", tipo: "booleano" },
+        { id: "descripcion", get cabecera() { return tAlmacen("pedido_compra.descripcion"); }, tipo: "texto" },
+        { id: "cantidad", get cabecera() { return tAlmacen("pedido_compra.cantidad"); }, tipo: "numero" },
+        { id: "cantidadRecibida", get cabecera() { return tAlmacen("pedido_compra.recibida"); }, tipo: "numero" },
+        { id: "cerrada", get cabecera() { return tAlmacen("pedido_compra.cerrada"); }, tipo: "booleano" },
     ],
 };
 

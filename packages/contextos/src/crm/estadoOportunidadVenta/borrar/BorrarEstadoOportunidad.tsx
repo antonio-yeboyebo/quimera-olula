@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { EstadoOportunidad } from "../diseño.ts";
 import { deleteEstadoOportunidad } from "../infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const BorrarEstadoOportunidad = ({
   publicar,
@@ -12,6 +13,7 @@ export const BorrarEstadoOportunidad = ({
   estado_oportunidad: EstadoOportunidad;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const borrar_ = useCallback(async () => {
     await deleteEstadoOportunidad(estado_oportunidad.id);
 
@@ -29,8 +31,8 @@ export const BorrarEstadoOportunidad = ({
     <QModalConfirmacion
       nombre="confirmarBorrarEstadoOportunidad"
       abierto={true}
-      titulo="Confirmar borrado"
-      mensaje={`¿Está seguro de que desea borrar este Estado de Oportunidad de Venta?`}
+      titulo={t("estadoOportunidadVenta.confirmarBorrado")}
+      mensaje={t("estadoOportunidadVenta.estaSeguroDeQueDeseaBorrar")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

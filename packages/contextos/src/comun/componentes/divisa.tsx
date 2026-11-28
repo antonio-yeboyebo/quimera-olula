@@ -1,6 +1,7 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { obtenerDatosSelector } from "@olula/lib/infraestructura.ts";
 import { useEffect, useState } from "react";
+import { useTComun } from "../i18n/index.ts";
 
 interface DivisasProps {
   valor: string;
@@ -22,6 +23,7 @@ export const Divisa = ({
   ...props
 }: DivisasProps) => {
 
+  const t = useTComun();
   const [opcionesDivisa, setOpcionesDivisa] = useState<OpcionDivisa[]>([]);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export const Divisa = ({
 
   return (
     <QSelect
-      label="Divisa"
+      label={t("divisa")}
       nombre={nombre}
       valor={valor}
       onChange={onChange}

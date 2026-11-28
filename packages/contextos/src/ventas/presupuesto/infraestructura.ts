@@ -8,6 +8,7 @@ import { direccionVacia, payloadCambioCliente } from "../venta/dominio.ts";
 import { articuloDeLinea, NuevaLineaVentaApiReq, NuevaLineaVentaApiRes, peticionNuevaLineaApi, respuestaNuevaLineaApi } from "../venta/infraestructura.ts";
 import { CambiarArticuloLinea, CambiarCantidadLinea, CambioClientePresupuesto, DeleteLinea, EstadoAprobado, GetPresupuesto, GetPresupuestos, GetReportPresupuesto, LineaPresupuesto, PatchAprobarPresupuesto, PatchCambiarDivisa, PatchLinea, PostLinea, PostPresupuesto, Presupuesto, QueryNuevaLinea } from "./diseño.ts";
 import { getTraza } from "#/comun/componentes/traza/infraestructura.ts";
+import { tVentas } from "../i18n/index.ts";
 
 type PresupuestoAPI = {
     id: string;
@@ -75,7 +76,7 @@ export const getPresupuesto: GetPresupuesto = async (id) =>
     });
 
 export const getReportPresupuesto: GetReportPresupuesto = async (id) =>
-    RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del presupuesto");
+    RestAPI.blob(`${baseUrl}/${id}/report`, tVentas("presupuesto.errores.report"));
 
 export const getPresupuestos: GetPresupuestos = async (
     filtro: Filtro,
@@ -94,11 +95,11 @@ export const postPresupuesto: PostPresupuesto = async (presupuesto): Promise<str
         empresa_id: presupuesto.empresa_id || empresaActual()
     };
 
-    return await RestAPI.post(baseUrl, payload, "Error al crear presupuesto").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrl, payload, tVentas("presupuesto.errores.crear")).then((respuesta) => respuesta.id);
 }
 
 export const borrarPresupuesto = async (id: string): Promise<void> => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar presupuesto");
+    await RestAPI.delete(`${baseUrl}/${id}`, tVentas("presupuesto.errores.borrar"));
 }
 
 export const patchCambiarAgente = async (id: string, cambio: CambioAgente) => {
@@ -107,7 +108,7 @@ export const patchCambiarAgente = async (id: string, cambio: CambioAgente) => {
             agente_id: cambio.agente_id,
             por_comision: cambio.por_comision,
         }
-    }, "Error al cambiar agente del presupuesto");
+    }, tVentas("presupuesto.errores.cambiarAgente"));
 }
 
 export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
@@ -118,13 +119,13 @@ export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
                 tasa_conversion: cambio.tasa_conversion,
             }
         }
-    }, "Error al cambiar divisa del presupuesto");
+    }, tVentas("presupuesto.errores.cambiarDivisa"));
 }
 
 export const patchCambiarCliente = async (id: string, cambio: CambioClientePresupuesto): Promise<void> => {
     await RestAPI.patch(`${baseUrl}/${id}`, {
         cambios: { cliente: payloadCambioCliente(cambio) }
-    }, "Error al cambiar cliente del presupuesto");
+    }, tVentas("presupuesto.errores.cambiarCliente"));
 }
 
 export const getLineas = async (id: string, orden?: Orden): Promise<LineaPresupuesto[]> => {
@@ -140,7 +141,7 @@ export const postLinea: PostLinea = async (id, linea) => {
     const lineaApi = peticionNuevaLineaApi(linea);
     const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea`, {
         lineas: [lineaApi],
-    }, "Error al crear línea de presupuesto");
+    }, tVentas("presupuesto.errores.crearLinea"));
     const miRespuesta = respuesta as unknown as NuevaLineaVentaApiRes[];
     const lineaActualizada = respuestaNuevaLineaApi(linea, miRespuesta[0]);
     return { ...lineaActualizada, id: miRespuesta[0].id } as unknown as typeof linea;
@@ -150,7 +151,7 @@ export const queryNuevaLinea: QueryNuevaLinea = async (id, linea) => {
     const lineaApi = peticionNuevaLineaApi(linea);
     const respuesta = await RestAPI.query<NuevaLineaVentaApiReq, NuevaLineaVentaApiRes>(
         `${baseUrl}/${id}/nueva_linea`, lineaApi,
-        "Error al obtener la nueva línea de presupuesto")
+        tVentas("presupuesto.errores.obtenerLinea"))
     const lineaActualizada = respuestaNuevaLineaApi(linea, respuesta);
     return lineaActualizada;
 }
@@ -163,7 +164,7 @@ export const patchArticuloLinea: CambiarArticuloLinea = async (id, lineaId, refe
             },
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar artículo de la línea del presupuesto");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, tVentas("presupuesto.errores.cambiarArticuloLinea"));
 }
 
 export const patchLinea: PatchLinea = async (id, linea) => {
@@ -179,7 +180,7 @@ export const patchLinea: PatchLinea = async (id, linea) => {
             comision: linea.por_comision,
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea del presupuesto");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("presupuesto.errores.cambiarLinea"));
 }
 
 
@@ -189,13 +190,13 @@ export const patchCantidadLinea: CambiarCantidadLinea = async (id, linea, cantid
             cantidad: cantidad,
         },
     }
-    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar cantidad de la línea del presupuesto");
+    await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("presupuesto.errores.cambiarCantidadLinea"));
 }
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
     await RestAPI.patch(`${baseUrl}/${id}/linea/borrar`, {
         lineas: [lineaId]
-    }, "Error al borrar línea del presupuesto");
+    }, tVentas("presupuesto.errores.borrarLinea"));
 }
 
 export const patchPresupuesto = async (id: string, presupuesto: Presupuesto) => {
@@ -219,7 +220,7 @@ export const patchPresupuesto = async (id: string, presupuesto: Presupuesto) => 
         },
     };
 
-    await RestAPI.patch(`${baseUrl}/${id}`, payload, "Error al actualizar presupuesto");
+    await RestAPI.patch(`${baseUrl}/${id}`, payload, tVentas("presupuesto.errores.actualizar"));
 };
 
 
@@ -227,7 +228,7 @@ export const aprobarPresupuesto: PatchAprobarPresupuesto = async (id) => {
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/${id}/aprobar`,
         {},
-        "Error al aprobar presupuesto"
+        tVentas("presupuesto.errores.aprobar")
     )) as unknown as { pedido_id: string; codigo?: string };
 
     const pedidoId = String(respuesta.pedido_id ?? "");
@@ -239,7 +240,7 @@ export const patchCambiarDescuento = async (id: string, dto_porcentual: number):
         cambios: {
             por_descuento: dto_porcentual,
         }
-    }, "Error al cambiar descuento del presupuesto");
+    }, tVentas("presupuesto.errores.cambiarDescuento"));
 };
 
 export const getTrazaPresupuesto = (id: string): Promise<unknown> => getTraza(`${baseUrl}/${id}`);

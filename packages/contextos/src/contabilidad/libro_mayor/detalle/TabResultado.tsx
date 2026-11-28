@@ -11,14 +11,15 @@ import {
 } from "../diseño.ts";
 import { nombreFicheroLibroMayor } from "../dominio.ts";
 import { getReportLibroMayor } from "../infraestructura.ts";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 const COLUMNAS: MetaTabla<LineaLibroMayor> = [
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "asientoNumero", cabecera: "Asiento", tipo: "numero" },
-    { id: "concepto", cabecera: "Concepto" },
-    { id: "debe", cabecera: "Debe", tipo: "moneda" },
-    { id: "haber", cabecera: "Haber", tipo: "moneda" },
-    { id: "saldo", cabecera: "Saldo", tipo: "moneda" },
+    { id: "fecha", get cabecera() { return tContabilidad("libro_mayor.fecha"); }, tipo: "fecha" },
+    { id: "asientoNumero", get cabecera() { return tContabilidad("libro_mayor.asiento"); }, tipo: "numero" },
+    { id: "concepto", get cabecera() { return tContabilidad("libro_mayor.concepto"); } },
+    { id: "debe", get cabecera() { return tContabilidad("libro_mayor.debe"); }, tipo: "moneda" },
+    { id: "haber", get cabecera() { return tContabilidad("libro_mayor.haber"); }, tipo: "moneda" },
+    { id: "saldo", get cabecera() { return tContabilidad("libro_mayor.saldo"); }, tipo: "moneda" },
 ];
 
 const importe = (valor: number): string =>
@@ -36,6 +37,7 @@ export const TabResultado = ({
     resultado: ResultadoLibroMayor | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [calculando, setCalculando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -67,21 +69,21 @@ export const TabResultado = ({
         <div className="TabResultado">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={ocupado}>
-                    {calculando ? "Calculando…" : "Calcular"}
+                    {calculando ? t("libro_mayor.calculando") : t("libro_mayor.calcular")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={descargar}
                     deshabilitado={ocupado}
                 >
-                    Descargar PDF
+                    {t("libro_mayor.descargarPdf")}
                 </QBoton>
             </div>
 
-            {!resultado && <p>Pulsa «Calcular» para obtener el mayor.</p>}
+            {!resultado && <p>{t("libro_mayor.pulsaCalcularParaObtenerElMayor")}</p>}
 
             {resultado && resultado.subcuentas.length === 0 && (
-                <p>No hay movimientos en el rango de la ficha.</p>
+                <p>{t("libro_mayor.noHayMovimientosEnElRango")}</p>
             )}
 
             {resultado?.subcuentas.map((bloque) => (
@@ -94,9 +96,8 @@ export const TabResultado = ({
                         {bloque.cabecera.descripcionSubcuenta}
                     </h3>
                     <p className="saldos-subcuenta">
-                        Saldo inicial {importe(bloque.cabecera.saldoInicial)} ·
-                        debe {importe(bloque.totalDebe)} · haber{" "}
-                        {importe(bloque.totalHaber)} · saldo final{" "}
+                        {t("libro_mayor.saldoInicial")}{" "}{importe(bloque.cabecera.saldoInicial)}{" "}{t("libro_mayor.debe2")}{" "}{importe(bloque.totalDebe)}{" "}{t("libro_mayor.haber2")}{" "}
+                        {importe(bloque.totalHaber)}{" "}{t("libro_mayor.saldoFinal")}{" "}
                         {importe(bloque.cabecera.saldoFinal)}
                     </p>
                     <QTabla

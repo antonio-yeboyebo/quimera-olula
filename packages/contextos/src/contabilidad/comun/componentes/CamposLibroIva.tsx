@@ -4,6 +4,7 @@ import { QCheckbox } from "@olula/componentes/atomos/qcheckbox.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { useFocus } from "@olula/lib/useFocus.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 /**
  * Criterios de los libros de facturas emitidas y recibidas, iguales en el
@@ -25,32 +26,32 @@ export const CamposLibroIva = ({
     refDescripcion?: ReturnType<typeof useFocus>;
 }) => (
     <>
-        <QInput label="Descripción" {...uiProps("descripcion")} ref={refDescripcion} />
+        <QInput label={tContabilidad("comun.descripcion")} {...uiProps("descripcion")} ref={refDescripcion} />
         <FilaFormulario>
-            <QInput label="Ejercicio" {...uiProps("ejercicioId")} />
-            <FechaInforme label="Desde fecha" {...uiProps("fechaDesde")} />
-            <FechaInforme label="Hasta fecha" {...uiProps("fechaHasta")} />
+            <QInput label={tContabilidad("comun.ejercicio")} {...uiProps("ejercicioId")} />
+            <FechaInforme label={tContabilidad("comun.desdeFecha")} {...uiProps("fechaDesde")} />
+            <FechaInforme label={tContabilidad("comun.hastaFecha")} {...uiProps("fechaHasta")} />
         </FilaFormulario>
         <FilaFormulario>
-            {conSerie && <QInput label="Serie" {...uiProps("codigoSerie")} opcional />}
-            <QCheckbox label="Todos los tipos de I.V.A." {...uiProps("todos")} />
+            {conSerie && <QInput label={tContabilidad("comun.serie")} {...uiProps("codigoSerie")} opcional />}
+            <QCheckbox label={tContabilidad("comun.todosLosTiposDeIV")} {...uiProps("todos")} />
             <QInput
-                label="% de I.V.A."
+                label={tContabilidad("comun.deIVA")}
                 {...uiProps("porcentaje")}
                 soloLectura={!porcentajeEditable}
             />
         </FilaFormulario>
         <FilaFormulario>
-            <QCheckbox label="Solo con I.V.A." {...uiProps("conIva")} />
-            <QCheckbox label="Mostrar total factura" {...uiProps("mostrarTotalFactura")} />
-            <QCheckbox label="Mostrar NIF" {...uiProps("mostrarNif")} />
-            <QCheckbox label="Mostrar documento" {...uiProps("mostrarDocumento")} />
-            <QCheckbox label="Mostrar asiento" {...uiProps("mostrarAsiento")} />
+            <QCheckbox label={tContabilidad("comun.soloConIVA")} {...uiProps("conIva")} />
+            <QCheckbox label={tContabilidad("comun.mostrarTotalFactura")} {...uiProps("mostrarTotalFactura")} />
+            <QCheckbox label={tContabilidad("comun.mostrarNif")} {...uiProps("mostrarNif")} />
+            <QCheckbox label={tContabilidad("comun.mostrarDocumento")} {...uiProps("mostrarDocumento")} />
+            <QCheckbox label={tContabilidad("comun.mostrarAsiento")} {...uiProps("mostrarAsiento")} />
         </FilaFormulario>
         <FilaFormulario>
-            <QCheckbox label="Numeración automática" {...uiProps("numeracionAutomatica")} />
+            <QCheckbox label={tContabilidad("comun.numeracionAutomatica")} {...uiProps("numeracionAutomatica")} />
             <QInput
-                label="Numerar desde"
+                label={tContabilidad("comun.numerarDesde")}
                 {...uiProps("numeroDesde")}
                 soloLectura={!numeroDesdeEditable}
                 opcional

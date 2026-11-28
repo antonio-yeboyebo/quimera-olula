@@ -7,6 +7,7 @@ import {
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
+import { tAlmacen } from "../../i18n/index.ts";
 
 interface ArticuloProps {
   /** Plantilla de la URL de su ficha (↗); "" para no enlazar. */
@@ -28,7 +29,7 @@ export const Articulo = ({
   descripcion = "",
   valor,
   nombre = "referencia",
-  label = "Artículo",
+  label = tAlmacen("comun.articulo"),
   onChange,
   ...props
 }: ArticuloProps) => {

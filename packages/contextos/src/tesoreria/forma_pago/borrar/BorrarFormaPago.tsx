@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { FormaPago } from "../diseño.ts";
 import { etiquetaFormaPago } from "../dominio.ts";
 import { deleteFormaPago } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const BorrarFormaPago = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarFormaPago = ({
     formaPago: FormaPago;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const borrar_ = useCallback(async () => {
         await deleteFormaPago(formaPago.id);
         publicar("forma_pago_borrada", formaPago);
@@ -26,8 +28,8 @@ export const BorrarFormaPago = ({
         <QModalConfirmacion
             nombre="borrarFormaPago"
             abierto={true}
-            titulo="Borrar forma de pago"
-            mensaje={`¿Confirma borrar ${etiquetaFormaPago(formaPago)} y sus plazos? No se puede borrar si la usan clientes, proveedores o documentos.`}
+            titulo={t("forma_pago.borrarFormaDePago")}
+            mensaje={t("forma_pago.confirmaBorrarFormapagoYSusPlazos", { formaPago: etiquetaFormaPago(formaPago) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

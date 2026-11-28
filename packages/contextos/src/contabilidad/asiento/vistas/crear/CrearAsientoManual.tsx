@@ -14,6 +14,7 @@ import {
 import { postAsientoManual } from "../../infraestructura.ts";
 import { EditorPartidasManual } from "../comun/EditorPartidasManual.tsx";
 import "../comun/camposAsiento.css";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 export const CrearAsientoManual = ({
     publicar,
@@ -22,6 +23,7 @@ export const CrearAsientoManual = ({
     publicar: EmitirEvento;
     ejercicioId: string;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoAsientoManualVacio(ejercicioId),
         [ejercicioId]
@@ -45,19 +47,19 @@ export const CrearAsientoManual = ({
         <QModal
             abierto={true}
             nombre="crearAsientoManual"
-            titulo="Nuevo asiento manual"
+            titulo={t("asiento.nuevoAsientoManual")}
             onCerrar={cancelar}
         >
             <div className="CamposAsientoManual">
                 <quimera-formulario>
                     <QInput
-                        label="Ejercicio"
+                        label={t("asiento.ejercicio")}
                         nombre="ejercicioId"
                         valor={modelo.ejercicioId}
                         soloLectura
                     />
                     <QInput
-                        label="Fecha"
+                        label={t("asiento.fecha")}
                         nombre="fecha"
                         tipo="fecha"
                         valor={modelo.fecha.toISOString().slice(0, 10)}
@@ -76,14 +78,14 @@ export const CrearAsientoManual = ({
                         }
                     />
                     <QInput
-                        label="Documento"
+                        label={t("asiento.documento")}
                         nombre="documento"
                         valor={modelo.documento}
                         onChange={(v) => set({ ...modelo, documento: v })}
                         opcional
                     />
                     <QInput
-                        label="Concepto"
+                        label={t("asiento.concepto")}
                         nombre="concepto"
                         valor={modelo.concepto}
                         onChange={(v) => set({ ...modelo, concepto: v })}
@@ -97,7 +99,7 @@ export const CrearAsientoManual = ({
             />
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido || aceptando}>
-                    Crear asiento
+                    {t("asiento.crearAsiento")}
                 </QBoton>
             </div>
         </QModal>

@@ -6,6 +6,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { useForm } from "@olula/lib/useForm.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { useCallback } from "react";
 import { LineaAlbaranar, LoteAlbaranar } from "../../diseño.ts";
 
@@ -27,6 +28,7 @@ export const CrearLoteAlbaranar = ({
     linea: LineaAlbaranar;
     emitir: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { modelo, uiProps, valido } = useModelo(metaNuevoLote, nuevoLoteVacio);
 
     const crear_ = useCallback(async () => {
@@ -44,16 +46,16 @@ export const CrearLoteAlbaranar = ({
         <QModal
             nombre="crearLote"
             abierto={true}
-            titulo={`Añadir lote — ${linea.sku} ${linea.descripcion}`}
+            titulo={t("albaranarPedido.anadirLote", { articulo: `${linea.sku} ${linea.descripcion}` })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Lote label="Lote" {...uiProps("idLote")} sku={linea.sku} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
+                <Lote label={t("albaranarPedido.lote")} {...uiProps("idLote")} sku={linea.sku} />
+                <QInput label={t("comun.lineas.cantidad")} {...uiProps("cantidad")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={crear} deshabilitado={!valido}>
-                    Añadir
+                    {t("albaranarPedido.anadir")}
                 </QBoton>
             </div>
         </QModal>

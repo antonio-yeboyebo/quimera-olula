@@ -5,6 +5,7 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
 import { FacturaCreada } from "../diseño.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 type UrlPorId = (id: string) => string;
 
@@ -15,6 +16,7 @@ export const FacturaGenerada = ({
     publicar: EmitirEvento;
     factura: FacturaCreada;
 }) => {
+    const t = useTVentas();
     const navigate = useNavigate();
     const { app } = useContext(FactoryCtx);
     const urlFactura =
@@ -27,18 +29,18 @@ export const FacturaGenerada = ({
         <QModal
             nombre="facturaGenerada"
             abierto={true}
-            titulo="Factura generada"
+            titulo={t("albaran.facturar.facturaGenerada")}
             onCerrar={cerrar}
         >
             <div className="mensaje" style={{ whiteSpace: "pre-line" }}>
-                La factura se ha generado correctamente.
+                {t("albaran.facturar.facturaGeneradaOk")}
             </div>
             <div className="botones">
                 <QBoton variante="texto" onClick={cerrar}>
-                    Seguir en el albarán
+                    {t("albaran.facturar.seguirEnAlbaran")}
                 </QBoton>
                 <QBoton onClick={() => navigate(urlFactura(factura.id))}>
-                    Ir a la factura {factura.codigo}
+                    {t("albaran.facturar.irALaFactura", { codigo: factura.codigo })}
                 </QBoton>
             </div>
         </QModal>

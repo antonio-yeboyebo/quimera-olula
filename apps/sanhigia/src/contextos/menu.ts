@@ -1,4 +1,5 @@
 import { MenuUsuarioElementos } from "@olula/componentes/menu/menu-usuario.tsx";
+import { elementoMiCuenta } from "@olula/componentes/menu/mi_cuenta.ts";
 
 /**
  * Elementos del menú de usuario personalizados para Sanhigia
@@ -17,6 +18,8 @@ export const MenuUsuarioElementosSanhigia: MenuUsuarioElementos = [
             },
         ],
     },
+    // Al mismo nivel que las demás secciones.
+    { ...elementoMiCuenta, icono: "usuario" },
     {
         nombre: "Administración",
         subelementos: [

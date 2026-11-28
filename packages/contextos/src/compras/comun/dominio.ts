@@ -1,5 +1,6 @@
 import { ConfigWidgets } from "@olula/componentes/index.js";
 import { formatearFechaDate } from "@olula/lib/dominio.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { ArticuloDeLinea, ArticuloDeLineaConTipo, TipoArticuloLinea } from "./diseño.ts";
 
 export const getTipoArticulo = (linea: ArticuloDeLinea): TipoArticuloLinea =>
@@ -45,35 +46,36 @@ export const datosClaveDocumentoCompra = (
     const grupo = documento.grupoIvaNegocioId ?? "";
 
     return [
-        { etiqueta: "Fecha", valor: documento.fecha ? formatearFechaDate(new Date(documento.fecha)) : "—" },
-        { etiqueta: "Proveedor", valor: documento.nombreProveedor?.trim() || "—" },
-        { etiqueta: "CIF/NIF", valor: documento.idFiscal?.trim() || "—" },
-        { etiqueta: "Grupo IVA negocio", valor: (grupo && descripcionGrupoIvaNegocio(grupo)) || grupo || "—" },
+        { etiqueta: tCompras("comun.datosClave.fecha"), valor: documento.fecha ? formatearFechaDate(new Date(documento.fecha)) : "—" },
+        { etiqueta: tCompras("comun.datosClave.proveedor"), valor: documento.nombreProveedor?.trim() || "—" },
+        { etiqueta: tCompras("comun.datosClave.cifNif"), valor: documento.idFiscal?.trim() || "—" },
+        { etiqueta: tCompras("comun.datosClave.grupoIvaNegocio"), valor: (grupo && descripcionGrupoIvaNegocio(grupo)) || grupo || "—" },
     ];
 };
 
 /** Medidas de un documento de compra que se ofrecen al personalizar widgets. */
-const camposWidgetsCompra: ConfigWidgets["campos"] = [
-    { id: "total", etiqueta: "Total", formato: "moneda" },
-    { id: "neto", etiqueta: "Base imponible", formato: "moneda" },
-    { id: "total_iva", etiqueta: "IVA", formato: "moneda" },
-    { id: "total_irpf", etiqueta: "IRPF", formato: "moneda" },
-    { id: "total_recargo", etiqueta: "Recargo de equivalencia", formato: "moneda" },
+const camposWidgetsCompra = (t = tCompras): ConfigWidgets["campos"] => [
+    { id: "total", etiqueta: t("comun.widgets.total"), formato: "moneda" },
+    { id: "neto", etiqueta: t("comun.widgets.baseImponible"), formato: "moneda" },
+    { id: "total_iva", etiqueta: t("comun.widgets.iva"), formato: "moneda" },
+    { id: "total_irpf", etiqueta: t("comun.widgets.irpf"), formato: "moneda" },
+    { id: "total_recargo", etiqueta: t("comun.widgets.recargo"), formato: "moneda" },
 ];
 
 /** Widgets por defecto de un maestro de documentos de compra. */
 export const widgetsDocumentoCompra = (
     recurso: string,
-    textos: { plural: string; total: string; medio: string }
+    textos: { plural: string; total: string; medio: string },
+    t = tCompras
 ): ConfigWidgets => ({
     recurso,
     titulo: textos.plural,
-    campos: camposWidgetsCompra,
+    campos: camposWidgetsCompra(t),
     widgets: [
-        { id: "documentos", titulo: textos.plural, operacion: "conteo", formato: "numero", pie: "Recuento" },
-        { id: "total", titulo: textos.total, operacion: "suma", campo: "total", formato: "moneda", pie: "Suma del total" },
-        { id: "neto", titulo: "Base imponible", operacion: "suma", campo: "neto", formato: "moneda", pie: "Suma de la base" },
-        { id: "medio", titulo: textos.medio, operacion: "promedio", campo: "total", formato: "moneda", pie: "Media del total" },
+        { id: "documentos", titulo: textos.plural, operacion: "conteo", formato: "numero", pie: t("comun.widgets.recuento") },
+        { id: "total", titulo: textos.total, operacion: "suma", campo: "total", formato: "moneda", pie: t("comun.widgets.sumaTotal") },
+        { id: "neto", titulo: t("comun.widgets.baseImponible"), operacion: "suma", campo: "neto", formato: "moneda", pie: t("comun.widgets.sumaBase") },
+        { id: "medio", titulo: textos.medio, operacion: "promedio", campo: "total", formato: "moneda", pie: t("comun.widgets.mediaTotal") },
     ],
 });
 

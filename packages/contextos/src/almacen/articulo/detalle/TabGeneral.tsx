@@ -10,6 +10,7 @@ import { Articulo } from "../diseño.ts";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { ProveedoresArticulo } from "./proveedores/ProveedoresArticulo.tsx";
 import "./TabGeneral.css";
+import { tAlmacen } from "../../i18n/index.ts";
 
 export const TabGeneral = ({
   form,
@@ -29,18 +30,18 @@ export const TabGeneral = ({
       {/* <div className="uso">{UsoArticulo(articulo)}</div> */}
       <quimera-formulario>
         <QInput
-          label="Referencia"
+          label={tAlmacen("articulo.referencia")}
           nombre="id"
           valor={articulo.id}
           soloLectura
         />
-        <QInput label="Descripción" {...uiProps("descripcion")} />
+        <QInput label={tAlmacen("articulo.descripcion")} {...uiProps("descripcion")} />
         <Familia {...uiProps("familiaId")} />
         {pesosMedidasActivo && <PesoMedida {...uiProps("unidadId")} />}
-        <QInput label="Código de barras" {...uiProps("codbarras")} />
+        <QInput label={tAlmacen("articulo.codigoDeBarras")} {...uiProps("codbarras")} />
         <TipoCodBarras {...uiProps("tipoCodBarras")} />
-        <QCheckbox label="No controla stock" {...uiProps("noStock")} />
-        <QTextArea label="Observaciones" {...uiProps("observaciones")} />
+        <QCheckbox label={tAlmacen("articulo.noControlaStock")} {...uiProps("noStock")} />
+        <QTextArea label={tAlmacen("articulo.observaciones")} {...uiProps("observaciones")} />
         {
         sgaActivo && (
         <ProveedoresArticulo

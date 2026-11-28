@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { EnlacePago, GenerarEnlacePago } from "../diseño.ts";
 import { emailValido } from "../dominio.ts";
 import "./EnlacePagoTarjeta.css";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Enlace permanente para que el cliente pague con tarjeta (Stripe). Al abrirse
@@ -26,6 +27,7 @@ export const EnlacePagoTarjeta = ({
     generar: GenerarEnlacePago;
     onCerrar: () => void;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const [enlace, setEnlace] = useState<EnlacePago | null>(null);
     const [copiado, setCopiado] = useState(false);
@@ -61,24 +63,21 @@ export const EnlacePagoTarjeta = ({
         <QModal abierto={true} nombre="enlace_pago_tarjeta" titulo={titulo} onCerrar={onCerrar}>
             <div className="EnlacePagoTarjeta">
                 {!enlace ? (
-                    <p>Generando el enlace de pago…</p>
+                    <p>{t("cobro_online.generandoElEnlaceDePago")}</p>
                 ) : (
                     <>
                         <p>
-                            Con este enlace el cliente paga {descripcion} con tarjeta
-                            ({formatearMoneda(enlace.importe, enlace.divisaId)}). No caduca:
-                            al abrirlo cobra lo que quede pendiente en ese momento, y el
-                            pago se apunta solo.
+                            {t("cobro_online.conEsteEnlaceElClientePaga", { descripcion, valor: formatearMoneda(enlace.importe, enlace.divisaId) })}
                         </p>
                         {enlace.modo === "test" && (
                             <QAviso variante="info">
-                                Modo test: el enlace no hace cobros reales.
+                                {t("cobro_online.modoTestElEnlaceNoHace")}
                             </QAviso>
                         )}
                         <quimera-formulario>
-                            <QInput label="Enlace de pago" nombre="url" valor={enlace.url} soloLectura />
+                            <QInput label={t("cobro_online.enlaceDePago")} nombre="url" valor={enlace.url} soloLectura />
                             <QInput
-                                label="Email del cliente"
+                                label={t("cobro_online.emailDelCliente")}
                                 nombre="email"
                                 tipo="email"
                                 valor={email}
@@ -86,21 +85,21 @@ export const EnlacePagoTarjeta = ({
                             />
                         </quimera-formulario>
                         {enlace.enviadoA && (
-                            <p className="enviado">Enlace enviado a {enlace.enviadoA}.</p>
+                            <p className="enviado">{t("cobro_online.enlaceEnviadoAEnviadoa", { enviadoA: enlace.enviadoA })}</p>
                         )}
                         <div className="botones maestro-botones">
                             <QBoton onClick={copiar}>
-                                {copiado ? "Enlace copiado" : "Copiar enlace"}
+                                {copiado ? t("cobro_online.enlaceCopiado") : t("cobro_online.copiarEnlace")}
                             </QBoton>
                             <QBoton
                                 onClick={enviar}
                                 deshabilitado={!emailValido(email) || enviando}
                                 variante="borde"
                             >
-                                {enviando ? "Enviando…" : "Enviar por email"}
+                                {enviando ? t("cobro_online.enviando") : t("cobro_online.enviarPorEmail")}
                             </QBoton>
                             <QBoton onClick={onCerrar} variante="borde">
-                                Cerrar
+                                {t("cobro_online.cerrar")}
                             </QBoton>
                         </div>
                     </>

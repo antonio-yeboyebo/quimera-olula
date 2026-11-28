@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { LibroMayor } from "../diseño.ts";
 import { etiquetaLibroMayor } from "../dominio.ts";
 import { deleteLibroMayor } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarLibroMayor = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarLibroMayor = ({
     informe: LibroMayor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteLibroMayor(informe.id);
         publicar("informe_borrado", informe);
@@ -29,8 +31,8 @@ export const BorrarLibroMayor = ({
         <QModalConfirmacion
             nombre="borrarLibroMayor"
             abierto={true}
-            titulo="Borrar informe"
-            mensaje={`¿Confirma borrar ${etiquetaLibroMayor(informe)}? Solo se borra la configuración del informe, no hay datos contables implicados.`}
+            titulo={t("libro_mayor.borrarInforme")}
+            mensaje={t("libro_mayor.confirmaBorrarInformeSoloSeBorra", { informe: etiquetaLibroMayor(informe) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

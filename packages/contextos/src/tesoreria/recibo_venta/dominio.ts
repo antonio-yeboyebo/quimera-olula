@@ -1,5 +1,6 @@
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { MovimientoRecibo, ReciboVenta } from "./diseño.ts";
+import { textoEstado } from "../comun/estados.ts";
 
 /**
  * Estados en los que el recibo admite cobro. El servidor manda el estado como
@@ -70,7 +71,7 @@ export const ESTADOS_RECIBO_VENTA_DEFECTO = ESTADOS_RECIBO_VENTA.filter(
 
 export const opcionesEstadoReciboVenta = ESTADOS_RECIBO_VENTA.map((estado) => ({
     valor: estado,
-    descripcion: estado,
+    get descripcion() { return textoEstado(estado); },
 }));
 
 const comoLista = (valor: unknown): string[] =>

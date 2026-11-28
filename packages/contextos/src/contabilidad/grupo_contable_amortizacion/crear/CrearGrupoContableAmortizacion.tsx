@@ -13,8 +13,10 @@ import {
     nuevoGrupoContableAmortizacionVacio,
 } from "../dominio.ts";
 import { postGrupoContableAmortizacion } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearGrupoContableAmortizacion = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevoGrupoContableAmortizacionVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoGrupoContableAmortizacion, inicial);
@@ -34,17 +36,17 @@ export const CrearGrupoContableAmortizacion = ({ publicar }: { publicar: EmitirE
         <QModal
             abierto={true}
             nombre="crearGrupoContableAmortizacion"
-            titulo="Nuevo grupo contable de amortización"
+            titulo={t("grupo_contable_amortizacion.nuevoGrupoContableDeAmortizacion")}
             onCerrar={cancelar}
         >
             <div className="CrearGrupoContableAmortizacion">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("grupo_contable_amortizacion.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposGrupo uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("grupo_contable_amortizacion.crear")}
                     </QBoton>
                 </div>
             </div>

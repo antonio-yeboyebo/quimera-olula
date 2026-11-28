@@ -5,6 +5,7 @@ import { CuadreBancario, CuadreCuenta } from "../diseño.js";
 import { urlConciliacionCuentaBancaria } from "../dominio.js";
 import { getCuadreBancario } from "../infraestructura.js";
 import { PartidasSinConciliar } from "./PartidasSinConciliar.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Panel de cuadre bancario-contable: muestra el saldo banco vs. saldo contable
@@ -80,6 +81,7 @@ const Alerta = ({
 };
 
 const FilaCuadreCuenta = ({ cuenta }: { cuenta: CuadreCuenta }) => {
+    const t = useTTesoreria();
     const { diferencia, cuentaBancoId } = cuenta;
     const hayAlertas = cuenta.totalAlertas > 0;
     const hayDiferencia = diferencia !== null && diferencia !== 0;
@@ -97,27 +99,27 @@ const FilaCuadreCuenta = ({ cuenta }: { cuenta: CuadreCuenta }) => {
                     {cuenta.institucion ? `${cuenta.institucion} — ` : ""}{cuenta.nombreCuenta}
                 </span>
                 <span className="CuadreCuenta-sincronizacion">
-                    Última sincronización:{" "}
+                    {t("conciliacion.ultimaSincronizacion")}{" "}
                     <strong>
                         {cuenta.ultimaSincronizacion
                             ? formatearFechaHora(cuenta.ultimaSincronizacion)
-                            : "nunca"}
+                            : t("conciliacion.cuadreNunca")}
                     </strong>
                 </span>
                 <span className="CuadreCuenta-saldos">
                     {cuenta.saldoBanco !== null && (
                         <span>
-                            Banco: <strong>{formatearMoneda(cuenta.saldoBanco, "EUR")}</strong>
+                            {t("conciliacion.banco")}{" "}<strong>{formatearMoneda(cuenta.saldoBanco, "EUR")}</strong>
                         </span>
                     )}
                     {cuenta.saldoContable !== null && (
                         <span>
-                            Contable: <strong>{formatearMoneda(cuenta.saldoContable, "EUR")}</strong>
+                            {t("conciliacion.contable")}{" "}<strong>{formatearMoneda(cuenta.saldoContable, "EUR")}</strong>
                         </span>
                     )}
                     {diferencia !== null && (
                         <span className={Math.abs(diferencia) > 0.01 ? "CuadreCuenta-diferencia--error" : ""}>
-                            Diferencia: <strong>{formatearMoneda(diferencia, "EUR")}</strong>
+                            {t("conciliacion.diferencia")}{" "}<strong>{formatearMoneda(diferencia, "EUR")}</strong>
                         </span>
                     )}
                 </span>
@@ -128,48 +130,48 @@ const FilaCuadreCuenta = ({ cuenta }: { cuenta: CuadreCuenta }) => {
                     {cuenta.bancarioSinConciliar > 0 && (
                         <Alerta
                             variante="pendiente"
-                            href={url?.({ estado: "in__pendiente,candidatos" }, "sin conciliar")}
+                            href={url?.({ estado: "in__pendiente,candidatos" }, t("conciliacion.cuadreFiltroSinConciliar"))}
                         >
-                            {cuenta.bancarioSinConciliar} sin conciliar
+                            {t("conciliacion.cuadreSinConciliar", { count: cuenta.bancarioSinConciliar })}
                             {" "}({formatearMoneda(cuenta.importeSinConciliar, "EUR")})
                         </Alerta>
                     )}
                     {cuenta.bancarioIgnorado > 0 && (
                         <Alerta
                             variante="ignorado"
-                            href={url?.({ estado: "in__ignorado" }, "ignorados")}
+                            href={url?.({ estado: "in__ignorado" }, t("conciliacion.cuadreFiltroIgnorados"))}
                         >
-                            {cuenta.bancarioIgnorado} ignorado{cuenta.bancarioIgnorado > 1 ? "s" : ""}
+                            {t("conciliacion.cuadreIgnorados", { count: cuenta.bancarioIgnorado })}
                             {" "}({formatearMoneda(cuenta.importeIgnorado, "EUR")})
                         </Alerta>
                     )}
                     {cuenta.requiereRevision > 0 && (
                         <Alerta
                             variante="revision"
-                            href={url?.({ requiere_revision: "=__true" }, "requieren revisión")}
+                            href={url?.({ requiere_revision: "=__true" }, t("conciliacion.cuadreFiltroRevision"))}
                         >
-                            {cuenta.requiereRevision} requiere{cuenta.requiereRevision > 1 ? "n" : ""} revisión
+                            {t("conciliacion.cuadreRevision", { count: cuenta.requiereRevision })}
                         </Alerta>
                     )}
                     {cuenta.bancoEliminoConciliado > 0 && (
                         <Alerta
                             variante="eliminado"
-                            href={url?.({ eliminado_en_banco: "=__true", estado: "in__conciliado" }, "eliminados por el banco")}
+                            href={url?.({ eliminado_en_banco: "=__true", estado: "in__conciliado" }, t("conciliacion.cuadreFiltroEliminados"))}
                         >
-                            {cuenta.bancoEliminoConciliado} eliminado{cuenta.bancoEliminoConciliado > 1 ? "s" : ""} por el banco
+                            {t("conciliacion.cuadreEliminados", { count: cuenta.bancoEliminoConciliado })}
                         </Alerta>
                     )}
                     {cuenta.asientoDescuadrado > 0 && (
                         <Alerta
                             variante="error"
-                            href={url?.({ asiento_descuadrado: "=__true" }, "asientos descuadrados")}
+                            href={url?.({ asiento_descuadrado: "=__true" }, t("conciliacion.cuadreFiltroDescuadrados"))}
                         >
-                            {cuenta.asientoDescuadrado} asiento{cuenta.asientoDescuadrado > 1 ? "s" : ""} descuadrado{cuenta.asientoDescuadrado > 1 ? "s" : ""}
+                            {t("conciliacion.cuadreDescuadrados", { count: cuenta.asientoDescuadrado })}
                         </Alerta>
                     )}
                     {cuenta.partidaHuerfana > 0 && (
                         <Alerta variante="error" onClick={() => setVerPartidas(true)}>
-                            {cuenta.partidaHuerfana} partida{cuenta.partidaHuerfana > 1 ? "s" : ""} contable{cuenta.partidaHuerfana > 1 ? "s" : ""} sin conciliar
+                            {t("conciliacion.cuadrePartidas", { count: cuenta.partidaHuerfana })}
                         </Alerta>
                     )}
                 </div>

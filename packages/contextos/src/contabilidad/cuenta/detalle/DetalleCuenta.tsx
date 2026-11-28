@@ -12,6 +12,7 @@ import { etiquetaCuenta } from "../dominio.ts";
 import { contextoDetalleCuentaInicial, guardarCuenta, metaCuenta } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetalleCuenta = ({
     id,
@@ -21,6 +22,7 @@ export const DetalleCuenta = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCuentaInicial,
@@ -48,7 +50,7 @@ export const DetalleCuenta = ({
 
     const accionesCuenta = [
         {
-            texto: "Borrar",
+            texto: t("cuenta.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.cuenta"),
             advertencia: true,
@@ -68,7 +70,7 @@ export const DetalleCuenta = ({
                     <QuimeraAcciones acciones={accionesCuenta} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("cuenta.general")}
                         key="tab-general"
                         children={
                             <TabGeneral form={formModelo} cuenta={cuenta} />

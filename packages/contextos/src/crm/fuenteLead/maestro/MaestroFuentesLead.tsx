@@ -11,8 +11,10 @@ import { FuenteLead } from "../diseño.ts";
 import { metaTablaFuenteLead } from "./maestro.ts";
 import "./MaestroFuentesLead.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroFuentesLead = () => {
+  const t = useTCrm();
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "INICIAL",
     fuentes_lead: listaActivaEntidadesInicial<FuenteLead>(),
@@ -28,7 +30,7 @@ export const MaestroFuentesLead = () => {
       <MaestroDetalle<FuenteLead>
         Maestro={
           <>
-            <h2>Fuentes de Lead</h2>
+            <h2>{t("fuenteLead.fuentesDeLead")}</h2>
 
             <Listado<FuenteLead>
               metaTabla={metaTablaFuenteLead}
@@ -49,7 +51,7 @@ export const MaestroFuentesLead = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_fuente_lead_solicitada")}
                   >
-                    Nuevo
+                    {t("fuenteLead.nuevo")}
                   </QBoton>
                 </div>
               )}

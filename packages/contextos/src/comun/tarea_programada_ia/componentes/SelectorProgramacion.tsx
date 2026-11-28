@@ -5,6 +5,7 @@ import {
     conHoraDiaDesdeTexto, horaDiaComoTexto, programacionDesdeExpresionCron,
 } from "../dominio.js";
 import "./SelectorProgramacion.css";
+import { tComun } from "../../i18n/index.ts";
 
 interface SelectorProgramacionProps {
     valor: string;
@@ -24,7 +25,7 @@ export const SelectorProgramacion = ({ valor, onChange }: SelectorProgramacionPr
     return (
         <div className="SelectorProgramacion">
             <QSelect
-                label="Frecuencia"
+                label={tComun("tareaProgramadaIa.frecuencia")}
                 nombre="frecuencia"
                 valor={programacion.frecuencia}
                 opciones={OPCIONES_FRECUENCIA}
@@ -36,7 +37,7 @@ export const SelectorProgramacion = ({ valor, onChange }: SelectorProgramacionPr
 
             {(programacion.frecuencia === 'cada_dia' || programacion.frecuencia === 'cada_semana') && (
                 <QDate
-                    label="Hora"
+                    label={tComun("tareaProgramadaIa.hora")}
                     nombre="hora"
                     tipo="hora"
                     valor={horaDiaComoTexto(programacion)}
@@ -48,7 +49,7 @@ export const SelectorProgramacion = ({ valor, onChange }: SelectorProgramacionPr
 
             {programacion.frecuencia === 'cada_semana' && (
                 <QSelect
-                    label="Día de la semana"
+                    label={tComun("tareaProgramadaIa.diaDeLaSemana")}
                     nombre="dia_semana"
                     valor={String(programacion.diaSemana)}
                     opciones={OPCIONES_DIA_SEMANA}

@@ -6,6 +6,7 @@ import { ConfigTesoreria as Config, ModoPagoRemesa, TipoRemesa } from "../diseñ
 import { conRemesasPago, explicacionModoPagoRemesa, opcionesModoPagoRemesa } from "../dominio.ts";
 import { getConfigTesoreria, patchConfigTesoreria } from "../infraestructura.ts";
 import "./ConfigTesoreria.css";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 const CAMPO: Record<TipoRemesa, keyof Config> = { cobro: "modoCobro", pago: "modoPago" };
 
@@ -15,6 +16,7 @@ const CAMPO: Record<TipoRemesa, keyof Config> = { cobro: "modoCobro", pago: "mod
  * a mano y no al cambiar, porque el modo decide los asientos de las remesas nuevas.
  */
 export const ConfigTesoreria = () => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const [guardada, setGuardada] = useState<Config | null>(null);
     const [config, setConfig] = useState<Config | null>(null);
@@ -49,7 +51,7 @@ export const ConfigTesoreria = () => {
             <section className="modo-remesa">
                 <h3>{titulo}</h3>
                 <QRadio
-                    label="Modo de pago"
+                    label={t("config.modoDePago")}
                     nombre={`modo-${tipo}`}
                     opciones={opcionesModoPagoRemesa}
                     valor={modo}
@@ -63,16 +65,15 @@ export const ConfigTesoreria = () => {
 
     return (
         <div className="ConfigTesoreria">
-            <h2>Configuración de tesorería</h2>
+            <h2>{t("config.configuracionDeTesoreria")}</h2>
             <p className="aviso-modo">
-                El modo se aplica a las remesas que se creen a partir de ahora; las existentes
-                mantienen sus asientos.
+                {t("config.elModoSeAplicaALas")}
             </p>
-            {modoRemesa("cobro", "Remesas de cobro")}
-            {conRemesasPago() && modoRemesa("pago", "Remesas de pago")}
+            {modoRemesa("cobro", t("config.remesasDeCobro"))}
+            {conRemesasPago() && modoRemesa("pago", t("config.remesasDePago"))}
             <div className="botones">
                 <QBoton deshabilitado={!cambiada || guardando} onClick={guardar}>
-                    {guardando ? "Guardando…" : "Guardar"}
+                    {guardando ? t("config.guardando") : t("config.guardar")}
                 </QBoton>
             </div>
         </div>

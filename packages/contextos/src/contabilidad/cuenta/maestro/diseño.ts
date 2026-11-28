@@ -5,6 +5,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { ejercicioActual } from "#/contabilidad/asiento/dominio.ts";
 import { Cuenta } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroCuenta = 'INICIAL' | 'CREANDO';
 
@@ -14,10 +15,10 @@ export type ContextoMaestroCuenta = {
 };
 
 export const metaTablaCuenta: MetaTabla<Cuenta> = [
-    { id: 'codigo', cabecera: 'Código' },
-    { id: 'nombre', cabecera: 'Descripción' },
-    { id: 'codigoEpigrafe', cabecera: 'Epígrafe' },
-    { id: 'ejercicioId', cabecera: 'Ejercicio' },
+    { id: 'codigo', get cabecera() { return tContabilidad("cuenta.codigo"); } },
+    { id: 'nombre', get cabecera() { return tContabilidad("cuenta.descripcion"); } },
+    { id: 'codigoEpigrafe', get cabecera() { return tContabilidad("cuenta.epigrafe"); } },
+    { id: 'ejercicioId', get cabecera() { return tContabilidad("cuenta.ejercicio"); } },
 ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -26,7 +27,7 @@ export const metaFiltroCuenta: MetaFiltro = {
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("cuenta.ejercicio"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["ejercicio_id", "eq", valor as string];
@@ -35,7 +36,7 @@ export const metaFiltroCuenta: MetaFiltro = {
     codigo: {
         id: "codigo",
         campo: "codigo",
-        label: "Código",
+        get label() { return tContabilidad("cuenta.codigo"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["codigo", "~", valor as string];
@@ -44,7 +45,7 @@ export const metaFiltroCuenta: MetaFiltro = {
     nombre: {
         id: "nombre",
         campo: "nombre",
-        label: "Descripción",
+        get label() { return tContabilidad("cuenta.descripcion"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["nombre", "~", valor as string];

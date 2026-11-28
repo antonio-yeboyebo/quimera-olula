@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { Factura } from "../diseño.ts";
 import { emisionEsReintento } from "../dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const EmitirFactura = ({
     factura,
@@ -12,6 +13,7 @@ export const EmitirFactura = ({
     factura: Factura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const emitir_ = useCallback(async () => {
         publicar("emision_lista");
     }, [publicar]);
@@ -29,11 +31,11 @@ export const EmitirFactura = ({
         <QModalConfirmacion
             nombre="emitirFactura"
             abierto={true}
-            titulo={reintento ? "Reintentar emisión" : "Emitir factura"}
+            titulo={reintento ? t("factura.emitir.tituloReintento") : t("factura.emitir.titulo")}
             mensaje={
                 reintento
-                    ? `La firma de la factura ${factura.codigo} falló. ¿Reintentar la emisión?`
-                    : `¿Emitir la factura ${factura.codigo}? Dejará de ser un borrador.`
+                    ? t("factura.emitir.mensajeReintento", { codigo: factura.codigo })
+                    : t("factura.emitir.mensaje", { codigo: factura.codigo })
             }
             onCerrar={cancelar}
             onAceptar={emitirFactura}

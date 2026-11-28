@@ -9,11 +9,13 @@ import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { useEffect, useState } from "react";
 import { UbicacionMapa } from "../diseño.ts";
 import { textoDistancias } from "../dominio.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const fmt = (n: number) => n.toLocaleString("es-ES");
 
 /** Panel de la ubicación pulsada: qué contiene, su picking fijo, sus clases y su stock con movimientos. */
 export const DetalleUbicacionMapa = ({ ubicacion, onCerrar }: { ubicacion: UbicacionMapa; onCerrar: () => void }) => {
+    const t = useTAlmacen();
     const [stocks, setStocks] = useState<StockUbicacionItem[] | null>(null);
 
     useEffect(() => {
@@ -30,33 +32,33 @@ export const DetalleUbicacionMapa = ({ ubicacion, onCerrar }: { ubicacion: Ubica
             <div className="mapa-panel-cabecera">
                 <h3>
                     <ValorConEnlace href={urlFicha.ubicacion(ubicacion.ubicacionId)} etiqueta={`Abrir ubicación ${ubicacion.ubicacion}`}>
-                        Ubicación {ubicacion.ubicacion}
+                        {t("mapa.ubicacionUbicacion", { ubicacion: ubicacion.ubicacion })}
                     </ValorConEnlace>
-                    {ubicacion.bloqueada && <> <QEtiqueta variante="error">Bloqueada</QEtiqueta></>}
+                    {ubicacion.bloqueada && <> <QEtiqueta variante="error">{t("mapa.bloqueada")}</QEtiqueta></>}
                 </h3>
-                <QBoton variante="texto" onClick={onCerrar}>Cerrar</QBoton>
+                <QBoton variante="texto" onClick={onCerrar}>{t("mapa.cerrar")}</QBoton>
             </div>
 
             <ul className="mapa-detalle-articulos">
-                {stocks === null ? <li>Cargando stock…</li>
-                    : conStock.length === 0 ? <li>Vacía</li>
+                {stocks === null ? <li>{t("mapa.cargandoStock")}</li>
+                    : conStock.length === 0 ? <li>{t("mapa.vacia")}</li>
                         : conStock.map((s) => (
                             <li key={s.id}>
-                                <ValorConEnlace href={urlFicha.articulo(s.articuloId)} etiqueta={`Abrir artículo ${s.articuloId}`}>
+                                <ValorConEnlace href={urlFicha.articulo(s.articuloId)} etiqueta={t("mapa.abrirArticuloArticuloid", { articuloId: s.articuloId })}>
                                     <strong>{s.articuloId}</strong>
                                 </ValorConEnlace>{" "}
                                 {s.articulo}
-                                <span className="mapa-detalle-stock">Stock: <strong>{fmt(s.cantidadFisica)}</strong></span>
+                                <span className="mapa-detalle-stock">{t("mapa.stock")}{" "}<strong>{fmt(s.cantidadFisica)}</strong></span>
                             </li>
                         ))}
                 {pf && (
                     <li>
-                        <ValorConEnlace href={urlListado.pickingFijoDeArticulo(pf.articuloId)} etiqueta={`Abrir el picking fijo de ${pf.articuloId}`}>
-                            Picking fijo de <strong>{pf.articuloId}</strong>
+                        <ValorConEnlace href={urlListado.pickingFijoDeArticulo(pf.articuloId)} etiqueta={t("mapa.abrirElPickingFijoDeArticuloid", { articuloId: pf.articuloId })}>
+                            {t("mapa.pickingFijoDe")}{" "}<strong>{pf.articuloId}</strong>
                         </ValorConEnlace>{" "}
                         {descripcion(pf.articuloId) ?? ""}
                         <span className="mapa-detalle-stock">
-                            mín. {fmt(pf.minimo)} · máx. {fmt(pf.maximo)}
+                            {t("mapa.minValorMaxValor2", { valor: fmt(pf.minimo), valor2: fmt(pf.maximo) })}
                         </span>
                     </li>
                 )}
@@ -64,15 +66,15 @@ export const DetalleUbicacionMapa = ({ ubicacion, onCerrar }: { ubicacion: Ubica
 
             <dl className="mapa-detalle-clases">
                 <div>
-                    <dt>ABC hueco</dt>
+                    <dt>{t("mapa.abcHueco")}</dt>
                     <dd>{ubicacion.claseUbicacion ? <InsigniaClase clase={ubicacion.claseUbicacion} /> : "—"}</dd>
                 </div>
                 <div>
-                    <dt>ABC artículo</dt>
+                    <dt>{t("mapa.abcArticulo")}</dt>
                     <dd>{ubicacion.claseArticulo ? <InsigniaClase clase={ubicacion.claseArticulo} /> : "—"}</dd>
                 </div>
                 <div>
-                    <dt>Clase</dt>
+                    <dt>{t("mapa.clase")}</dt>
                     <dd>{ubicacion.clasesAlmacenamiento.length ? ubicacion.clasesAlmacenamiento.join(", ") : "—"}</dd>
                 </div>
             </dl>

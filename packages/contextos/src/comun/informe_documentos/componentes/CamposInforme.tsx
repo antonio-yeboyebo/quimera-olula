@@ -6,6 +6,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import { useFocus } from "@olula/lib/useFocus.ts";
 import { CampoInforme, FichaInforme, PestañaInforme } from "../diseño.ts";
+import { tComun } from "../../i18n/index.ts";
 
 const Campo = ({
     campo,
@@ -56,7 +57,7 @@ export const CamposInforme = ({
     refDescripcion?: ReturnType<typeof useFocus>;
 }) => (
     <>
-        <QInput label="Descripción" {...uiProps("descripcion")} ref={refDescripcion} />
+        <QInput label={tComun("informeDocumentos.descripcion")} {...uiProps("descripcion")} ref={refDescripcion} />
         {pestaña.filas.map((fila, indice) => (
             <FilaFormulario key={indice}>
                 {fila.map((campo) => (

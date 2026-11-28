@@ -18,6 +18,7 @@ import {
     PostTarifa,
     Tarifa,
 } from "./diseño.js";
+import { tVentas } from "../i18n/index.ts";
 
 export interface TarifaApi {
     id: string;
@@ -141,7 +142,7 @@ export const getTarifa: GetTarifa = async (id) => {
     return await RestAPI.getItem<Tarifa, TarifaApi>(
         `${baseUrl}/${id}`,
         tarifaDesdeApi,
-        "Error al obtener la tarifa"
+        tVentas("tarifa.errores.obtener")
     );
 };
 
@@ -153,7 +154,7 @@ export const getTarifas: GetTarifas = async (criteria) => {
         baseUrl,
         criteria,
         tarifaDesdeApi,
-        "Error al obtener las tarifas"
+        tVentas("tarifa.errores.obtenerLista")
     );
 };
 
@@ -164,7 +165,7 @@ export const postTarifa: PostTarifa = async (nuevaTarifa) => {
     const respuesta = await RestAPI.post<NuevaTarifaApi>(
         baseUrl,
         nuevaTarifaAApi(nuevaTarifa),
-        "Error al crear la tarifa"
+        tVentas("tarifa.errores.crear")
     );
     return respuesta.id;
 };
@@ -176,7 +177,7 @@ export const patchTarifa: PatchTarifa = async (id, cambios) => {
     await RestAPI.patch<PayloadCambios<CambiosTarifaApi>>(
         `${baseUrl}/${id}`,
         { cambios: cambiosTarifaAApi(cambios) },
-        "Error al actualizar la tarifa"
+        tVentas("tarifa.errores.actualizar")
     );
 };
 
@@ -185,7 +186,7 @@ export const patchTarifa: PatchTarifa = async (id, cambios) => {
  * El servidor responde 409 si la tarifa tiene artículos asociados.
  */
 export const deleteTarifa: DeleteTarifa = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al eliminar la tarifa");
+    await RestAPI.delete(`${baseUrl}/${id}`, tVentas("tarifa.errores.eliminar"));
 };
 
 /**
@@ -196,7 +197,7 @@ export const getArticulosTarifa: GetArticulosTarifa = async (tarifaId) => {
         baseUrlArticulos,
         criteriaArticulosDeTarifa(tarifaId),
         articuloTarifaDesdeApi,
-        "Error al obtener los artículos de la tarifa"
+        tVentas("tarifa.errores.obtenerArticulos")
     );
 };
 
@@ -210,7 +211,7 @@ export const postArticuloTarifa: PostArticuloTarifa = async (
     const respuesta = await RestAPI.post<NuevoArticuloTarifaApi>(
         baseUrlArticulos,
         nuevoArticuloTarifaAApi(tarifaId, nuevoArticuloTarifa),
-        "Error al añadir el artículo a la tarifa"
+        tVentas("tarifa.errores.anadirArticulo")
     );
     return respuesta.id;
 };
@@ -222,7 +223,7 @@ export const patchArticuloTarifa: PatchArticuloTarifa = async (id, cambios) => {
     await RestAPI.patch<PayloadCambios<CambiosArticuloTarifaApi>>(
         `${baseUrlArticulos}/${id}`,
         { cambios: cambiosArticuloTarifaAApi(cambios) },
-        "Error al actualizar el artículo de la tarifa"
+        tVentas("tarifa.errores.actualizarArticulo")
     );
 };
 
@@ -232,6 +233,6 @@ export const patchArticuloTarifa: PatchArticuloTarifa = async (id, cambios) => {
 export const deleteArticuloTarifa: DeleteArticuloTarifa = async (id) => {
     await RestAPI.delete(
         `${baseUrlArticulos}/${id}`,
-        "Error al quitar el artículo de la tarifa"
+        tVentas("tarifa.errores.quitarArticulo")
     );
 };

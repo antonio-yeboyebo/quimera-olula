@@ -6,6 +6,7 @@ import {
     IaMemoria, NuevaIaMemoria, NuevaIaMemoriaDesdeConector, NuevaIaMemoriaDesdeFichero, OrigenIaMemoria,
     PatchIaMemoria, PatchIaMemoriaDesdeFichero, PostIaMemoria, PostIaMemoriaDesdeConector, PostIaMemoriaDesdeFichero,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Forma de la entidad tal como la devuelve la API (snake_case).
@@ -152,7 +153,7 @@ export const postIaMemoria: PostIaMemoria = async (nuevaIaMemoria) => {
     const respuesta = await RestAPI.post<NuevaIaMemoriaApi>(
         baseUrl,
         nuevaIaMemoriaAApi(nuevaIaMemoria),
-        "Error al crear la memoria del asistente",
+        tComun("iaMemoria.errorAlCrearLaMemoriaDel"),
     );
     return respuesta.id;
 };
@@ -165,7 +166,7 @@ export const postIaMemoriaDesdeFichero: PostIaMemoriaDesdeFichero = async (nueva
     const respuesta = await RestAPI.post<NuevaIaMemoriaDesdeFicheroApi>(
         `${baseUrl}/importar`,
         nuevaIaMemoriaDesdeFicheroAApi(nuevaIaMemoria),
-        "Error al importar el fichero para la memoria del asistente",
+        tComun("iaMemoria.errorAlImportarElFicheroPara"),
     );
     return respuesta.id;
 };
@@ -179,7 +180,7 @@ export const postIaMemoriaDesdeConector: PostIaMemoriaDesdeConector = async (nue
     const respuesta = await RestAPI.post<NuevaIaMemoriaDesdeConectorApi>(
         `${baseUrl}/importar-conector`,
         nuevaIaMemoriaDesdeConectorAApi(nuevaIaMemoria),
-        "Error al importar el documento para la memoria del asistente",
+        tComun("iaMemoria.errorAlImportarElDocumentoPara"),
     );
     return respuesta.id;
 };
@@ -192,7 +193,7 @@ export const patchIaMemoriaDesdeFichero: PatchIaMemoriaDesdeFichero = async (id,
     await RestAPI.patch<NuevaIaMemoriaDesdeFicheroApi>(
         `${baseUrl}/${id}/importar`,
         nuevaIaMemoriaDesdeFicheroAApi(fichero),
-        "Error al reemplazar el fichero de la memoria del asistente",
+        tComun("iaMemoria.errorAlReemplazarElFicheroDe"),
     );
 };
 
@@ -204,7 +205,7 @@ export const patchIaMemoriaDesdeFichero: PatchIaMemoriaDesdeFichero = async (id,
 export const obtenerUrlDescargaFicheroIaMemoria = async (id: string): Promise<string> => {
     const respuesta = await RestAPI.get<{ url: string }>(
         `${baseUrl}/${id}/fichero`,
-        "Error al obtener la descarga del fichero de la memoria del asistente",
+        tComun("iaMemoria.errorAlObtenerLaDescargaDel"),
     );
     return respuesta.url;
 };
@@ -216,7 +217,7 @@ export const patchIaMemoria: PatchIaMemoria = async (id, cambios) => {
     await RestAPI.patch<CambiosIaMemoriaApi>(
         `${baseUrl}/${id}`,
         cambiosIaMemoriaAApi(cambios),
-        "Error al guardar la memoria del asistente",
+        tComun("iaMemoria.errorAlGuardarLaMemoriaDel"),
     );
 };
 
@@ -226,7 +227,7 @@ export const patchIaMemoria: PatchIaMemoria = async (id, cambios) => {
 export const deleteIaMemoria: DeleteIaMemoria = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar la memoria del asistente",
+        tComun("iaMemoria.errorAlEliminarLaMemoriaDel"),
     );
 };
 
@@ -237,7 +238,7 @@ export const deleteIaMemoria: DeleteIaMemoria = async (id) => {
 export const getEstadoRagIaMemoria: GetEstadoRagIaMemoria = async () => {
     const respuesta = await RestAPI.get<EstadoRagIaMemoriaApi>(
         `${baseUrl}/estado-rag`,
-        "Error al comprobar el estado de la búsqueda semántica",
+        tComun("iaMemoria.errorAlComprobarElEstadoDe"),
     );
     return estadoRagIaMemoriaDesdeApi(respuesta);
 };

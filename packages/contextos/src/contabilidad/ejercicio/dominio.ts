@@ -7,6 +7,7 @@ import {
     OpcionesCierre,
     TipoAsientoEjercicio,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const DIGITOS_SUBCUENTA_DEFECTO = 10;
 
@@ -77,14 +78,22 @@ export const puedeCerrar = (e: Ejercicio): boolean =>
 export const puedeReabrir = (e: Ejercicio): boolean =>
     !!e.id && e.estado === "CERRADO";
 
+/** Texto visible del estado del ejercicio (`ABIERTO`, `CERRADO`). */
+export const textoEstadoEjercicio = (estado: string): string =>
+    estado === "ABIERTO"
+        ? tContabilidad("ejercicio.estadoAbierto")
+        : estado === "CERRADO"
+          ? tContabilidad("ejercicio.estadoCerrado")
+          : estado;
+
 /** Asientos enlazados al ejercicio (Eneboo `ejercicios.idasiento*`, pestaña
  * Asientos de ejercicios.ui): la apertura (si vino del cierre del anterior),
  * la regularización de pérdidas y ganancias y el cierre, los que haya. */
 export const asientosDelEjercicio = (ejercicio: Ejercicio): AsientoDelEjercicio[] => {
     const asientos: [TipoAsientoEjercicio, string, number | null][] = [
-        ["APERTURA", "Asiento de apertura", ejercicio.asientoAperturaId],
-        ["REGULARIZACION", "Asiento de regularización (pérdidas y ganancias)", ejercicio.asientoPygId],
-        ["CIERRE", "Asiento de cierre", ejercicio.asientoCierreId],
+        ["APERTURA", tContabilidad("ejercicio.asientoDeApertura"), ejercicio.asientoAperturaId],
+        ["REGULARIZACION", tContabilidad("ejercicio.asientoDeRegularizacionPerdidasYGanancia"), ejercicio.asientoPygId],
+        ["CIERRE", tContabilidad("ejercicio.asientoDeCierre"), ejercicio.asientoCierreId],
     ];
     return asientos
         .filter(([, , id]) => !!id)
@@ -137,10 +146,10 @@ export const opcionesCierreAEnviar = (ejercicio: Ejercicio, o: OpcionesCierre): 
 /** co_cerrarejer.qs::validarCierre. */
 export const validarOpcionesCierre = (ejercicio: Ejercicio, o: OpcionesCierre): string | true => {
     if (o.fecha < ejercicio.fechaInicio || o.fecha > ejercicio.fechaFin) {
-        return "La fecha debe estar dentro del ejercicio";
+        return tContabilidad("ejercicio.laFechaDebeEstarDentroDel");
     }
     if (o.abrir && !o.ejercicioDestinoId) {
-        return "Debe seleccionar el ejercicio sobre el que se creará el asiento de apertura";
+        return tContabilidad("ejercicio.debeSeleccionarElEjercicioSobreEl");
     }
     return true;
 };
@@ -153,11 +162,9 @@ export const mensajeReabrir = (ejercicio: Ejercicio, ejercicios: Ejercicio[]): s
         .filter((e) => e.fechaInicio.getTime() > ejercicio.fechaInicio.getTime())
         .sort((a, b) => a.fechaInicio.getTime() - b.fechaInicio.getTime())[0];
     const apertura = siguiente
-        ? `el asiento de apertura del ejercicio siguiente (${etiquetaEjercicio(siguiente)})`
-        : "el asiento de apertura del ejercicio siguiente, si lo hay";
-    return `Se van a borrar los asientos de pérdidas y ganancias y de cierre del ejercicio `
-        + `${etiquetaEjercicio(ejercicio)} y ${apertura}. El ejercicio ${ejercicio.id} `
-        + `quedará abierto. ¿Desea continuar?`;
+        ? tContabilidad("ejercicio.elAsientoDeAperturaDelEjercicio", { siguiente: etiquetaEjercicio(siguiente) })
+        : tContabilidad("ejercicio.elAsientoDeAperturaDelEjercicio2");
+    return tContabilidad("ejercicio.seVanABorrarLosAsientos", { ejercicio: etiquetaEjercicio(ejercicio), apertura, id: ejercicio.id });
 };
 
 export const esAvisoCuentasSinCodigoBalance = (error: unknown): boolean => {
@@ -195,11 +202,11 @@ export const metaDatosEjercicio: MetaModelo<DatosEjercicio> = {
     },
     validacion: (m) => {
         if (m.fechaInicio > m.fechaFin) {
-            return "La fecha de inicio del ejercicio debe ser menor que la de fin";
+            return tContabilidad("ejercicio.laFechaDeInicioDelEjercicio");
         }
         const digitos = Number(m.digitosSubcuenta);
         if (digitos < 5 || digitos > 15) {
-            return "La longitud de la subcuenta debe estar entre 5 y 15 caracteres";
+            return tContabilidad("ejercicio.laLongitudDeLaSubcuentaDebe");
         }
         return true;
     },

@@ -10,12 +10,13 @@ import { DetalleEjercicio, PropsDetalleEjercicio } from "../detalle/DetalleEjerc
 import { Ejercicio } from "../diseño.ts";
 import { criteriaEjerciciosDefecto, metaTablaEjercicio } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 /** Listado de la tabla `ejercicios`. En Contabilidad > «Apertura y Cierre de
  * Ejercicio» (co_cerrarejer) no se crean ni se borran ejercicios; en
  * Fiscalidad > «Ejercicios fiscales» (ejercicios.ui) sí se crean (`conAlta`). */
 export const MaestroConDetalleEjercicio = ({
-    titulo = "Apertura y Cierre de Ejercicio",
+    titulo = tContabilidad("ejercicio.aperturaYCierreDeEjercicio"),
     conAlta = false,
     Detalle = DetalleEjercicio,
 }: {
@@ -24,6 +25,7 @@ export const MaestroConDetalleEjercicio = ({
     Detalle?: ComponentType<PropsDetalleEjercicio>;
 } = {}) => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaEjerciciosDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetalleEjercicio = ({
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los ejercicios.</p>;
+        return <p>{t("ejercicio.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -61,7 +63,7 @@ export const MaestroConDetalleEjercicio = ({
                             renderAcciones={conAlta ? () => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_ejercicio_solicitado")}>
-                                        Nuevo ejercicio
+                                        {t("ejercicio.nuevoEjercicio")}
                                     </QBoton>
                                 </div>
                             ) : undefined}

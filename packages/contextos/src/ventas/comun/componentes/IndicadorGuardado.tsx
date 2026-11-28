@@ -1,6 +1,7 @@
 import { QError } from "@olula/lib/contexto.ts";
 import { useEffect, useRef, useState } from "react";
 import "./IndicadorGuardado.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const IndicadorGuardado = ({
   modificado,
@@ -13,6 +14,7 @@ export const IndicadorGuardado = ({
   guardados?: number;
   msVisible?: number;
 }) => {
+  const t = useTVentas();
   const [guardadoReciente, setGuardadoReciente] = useState(false);
   const guardadosPrevio = useRef(guardados);
 
@@ -34,7 +36,7 @@ export const IndicadorGuardado = ({
         role="alert"
         title={error.descripcion}
       >
-        Error al guardar
+        {t("comun.guardado.error")}
       </span>
     );
   }
@@ -42,7 +44,7 @@ export const IndicadorGuardado = ({
   if (modificado) {
     return (
       <span className="indicador-guardado pendiente" role="status">
-        Sin guardar
+        {t("comun.guardado.sinGuardar")}
       </span>
     );
   }
@@ -50,7 +52,7 @@ export const IndicadorGuardado = ({
   if (guardadoReciente) {
     return (
       <span className="indicador-guardado guardado" role="status">
-        Guardado
+        {t("comun.guardado.guardado")}
       </span>
     );
   }

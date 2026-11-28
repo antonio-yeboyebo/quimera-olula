@@ -11,20 +11,22 @@ import { FichaInforme, PestañaInforme } from "../diseño.ts";
 import { CrearInforme } from "./CrearInforme.tsx";
 import { DetalleInforme } from "./DetalleInforme.tsx";
 import { getMaquinaMaestro } from "./maestro.ts";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
-const metaTabla: MetaTabla<FichaInforme> = [{ id: "descripcion", cabecera: "Descripción" }];
+const metaTabla: MetaTabla<FichaInforme> = [{ id: "descripcion", get cabecera() { return tComun("informeDocumentos.descripcion"); } }];
 
 const metaFiltro: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tComun("informeDocumentos.descripcion"); },
         filtro: (valor) => (!valor || valor === "" ? null : ["descripcion", "~", valor as string]),
     },
 };
 
 /** Fichas guardadas de una pestaña (comparten tabla con Eneboo) y su detalle. */
 export const MaestroInforme = ({ pestaña }: { pestaña: PestañaInforme }) => {
+    const t = useTComun();
     const getMaquina = useMemo(() => getMaquinaMaestro(pestaña), [pestaña]);
     const criteriaInicial = useMemo(() => ({ ...criteriaDefecto, orden: ["id", "DESC"] as [string, string] }), []);
 
@@ -55,7 +57,7 @@ export const MaestroInforme = ({ pestaña }: { pestaña: PestañaInforme }) => {
                         seleccionada={fichas.activo}
                         renderAcciones={() => (
                             <div className="maestro-botones">
-                                <QBoton onClick={() => emitir("crear_informe_solicitado")}>Nuevo informe</QBoton>
+                                <QBoton onClick={() => emitir("crear_informe_solicitado")}>{t("informeDocumentos.nuevoInforme")}</QBoton>
                             </div>
                         )}
                         onSeleccion={(payload) => emitir("informe_seleccionado", payload)}

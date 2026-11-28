@@ -11,6 +11,7 @@ import { puede, puedeAlguna } from "@olula/lib/dominio.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
+import { useTVentas } from "../../i18n/index.ts";
 import { TabPreciosArticulo } from "#/ventas/precio_articulo/detalle/TabPreciosArticulo.tsx";
 import { muestraPreciosArticulo } from "#/ventas/precio_articulo/dominio.ts";
 import { BorrarCliente } from "../borrar/BorrarCliente.tsx";
@@ -35,6 +36,7 @@ export const DetalleCliente = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const clienteId = id ?? params.id;
 
@@ -84,20 +86,20 @@ export const DetalleCliente = ({
                 acciones={[
                   {
                     icono: "eliminar",
-                    texto: "Borrar",
+                    texto: t("cliente.botones.borrar"),
                     onClick: () => emitir("borrado_solicitado"),
                     advertencia: true,
                   },
                   ...(!ctx.cliente.de_baja
                     ? [
                         {
-                          texto: "Dar de baja",
+                          texto: t("cliente.detalle.darDeBaja"),
                           onClick: () => emitir("baja_solicitada"),
                         },
                       ]
                     : [
                         {
-                          texto: "Dar de alta",
+                          texto: t("cliente.detalle.darDeAlta"),
                           onClick: () => emitir("dar_de_alta_solicitado"),
                         },
                       ]),
@@ -109,7 +111,7 @@ export const DetalleCliente = ({
               children={[
                 <Tab
                   key="tab-1"
-                  label="General"
+                  label={t("cliente.detalle.pestanas.general")}
                   children={
                     <TabGeneral
                       form={cliente}
@@ -123,7 +125,7 @@ export const DetalleCliente = ({
                 />,
                 <Tab
                   key="tab-2"
-                  label="Comercial"
+                  label={t("cliente.detalle.pestanas.comercial")}
                   children={
                     <TabComercial
                       form={cliente}
@@ -134,12 +136,12 @@ export const DetalleCliente = ({
                 />,
                 <Tab
                   key="tab-3"
-                  label="Direcciones"
+                  label={t("cliente.detalle.pestanas.direcciones")}
                   children={<TabDirecciones clienteId={ctx.cliente.id} />}
                 />,
                 <Tab
                   key="tab-4"
-                  label="Cuentas Bancarias"
+                  label={t("cliente.detalle.pestanas.cuentas")}
                   children={
                     <TabCuentasBanco cliente={ctx.cliente} publicar={emitir} />
                   }
@@ -148,7 +150,7 @@ export const DetalleCliente = ({
                   ? [
                       <Tab
                         key="tab-5"
-                        label="Agenda"
+                        label={t("cliente.detalle.pestanas.agenda")}
                         children={
                           <div className="detalle-cliente-tab-contenido">
                             <TabCrmContactos entidadId={ctx.cliente.id} api={apiAgendaCliente} />
@@ -161,7 +163,7 @@ export const DetalleCliente = ({
                   ? [
                       <Tab
                         key="tab-6"
-                        label="Documentos"
+                        label={t("cliente.detalle.pestanas.documentos")}
                         children={<TabDocumentos clienteId={ctx.cliente.id} />}
                       />,
                     ]
@@ -170,7 +172,7 @@ export const DetalleCliente = ({
                   ? [
                       <Tab
                         key="tab-7"
-                        label="Contabilidad"
+                        label={t("cliente.detalle.pestanas.contabilidad")}
                         children={
                           <div className="detalle-cliente-tab-contenido">
                             <TabContabilidad
@@ -186,7 +188,7 @@ export const DetalleCliente = ({
                   ? [
                       <Tab
                         key="tab-8"
-                        label="Precios por artículo"
+                        label={t("cliente.detalle.pestanas.precios")}
                         children={
                           <TabPreciosArticulo clienteId={ctx.cliente.id} />
                         }
@@ -215,7 +217,7 @@ export const DetalleCliente = ({
             <QModal
               nombre="modal-baja"
               abierto={estado === "BAJANDO_CLIENTE"}
-              titulo="Dar de baja"
+              titulo={t("cliente.detalle.darDeBaja")}
               onCerrar={() => emitir("baja_cancelada")}
             >
               <BajaCliente clienteId={ctx.cliente.id} publicar={emitir} />

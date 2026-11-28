@@ -1,6 +1,7 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabGeneral.css";
+import { tTesoreria } from "../../i18n/index.ts";
 
 interface TabGeneralProps {
     form: FormModelo;
@@ -13,14 +14,14 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Referencia" {...uiProps("referencia")} />
-                <QInput label="Tipo" {...uiProps("tipo")} />
-                <QInput label="Tipo de pago" {...uiProps("tipoPago")} />
-                <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QInput label="Cliente" {...uiProps("clienteId")} />
-                <QInput label="Nº de efectos" {...uiProps("numEfectos")} />
-                <QInput label="Cuenta" {...uiProps("cuentaId")} />
-                <QInput label="Cuenta del cliente" {...uiProps("cuentaClienteId")} />
+                <QInput label={tTesoreria("mandato.referencia")} {...uiProps("referencia")} />
+                <QInput label={tTesoreria("mandato.tipo")} {...uiProps("tipo")} />
+                <QInput label={tTesoreria("mandato.tipoDePago")} {...uiProps("tipoPago")} />
+                <QInput label={tTesoreria("mandato.descripcion")} {...uiProps("descripcion")} />
+                <QInput label={tTesoreria("mandato.cliente")} {...uiProps("clienteId")} />
+                <QInput label={tTesoreria("mandato.nDeEfectos")} {...uiProps("numEfectos")} />
+                <QInput label={tTesoreria("mandato.cuenta")} {...uiProps("cuentaId")} />
+                <QInput label={tTesoreria("mandato.cuentaDelCliente")} {...uiProps("cuentaClienteId")} />
             </quimera-formulario>
         </div>
     );

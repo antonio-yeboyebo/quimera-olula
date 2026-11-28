@@ -19,6 +19,7 @@ import { DesconectarConexionBancaria } from "../desconectar/DesconectarConexionB
 import { ReautenticarBancoConexionBancaria } from "../reautenticar/ReautenticarBancoConexionBancaria.js";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Detalle de solo lectura salvo por la asociación de cuentas (ver
@@ -35,6 +36,7 @@ export const DetalleConexionBancaria = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleConexionBancariaInicial,
@@ -58,12 +60,12 @@ export const DetalleConexionBancaria = ({
 
     const acciones = [
         requiereReautenticacion(conexion) && {
-            texto: "Reautenticar banco",
+            texto: t("conexion_bancaria.reautenticarBanco"),
             onClick: () => emitir("reautenticacion_solicitada"),
             advertencia: true,
         },
         {
-            texto: "Desconectar",
+            texto: t("conexion_bancaria.desconectar"),
             onClick: () => emitir("desconexion_solicitada"),
             advertencia: true,
         },
@@ -82,11 +84,11 @@ export const DetalleConexionBancaria = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("conexion_bancaria.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label={`Cuentas (${cuentas.length})`}
+                    <Tab label={t("conexion_bancaria.cuentasLength", { length: cuentas.length })}
                         key="tab-cuentas"
                         children={
                             <CuentasConexionBancaria
@@ -97,13 +99,13 @@ export const DetalleConexionBancaria = ({
                         }
                     />,
                     ...(prestamos.length > 0 ? [
-                        <Tab label={`Préstamos (${prestamos.length})`}
+                        <Tab label={t("conexion_bancaria.prestamosLength", { length: prestamos.length })}
                             key="tab-prestamos"
                             children={<PrestamosConexionBancaria prestamos={prestamos} publicar={emitir} />}
                         />,
                     ] : []),
                     ...(eligeTiposProducto ? [
-                        <Tab label="Productos"
+                        <Tab label={t("conexion_bancaria.productos")}
                             key="tab-productos"
                             children={<ProductosConexionBancaria conexion={conexion} publicar={emitir} />}
                         />,

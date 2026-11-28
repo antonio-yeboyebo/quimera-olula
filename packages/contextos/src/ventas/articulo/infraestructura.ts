@@ -12,6 +12,7 @@ import {
     TagArticulo,
 } from "./diseño.ts";
 import { filtroArticulosVenta } from "./dominio.ts";
+import { tVentas } from "../i18n/index.ts";
 
 const baseUrl = `/ventas/articulo`;
 
@@ -104,13 +105,13 @@ export const postArticulo: PostArticulo = async (articulo) =>
             descripcion: articulo.descripcion ?? "",
             ...(articulo.grupoIvaProductoId ? { grupo_iva_producto_id: articulo.grupoIvaProductoId } : {}),
         },
-        "Error al crear el artículo"
+        tVentas("articulo.errores.crear")
     ).then((respuesta) => String(respuesta.id));
 
 export const patchArticulo: PatchArticulo = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosArticuloAApi(cambios),
-        "Error al guardar el artículo"
+        tVentas("articulo.errores.guardar")
     );
 };

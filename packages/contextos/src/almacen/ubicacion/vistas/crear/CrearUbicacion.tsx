@@ -12,6 +12,7 @@ import { NuevaUbicacion } from "../../diseño.ts";
 import { metaNuevaUbicacion, nuevaUbicacionVacia } from "../../dominio.ts";
 import { getUbicacion, postUbicacion } from "../../infraestructura.ts";
 import "./CrearUbicacion.css";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const CrearUbicacion = ({
   publicar = async () => {},
@@ -41,6 +42,7 @@ const FormAltaUbicacion = ({
   publicar?: ProcesarEvento;
   ubicacion: HookModelo<NuevaUbicacion>;
 }) => {
+  const t = useTAlmacen();
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
@@ -60,22 +62,22 @@ const FormAltaUbicacion = ({
 
   return (
     <div className="CrearUbicacion">
-      <h2>Nueva Ubicación</h2>
+      <h2>{t("ubicacion.nuevaUbicacion")}</h2>
       <quimera-formulario>
-        <QInput label="Código (vacío si se genera por pasillo)" {...ubicacion.uiProps("codigo")} />
+        <QInput label={t("ubicacion.codigoVacioSiSeGeneraPor")} {...ubicacion.uiProps("codigo")} />
         <Zona {...ubicacion.uiProps("zonaId")} />
         <PasilloZona zonaId={ubicacion.modelo.zonaId} {...ubicacion.uiProps("pasilloId")} />
-        <QInput label="Módulo" {...ubicacion.uiProps("modulo")} />
-        <QInput label="Nivel" {...ubicacion.uiProps("nivel")} />
-        <QInput label="Hueco" {...ubicacion.uiProps("hueco")} />
+        <QInput label={t("ubicacion.modulo")} {...ubicacion.uiProps("modulo")} />
+        <QInput label={t("ubicacion.nivel")} {...ubicacion.uiProps("nivel")} />
+        <QInput label={t("ubicacion.hueco")} {...ubicacion.uiProps("hueco")} />
         <TipoUbicacion {...ubicacion.uiProps("tipoUbicacionId")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={crear} deshabilitado={!ubicacion.valido}>
-          Guardar
+          {t("ubicacion.guardar")}
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">
-          Cancelar
+          {t("ubicacion.cancelar")}
         </QBoton>
       </div>
     </div>

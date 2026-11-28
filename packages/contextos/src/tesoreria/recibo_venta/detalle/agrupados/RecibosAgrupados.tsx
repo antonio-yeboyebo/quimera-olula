@@ -2,10 +2,11 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ReciboVenta } from "../../diseño.js";
 import { metaTablaReciboVenta } from "../../maestro/metatabla_recibo_venta.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 export const RecibosAgrupados = ({ recibos }: { recibos: ReciboVenta[] }) => (
   <div className="RecibosAgrupados">
-    <h3>Recibos agrupados</h3>
+    <h3>{tTesoreria("recibo_venta.recibosAgrupados")}</h3>
 
     <ListadoSemiControlado
       metaTabla={metaTablaReciboVenta}

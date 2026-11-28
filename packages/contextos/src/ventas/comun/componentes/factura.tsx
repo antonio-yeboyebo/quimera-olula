@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Factura as FacturaVenta } from "../../factura/diseño.ts";
 import { getFacturas } from "../../factura/infraestructura.ts";
 import { facturaConCliente, facturaDeCliente } from "./factura_texto.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export type OpcionFactura = {
   valor: string;
@@ -69,13 +70,15 @@ export const Factura = ({
   descripcion = "",
   valor,
   nombre = "factura_id",
-  label = "Factura",
+  label: labelProp,
   placeholder,
   deshabilitado = false,
   renderOpcion,
   onChange,
   ...props
 }: FacturaProps) => {
+  const t = useTVentas();
+  const label = labelProp ?? t("comun.campos.factura");
   const [intentoBusquedaSinCliente, setIntentoBusquedaSinCliente] =
     useState(false);
 
@@ -133,14 +136,14 @@ export const Factura = ({
       placeholder={
         placeholder ??
         (clienteId === undefined
-          ? "Código, cliente o fecha (dd/mm/aaaa)"
-          : "Código o fecha (dd/mm/aaaa)")
+          ? t("comun.factura.buscarConCliente")
+          : t("comun.factura.buscarSinCliente"))
       }
       deshabilitado={deshabilitado}
       erroneo={intentoBusquedaSinCliente}
       textoValidacion={
         intentoBusquedaSinCliente
-          ? "El campo cliente debe estar informado"
+          ? t("comun.factura.clienteObligatorio")
           : undefined
       }
       {...props}

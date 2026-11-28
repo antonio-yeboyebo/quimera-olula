@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { fechaDesdeApi } from "../comun/infraestructura.js";
 import ApiUrls from "../comun/urls.js";
 import { GetMandato, GetMandatos, Mandato } from "./diseño.js";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface MandatoApi {
     id: string;
@@ -41,7 +42,7 @@ export const getMandato: GetMandato = async (id) => {
     return await RestAPI.getItem<Mandato, MandatoApi>(
         `${baseUrl}/${id}`,
         mandatoDesdeApi,
-        "Error al obtener el mandato"
+        tTesoreria("mandato.errorAlObtenerElMandato")
     );
 };
 
@@ -50,6 +51,6 @@ export const getMandatos: GetMandatos = async (criteria) => {
         baseUrl,
         criteria,
         mandatoDesdeApi,
-        "Error al obtener los mandatos"
+        tTesoreria("mandato.errorAlObtenerLosMandatos")
     );
 };

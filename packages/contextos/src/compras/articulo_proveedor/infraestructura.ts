@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.ts";
 import {
@@ -83,7 +84,7 @@ const cambiosAApi = (
 export const getProveedoresDeArticulo: GetProveedoresDeArticulo = async (articuloId) => {
     const respuesta = await RestAPI.get<{ datos: ArticuloProveedorApi[]; total: number }>(
         `${urls.ARTICULO}/${articuloId}/proveedor`,
-        "Error al obtener los proveedores del artículo"
+        tCompras("articuloProveedor.errores.proveedoresArticulo")
     );
 
     return {
@@ -100,21 +101,21 @@ export const getArticulosDeProveedor: GetArticulosDeProveedor = async (
         `${urls.PROVEEDOR}/${proveedorId}/articulo`,
         criteria,
         articuloProveedorDesdeApi,
-        "Error al obtener los artículos del proveedor"
+        tCompras("articuloProveedor.errores.articulosProveedor")
     );
 
 export const getArticuloProveedor: GetArticuloProveedor = async (id) =>
     await RestAPI.getItem<ArticuloProveedor, ArticuloProveedorApi>(
         `${baseUrl}/${id}`,
         articuloProveedorDesdeApi,
-        "Error al obtener el precio de proveedor"
+        tCompras("articuloProveedor.errores.obtener")
     );
 
 export const postArticuloProveedor: PostArticuloProveedor = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevoAApi(nuevo),
-        "Error al crear el precio de proveedor"
+        tCompras("articuloProveedor.errores.crear")
     );
 
     return String(respuesta.id);
@@ -124,18 +125,18 @@ export const patchArticuloProveedor: PatchArticuloProveedor = async (id, cambios
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosAApi(cambios),
-        "Error al guardar el precio de proveedor"
+        tCompras("articuloProveedor.errores.guardar")
     );
 };
 
 export const deleteArticuloProveedor: DeleteArticuloProveedor = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el precio de proveedor");
+    await RestAPI.delete(`${baseUrl}/${id}`, tCompras("articuloProveedor.errores.borrar"));
 };
 
 export const marcarPorDefecto: MarcarPorDefectoArticuloProveedor = async (id) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/por-defecto`,
         {},
-        "Error al marcar el proveedor por defecto"
+        tCompras("articuloProveedor.errores.porDefecto")
     );
 };

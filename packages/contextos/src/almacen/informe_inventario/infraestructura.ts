@@ -6,6 +6,7 @@ import {
     GrupoInventario,
     ResultadoInventario,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 interface FilaInventarioApi {
     referencia: string;
@@ -65,11 +66,11 @@ export const getResultadoInventario: GetResultadoInventario = async (url, id) =>
     RestAPI.getItem<ResultadoInventario, ResultadoInventarioApi>(
         `${url}/${id}/resultado`,
         resultadoInventarioDesdeApi,
-        "Error al calcular el informe de inventario"
+        tAlmacen("informe_inventario.errorAlCalcularElInformeDe")
     );
 
 export const getReportInventario: GetReportInventario = async (url, id) =>
-    RestAPI.blob(`${url}/${id}/report`, "Error al descargar el PDF del inventario");
+    RestAPI.blob(`${url}/${id}/report`, tAlmacen("informe_inventario.errorAlDescargarElPdfDel"));
 
 export const getHojaInventario: GetHojaInventario = async (url, id, formato) =>
-    RestAPI.blob(`${url}/${id}/hoja?formato=${formato}`, "Error al descargar la hoja del inventario");
+    RestAPI.blob(`${url}/${id}/hoja?formato=${formato}`, tAlmacen("informe_inventario.errorAlDescargarLaHojaDel"));

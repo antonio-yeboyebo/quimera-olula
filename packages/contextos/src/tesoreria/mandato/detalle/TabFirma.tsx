@@ -1,6 +1,7 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabFirma.css";
+import { tTesoreria } from "../../i18n/index.ts";
 
 interface TabFirmaProps {
     form: FormModelo;
@@ -13,10 +14,10 @@ export const TabFirma = ({ form }: TabFirmaProps) => {
     return (
         <div className="TabFirma">
             <quimera-formulario>
-                <QInput label="Fecha de firma" {...uiProps("fechaFirma")} />
-                <QInput label="Lugar de firma" {...uiProps("lugarFirma")} />
-                <QInput label="Fecha último adeudo" {...uiProps("fechaUltimoAdeudo")} />
-                <QInput label="Fecha de caducidad" {...uiProps("fechaCaducidad")} />
+                <QInput label={tTesoreria("mandato.fechaDeFirma")} {...uiProps("fechaFirma")} />
+                <QInput label={tTesoreria("mandato.lugarDeFirma")} {...uiProps("lugarFirma")} />
+                <QInput label={tTesoreria("mandato.fechaUltimoAdeudo")} {...uiProps("fechaUltimoAdeudo")} />
+                <QInput label={tTesoreria("mandato.fechaDeCaducidad")} {...uiProps("fechaCaducidad")} />
             </quimera-formulario>
         </div>
     );

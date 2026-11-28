@@ -5,8 +5,10 @@ import { useCallback } from "react";
 import { Divisa } from "../diseño.ts";
 import { etiquetaDivisa } from "../dominio.ts";
 import { deleteDivisa } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarDivisa = ({ publicar, divisa }: { divisa: Divisa; publicar: EmitirEvento }) => {
+    const t = useTComun();
     const borrar_ = useCallback(async () => {
         await deleteDivisa(divisa.id);
         publicar("divisa_borrado", divisa);
@@ -20,8 +22,8 @@ export const BorrarDivisa = ({ publicar, divisa }: { divisa: Divisa; publicar: E
         <QModalConfirmacion
             nombre="borrarDivisa"
             abierto={true}
-            titulo="Borrar divisa"
-            mensaje={`¿Confirma borrar ${etiquetaDivisa(divisa)}? No se puede borrar si la usan clientes, proveedores, documentos, tarifas o la contabilidad.`}
+            titulo={t("divisas.borrarDivisa")}
+            mensaje={t("divisas.confirmaBorrarDivisaNoSePuede", { divisa: etiquetaDivisa(divisa) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

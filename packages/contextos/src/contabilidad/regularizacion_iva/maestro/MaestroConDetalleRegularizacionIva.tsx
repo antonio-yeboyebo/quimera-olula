@@ -14,10 +14,12 @@ import {
     metaTablaRegularizacionIva,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Regularizaciones de I.V.A. (Eneboo co_masterregiva). */
 export const MaestroConDetalleRegularizacionIva = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaRegularizacionesIvaDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -42,7 +44,7 @@ export const MaestroConDetalleRegularizacionIva = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las regularizaciones de IVA.</p>;
+        return <p>{t("regularizacion_iva.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -51,7 +53,7 @@ export const MaestroConDetalleRegularizacionIva = () => {
                 seleccionada={regularizaciones.activo}
                 Maestro={
                     <>
-                        <h2>Regularización de IVA</h2>
+                        <h2>{t("regularizacion_iva.regularizacionDeIva")}</h2>
                         <Listado<RegularizacionIva>
                             metaTabla={metaTablaRegularizacionIva}
                             metaFiltro={metaFiltroRegularizacionIva}
@@ -67,7 +69,7 @@ export const MaestroConDetalleRegularizacionIva = () => {
                                             emitir("crear_regularizacion_iva_solicitada")
                                         }
                                     >
-                                        Nueva regularización
+                                        {t("regularizacion_iva.nuevaRegularizacion")}
                                     </QBoton>
                                 </div>
                             )}

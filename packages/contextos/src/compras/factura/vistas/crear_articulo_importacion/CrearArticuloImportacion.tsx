@@ -19,6 +19,7 @@ import {
     nuevoArticuloDesdeLinea,
 } from "../validar_importacion/dominio.ts";
 import { metaNuevoArticuloImportacion } from "./dominio.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CrearArticuloImportacion = ({
     linea,
@@ -33,6 +34,7 @@ export const CrearArticuloImportacion = ({
     opcionesDatosContables: OpcionDatoContable[];
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const inicial = useMemo(() => nuevoArticuloDesdeLinea(linea), [linea]);
     const { modelo, uiProps, valido } = useModelo(metaNuevoArticuloImportacion, inicial);
 
@@ -50,17 +52,17 @@ export const CrearArticuloImportacion = ({
         <QModal
             abierto={true}
             nombre="crearArticuloImportacion"
-            titulo="Crear artículo"
+            titulo={t("factura.importacion.crearArticulo")}
             onCerrar={cancelar}
         >
             <div className="CrearArticuloImportacion">
                 <quimera-formulario>
-                    <QInput label="Referencia" {...uiProps("referencia")} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("comun.campos.referencia")} {...uiProps("referencia")} />
+                    <QInput label={t("comun.campos.descripcion")} {...uiProps("descripcion")} />
                     <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
                     {modoDatosContables === "grupo_contable" ? (
                         <QSelect
-                            label="Grupo contable de producto"
+                            label={t("factura.importacion.articulo.grupoContable")}
                             {...uiProps("datoContable")}
                             opciones={opcionesDatosContables.map((o) => ({
                                 valor: o.id,
@@ -68,16 +70,16 @@ export const CrearArticuloImportacion = ({
                             }))}
                         />
                     ) : (
-                        <QInput label="Subcuenta de gasto" {...uiProps("datoContable")} />
+                        <QInput label={t("factura.importacion.subcuentaGasto")} {...uiProps("datoContable")} />
                     )}
                     <QCheckbox
-                        label="Coste proveedor = precio de la factura"
+                        label={t("factura.importacion.articulo.costeIgualPrecio")}
                         {...uiProps("costeIgualPrecio")}
                     />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("comun.botones.crear")}
                     </QBoton>
                 </div>
             </div>

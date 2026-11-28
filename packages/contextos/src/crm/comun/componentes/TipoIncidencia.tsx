@@ -1,4 +1,5 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
+import { tCrm } from "../../i18n/index.ts";
 
 interface TipoIncidenciaProps {
   valor: string;
@@ -7,8 +8,8 @@ interface TipoIncidenciaProps {
 }
 
 const opcionesTipo = [
-  { valor: "proveedor", descripcion: "Proveedor" },
-  { valor: "transportista", descripcion: "Transportista" },
+  { valor: "proveedor", get descripcion() { return tCrm("comun.proveedor"); } },
+  { valor: "transportista", get descripcion() { return tCrm("comun.transportista"); } },
 ];
 
 export const TipoIncidencia = ({
@@ -18,7 +19,7 @@ export const TipoIncidencia = ({
 }: TipoIncidenciaProps) => {
   return (
     <QSelect
-      label="Tipo"
+      label={tCrm("comun.tipo")}
       nombre="tipo_incidencia"
       valor={valor}
       onChange={onChange}

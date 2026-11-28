@@ -11,6 +11,7 @@ import { incidenciaVacia, metaIncidencia } from "./detalle.ts";
 import "./DetalleIncidencia.css";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./tabs/TabGeneral.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleIncidencia = ({
   id,
@@ -19,6 +20,7 @@ export const DetalleIncidencia = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const incidenciaId = id ?? params.id;
@@ -57,7 +59,7 @@ export const DetalleIncidencia = ({
             vertical
             acciones={[
               {
-                texto: "Borrar",
+                texto: t("incidencia.borrar"),
                 onClick: () => emitir("borrado_incidencia_solicitado"),
                 advertencia: true,
               },
@@ -65,11 +67,11 @@ export const DetalleIncidencia = ({
           />
 
           <Tabs>
-            <Tab label="General">
+            <Tab label={t("incidencia.general")}>
               <TabGeneral incidencia={incidencia} />
             </Tab>
 
-            <Tab label="Acciones">
+            <Tab label={t("incidencia.acciones")}>
               <Acciones incidencia={incidencia} />
             </Tab>
           </Tabs>
@@ -80,14 +82,14 @@ export const DetalleIncidencia = ({
                 onClick={() => emitir("incidencia_cambiada", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("incidencia.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_incidencia_cancelada")}
               >
-                Cancelar
+                {t("incidencia.cancelar")}
               </QBoton>
             </div>
           )}

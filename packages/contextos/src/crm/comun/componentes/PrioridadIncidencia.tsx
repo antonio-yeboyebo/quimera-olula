@@ -1,4 +1,6 @@
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
+import { tCrm } from "../../i18n/index.ts";
+import { opcionesPrioridadIncidencia } from "../valores/prioridad_incidencia.ts";
 
 interface PrioridadProps {
   valor: string;
@@ -6,11 +8,6 @@ interface PrioridadProps {
   getProps?: (campo: string) => Record<string, unknown>;
 }
 
-const opcionesPrioridad = [
-  { valor: "alta", descripcion: "Alta" },
-  { valor: "media", descripcion: "Media" },
-  { valor: "baja", descripcion: "Baja" },
-];
 
 export const PrioridadIncidencia = ({
   valor,
@@ -19,11 +16,11 @@ export const PrioridadIncidencia = ({
 }: PrioridadProps) => {
   return (
     <QSelect
-      label="Prioridad"
+      label={tCrm("comun.prioridad")}
       nombre="prioridad"
       valor={valor}
       onChange={onChange}
-      opciones={opcionesPrioridad}
+      opciones={opcionesPrioridadIncidencia}
       {...(getProps ? getProps("prioridad") : {})}
     />
   );

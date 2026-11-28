@@ -4,6 +4,7 @@ import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
 import { LineaPedido, Pedido } from "../../diseño.ts";
 import { pedidoEsEditable, pedidoPendiente } from "../../dominio.ts";
 import { LineasLista } from "./LineasLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 
 export const Lineas = ({
   pedido,
@@ -16,23 +17,24 @@ export const Lineas = ({
   estadoPedido: string;
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
+  const t = useTVentas();
   // Con algo servido el servidor solo admite añadir líneas, no cambiarlas ni borrarlas.
   const lineasModificables = pedidoPendiente(pedido);
   const editable = estadoPedido === "ABIERTO" && pedidoEsEditable(pedido);
 
   const acciones = [
     {
-      texto: "Nueva",
+      texto: t("documento.lineas.nueva"),
       onClick: () => publicar("alta_linea_solicitada"),
     },
     {
-      texto: "Editar",
+      texto: t("documento.lineas.editar"),
       onClick: () => publicar("cambio_linea_solicitado"),
       deshabilitado: !lineaActiva || !lineasModificables,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => publicar("baja_linea_solicitada"),
       deshabilitado: !lineaActiva || !lineasModificables,

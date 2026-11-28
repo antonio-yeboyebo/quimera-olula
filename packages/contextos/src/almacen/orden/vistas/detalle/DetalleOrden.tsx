@@ -1,9 +1,10 @@
-import { urlFicha, urlMapa } from "#/almacen/comun/fichas.ts";
 import { CrearCaja } from "#/almacen/caja/crear/CrearCaja.tsx";
-import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
+import { iniciarAudioLectura } from "#/almacen/comun/audio.ts";
 import { Almacen } from "#/almacen/comun/componentes/Almacen.tsx";
 import { Caja } from "#/almacen/comun/componentes/Caja.tsx";
 import { Ubicacion } from "#/almacen/comun/componentes/Ubicacion.tsx";
+import { urlFicha, urlMapa } from "#/almacen/comun/fichas.ts";
+import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -19,6 +20,7 @@ import { desbloquearTTS, useSintesisVoz } from "@olula/lib/voz/useSintesisVoz.ts
 import { useCallback, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
+import { useTAlmacen } from "../../../i18n/index.ts";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import {
     etiquetaEstadoOrden,
@@ -31,11 +33,12 @@ import {
     pedidoUnicoDeOrden,
 } from "../../dominio.ts";
 import { crearCajasOrden, getEtiquetaEnvio, getReportEtiquetasOrden } from "../../infraestructura.ts";
+import { definicionDeLinea, tieneFaseDrop } from "../../pasos/catalogo.ts";
 import { AlbaranarOrden } from "../albaranar/AlbaranarOrden.tsx";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
+import { ColocacionOrden } from "../colocar/ColocacionOrden.tsx";
 import { GenerarEnvioOrden } from "../generar_envio/GenerarEnvioOrden.tsx";
 import { ImprimirEtiquetasOrden } from "../imprimir_etiquetas/ImprimirEtiquetasOrden.tsx";
-import { ColocacionOrden } from "../colocar/ColocacionOrden.tsx";
 import { RecorridoOrden } from "../recorrido/RecorridoOrden.tsx";
 import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
 import { calcularAccionPrincipal } from "./accion_principal.ts";
@@ -44,8 +47,6 @@ import "./DetalleOrden.css";
 import { LecturaOrden } from "./lectura/LecturaLineaOrden.tsx";
 import { LecturasCajaOrden } from "./lecturas_caja/LecturasCajaOrden.tsx";
 import { LecturaCajaOrden } from "./leer_caja/LecturaCajaOrden.tsx";
-import { iniciarAudioLectura } from "#/almacen/comun/audio.ts";
-import { definicionDeLinea, tieneFaseDrop } from "../../pasos/catalogo.ts";
 import { LeerPasosOrden } from "./leer_pasos/LeerPasosOrden.tsx";
 import { LecturaUbicacionOrden } from "./leer_ubicacion/LecturaUbicacionOrden.tsx";
 import { LineasOrden } from "./lineas/LineasOrden.tsx";
@@ -60,6 +61,7 @@ export const DetalleOrden = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const params = useParams();
     const ordenId = id ?? params.id;
 
@@ -141,9 +143,9 @@ export const DetalleOrden = ({
             cerrarDetalle={() => publicar("cancelar_seleccion")}
         >
             <div className="maestro-botones">
-                <QBoton variante="borde" onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                <QBoton variante="borde" onClick={() => emitir("borrado_solicitado")}>{t("orden.borrar")}</QBoton>
                 {modelo.estado !== "TERMINADA" && modelo.estado !== "PREPARADA" && (
-                    <QBoton variante="borde" onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("terminado_solicitado")}>{t("orden.terminar")}</QBoton>
                 )}
                 {modelo.tipo === "SALIDA" && modelo.estado !== "TERMINADA" && (
                     <QBoton
@@ -151,7 +153,7 @@ export const DetalleOrden = ({
                         deshabilitado={!ordenAlbaranable(modelo)}
                         onClick={() => emitir("albaranado_solicitado")}
                     >
-                        Albaranar
+                        {t("orden.albaranar")}
                     </QBoton>
                 )}
                 {modelo.tipo === "ENTRADA" && (
@@ -160,18 +162,19 @@ export const DetalleOrden = ({
                         deshabilitado={modelo.estado !== "TERMINADA"}
                         onClick={() => emitir("colocacion_solicitada")}
                     >
-                        Colocar
+                        {t("orden.colocar")}
                     </QBoton>
                 )}
                 {ordenPermiteEnvio(modelo, hayAgenciasEnvio()) && (
-                    <QBoton variante="borde" onClick={() => emitir("envio_solicitado")}>Generar envío</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("envio_solicitado")}>{t("orden.generarEnvio")}</QBoton>
                 )}
-                <QBoton variante="borde" onClick={() => emitir("recorrido_solicitado")}>Recorrido</QBoton>
+                <QBoton variante="borde" onClick={() => emitir("recorrido_solicitado")}>{t("orden.recorrido")}</QBoton>
                 {plugin("sga") === "activo" && (
                     <QBoton variante="borde" enlace={urlMapa({ almacenId: modelo.almacenId, ordenId: modelo.id })}>
-                        Ver en el mapa
+                        {t("orden.verEnElMapa")}
                     </QBoton>
                 )}
+                <QBoton variante="borde" onClick={imprimirEtiquetas}>{t("orden.imprimirEtiquetas")}</QBoton>
                 <QBoton variante="borde" onClick={imprimirEtiquetas}>Imprimir etiquetas</QBoton>
                 {impresionEtiquetasActiva() && (
                     <QBoton variante="borde" onClick={() => emitir("impresion_etiquetas_solicitada")}>
@@ -179,7 +182,7 @@ export const DetalleOrden = ({
                     </QBoton>
                 )}
                 {sgaActivo && (
-                    <QBoton variante="borde" onClick={generarCajas}>Crear cajas</QBoton>
+                    <QBoton variante="borde" onClick={generarCajas}>{t("orden.crearCajas")}</QBoton>
                 )}
             </div>
             {accionPrincipal && (
@@ -192,20 +195,20 @@ export const DetalleOrden = ({
             )}
             <div className="DetalleOrden">
                 <quimera-formulario>
-                    <QInput label="Descripción" {...orden.uiProps("descripcion")}/>
+                    <QInput label={t("orden.descripcion")} {...orden.uiProps("descripcion")}/>
                     <TipoOrden {...orden.uiProps("tipo")} soloLectura />
                     <Almacen {...orden.uiProps("almacenId")} soloLectura />
-                    <QInput label="Fecha" {...orden.uiProps("fecha")} soloLectura />
+                    <QInput label={t("orden.fecha")} {...orden.uiProps("fecha")} soloLectura />
                     {pedidoUnico && (
                         <div className="DetalleOrden__albaranes">
-                            <span>Pedido</span>
+                            <span>{t("orden.pedido")}</span>
                             <Link to={urlFicha.pedidoVenta(pedidoUnico.id) ?? ""}>{pedidoUnico.codigo}</Link>
                             {pedidoUnico.cliente && <span>{pedidoUnico.cliente}</span>}
                         </div>
                     )}
                     {modelo.albaranes.length > 0 && (
                         <div className="DetalleOrden__albaranes">
-                            <span>{modelo.albaranes.length === 1 ? "Albarán" : "Albaranes"}</span>
+                            <span>{modelo.albaranes.length === 1 ? t("orden.albaran") : t("orden.albaranes")}</span>
                             {modelo.albaranes.map(({ id, codigo, agenciaEnvio, numeroTracking }) => (
                                 <span key={id} className="DetalleOrden__albaran">
                                     <Link to={`/ventas/albaran?id=${id}`}>{codigo}</Link>
@@ -217,7 +220,7 @@ export const DetalleOrden = ({
                                                 tamaño="pequeño"
                                                 onClick={() => reimprimirEtiquetaEnvio(id)}
                                             >
-                                                Etiqueta
+                                                {t("orden.etiqueta")}
                                             </QBoton>
                                         </>
                                     )}
@@ -228,31 +231,31 @@ export const DetalleOrden = ({
                     {usarCajasCabecera && sgaActivo && mostrarOrigen && (
                         <Caja
                             {...orden.uiProps("idCajaOrigen")}
-                            label="Caja origen"
+                            label={t("orden.cajaOrigen2")}
                             nombre="idCajaOrigen"
                         />
                     )}
                     {usarCajasCabecera && sgaActivo && mostrarOrigen && (
                         <Ubicacion
                             {...orden.uiProps("idUbicacionOrigen")}
-                            label="Ubicación origen"
+                            label={t("orden.ubicacionOrigen2")}
                             nombre="idUbicacionOrigen"
                         />
                     )}
                     {usarCajasCabecera && sgaActivo && mostrarDestino && (
                         <Caja
                             {...orden.uiProps("idCajaDestino")}
-                            label="Caja destino"
+                            label={t("orden.cajaDestino2")}
                             nombre="idCajaDestino"
                         />
                     )}
                     {usarCajasCabecera && sgaActivo && mostrarDestino && (
-                        <QBoton variante="borde" texto='Nueva caja' onClick={() => emitir("creacion_de_caja_solicitada")} />
+                        <QBoton variante="borde" texto={t("orden.nuevaCaja")} onClick={() => emitir("creacion_de_caja_solicitada")} />
                     )}
                     {usarCajasCabecera && sgaActivo && mostrarDestino && (
                         <Ubicacion
                             {...orden.uiProps("idUbicacionDestino", "ubicacionDestino")}
-                            label="Ubicación destino"
+                            label={t("orden.ubicacionDestino2")}
                             nombre="idUbicacionDestino"
                         />
                     )}
@@ -260,20 +263,20 @@ export const DetalleOrden = ({
             </div>
             <div className="maestro-botones">
                 {ocultarTemporalDemos && (
-                <QBoton variante="borde" onClick={() => emitir("lectura_solicitada")}>Lectura</
+                <QBoton variante="borde" onClick={() => emitir("lectura_solicitada")}>{t("orden.lectura")}</
                 QBoton>
                 )}
                 {ocultarTemporalDemos && sgaActivo && ["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton variante="borde" onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("lectura_caja_solicitada")}>{t("orden.lecturaCaja")}</QBoton>
                 )}
                 {ocultarTemporalDemos && sgaActivo && ["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton variante="borde" onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura bandeja</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("lectura_ubicacion_solicitada")}>{t("orden.lecturaBandeja")}</QBoton>
                 )}
                 {sgaActivo && modelo.lineas.some((l) => !!definicionDeLinea(l, modelo, "PICK")) && (
-                    <QBoton variante="borde" onClick={() => emitir("lectura_pick_solicitada")}>Leer pick</QBoton>
+                    <QBoton variante="borde" onClick={() => emitir("lectura_pick_solicitada")}>{t("orden.leerPick")}</QBoton>
                 )}
                 {sgaActivo && modelo.lineas.some((l) => tieneFaseDrop(l, modelo)) && (
-                    <QBoton variante="borde" onClick={() => { iniciarAudioLectura(); emitir("lectura_drop_solicitada"); }}>Leer drop</QBoton>
+                    <QBoton variante="borde" onClick={() => { iniciarAudioLectura(); emitir("lectura_drop_solicitada"); }}>{t("orden.leerDrop")}</QBoton>
                 )}
                 {sgaActivo && (
                     <QBoton variante="borde" onClick={() => {
@@ -281,15 +284,15 @@ export const DetalleOrden = ({
                         if (nuevoValor) desbloquearTTS();
                         setModoVoz(nuevoValor);
                     }}>
-                        {modoVoz ? "Voz ON" : "Voz OFF"}
+                        {modoVoz ? t("orden.vozOn") : t("orden.vozOff")}
                     </QBoton>
                 )}
                 {sgaActivo && modoVoz && !tts.vocesDisponibles && (
-                    <p className="q-texto-error">No hay voces TTS instaladas. Instala espeak-ng en el sistema.</p>
+                    <p className="q-texto-error">{t("orden.noHayVocesTtsInstaladasInstala")}</p>
                 )}
             </div>
             {usarCajasCabecera && sgaActivo && <LecturasCajaOrden orden={ctx.orden} />}
-            <h3>LÍNEAS</h3>
+            <h3>{t("orden.lineas")}</h3>
             <LineasOrden
                 orden={ctx.orden}
                 lineas={ctx.lineas}

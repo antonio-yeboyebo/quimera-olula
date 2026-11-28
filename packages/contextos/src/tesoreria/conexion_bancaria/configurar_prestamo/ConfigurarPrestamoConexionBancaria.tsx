@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { PrestamoBancario } from "../diseño.js";
 import { metaSubcuentasPrestamo } from "../dominio.js";
 import { patchPrestamoBancario } from "../infraestructura.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Subcuentas con las que se contabiliza cada cuota del préstamo: el capital
@@ -21,6 +22,7 @@ export const ConfigurarPrestamoConexionBancaria = ({
     prestamo: PrestamoBancario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const inicial = useMemo(() => ({
         codigoSubcuentaCapital: prestamo.codigoSubcuentaCapital ?? "",
         codigoSubcuentaIntereses: prestamo.codigoSubcuentaIntereses ?? "",
@@ -40,13 +42,13 @@ export const ConfigurarPrestamoConexionBancaria = ({
 
     return (
         <QModal abierto={true} nombre="configurarPrestamoConexionBancaria"
-            titulo={`Préstamo ${prestamo.contrato ?? prestamo.nombre}`} onCerrar={cancelar}>
+            titulo={t("conexion_bancaria.prestamoValor", { valor: prestamo.contrato ?? prestamo.nombre })} onCerrar={cancelar}>
             <quimera-formulario>
-                <QInput label="Subcuenta del capital" {...uiProps("codigoSubcuentaCapital")} />
-                <QInput label="Subcuenta de los intereses" {...uiProps("codigoSubcuentaIntereses")} />
+                <QInput label={t("conexion_bancaria.subcuentaDelCapital")} {...uiProps("codigoSubcuentaCapital")} />
+                <QInput label={t("conexion_bancaria.subcuentaDeLosIntereses")} {...uiProps("codigoSubcuentaIntereses")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
-                <QBoton onClick={guardar} deshabilitado={!valido}>Guardar</QBoton>
+                <QBoton onClick={guardar} deshabilitado={!valido}>{t("conexion_bancaria.guardar")}</QBoton>
             </div>
         </QModal>
     );

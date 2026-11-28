@@ -32,6 +32,7 @@ import { TabObservaciones } from "./TabObservaciones.tsx";
 import { TabProveedor } from "./TabProveedor.tsx";
 import { TabRecibos } from "./TabRecibos.tsx";
 import { TotalesDocumento } from "#/compras/comun/componentes/TotalesDocumento.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const DetalleFactura = ({
     id,
@@ -40,6 +41,7 @@ export const DetalleFactura = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleFacturaInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -73,22 +75,22 @@ export const DetalleFactura = ({
     const editable = facturaEditable(factura);
 
     const accionesFactura = [
-        { texto: "Imprimir", onClick: imprimir },
-        { texto: "Documentos relacionados", onClick: () => emitir("traza_solicitada") },
+        { texto: t("comun.botones.imprimir"), onClick: imprimir },
+        { texto: t("comun.botones.documentosRelacionados"), onClick: () => emitir("traza_solicitada") },
         {
-            texto: "Registrar factura",
+            texto: t("factura.detalle.registrar"),
             onClick: () => emitir("registro_solicitado"),
             deshabilitado: !facturaRegistrable(factura),
             principal: true,
         },
         {
-            texto: "Rectificativa",
+            texto: t("factura.detalle.rectificativa"),
             onClick: () => emitir("cambio_rectificativa_solicitado"),
             deshabilitado: !editable,
         },
         {
             icono: "eliminar",
-            texto: "Borrar",
+            texto: t("comun.botones.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             advertencia: true,
             deshabilitado: !editable,
@@ -113,7 +115,7 @@ export const DetalleFactura = ({
                     children={[
                         <Tab
                             key="tab-lineas"
-                            label="Líneas"
+                            label={t("comun.documento.pestanas.lineas")}
                             children={
                                 <LineasFactura
                                     factura={factura}
@@ -125,28 +127,28 @@ export const DetalleFactura = ({
                         />,
                         <Tab
                             key="tab-proveedor"
-                            label="Proveedor"
+                            label={t("comun.documento.pestanas.proveedor")}
                             children={<TabProveedor form={formModelo} publicar={emitir} />}
                         />,
                         <Tab
                             key="tab-datos"
-                            label="Datos"
+                            label={t("comun.documento.pestanas.datos")}
                             children={<TabDatos form={formModelo} publicar={emitir} />}
                         />,
                         <Tab
                             key="tab-observaciones"
-                            label="Observaciones"
+                            label={t("comun.campos.observaciones")}
                             children={<TabObservaciones form={formModelo} />}
                         />,
                         <Tab
                             key="tab-recibos"
-                            label="Recibos"
+                            label={t("factura.detalle.recibos")}
                             children={<TabRecibos facturaId={factura.id} />}
                         />,
                         puede("contabilidad.asiento") && (
                             <Tab
                                 key="tab-contabilidad"
-                                label="Contabilidad"
+                                label={t("factura.detalle.contabilidad")}
                                 children={<AsientoDeDocumento asientoId={factura.asientoId} sinDatosDocumento />}
                             />
                         ),

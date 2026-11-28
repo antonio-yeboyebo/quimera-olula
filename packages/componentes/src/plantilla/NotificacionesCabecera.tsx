@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { QIcono } from "../atomos/qicono.tsx";
 import { estaAutentificado } from "./autenticacion";
 import "./NotificacionesCabecera.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 const COMUNICACIONES_URL = "/comun/comunicacion";
 
@@ -14,6 +15,7 @@ type EventoComunicacionResumen = {
 };
 
 export const NotificacionesCabecera = () => {
+  const t = useTComponentes();
   const autenticado = estaAutentificado();
   const tienePermisoComunicacion = puede("comun.comunicacion");
   const pluginSseActivo = plugin("eventos_sse") === "activo";
@@ -57,8 +59,8 @@ export const NotificacionesCabecera = () => {
     <Link
       to={COMUNICACIONES_URL}
       className="accion-cabecera-notificaciones"
-      aria-label={`Ir a comunicaciones. ${totalNoLeidas} notificaciones sin leer.`}
-      title="Notificaciones"
+      aria-label={t("ui.plantilla.irAComunicacionesTotalnoleidasNotificaci", { totalNoLeidas })}
+      title={t("ui.plantilla.notificaciones")}
     >
       <QIcono nombre="bell" tamaño="sm" />
       <span className="accion-cabecera-notificaciones-badge">

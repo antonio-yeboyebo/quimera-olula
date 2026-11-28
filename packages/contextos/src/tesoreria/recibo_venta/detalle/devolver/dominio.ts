@@ -2,6 +2,7 @@ import { MetaModelo } from "@olula/lib/dominio.js";
 import { ReciboVenta } from "../../diseño.js";
 import { cuentaUltimoPago } from "../../dominio.js";
 import { DevolucionRecibo } from "./diseño.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 /** La cuenta se precarga con la del último pago y no se puede cambiar. */
 export const devolucionReciboVacia = (recibo: ReciboVenta): DevolucionRecibo => {
@@ -23,7 +24,7 @@ export const metaDevolucionRecibo = (enDivisa: boolean): MetaModelo<DevolucionRe
             tipo: "numero",
             requerido: enDivisa,
             validacion: (m) => !enDivisa || m.tasa_conversion > 0
-                ? true : "La tasa de cambio debe ser mayor que 0",
+                ? true : tTesoreria("recibo_venta.laTasaDeCambioDebeSer"),
         },
     },
 });

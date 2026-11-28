@@ -1,4 +1,5 @@
 import { MenuUsuarioElementos } from "@olula/componentes/menu/menu-usuario.tsx";
+import { elementoMiCuenta } from "@olula/componentes/menu/mi_cuenta.ts";
 
 const userData = JSON.parse(localStorage.getItem("user_data") || "{}");
 const nombreUsuario = userData?.user?.user || "Usuario";
@@ -15,6 +16,8 @@ export const MenuUsuarioElementosGanso: MenuUsuarioElementos = [
             },
         ],
     },
+    // Al mismo nivel que las demás secciones.
+    { ...elementoMiCuenta, icono: "usuario" },
     {
         nombre: "Administración",
         subelementos: [

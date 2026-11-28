@@ -12,8 +12,10 @@ import { useCallback, useMemo } from "react";
 import { metaNuevaAmortizacion, nuevaAmortizacionVacia, PERIODOS } from "../dominio.ts";
 import { postAmortizacion } from "../infraestructura.ts";
 import { useOpcionesGrupo } from "./OpcionesGrupo.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearAmortizacion = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaAmortizacionVacia, []);
     const { modelo, uiProps, valido } = useModelo(metaNuevaAmortizacion, inicial);
     const grupos = useOpcionesGrupo();
@@ -30,23 +32,23 @@ export const CrearAmortizacion = ({ publicar }: { publicar: EmitirEvento }) => {
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearAmortizacion" titulo="Nueva amortización"
+        <QModal abierto={true} nombre="crearAmortizacion" titulo={t("amortizacion.nuevaAmortizacion")}
             onCerrar={cancelar}>
             <div className="CrearAmortizacion">
                 <quimera-formulario>
-                    <QInput label="Código (vacío: automático)" {...uiProps("id")} />
-                    <QInput label="Elemento de inmovilizado" {...uiProps("elemento")} ref={focus} />
-                    <QSelect label="Grupo contable" opciones={grupos} {...uiProps("grupoId")} />
-                    <QDate label="Fecha de adquisición" {...uiProps("fecha")} />
-                    <QDate label="Fecha de inicio" {...uiProps("fechaInicio")} />
-                    <QInput label="Valor de adquisición" {...uiProps("valorAdquisicion")} />
-                    <QInput label="Valor residual" {...uiProps("valorResidual")} />
-                    <QSelect label="Periodo" opciones={PERIODOS} {...uiProps("periodo")} />
-                    <QInput label="% anual" {...uiProps("porcentajeAnual")} />
-                    <QCheckbox label="Bloqueado" {...uiProps("bloqueado")} />
+                    <QInput label={t("amortizacion.codigoVacioAutomatico")} {...uiProps("id")} />
+                    <QInput label={t("amortizacion.elementoDeInmovilizado")} {...uiProps("elemento")} ref={focus} />
+                    <QSelect label={t("amortizacion.grupoContable")} opciones={grupos} {...uiProps("grupoId")} />
+                    <QDate label={t("amortizacion.fechaDeAdquisicion")} {...uiProps("fecha")} />
+                    <QDate label={t("amortizacion.fechaDeInicio")} {...uiProps("fechaInicio")} />
+                    <QInput label={t("amortizacion.valorDeAdquisicion")} {...uiProps("valorAdquisicion")} />
+                    <QInput label={t("amortizacion.valorResidual")} {...uiProps("valorResidual")} />
+                    <QSelect label={t("amortizacion.periodo")} opciones={PERIODOS} {...uiProps("periodo")} />
+                    <QInput label={t("amortizacion.anual")} {...uiProps("porcentajeAnual")} />
+                    <QCheckbox label={t("amortizacion.bloqueado")} {...uiProps("bloqueado")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
-                    <QBoton onClick={crear} deshabilitado={!valido}>Crear</QBoton>
+                    <QBoton onClick={crear} deshabilitado={!valido}>{t("amortizacion.crear")}</QBoton>
                 </div>
             </div>
         </QModal>

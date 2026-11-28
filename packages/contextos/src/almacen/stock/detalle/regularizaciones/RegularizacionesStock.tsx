@@ -1,6 +1,7 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { formatearFechaString } from "@olula/lib/dominio.ts";
 import { RegularizacionStock } from "../../diseño.ts";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 const numero = (n: number) => n.toLocaleString("es-ES");
 
@@ -13,16 +14,16 @@ export const RegularizacionesStock = ({
     onBorrar: (regularizacion: RegularizacionStock) => void;
 }) => (
     <details className="DetalleStock-regularizaciones" open={regularizaciones.length > 0}>
-        <summary>Regularizaciones ({regularizaciones.length})</summary>
+        <summary>{tAlmacen("stock.regularizacionesLength", { length: regularizaciones.length })}</summary>
         <table>
             <thead>
                 <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Inicial</th>
-                    <th>Final</th>
-                    <th>Motivo</th>
-                    <th>Inventario</th>
+                    <th>{tAlmacen("stock.fecha")}</th>
+                    <th>{tAlmacen("stock.hora")}</th>
+                    <th>{tAlmacen("stock.inicial")}</th>
+                    <th>{tAlmacen("stock.final")}</th>
+                    <th>{tAlmacen("stock.motivo")}</th>
+                    <th>{tAlmacen("stock.inventario")}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -37,7 +38,7 @@ export const RegularizacionesStock = ({
                         <td>{r.inventarioId ?? ""}</td>
                         <td>
                             <QBoton tamaño="pequeño" variante="texto" onClick={() => onBorrar(r)}>
-                                Borrar
+                                {tAlmacen("stock.borrar")}
                             </QBoton>
                         </td>
                     </tr>

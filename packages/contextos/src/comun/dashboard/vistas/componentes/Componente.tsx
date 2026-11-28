@@ -8,6 +8,7 @@ import { Mapa } from "./Mapa.tsx";
 import { MarcoComponente } from "./MarcoComponente.tsx";
 import { Tabla } from "./Tabla.tsx";
 import { Objetivo, Tarjeta } from "./Tarjeta.tsx";
+import { useTComun } from "../../../i18n/index.ts";
 
 /**
  * Un componente del dashboard con sus datos. `espera` (ms) retrasa la carga: la vista
@@ -20,6 +21,7 @@ export const Componente = ({
   componente: ComponenteDashboard;
   espera?: number;
 }) => {
+  const t = useTComun();
   const { respuestas, cargando, error } = useDatosComponente(componente, espera);
   const recursos = useRecursos();
   const problema = problemaComponente(componente);
@@ -85,7 +87,7 @@ export const Componente = ({
         );
       default:
         return (
-          <p className="dashboard-componente-estado">Este tipo de componente llegará pronto</p>
+          <p className="dashboard-componente-estado">{t("dashboard.esteTipoDeComponenteLlegaraPronto")}</p>
         );
     }
   };

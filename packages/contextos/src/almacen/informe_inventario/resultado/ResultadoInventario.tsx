@@ -7,6 +7,7 @@ import { FormatoHoja, GrupoInventario, ResultadoInventario as Resultado } from "
 import { cantidad, criteriosResultado, importe, nombreFicheroInventario } from "../dominio.ts";
 import { getHojaInventario, getReportInventario, getResultadoInventario } from "../infraestructura.ts";
 import "./ResultadoInventario.css";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 type Ocupado = "calcular" | "pdf" | FormatoHoja | null;
 
@@ -16,6 +17,7 @@ type Ocupado = "calcular" | "pdf" | FormatoHoja | null;
  * botones descargan el PDF y la hoja (Excel u ODS) de los criterios guardados.
  */
 export const ResultadoInventario = ({ pestaña, ficha }: PropsResultadoInforme) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [resultado, setResultado] = useState<Resultado | null>(null);
     const [ocupado, setOcupado] = useState<Ocupado>(null);
@@ -54,32 +56,32 @@ export const ResultadoInventario = ({ pestaña, ficha }: PropsResultadoInforme) 
         <div className="ResultadoInventario">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={!!ocupado}>
-                    {ocupado === "calcular" ? "Calculando…" : "Calcular"}
+                    {ocupado === "calcular" ? t("informe_inventario.calculando") : t("informe_inventario.calcular")}
                 </QBoton>
                 <QBoton variante="borde" onClick={() => descargar("pdf")} deshabilitado={!!ocupado}>
-                    PDF
+                    {t("informe_inventario.pdf")}
                 </QBoton>
                 <QBoton variante="borde" onClick={() => descargar("xlsx")} deshabilitado={!!ocupado}>
-                    Excel
+                    {t("informe_inventario.excel")}
                 </QBoton>
                 <QBoton variante="borde" onClick={() => descargar("ods")} deshabilitado={!!ocupado}>
-                    ODS
+                    {t("informe_inventario.ods")}
                 </QBoton>
             </div>
 
-            {!resultado && <p className="ayuda">Pulsa «Calcular» para ver el inventario con los criterios guardados.</p>}
+            {!resultado && <p className="ayuda">{t("informe_inventario.pulsaCalcularParaVerElInventario")}</p>}
 
             {resultado && (
                 <>
                     <h3>{resultado.titulo}</h3>
                     <p className="criterios">{criteriosResultado(resultado)}</p>
-                    {resultado.grupos.length === 0 && <p>No hay stock con estos criterios.</p>}
+                    {resultado.grupos.length === 0 && <p>{t("informe_inventario.noHayStockConEstosCriterios")}</p>}
                     {resultado.grupos.map((grupo) => (
                         <GrupoAlmacen key={grupo.almacenId} grupo={grupo} valorado={resultado.valorado} />
                     ))}
                     {resultado.valorado && resultado.grupos.length > 0 && (
                         <p className="total-inventario">
-                            Total inventario <span>{importe(resultado.total)}</span>
+                            {t("informe_inventario.totalInventario")}{" "}<span>{importe(resultado.total)}</span>
                         </p>
                     )}
                 </>
@@ -99,11 +101,11 @@ const GrupoAlmacen = ({ grupo, valorado }: { grupo: GrupoInventario; valorado: b
             <table>
                 <thead>
                     <tr>
-                        <th>Referencia</th>
-                        <th>Descripción</th>
-                        <th className="numero">Cantidad</th>
-                        {valorado && <th className="numero">Precio</th>}
-                        {valorado && <th className="numero">Valor</th>}
+                        <th>{tAlmacen("informe_inventario.referencia")}</th>
+                        <th>{tAlmacen("informe_inventario.descripcion")}</th>
+                        <th className="numero">{tAlmacen("informe_inventario.cantidad")}</th>
+                        {valorado && <th className="numero">{tAlmacen("informe_inventario.precio")}</th>}
+                        {valorado && <th className="numero">{tAlmacen("informe_inventario.valor")}</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -120,7 +122,7 @@ const GrupoAlmacen = ({ grupo, valorado }: { grupo: GrupoInventario; valorado: b
                 {valorado && (
                     <tfoot>
                         <tr>
-                            <td colSpan={4}>Total almacén</td>
+                            <td colSpan={4}>{tAlmacen("informe_inventario.totalAlmacen")}</td>
                             <td className="numero">{importe(grupo.total)}</td>
                         </tr>
                     </tfoot>

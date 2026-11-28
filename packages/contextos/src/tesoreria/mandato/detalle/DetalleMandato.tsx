@@ -10,6 +10,7 @@ import "./DetalleMandato.css";
 import { getMaquina } from "./maquina.js";
 import { TabFirma } from "./TabFirma.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const DetalleMandato = ({
     id,
@@ -19,6 +20,7 @@ export const DetalleMandato = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleMandatoInicial,
@@ -34,7 +36,7 @@ export const DetalleMandato = ({
 
     if (!ctx.mandato.id) return null;
 
-    const titulo = (m: Mandato) => m.referencia || `Mandato ${m.id}`;
+    const titulo = (m: Mandato) => m.referencia || t("mandato.mandatoId", { id: m.id });
 
     return (
         <Detalle
@@ -46,11 +48,11 @@ export const DetalleMandato = ({
         >
             <div className="DetalleMandato">
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("mandato.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label="Firma"
+                    <Tab label={t("mandato.firma")}
                         key="tab-firma"
                         children={<TabFirma form={formModelo} />}
                     />,

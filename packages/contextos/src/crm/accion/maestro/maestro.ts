@@ -7,13 +7,15 @@ import {
 import { Accion } from "../diseño.ts";
 import { finalizarAccion, getAcciones } from "../infraestructura.ts";
 import { ContextoMaestroAcciones, EstadoMaestroAcciones } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
+import { textoEstadoAccion, textoTipoAccion } from "../../comun/valores/texto_opcion.ts";
 
 export const metaTablaAccion: MetaTabla<Accion> = [
-    { id: "id", cabecera: "Código" },
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "tipo", cabecera: "Tipo" },
-    { id: "estado", cabecera: "Estado" },
+    { id: "id", get cabecera() { return tCrm("accion.codigo"); } },
+    { id: "fecha", get cabecera() { return tCrm("accion.fecha"); }, tipo: "fecha" },
+    { id: "descripcion", get cabecera() { return tCrm("accion.descripcion"); } },
+    { id: "tipo", get cabecera() { return tCrm("accion.tipo"); }, render: (a) => textoTipoAccion(a.tipo) },
+    { id: "estado", get cabecera() { return tCrm("accion.estado"); }, render: (a) => textoEstadoAccion(a.estado) },
 ];
 
 type ProcesarAcciones = ProcesarContexto<EstadoMaestroAcciones, ContextoMaestroAcciones>;

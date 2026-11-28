@@ -2,6 +2,7 @@ import { CrmContacto, NuevoCrmContacto } from "#/ventas/cliente/diseño.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Agenda de contactos de un tercero (cliente o proveedor). Los contactos son los mismos
@@ -58,20 +59,20 @@ export const crearApiAgenda = (urlAgenda: (entidadId: string) => string, urlCont
       .then((respuesta) => respuesta.datos.map(contactoAgendaDesdeApi)),
 
   crear: async (entidadId, contacto) =>
-    RestAPI.post(urlAgenda(entidadId), contactoAgendaAApi(contacto), "Error al crear contacto")
+    RestAPI.post(urlAgenda(entidadId), contactoAgendaAApi(contacto), tComun("agenda.errorAlCrearContacto"))
       .then((respuesta) => respuesta.id),
 
   cambiar: async (contacto) => {
-    await RestAPI.patch(`${urlContactos}/${contacto.id}`, contactoAgendaAApi(contacto), "Error al actualizar contacto");
+    await RestAPI.patch(`${urlContactos}/${contacto.id}`, contactoAgendaAApi(contacto), tComun("agenda.errorAlActualizarContacto"));
   },
 
   borrar: async (contactoId) => {
-    await RestAPI.delete(`${urlContactos}/${contactoId}`, "Error al borrar contacto");
+    await RestAPI.delete(`${urlContactos}/${contactoId}`, tComun("agenda.errorAlBorrarContacto"));
   },
 
   vincular: async (contactoId, entidadId) => {
     try {
-      await RestAPI.post(`${urlAgenda(entidadId)}/${contactoId}`, {}, "Error al añadir el contacto a la agenda");
+      await RestAPI.post(`${urlAgenda(entidadId)}/${contactoId}`, {}, tComun("agenda.errorAlAnadirElContactoA"));
     } catch (error) {
       const fallo = error as { estado?: number; descripcion?: string };
       if (fallo?.estado === 409) {
@@ -82,7 +83,7 @@ export const crearApiAgenda = (urlAgenda: (entidadId: string) => string, urlCont
   },
 
   desvincular: async (contactoId, entidadId) => {
-    await RestAPI.delete(`${urlAgenda(entidadId)}/${contactoId}`, "Error al quitar el contacto de la agenda");
+    await RestAPI.delete(`${urlAgenda(entidadId)}/${contactoId}`, tComun("agenda.errorAlQuitarElContactoDe"));
   },
 
   buscar: async (filtro, orden) =>

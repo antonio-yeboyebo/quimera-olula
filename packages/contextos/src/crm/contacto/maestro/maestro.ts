@@ -7,12 +7,13 @@ import {
 import { Contacto } from "../diseño.ts";
 import { getContactos } from "../infraestructura.ts";
 import { ContextoMaestroContactos, EstadoMaestroContactos } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const metaTablaContacto: MetaTabla<Contacto> = [
-    { id: "id", cabecera: "Id" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "email", cabecera: "Email" },
-    { id: "telefono1", cabecera: "Teléfono" },
+    { id: "id", get cabecera() { return tCrm("contacto.id"); } },
+    { id: "nombre", get cabecera() { return tCrm("contacto.nombre"); } },
+    { id: "email", get cabecera() { return tCrm("contacto.email"); } },
+    { id: "telefono1", get cabecera() { return tCrm("contacto.telefono"); } },
 ];
 
 type ProcesarContactos = ProcesarContexto<EstadoMaestroContactos, ContextoMaestroContactos>;

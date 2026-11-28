@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { GrupoContableAmortizacion } from "../diseño.ts";
 import { etiquetaGrupoContableAmortizacion } from "../dominio.ts";
 import { deleteGrupoContableAmortizacion } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarGrupoContableAmortizacion = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarGrupoContableAmortizacion = ({
     grupo: GrupoContableAmortizacion;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteGrupoContableAmortizacion(grupo.id);
         publicar("grupo_borrado", grupo);
@@ -26,8 +28,8 @@ export const BorrarGrupoContableAmortizacion = ({
         <QModalConfirmacion
             nombre="borrarGrupoContableAmortizacion"
             abierto={true}
-            titulo="Borrar grupo contable de amortización"
-            mensaje={`¿Confirma borrar ${etiquetaGrupoContableAmortizacion(grupo)}? No se puede borrar si tiene amortizaciones.`}
+            titulo={t("grupo_contable_amortizacion.borrarGrupoContableDeAmortizacion")}
+            mensaje={t("grupo_contable_amortizacion.confirmaBorrarGrupoNoSePuede", { grupo: etiquetaGrupoContableAmortizacion(grupo) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

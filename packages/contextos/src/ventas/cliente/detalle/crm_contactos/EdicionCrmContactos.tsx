@@ -1,3 +1,4 @@
+import { useTVentas } from "../../../i18n/index.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
@@ -16,6 +17,7 @@ export const EdicionCrmContactos = ({
   contacto,
   emitir,
 }: EdicionCrmContactosProps) => {
+  const t = useTVentas();
   const { modelo, uiProps, valido } = useModelo(metaCrmContacto, contacto);
   const focus = useFocus();
 
@@ -26,23 +28,23 @@ export const EdicionCrmContactos = ({
   return (
     <div className="edicion-crm-contactos">
       <quimera-formulario>
-        <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
-        <QInput label="Cargo" {...uiProps("cargo")} />
-        <QInput label="Email" {...uiProps("email")} />
-        <QInput label="Teléfono 1" {...uiProps("telefono1")} />
-        <QInput label="Teléfono 2" {...uiProps("telefono2")} />
-        <QTextArea label="Observaciones" {...uiProps("observaciones")} />
+        <QInput label={t("cliente.agenda.nombre")} {...uiProps("nombre")} ref={focus} />
+        <QInput label={t("cliente.agenda.cargo")} {...uiProps("cargo")} />
+        <QInput label={t("cliente.agenda.email")} {...uiProps("email")} />
+        <QInput label={t("cliente.agenda.telefono1")} {...uiProps("telefono1")} />
+        <QInput label={t("cliente.agenda.telefono2")} {...uiProps("telefono2")} />
+        <QTextArea label={t("cliente.agenda.observaciones")} {...uiProps("observaciones")} />
       </quimera-formulario>
       <div className="botones">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton
           tipo="reset"
           variante="texto"
           onClick={() => emitir("edicion_cancelada")}
         >
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { MetaModelo, puede, stringNoVacio } from "@olula/lib/dominio.ts";
 import { IaTareaProgramada } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Tarea vacía para inicialización del contexto de detalle.
@@ -40,23 +41,23 @@ export type FrecuenciaTarea =
     | 'cada_semana';
 
 export const OPCIONES_FRECUENCIA: { valor: FrecuenciaTarea; descripcion: string }[] = [
-    { valor: 'cada_5_min', descripcion: 'Cada 5 minutos' },
-    { valor: 'cada_15_min', descripcion: 'Cada 15 minutos' },
-    { valor: 'cada_media_hora', descripcion: 'Cada media hora' },
-    { valor: 'cada_hora', descripcion: 'Cada hora' },
-    { valor: 'cada_dia', descripcion: 'Cada día' },
-    { valor: 'cada_semana', descripcion: 'Cada semana' },
+    { valor: 'cada_5_min', get descripcion() { return tComun("tareaProgramadaIa.cada5Minutos"); } },
+    { valor: 'cada_15_min', get descripcion() { return tComun("tareaProgramadaIa.cada15Minutos"); } },
+    { valor: 'cada_media_hora', get descripcion() { return tComun("tareaProgramadaIa.cadaMediaHora"); } },
+    { valor: 'cada_hora', get descripcion() { return tComun("tareaProgramadaIa.cadaHora"); } },
+    { valor: 'cada_dia', get descripcion() { return tComun("tareaProgramadaIa.cadaDia"); } },
+    { valor: 'cada_semana', get descripcion() { return tComun("tareaProgramadaIa.cadaSemana"); } },
 ];
 
 // Convención cron estándar: 0 = domingo.
 export const OPCIONES_DIA_SEMANA: { valor: string; descripcion: string }[] = [
-    { valor: '1', descripcion: 'Lunes' },
-    { valor: '2', descripcion: 'Martes' },
-    { valor: '3', descripcion: 'Miércoles' },
-    { valor: '4', descripcion: 'Jueves' },
-    { valor: '5', descripcion: 'Viernes' },
-    { valor: '6', descripcion: 'Sábado' },
-    { valor: '0', descripcion: 'Domingo' },
+    { valor: '1', get descripcion() { return tComun("tareaProgramadaIa.lunes"); } },
+    { valor: '2', get descripcion() { return tComun("tareaProgramadaIa.martes"); } },
+    { valor: '3', get descripcion() { return tComun("tareaProgramadaIa.miercoles"); } },
+    { valor: '4', get descripcion() { return tComun("tareaProgramadaIa.jueves"); } },
+    { valor: '5', get descripcion() { return tComun("tareaProgramadaIa.viernes"); } },
+    { valor: '6', get descripcion() { return tComun("tareaProgramadaIa.sabado"); } },
+    { valor: '0', get descripcion() { return tComun("tareaProgramadaIa.domingo"); } },
 ];
 
 export interface ProgramacionTarea {
@@ -141,10 +142,10 @@ export const programacionDesdeExpresionCron = (expresion: string): ProgramacionT
 export const descripcionFrecuencia = (expresion: string): string => {
     const p = programacionDesdeExpresionCron(expresion);
     const base = OPCIONES_FRECUENCIA.find((o) => o.valor === p.frecuencia)?.descripcion ?? expresion;
-    if (p.frecuencia === 'cada_dia') return `${base} a las ${horaDiaComoTexto(p)}`;
+    if (p.frecuencia === 'cada_dia') return tComun("tareaProgramadaIa.baseALasP", { base, p: horaDiaComoTexto(p) });
     if (p.frecuencia === 'cada_semana') {
         const dia = OPCIONES_DIA_SEMANA.find((o) => o.valor === String(p.diaSemana))?.descripcion ?? '';
-        return `${base} (${dia}) a las ${horaDiaComoTexto(p)}`;
+        return tComun("tareaProgramadaIa.baseDiaALasP", { base, dia, p: horaDiaComoTexto(p) });
     }
     return base;
 };

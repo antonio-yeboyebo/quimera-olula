@@ -14,6 +14,7 @@ import {
     OPCIONES_TIPO_SUBCUENTA,
 } from "../dominio.ts";
 import "./FormPartidaPlantilla.css";
+import { tContabilidad } from "../../i18n/index.ts";
 
 
 /**
@@ -31,50 +32,50 @@ export const FormPartidaPlantilla = ({
 }) => (
     <div className="FormPartidaPlantilla">
         <quimera-formulario>
-            <QInput label="Nº de orden" {...uiProps("numeroOrden")} />
-            <QSelect label="Debe / Haber" {...uiProps("debeHaber")} opciones={OPCIONES_DEBE_HABER} />
-            <QCheckbox label="Saltar si es cero" {...uiProps("saltarSiCero")} />
+            <QInput label={tContabilidad("plantilla_asiento.nDeOrden")} {...uiProps("numeroOrden")} />
+            <QSelect label={tContabilidad("plantilla_asiento.debeHaber")} {...uiProps("debeHaber")} opciones={OPCIONES_DEBE_HABER} />
+            <QCheckbox label={tContabilidad("plantilla_asiento.saltarSiEsCero")} {...uiProps("saltarSiCero")} />
         </quimera-formulario>
 
-        <h4>Subcuenta</h4>
+        <h4>{tContabilidad("plantilla_asiento.subcuenta")}</h4>
         <quimera-formulario>
-            <QSelect label="Subcuenta" {...uiProps("tipoSubcuenta")} opciones={OPCIONES_TIPO_SUBCUENTA} />
+            <QSelect label={tContabilidad("plantilla_asiento.subcuenta")} {...uiProps("tipoSubcuenta")} opciones={OPCIONES_TIPO_SUBCUENTA} />
             {modelo.tipoSubcuenta !== "Definida" && (
-                <QInput label="Código" {...uiProps("codigoSubcuenta")} />
+                <QInput label={tContabilidad("plantilla_asiento.codigo")} {...uiProps("codigoSubcuenta")} />
             )}
-            <QInput label="Variable" {...uiProps("variableSubcuenta")} />
+            <QInput label={tContabilidad("plantilla_asiento.variable")} {...uiProps("variableSubcuenta")} />
         </quimera-formulario>
 
-        <h4>Importe</h4>
+        <h4>{tContabilidad("plantilla_asiento.importe")}</h4>
         <quimera-formulario>
-            <QSelect label="Importe" {...uiProps("tipoImporte")} opciones={OPCIONES_TIPO_IMPORTE} />
+            <QSelect label={tContabilidad("plantilla_asiento.importe")} {...uiProps("tipoImporte")} opciones={OPCIONES_TIPO_IMPORTE} />
             {modelo.tipoImporte === "Calcular" && (
-                <QInput label="Fórmula (p. ej. BASE*21/100)" {...uiProps("importe")} />
+                <QInput label={tContabilidad("plantilla_asiento.formulaPEjBase21100")} {...uiProps("importe")} />
             )}
             {modelo.tipoImporte !== "Cuadrar" && (
-                <QInput label="Variable" {...uiProps("variableImporte")} />
+                <QInput label={tContabilidad("plantilla_asiento.variable")} {...uiProps("variableImporte")} />
             )}
         </quimera-formulario>
 
-        <h4>Concepto</h4>
+        <h4>{tContabilidad("plantilla_asiento.concepto")}</h4>
         <quimera-formulario>
-            <QSelect label="Concepto" {...uiProps("tipoConcepto")} opciones={OPCIONES_TIPO_CONCEPTO} />
+            <QSelect label={tContabilidad("plantilla_asiento.concepto")} {...uiProps("tipoConcepto")} opciones={OPCIONES_TIPO_CONCEPTO} />
             {(modelo.tipoConcepto === "Establecer" || modelo.tipoConcepto === "Pedir") && (
-                <QInput label="Texto" {...uiProps("concepto")} />
+                <QInput label={tContabilidad("plantilla_asiento.texto")} {...uiProps("concepto")} />
             )}
             {modelo.tipoConcepto !== "Último" && (
-                <QInput label="Variable" {...uiProps("variableConcepto")} />
+                <QInput label={tContabilidad("plantilla_asiento.variable")} {...uiProps("variableConcepto")} />
             )}
         </quimera-formulario>
 
-        <h4>Documento</h4>
+        <h4>{tContabilidad("plantilla_asiento.documento")}</h4>
         <quimera-formulario>
-            <QSelect label="Documento" {...uiProps("tipoDocumento")} opciones={OPCIONES_TIPO_DOCUMENTO} />
+            <QSelect label={tContabilidad("plantilla_asiento.documento")} {...uiProps("tipoDocumento")} opciones={OPCIONES_TIPO_DOCUMENTO} />
             {modelo.tipoDocumento !== "Último" && (
                 <>
-                    <QInput label="Documento (_NFAC_ = nº factura)" {...uiProps("documento")} />
+                    <QInput label={tContabilidad("plantilla_asiento.documentoNfacNFactura")} {...uiProps("documento")} />
                     <QSelect
-                        label="Tipo de documento"
+                        label={tContabilidad("plantilla_asiento.tipoDeDocumento")}
                         {...uiProps("tipoDocumentoOrigen")}
                         opciones={OPCIONES_TIPO_DOCUMENTO_ORIGEN}
                     />
@@ -82,24 +83,24 @@ export const FormPartidaPlantilla = ({
             )}
         </quimera-formulario>
 
-        <h4>IVA (solo si la subcuenta es de IVA)</h4>
+        <h4>{tContabilidad("plantilla_asiento.ivaSoloSiLaSubcuentaEs")}</h4>
         <quimera-formulario>
-            <QSelect label="Base imponible" {...uiProps("tipoBaseImponible")} opciones={OPCIONES_TIPO_BASE_IMPONIBLE} />
+            <QSelect label={tContabilidad("plantilla_asiento.baseImponible")} {...uiProps("tipoBaseImponible")} opciones={OPCIONES_TIPO_BASE_IMPONIBLE} />
             {modelo.tipoBaseImponible === "Calcular" && (
-                <QInput label="Fórmula de la base" {...uiProps("baseImponible")} />
+                <QInput label={tContabilidad("plantilla_asiento.formulaDeLaBase")} {...uiProps("baseImponible")} />
             )}
-            <QInput label="Variable" {...uiProps("variableBaseImponible")} />
-            <QSelect label="Nº de factura" {...uiProps("tipoFactura")} opciones={OPCIONES_TIPO_FACTURA} />
-            <QInput label="Serie" {...uiProps("serieId")} />
+            <QInput label={tContabilidad("plantilla_asiento.variable")} {...uiProps("variableBaseImponible")} />
+            <QSelect label={tContabilidad("plantilla_asiento.nDeFactura")} {...uiProps("tipoFactura")} opciones={OPCIONES_TIPO_FACTURA} />
+            <QInput label={tContabilidad("plantilla_asiento.serie")} {...uiProps("serieId")} />
         </quimera-formulario>
 
-        <h4>Contrapartida</h4>
+        <h4>{tContabilidad("plantilla_asiento.contrapartida")}</h4>
         <quimera-formulario>
-            <QSelect label="Contrapartida" {...uiProps("tipoContrapartida")} opciones={OPCIONES_TIPO_SUBCUENTA} />
+            <QSelect label={tContabilidad("plantilla_asiento.contrapartida")} {...uiProps("tipoContrapartida")} opciones={OPCIONES_TIPO_SUBCUENTA} />
             {modelo.tipoContrapartida !== "Definida" && (
-                <QInput label="Código" {...uiProps("codigoContrapartida")} />
+                <QInput label={tContabilidad("plantilla_asiento.codigo")} {...uiProps("codigoContrapartida")} />
             )}
-            <QInput label="Variable" {...uiProps("variableContrapartida")} />
+            <QInput label={tContabilidad("plantilla_asiento.variable")} {...uiProps("variableContrapartida")} />
         </quimera-formulario>
     </div>
 );

@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { FormaPago, NuevaFormaPago, PlazoFormaPago } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 /** Longitudes de `formaspago.mtd`. */
 export const LONGITUD_CODIGO = 10;
@@ -7,8 +8,8 @@ export const LONGITUD_DESCRIPCION = 100;
 
 /** `formaspago.genrecibos`, por defecto "Emitidos". */
 export const opcionesGeneraRecibos = [
-    { valor: "Emitidos", descripcion: "Emitidos" },
-    { valor: "Pagados", descripcion: "Pagados" },
+    { valor: "Emitidos", get descripcion() { return tTesoreria("forma_pago.emitidos"); } },
+    { valor: "Pagados", get descripcion() { return tTesoreria("forma_pago.pagados"); } },
 ];
 
 /** `formaspago.tipopagofacturae` (la primera opción de Eneboo es vacía). */
@@ -78,13 +79,13 @@ export const nuevoPlazo = (plazos: PlazoFormaPago[]): PlazoFormaPago => ({
  * días no negativos y la suma igual a 100. Devuelve el error o null. */
 export const errorPlazos = (plazos: PlazoFormaPago[]): string | null => {
     if (plazos.some((p) => !Number.isInteger(Number(p.dias)) || Number(p.dias) < 0)) {
-        return "Los días aplazados deben ser un número entero no negativo";
+        return tTesoreria("forma_pago.losDiasAplazadosDebenSerUn");
     }
     if (plazos.some((p) => !(redondear2(Number(p.aplazado)) > 0))) {
-        return "El % aplazado debe ser mayor que cero";
+        return tTesoreria("forma_pago.elAplazadoDebeSerMayorQue");
     }
     if (totalAplazado(plazos) !== 100) {
-        return "La suma de los % aplazados debe ser igual al 100%";
+        return tTesoreria("forma_pago.laSumaDeLosAplazadosDebe");
     }
     return null;
 };

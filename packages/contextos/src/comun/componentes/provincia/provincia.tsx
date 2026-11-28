@@ -1,6 +1,7 @@
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Filtro, Orden } from "@olula/lib/diseño.ts";
 import { getProvincias } from "./infraestructura.ts";
+import { tComun } from "../../i18n/index.ts";
 
 interface ProvinciaSelectorProps {
   descripcion?: string;
@@ -17,7 +18,7 @@ export const ProvinciaSelector = ({
   descripcion = "",
   valor,
   nombre = "provincia_id",
-  label = "Provincia",
+  label = tComun("componentes.provincia"),
   onChange,
   ...props
 }: ProvinciaSelectorProps) => {

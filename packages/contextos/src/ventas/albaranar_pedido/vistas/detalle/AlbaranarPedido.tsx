@@ -10,6 +10,7 @@ import { metaAlbaranarPedido } from "../../dominio.ts";
 import { contextoVacio } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { LineasAlbaranar } from "./lineas/LineasAlbaranar.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 
 type UrlPorId = (id: string) => string;
 
@@ -18,6 +19,7 @@ export const AlbaranarPedido = ({
 }: {
     publicar?: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const navigate = useNavigate();
     const { app } = useContext(FactoryCtx);
     const urlAlbaran =
@@ -49,13 +51,13 @@ export const AlbaranarPedido = ({
             <div className="albaranar2-bloque">
             <div className="botones maestro-botones">
                 <QBoton onClick={() => emitir("marcar_todo")}>
-                    Enviar todo
+                    {t("pedido.albaranar.enviarTodo")}
                 </QBoton>
                 <QBoton
                     onClick={() => emitir("albaranar_solicitado")}
                     deshabilitado={!albaranado.valido || estado !== "LISTO"}
                 >
-                    Albaranar
+                    {t("pedido.albaranar.albaranar")}
                 </QBoton>
             </div>
 
@@ -73,21 +75,21 @@ export const AlbaranarPedido = ({
                 <QModal
                     nombre="albaranCreado"
                     abierto={true}
-                    titulo="Albarán creado"
+                    titulo={t("pedido.albaranar.albaranCreado")}
                     onCerrar={() => emitir("albaranado_cerrado")}
                 >
-                    <p>Albarán <strong>{ctx.albaranCreado.codigo}</strong> creado correctamente.</p>
+                    <p>{t("pedido.albaranar.albaranCreadoCodigo", { codigo: ctx.albaranCreado.codigo })}</p>
                     <div className="botones maestro-botones">
                         <QBoton
                             variante="texto"
                             onClick={() => navigate("/ventas/pedido")}
                         >
-                            Volver a pedidos
+                            {t("pedido.albaranar.volverAPedidos")}
                         </QBoton>
                         <QBoton
                             onClick={() => navigate(urlAlbaran(ctx.albaranCreado!.id))}
                         >
-                            Ir al albarán {ctx.albaranCreado.codigo}
+                            {t("pedido.albaranar.irAlAlbaran", { codigo: ctx.albaranCreado.codigo })}
                         </QBoton>
                     </div>
                 </QModal>

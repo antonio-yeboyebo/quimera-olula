@@ -8,6 +8,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { LineaAlbaranar, LoteAlbaranar } from "../../diseño.ts";
+import { useTVentas } from "../../../i18n/index.ts";
 
 const metaCambiarLote: MetaModelo<LoteAlbaranar> = {
     campos: {
@@ -25,6 +26,7 @@ export const CambiarLoteAlbaranar = ({
     lote: LoteAlbaranar;
     emitir: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const { modelo, uiProps, valido, modificado } = useModelo(metaCambiarLote, lote);
 
     const cambiar_ = useCallback(async () => {
@@ -45,8 +47,8 @@ export const CambiarLoteAlbaranar = ({
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Lote label="Lote" {...uiProps("idLote")} sku={linea.sku} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
+                <Lote label={t("pedido.albaranar.lote")} {...uiProps("idLote")} sku={linea.sku} />
+                <QInput label={t("documento.formLinea.cantidad")} {...uiProps("cantidad")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={cambiar} deshabilitado={!valido || !modificado}>

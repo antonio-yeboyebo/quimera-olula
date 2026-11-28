@@ -17,6 +17,7 @@ import {
 import { getMaquina } from "./maquina.ts";
 import { TabCriterios } from "./TabCriterios.tsx";
 import { TabResultado } from "./TabResultado.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const DetallePatrimonioNeto = ({
     id,
@@ -25,6 +26,7 @@ export const DetallePatrimonioNeto = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetallePatrimonioNetoInicial,
@@ -52,7 +54,7 @@ export const DetallePatrimonioNeto = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("patrimonio_neto.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -74,14 +76,14 @@ export const DetallePatrimonioNeto = ({
                 <Tabs
                     children={[
                         <Tab
-                            label="Criterios"
+                            label={t("patrimonio_neto.criterios")}
                             key="tab-criterios"
                             children={
                                 <TabCriterios form={formModelo} />
                             }
                         />,
                         <Tab
-                            label="Resultado"
+                            label={t("patrimonio_neto.resultado")}
                             key="tab-resultado"
                             children={
                                 <TabResultado

@@ -4,6 +4,7 @@ import type {
     SpeechRecognitionEvent,
     SpeechRecognitionInstance,
 } from "./speech-recognition.d.ts";
+import { useTLib } from "../i18n/textos.ts";
 
 const getSpeechRecognition = (): (new () => SpeechRecognitionInstance) | null => {
     if (typeof window === "undefined") return null;
@@ -22,6 +23,7 @@ export interface UseReconocimientoVoz {
 }
 
 export const useReconocimientoVoz = (): UseReconocimientoVoz => {
+    const t = useTLib();
     const SpeechRecognitionClass = getSpeechRecognition();
     const soportado = SpeechRecognitionClass !== null;
 
@@ -71,10 +73,10 @@ export const useReconocimientoVoz = (): UseReconocimientoVoz => {
 
         recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
             const mensajes: Record<string, string> = {
-                "no-speech": "No se ha detectado voz",
-                "audio-capture": "No se ha encontrado micrófono",
-                "not-allowed": "Permiso de micrófono denegado",
-                "network": "Error de red",
+                "no-speech": t("gen.voz.noSeHaDetectadoVoz"),
+                "audio-capture": t("gen.voz.noSeHaEncontradoMicrofono"),
+                "not-allowed": t("gen.voz.permisoDeMicrofonoDenegado"),
+                "network": t("gen.voz.errorDeRed"),
                 "aborted": "",
             };
             const mensaje = mensajes[event.error] ?? `Error: ${event.error}`;

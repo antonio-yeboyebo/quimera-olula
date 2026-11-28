@@ -67,6 +67,8 @@ export default function App({ project, environment }) {
         .init({
           debug: false,
           fallbackLng: "es",
+          // i18next 27 trata "" como clave ausente; se mantiene el comportamiento de la v22
+          returnEmptyString: true,
           interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
           },

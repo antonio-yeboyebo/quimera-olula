@@ -23,6 +23,7 @@ import {
   nuevoPresupuestoClienteNoRegistradoVacio,
   nuevoPresupuestoVacio,
 } from "./crear.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearPresupuesto = ({
   publicar = async () => {},
@@ -33,6 +34,7 @@ export const CrearPresupuesto = ({
   onCancelar?: () => void;
   modeloVacio?: NuevoPresupuesto;
 }) => {
+  const t = useTVentas();
   const modeloConEmpresa = () => conEmpresaActual(modeloVacio);
   const modeloNoRegistradoConEmpresa = () =>
     conEmpresaActual(nuevoPresupuestoClienteNoRegistradoVacio);
@@ -66,7 +68,7 @@ export const CrearPresupuesto = ({
     <QModal
       abierto={true}
       nombre="crear_presupuesto"
-      titulo="Nuevo Presupuesto"
+      titulo={t("presupuesto.maestro.nuevo")}
       onCerrar={cancelar}
     >
       <FormAltaPresupuesto
@@ -96,6 +98,7 @@ const FormAltaPresupuesto = ({
   modeloVacio: NuevoPresupuesto;
   onToggleModoCliente: () => void;
 }) => {
+  const t = useTVentas();
   const focus = useFocus();
   const modeloConEmpresa = () => conEmpresaActual(modeloVacio);
   const modeloNoRegistradoConEmpresa = () =>
@@ -136,7 +139,7 @@ const FormAltaPresupuesto = ({
     <>
       <div className="modo-cliente">
         <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
-          {modoNoRegistrado ? "Cliente registrado" : "Cliente no registrado"}
+          {modoNoRegistrado ? t("documento.crear.clienteRegistrado") : t("documento.crear.clienteNoRegistrado")}
         </QBoton>
       </div>
       <div className="CrearPresupuesto campos-direccion">
@@ -147,12 +150,12 @@ const FormAltaPresupuesto = ({
                 onChange={(id) => presupuestoNoRegistrado.uiProps("empresa_id").onChange(id)}
               />
               <QInput
-                label="Nombre del Cliente"
+                label={t("documento.crear.nombreCliente")}
                 {...presupuestoNoRegistrado.uiProps("nombre_cliente")}
                 ref={focus}
               />
               <QInput
-                label="ID Fiscal"
+                label={t("documento.detalle.idFiscal")}
                 {...presupuestoNoRegistrado.uiProps("id_fiscal")}
               />
               <CamposDireccionVenta uiProps={presupuestoNoRegistrado.uiProps} />

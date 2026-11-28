@@ -6,6 +6,7 @@ import {
     GetIaTareasProgramadas, IaTareaProgramada, NuevoIaTareaProgramada, PatchIaTareaProgramada,
     PostIaTareaProgramada,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 /**
  * Forma de la entidad tal como la devuelve la API (snake_case).
@@ -111,7 +112,7 @@ export const postIaTareaProgramada: PostIaTareaProgramada = async (nuevaTarea) =
     const respuesta = await RestAPI.post<NuevaIaTareaProgramadaApi>(
         baseUrl,
         nuevaIaTareaProgramadaAApi(nuevaTarea),
-        "Error al crear la tarea programada",
+        tComun("tareaProgramadaIa.errorAlCrearLaTareaProgramada"),
     );
     return respuesta.id;
 };
@@ -120,14 +121,14 @@ export const patchIaTareaProgramada: PatchIaTareaProgramada = async (id, cambios
     await RestAPI.patch<CambiosIaTareaProgramadaApi>(
         `${baseUrl}/${id}`,
         cambiosIaTareaProgramadaAApi(cambios),
-        "Error al guardar la tarea programada",
+        tComun("tareaProgramadaIa.errorAlGuardarLaTareaProgramada"),
     );
 };
 
 export const deleteIaTareaProgramada: DeleteIaTareaProgramada = async (id) => {
     await RestAPI.delete(
         `${baseUrl}/${id}`,
-        "Error al eliminar la tarea programada",
+        tComun("tareaProgramadaIa.errorAlEliminarLaTareaProgramada"),
     );
 };
 
@@ -135,6 +136,6 @@ export const getEjecucionesIaTareaProgramada: GetEjecucionesIaTareaProgramada = 
     return await RestAPI.getLista<EjecucionIaTareaProgramada, EjecucionIaTareaProgramadaApi>(
         `${baseUrl}/${tareaId}/ejecuciones`,
         ejecucionIaTareaProgramadaDesdeApi,
-        "Error al obtener el historial de ejecuciones",
+        tComun("tareaProgramadaIa.errorAlObtenerElHistorialDe"),
     );
 };

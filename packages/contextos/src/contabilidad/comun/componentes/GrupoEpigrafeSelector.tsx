@@ -6,6 +6,7 @@ import {
     getGrupoEpigrafe,
     getGruposEpigrafes,
 } from "#/contabilidad/grupo_epigrafe/infraestructura.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type OpcionGrupoEpigrafe = {
     valor: string;
@@ -36,7 +37,7 @@ export const GrupoEpigrafeSelector = ({
     valor,
     descripcion = "",
     nombre = "grupo_id",
-    label = "Grupo",
+    label = tContabilidad("comun.grupo"),
     onChange,
     ...props
 }: GrupoEpigrafeSelectorProps) => {

@@ -8,12 +8,14 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postAgente } from "../infraestructura.js";
 import { metaNuevoAgente, nuevoAgenteInicial } from "./crear.js";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearAgente = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const inicial = useMemo(nuevoAgenteInicial, []);
 
     const { modelo: agente, uiProps, valido } = useModelo(
@@ -42,17 +44,17 @@ export const CrearAgente = ({
         <QModal
             abierto={true}
             nombre="crearAgente"
-            titulo="Nuevo agente"
+            titulo={t("agente.maestro.nuevo")}
             onCerrar={cancelar}
         >
             <div className="CrearAgente">
                 <quimera-formulario>
-                    <QInput label="Nombre de pila" {...uiProps("nombre_pila")} ref={focus} />
-                    <QInput label="Apellidos" {...uiProps("apellidos")} />
-                    <QInput label="Id Fiscal" {...uiProps("id_fiscal")} />
-                    <QInput label="% Comisión" {...uiProps("por_comision")} />
-                    <QInput label="Teléfono" {...uiProps("telefono")} />
-                    <QInput label="Email" {...uiProps("email")} />
+                    <QInput label={t("agente.campos.nombrePila")} {...uiProps("nombre_pila")} ref={focus} />
+                    <QInput label={t("agente.campos.apellidos")} {...uiProps("apellidos")} />
+                    <QInput label={t("agente.campos.idFiscal")} {...uiProps("id_fiscal")} />
+                    <QInput label={t("agente.campos.comision")} {...uiProps("por_comision")} />
+                    <QInput label={t("agente.campos.telefono")} {...uiProps("telefono")} />
+                    <QInput label={t("agente.campos.email")} {...uiProps("email")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">

@@ -9,6 +9,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.ts";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.ts";
 import { useEffect, useMemo } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { CargarFichero } from "../vistas/cargar_fichero/CargarFichero.tsx";
 import { CrearFactura } from "../crear/CrearFactura.tsx";
 import { DetalleFactura } from "../detalle/DetalleFactura.tsx";
@@ -18,14 +19,6 @@ import { getMaquina } from "./maquina.ts";
 import { metaTablaFactura } from "./metatabla_factura.tsx";
 import { TarjetaFactura } from "./TarjetaFactura.tsx";
 
-const widgetsFacturaCompra = widgetsDocumentoCompra("compras.factura", {
-    plural: "Facturas de compra",
-    total: "Total facturado",
-    medio: "Factura media",
-});
-
-// Filtros con el nombre de campo de la API (snake_case): el modelo va en camelCase.
-const metaFiltroFactura = getMetaFiltroDefecto(metaTablaFactura, { campoApi: camelASnake });
 
 const criteriaFacturas = {
     ...criteriaDefecto,
@@ -33,6 +26,19 @@ const criteriaFacturas = {
 };
 
 export const MaestroConDetalleFactura = () => {
+    const t = useTCompras();
+    // Columnas, filtros y widgets en el idioma activo: se rehacen al cambiarlo.
+    const metaTabla = useMemo(() => metaTablaFactura(t), [t]);
+    // Filtros con el nombre de campo de la API (snake_case): el modelo va en camelCase.
+    const metaFiltro = useMemo(() => getMetaFiltroDefecto(metaTabla, { campoApi: camelASnake }), [metaTabla]);
+    const widgets = useMemo(
+        () => widgetsDocumentoCompra("compras.factura", {
+            plural: t("factura.maestro.titulo"),
+            total: t("factura.maestro.totalFacturado"),
+            medio: t("factura.maestro.media"),
+        }, t),
+        [t]
+    );
     const criteriaBase = useMemo(() => criteriaFacturas, []);
 
     const { id, criteria } = getUrlParams();
@@ -57,11 +63,11 @@ export const MaestroConDetalleFactura = () => {
             <MaestroDetalle<Factura>
                 Maestro={
                     <>
-                        <h2>Facturas de compra</h2>
+                        <h2>{t("factura.maestro.titulo")}</h2>
                         <Listado<Factura>
-                            metaTabla={metaTablaFactura}
-                            metaFiltro={metaFiltroFactura}
-                            widgets={widgetsFacturaCompra}
+                            metaTabla={metaTabla}
+                            metaFiltro={metaFiltro}
+                            widgets={widgets}
                             criteria={facturas.criteria}
                             tarjeta={TarjetaFactura}
                             entidades={facturas.lista}
@@ -70,10 +76,10 @@ export const MaestroConDetalleFactura = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_factura_solicitada")}>
-                                        Nueva Factura
+                                        {t("factura.maestro.nueva")}
                                     </QBoton>
                                     <QBoton onClick={() => emitir("cargar_fichero_solicitado")} variante="borde">
-                                        Cargar fichero
+                                        {t("factura.maestro.cargarFichero")}
                                     </QBoton>
                                 </div>
                             )}

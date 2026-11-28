@@ -15,6 +15,7 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Albaran, EstadoAlbaran } from "../diseño.ts";
 import { editable } from "../dominio.ts";
 import "./TabDatos.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 interface TabDatosProps {
   albaran: HookModelo<Albaran>;
@@ -27,32 +28,39 @@ export const TabDatos = ({
   estado,
   publicar = () => {},
 }: TabDatosProps) => {
+  const t = useTVentas();
   const { uiProps, modelo } = albaran;
   const mostrarBotonesCambio = estado === "ABIERTO" && editable(modelo);
 
   return (
     <div className="TabDatos">
       <quimera-formulario>
-        <QDate label="Fecha" {...uiProps("fecha")} />
-        <QInput label="Hora" {...uiProps("hora")} />
+        <QDate label={t("documento.detalle.fecha")} {...uiProps("fecha")} />
+        <QInput label={t("documento.detalle.hora")} {...uiProps("hora")} />
         <Almacen {...uiProps("almacen_id", "nombre_almacen")} />
         <Divisa {...uiProps("divisa_id")} />
-        <QInput label="T. Conversión" {...uiProps("tasa_conversion")} />
+        <QInput
+          label={t("documento.detalle.tasaConversion")}
+          {...uiProps("tasa_conversion")}
+        />
         {mostrarBotonesCambio && (
           <div className="TabDatos-accion TabDatos-accion--divisa">
             <BotonCambiar
-              titulo="Cambiar divisa y tasa de conversión"
+              titulo={t("documento.detalle.cambiarDivisa")}
               onClick={() => publicar("cambio_divisa_solicitado")}
               deshabilitado={!puedeCambiarDivisa(modelo)}
             />
           </div>
         )}
         <Agente {...uiProps("agente_id", "nombre_agente")} />
-        <QInput label="% Comisión" {...uiProps("por_comision")} />
+        <QInput
+          label={t("documento.detalle.porComision")}
+          {...uiProps("por_comision")}
+        />
         {mostrarBotonesCambio && (
           <div className="TabDatos-accion TabDatos-accion--agente">
             <BotonCambiar
-              titulo="Cambiar agente y % de comisión"
+              titulo={t("documento.detalle.cambiarAgente")}
               onClick={() => publicar("cambio_agente_solicitado")}
             />
           </div>
@@ -63,7 +71,7 @@ export const TabDatos = ({
           <GrupoIvaNegocio {...uiProps("grupo_iva_negocio_id")} />
         )}
         {/* Solo lectura: la serie se fija al crear el documento (ver metaVenta). */}
-        <QInput label="Serie" {...uiProps("serie_id")} />
+        <QInput label={t("documento.detalle.serie")} {...uiProps("serie_id")} />
       </quimera-formulario>
     </div>
   );

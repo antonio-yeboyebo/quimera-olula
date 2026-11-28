@@ -8,6 +8,7 @@ import {
     PostProvincia,
     Provincia,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 const baseUrl = "/comun/provincia";
 
@@ -44,14 +45,14 @@ export const getProvincia: GetProvincia = async (id) =>
     RestAPI.getItem<Provincia, ProvinciaApi>(urlProvincia(id), provinciaDesdeApi);
 
 export const postProvincia: PostProvincia = async (nueva) => {
-    const respuesta = await RestAPI.post(baseUrl, cambiosProvinciaAApi(nueva), "Error al crear la provincia");
+    const respuesta = await RestAPI.post(baseUrl, cambiosProvinciaAApi(nueva), tComun("provincia.errorAlCrearLaProvincia"));
     return String(respuesta.id);
 };
 
 export const patchProvincia: PatchProvincia = async (id, cambios) => {
-    await RestAPI.patch(urlProvincia(id), cambiosProvinciaAApi(cambios), "Error al guardar la provincia");
+    await RestAPI.patch(urlProvincia(id), cambiosProvinciaAApi(cambios), tComun("provincia.errorAlGuardarLaProvincia"));
 };
 
 export const deleteProvincia: DeleteProvincia = async (id) => {
-    await RestAPI.delete(urlProvincia(id), "Error al borrar la provincia");
+    await RestAPI.delete(urlProvincia(id), tComun("provincia.errorAlBorrarLaProvincia"));
 };

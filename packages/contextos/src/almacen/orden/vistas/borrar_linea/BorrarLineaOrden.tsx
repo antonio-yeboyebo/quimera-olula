@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { deleteLineasOrden } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const BorrarLineaOrden = ({
     publicar,
@@ -14,6 +15,7 @@ export const BorrarLineaOrden = ({
     linea: LineaOrdenAlmacen;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteLineasOrden(orden.id, [linea.id]);
         publicar("linea_borrada", linea.id);
@@ -29,8 +31,8 @@ export const BorrarLineaOrden = ({
         <QModalConfirmacion
             nombre="confirmarBorrarLineaOrden"
             abierto={true}
-            titulo="Confirmar borrado"
-            mensaje="¿Está seguro de que desea borrar esta línea?"
+            titulo={t("orden.confirmarBorrado")}
+            mensaje={t("orden.estaSeguroDeQueDeseaBorrar")}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

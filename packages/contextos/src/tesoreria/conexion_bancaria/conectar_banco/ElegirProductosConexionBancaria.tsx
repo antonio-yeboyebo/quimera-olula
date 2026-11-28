@@ -4,6 +4,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { useState } from "react";
 import { TipoProductoBancario } from "../diseño.js";
 import { TIPOS_PRODUCTO_BANCARIO, conTipoProducto, etiquetaTipoProducto } from "../dominio.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Paso previo al widget de los proveedores que cobran por producto leído
@@ -17,13 +18,13 @@ export const ElegirProductosConexionBancaria = ({
     onAceptar: (tipos: TipoProductoBancario[]) => void;
     onCancelar: () => void;
 }) => {
+    const t = useTTesoreria();
     const [tipos, setTipos] = useState<TipoProductoBancario[]>(["accounts"]);
 
     return (
-        <QModal abierto={true} nombre="elegirProductosConexionBancaria" titulo="Conectar banco" onCerrar={onCancelar}>
+        <QModal abierto={true} nombre="elegirProductosConexionBancaria" titulo={t("conexion_bancaria.conectarBanco")} onCerrar={onCancelar}>
             <p>
-                Elige qué productos quieres leer del banco. Cada cuenta o préstamo que tengas en él
-                cuenta como un producto para la facturación del proveedor.
+                {t("conexion_bancaria.eligeQueProductosQuieresLeerDel")}
             </p>
             <quimera-formulario>
                 {TIPOS_PRODUCTO_BANCARIO.map((tipo) => (
@@ -38,7 +39,7 @@ export const ElegirProductosConexionBancaria = ({
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={() => onAceptar(tipos)} deshabilitado={tipos.length === 0}>
-                    Continuar
+                    {t("conexion_bancaria.continuar")}
                 </QBoton>
             </div>
         </QModal>

@@ -11,6 +11,7 @@ import {
 } from "../comun/config_visual.ts";
 import { OportunidadVenta } from "../diseño.ts";
 import "./TarjetaOportunidadVenta.css";
+import { tCrm } from "../../i18n/index.ts";
 
 export const TarjetaOportunidadVenta = (oportunidad: OportunidadVenta) => {
   const importe = oportunidad.importe ?? 0;
@@ -48,7 +49,7 @@ export const TarjetaOportunidadVenta = (oportunidad: OportunidadVenta) => {
               <div className="tarjeta-avisos">
                 {vencePronto && (
                   <QEtiqueta variante="error" className="tarjeta-aviso-cliente">
-                    Vence pronto
+                    {tCrm("oportunidadventa.vencePronto")}
                   </QEtiqueta>
                 )}
                 {tieneAccionesPendientes && (
@@ -56,7 +57,7 @@ export const TarjetaOportunidadVenta = (oportunidad: OportunidadVenta) => {
                     variante="advertencia"
                     className="tarjeta-aviso-cliente"
                   >
-                    {`${accionesPendientes} acciones pendientes`}
+                    {tCrm("oportunidadventa.accionesPendientes", { count: accionesPendientes })}
                   </QEtiqueta>
                 )}
               </div>

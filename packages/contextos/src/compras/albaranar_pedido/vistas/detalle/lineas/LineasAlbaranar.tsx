@@ -12,6 +12,7 @@ import { CambiarLoteAlbaranar } from "../../cambiar_lote/CambiarLoteAlbaranar.ts
 import { CrearLoteAlbaranar } from "../../crear_lote/CrearLoteAlbaranar.tsx";
 import { EstadoAlbaranar } from "../diseño.ts";
 import "./LineasAlbaranar.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 // ---------------------------------------------------------------------------
 // Fila de línea
@@ -26,6 +27,7 @@ const FilaLinea = ({
     conLotes: boolean;
     emitir: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { uiProps } = useModelo(metaLinea, linea, async (lineaActualizada) => {
         await emitir("recibiendo_cambiada", {
             idLinea: lineaActualizada.idLinea,
@@ -60,14 +62,14 @@ const FilaLinea = ({
                         <QInput label="" {...uiProps("recibiendo")} />
                     )}
                 </td>
-                {conLotes && <td>{linea.porLotes ? "Sí" : "No"}</td>}
+                {conLotes && <td>{linea.porLotes ? t("comun.si") : t("albaranarPedido.no")}</td>}
                 <td>
                     {conLotes && linea.porLotes && (
                         <QBoton
                             tamaño="pequeño"
                             onClick={() => emitir("alta_lote_solicitada", linea.idLinea)}
                         >
-                            + Lote
+                            {t("albaranarPedido.masLote")}
                         </QBoton>
                     )}
                 </td>
@@ -78,8 +80,8 @@ const FilaLinea = ({
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Lote</th>
-                                    <th className="num">Cantidad</th>
+                                    <th>{t("albaranarPedido.lote")}</th>
+                                    <th className="num">{t("comun.lineas.cantidad")}</th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -110,7 +112,9 @@ const FilaLote = ({
     linea: LineaAlbaranar;
     lote: LoteAlbaranar;
     emitir: EmitirEvento;
-}) => (
+}) => {
+    const t = useTCompras();
+    return (
     <tr>
         <td>{lote.idLote}</td>
         <td className="num">{lote.cantidad}</td>
@@ -121,7 +125,7 @@ const FilaLote = ({
                     emitir("cambio_lote_solicitado", { idLinea: linea.idLinea, lote })
                 }
             >
-                Editar
+                {t("comun.botones.editar")}
             </QBoton>
         </td>
         <td>
@@ -131,11 +135,12 @@ const FilaLote = ({
                     emitir("baja_lote_solicitada", { idLinea: linea.idLinea, lote })
                 }
             >
-                Borrar
+                {t("comun.botones.borrar")}
             </QBoton>
         </td>
     </tr>
-);
+    );
+};
 
 // ---------------------------------------------------------------------------
 // Orquestador principal
@@ -155,16 +160,17 @@ export const LineasAlbaranar = ({
     lineaActiva: LineaAlbaranar | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const conLotes = plugin("trazabilidad") === "activa";
     return (
     <div className="LineasAlbaranar">
         <table>
             <thead>
                 <tr>
-                    <th>Artículo</th>
-                    <th className="num">Recibida</th>
-                    <th className="num">A Recibir</th>
-                    {conLotes && <th>Por lotes</th>}
+                    <th>{t("comun.campos.articulo")}</th>
+                    <th className="num">{t("comun.lineas.recibida")}</th>
+                    <th className="num">{t("albaranarPedido.aRecibir")}</th>
+                    {conLotes && <th>{t("albaranarPedido.porLotes")}</th>}
                     <th></th>
                 </tr>
             </thead>

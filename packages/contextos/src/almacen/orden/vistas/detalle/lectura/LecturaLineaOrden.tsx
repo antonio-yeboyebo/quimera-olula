@@ -18,9 +18,10 @@ import { getSkuLote, registrarLecturasOrden } from "../../../infraestructura.ts"
 import { getLecturaOrdenVacia, getMetaLecturaOrden } from "./lectura_orden.ts";
 import "./LecturaLineaOrden.css";
 import { LecturaSkuLote } from "./LecturaSkuLote.tsx";
+import { tAlmacen, useTAlmacen } from "../../../../i18n/index.ts";
 
 const preguntaSku: PreguntaVoz = {
-    instruccion: "Lee el código de barras",
+    get instruccion() { return tAlmacen("orden.leeElCodigoDeBarras"); },
     tipo: "texto",
     resolver: async (texto) => {
         try {
@@ -29,33 +30,33 @@ const preguntaSku: PreguntaVoz = {
             return null;
         }
     },
-    confirmacion: (v) => `Artículo ${v.descripcion}, ¿correcto?`,
+    confirmacion: (v) => tAlmacen("orden.articuloDescripcionCorrecto", { descripcion: v.descripcion }),
 };
 
 const preguntaCantidad: PreguntaVoz = {
-    instruccion: "Dime la cantidad",
+    get instruccion() { return tAlmacen("orden.dimeLaCantidad"); },
     tipo: "numero",
-    confirmacion: (v) => `${v} unidades, ¿correcto?`,
+    confirmacion: (v) => tAlmacen("orden.vUnidadesCorrecto", { v }),
 };
 
 const preguntaUbicacion = (label: string): PreguntaVoz => ({
-    instruccion: `Dime la ${label}`,
+    instruccion: tAlmacen("orden.dimeLaLabel", { label }),
     tipo: "texto",
     resolver: async (texto) => {
         const ubi = await buscarUbicacionPorTexto(texto);
         return ubi ? { id: ubi.id, codigo: ubi.codigo } : null;
     },
-    confirmacion: (v) => `Ubicación ${v.codigo}, ¿correcto?`,
+    confirmacion: (v) => tAlmacen("orden.ubicacionCodigoCorrecto", { codigo: v.codigo }),
 });
 
 const preguntaCaja = (label: string): PreguntaVoz => ({
-    instruccion: `Dime la ${label}`,
+    instruccion: tAlmacen("orden.dimeLaLabel", { label }),
     tipo: "texto",
     resolver: async (texto) => {
         const caja = await buscarCajaPorTexto(texto);
         return caja ? { id: caja.id, lpn: caja.lpn } : null;
     },
-    confirmacion: (v) => `Caja ${v.lpn}, ¿correcto?`,
+    confirmacion: (v) => tAlmacen("orden.cajaLpnCorrecto", { lpn: v.lpn }),
 });
 
 export const LecturaOrden = ({
@@ -69,6 +70,7 @@ export const LecturaOrden = ({
     tipo: TipoOrden;
     modoVoz?: boolean;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const flujoVoz = useFlujoVoz();
 
@@ -143,22 +145,22 @@ export const LecturaOrden = ({
 
                 // 3. Ubicación origen (si aplica)
                 if (sgaActivo && mostrarOrigen) {
-                    const ubiOrigen = await flujoVoz.preguntar(preguntaUbicacion("ubicación de origen"));
+                    const ubiOrigen = await flujoVoz.preguntar(preguntaUbicacion(t("orden.ubicacionDeOrigen")));
                     if (cancelado) return;
                     parcial.idUbicacionOrigen = ubiOrigen.id;
 
-                    const cajaOrigen = await flujoVoz.preguntar(preguntaCaja("caja de origen"));
+                    const cajaOrigen = await flujoVoz.preguntar(preguntaCaja(t("orden.cajaDeOrigen")));
                     if (cancelado) return;
                     parcial.idCajaOrigen = cajaOrigen.id;
                 }
 
                 // 4. Ubicación destino (si aplica)
                 if (sgaActivo && mostrarDestino) {
-                    const ubiDestino = await flujoVoz.preguntar(preguntaUbicacion("ubicación de destino"));
+                    const ubiDestino = await flujoVoz.preguntar(preguntaUbicacion(t("orden.ubicacionDeDestino")));
                     if (cancelado) return;
                     parcial.idUbicacionDestino = ubiDestino.id;
 
-                    const cajaDestino = await flujoVoz.preguntar(preguntaCaja("caja de destino"));
+                    const cajaDestino = await flujoVoz.preguntar(preguntaCaja(t("orden.cajaDeDestino")));
                     if (cancelado) return;
                     parcial.idCajaDestino = cajaDestino.id;
                 }
@@ -188,7 +190,7 @@ export const LecturaOrden = ({
     );
 
     return (
-        <QModal abierto={true} nombre="lecturaOrden" titulo={modoVoz ? "Lectura de artículos (voz)" : "Lectura de artículos"} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_cancelada"); }}>
+        <QModal abierto={true} nombre="lecturaOrden" titulo={modoVoz ? t("orden.lecturaDeArticulosVoz") : t("orden.lecturaDeArticulos")} onCerrar={() => { flujoVoz.cancelar(); publicar("lectura_cancelada"); }}>
             <div className="LecturaOrden">
                 {modoVoz && (
                     <IndicadorVoz
@@ -199,7 +201,7 @@ export const LecturaOrden = ({
                 )}
                 <quimera-formulario>
                     <LecturaSkuLote nombre="sku-lote" onLectura={onSkuLoteLeido} />
-                    <QInput label="Cantidad" {...uiProps("cantidad")} />
+                    <QInput label={t("orden.cantidad")} {...uiProps("cantidad")} />
                     <Articulo
                         {...uiProps("sku", "articulo")}
                     />
@@ -210,11 +212,11 @@ export const LecturaOrden = ({
                     {sgaActivo && mostrarOrigen && (
                         <>
                             <Ubicacion
-                                label={"U. Origen"}
+                                label={t("orden.uOrigen")}
                                 {...uiProps("idUbicacionOrigen")}
                             />
                             <Caja
-                                label={"Caja Origen"}
+                                label={t("orden.cajaOrigen3")}
                                 {...uiProps("idCajaOrigen")}
                             />
                         </>
@@ -222,11 +224,11 @@ export const LecturaOrden = ({
                     {sgaActivo && mostrarDestino && (
                         <>
                             <Ubicacion
-                                label={"U. Destino"}
+                                label={t("orden.uDestino")}
                                 {...uiProps("idUbicacionDestino")}
                             />
                             <Caja
-                                label={"Caja Destino"}
+                                label={t("orden.cajaDestino3")}
                                 {...uiProps("idCajaDestino")}
                             />
                         </>
@@ -234,7 +236,7 @@ export const LecturaOrden = ({
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={registrar} deshabilitado={!valido}>
-                        Registrar
+                        {t("orden.registrar")}
                     </QBoton>
                 </div>
             </div>

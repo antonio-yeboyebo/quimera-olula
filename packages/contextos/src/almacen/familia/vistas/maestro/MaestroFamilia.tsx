@@ -12,8 +12,10 @@ import { CrearFamilia } from "../CrearFamilia.tsx";
 import { DetalleFamilia } from "../detalle/DetalleFamilia.tsx";
 import { metaTablaFamilia } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const MaestroFamilia = () => {
+  const t = useTAlmacen();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -35,9 +37,9 @@ export const MaestroFamilia = () => {
         layout="TABLA"
         Maestro={
           <>
-            <h2>Familias</h2>
+            <h2>{t("familia.familias")}</h2>
             <div className="maestro-botones">
-              <QBoton onClick={() => emitir("crear")}>Nueva</QBoton>
+              <QBoton onClick={() => emitir("crear")}>{t("familia.nueva")}</QBoton>
             </div>
             <Listado<Familia>
               metaTabla={metaTablaFamilia}

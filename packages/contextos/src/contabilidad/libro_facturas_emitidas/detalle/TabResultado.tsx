@@ -8,27 +8,28 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import { LibroFacturasEmitidas } from "../diseño.ts";
 import { nombreFicheroLibroFacturasEmitidas } from "../dominio.ts";
 import { getReportLibroFacturasEmitidas } from "../infraestructura.ts";
+import { tContabilidad, useTContabilidad } from "../../i18n/index.ts";
 
 /** Las columnas replican las del `.kut`, incluidas las que las opciones de
  * la ficha pueden quitar. */
 const columnas = (
     informe: LibroFacturasEmitidas
 ): MetaTabla<FilaLibroIva> => [
-    { id: "codigoFactura", cabecera: "Factura" },
-    { id: "fechaAsiento", cabecera: "Fecha as.", tipo: "fecha" },
+    { id: "codigoFactura", cabecera: tContabilidad("libro_facturas_emitidas.factura") },
+    { id: "fechaAsiento", cabecera: tContabilidad("libro_facturas_emitidas.fechaAs"), tipo: "fecha" },
     ...(informe.mostrarAsiento
-        ? ([{ id: "asientoNumero", cabecera: "As.", tipo: "numero" }] as const)
+        ? ([{ id: "asientoNumero", cabecera: tContabilidad("libro_facturas_emitidas.as"), tipo: "numero" }] as const)
         : []),
     ...(informe.mostrarDocumento
-        ? ([{ id: "documento", cabecera: "Documento" }] as const)
+        ? ([{ id: "documento", cabecera: tContabilidad("libro_facturas_emitidas.documento") }] as const)
         : []),
     ...(informe.mostrarNif
-        ? ([{ id: "cifNif", cabecera: "CIF/NIF" }] as const)
+        ? ([{ id: "cifNif", cabecera: tContabilidad("libro_facturas_emitidas.cifNif") }] as const)
         : []),
-    { id: "nombreTercero", cabecera: "Tercero" },
-    { id: "baseImponible", cabecera: "Base", tipo: "moneda" },
-    { id: "cuotaIva", cabecera: "Cuota IVA", tipo: "moneda" },
-    { id: "porcentajeIva", cabecera: "% IVA", tipo: "numero" },
+    { id: "nombreTercero", cabecera: tContabilidad("libro_facturas_emitidas.tercero") },
+    { id: "baseImponible", cabecera: tContabilidad("libro_facturas_emitidas.base"), tipo: "moneda" },
+    { id: "cuotaIva", cabecera: tContabilidad("libro_facturas_emitidas.cuotaIva"), tipo: "moneda" },
+    { id: "porcentajeIva", cabecera: tContabilidad("libro_facturas_emitidas.iva"), tipo: "numero" },
 ];
 
 export const TabResultado = ({
@@ -40,6 +41,7 @@ export const TabResultado = ({
     resultado: ResultadoLibroIva | null;
     emitir: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const [calculando, setCalculando] = useState(false);
     const [descargando, setDescargando] = useState(false);
@@ -78,18 +80,18 @@ export const TabResultado = ({
         <div className="TabResultado">
             <div className="maestro-botones">
                 <QBoton onClick={calcular} deshabilitado={ocupado}>
-                    {calculando ? "Calculando…" : "Calcular"}
+                    {calculando ? t("libro_facturas_emitidas.calculando") : t("libro_facturas_emitidas.calcular")}
                 </QBoton>
                 <QBoton
                     variante="borde"
                     onClick={descargar}
                     deshabilitado={ocupado}
                 >
-                    Descargar PDF
+                    {t("libro_facturas_emitidas.descargarPdf")}
                 </QBoton>
             </div>
 
-            {!resultado && <p>Pulsa «Calcular» para obtener el libro.</p>}
+            {!resultado && <p>{t("libro_facturas_emitidas.pulsaCalcularParaObtenerElLibro")}</p>}
 
             {resultado && (
                 <QTabla

@@ -1,6 +1,7 @@
 import { MetaCampoFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { almacenDeTrabajo } from "../preferencias.ts";
 import { Almacen } from "./Almacen.tsx";
+import { tAlmacen } from "../../i18n/index.ts";
 
 /**
  * Filtro «Almacén» de los listados del SGA. Elegir uno lo recuerda como almacén de trabajo; con
@@ -9,7 +10,7 @@ import { Almacen } from "./Almacen.tsx";
 export const filtroAlmacen = (campo = "almacen_id"): MetaCampoFiltro => ({
     id: "almacen",
     campo,
-    label: "Almacén",
+    label: tAlmacen("comun.almacen"),
     filtro: (v) => (v ? [campo, "=", v as string] : null),
     render: (valor, onChange) => (
         <Almacen

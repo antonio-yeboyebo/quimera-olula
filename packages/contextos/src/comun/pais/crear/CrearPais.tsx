@@ -9,8 +9,10 @@ import { useCallback, useMemo } from "react";
 import { CamposPais } from "../detalle/CamposPais.tsx";
 import { metaNuevoPais, nuevoPaisVacio } from "../dominio.ts";
 import { postPais } from "../infraestructura.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 export const CrearPais = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTComun();
     const inicial = useMemo(nuevoPaisVacio, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevoPais, inicial);
@@ -27,15 +29,15 @@ export const CrearPais = ({ publicar }: { publicar: EmitirEvento }) => {
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearPais" titulo="Nuevo país" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearPais" titulo={t("paises.nuevoPais")} onCerrar={cancelar}>
             <div className="CrearPais">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("paises.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposPais uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("paises.crear")}
                     </QBoton>
                 </div>
             </div>

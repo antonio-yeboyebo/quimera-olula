@@ -9,6 +9,7 @@ import { CuentaBancoProveedor, Proveedor } from "../diseño.ts";
 import { metaCuentaBancoProveedor } from "../dominio.ts";
 import { patchCuentaBancoProveedor } from "../infraestructura.ts";
 import "./CambiarCuentaBancoProveedor.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CambiarCuentaBancoProveedor = ({
     proveedor,
@@ -19,6 +20,7 @@ export const CambiarCuentaBancoProveedor = ({
     cuenta: CuentaBancoProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const { modelo, uiProps, valido } = useModelo(metaCuentaBancoProveedor, cuenta);
 
     const cambiar_ = useCallback(async () => {
@@ -37,23 +39,23 @@ export const CambiarCuentaBancoProveedor = ({
         <QModal
             abierto={true}
             nombre="cambiarCuentaBancoProveedor"
-            titulo="Cambiar cuenta bancaria"
+            titulo={t("proveedor.cuentas.cambiar")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QInput label="IBAN" {...uiProps("iban")} />
-                <QInput label="BIC" {...uiProps("bic")} />
-                <QInput label="Código de cuenta" {...uiProps("codigoCuenta")} />
-                <QInput label="País" {...uiProps("paisId")} />
-                <QInput label="Entidad" {...uiProps("entidad")} />
-                <QInput label="Agencia" {...uiProps("agencia")} />
-                <QInput label="Dígito de control" {...uiProps("digitoControl")} />
-                <QInput label="Cuenta" {...uiProps("cuenta")} />
+                <QInput label={t("comun.campos.descripcion")} {...uiProps("descripcion")} />
+                <QInput label={t("proveedor.cuentas.iban")} {...uiProps("iban")} />
+                <QInput label={t("proveedor.cuentas.bic")} {...uiProps("bic")} />
+                <QInput label={t("proveedor.cuentas.codigoCuenta")} {...uiProps("codigoCuenta")} />
+                <QInput label={t("comun.direccion.pais")} {...uiProps("paisId")} />
+                <QInput label={t("proveedor.cuentas.entidad")} {...uiProps("entidad")} />
+                <QInput label={t("proveedor.cuentas.agencia")} {...uiProps("agencia")} />
+                <QInput label={t("proveedor.cuentas.digitoControl")} {...uiProps("digitoControl")} />
+                <QInput label={t("proveedor.cuentas.cuenta")} {...uiProps("cuenta")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={cambiar} deshabilitado={!valido}>
-                    Cambiar
+                    {t("comun.botones.cambiar")}
                 </QBoton>
             </div>
         </QModal>

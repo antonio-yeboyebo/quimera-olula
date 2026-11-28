@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
 import { Accion, DeleteAccion, GetAccion, GetAcciones, PatchAccion, PostAccion } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 export type AccionAPI = Omit<Accion, "fecha" | "fecha_fin"> & {
     fecha: string | null;
@@ -30,7 +31,7 @@ export const postAccion: PostAccion = async (accion) => {
         fecha: accion.fecha?.toISOString().slice(0, 10)
     };
 
-    return await RestAPI.post(new ApiUrls().ACCION, body, "Error al guardar acción").then((respuesta) => respuesta.id);
+    return await RestAPI.post(new ApiUrls().ACCION, body, tCrm("accion.errorAlGuardarAccion")).then((respuesta) => respuesta.id);
 };
 
 export const patchAccion: PatchAccion = async (id, accion) => {
@@ -38,12 +39,12 @@ export const patchAccion: PatchAccion = async (id, accion) => {
     const accionSinNulls = Object.fromEntries(
         Object.entries(accionPatch).map(([k, v]) => [k, v === null ? "" : v])
     );
-    await RestAPI.patch(`${new ApiUrls().ACCION}/${id}`, accionSinNulls, "Error al guardar acción");
+    await RestAPI.patch(`${new ApiUrls().ACCION}/${id}`, accionSinNulls, tCrm("accion.errorAlGuardarAccion"));
 };
 
 export const deleteAccion: DeleteAccion = async (id) =>
-    await RestAPI.delete(`${new ApiUrls().ACCION}/${id}`, "Error al borrar acción");
+    await RestAPI.delete(`${new ApiUrls().ACCION}/${id}`, tCrm("accion.errorAlBorrarAccion"));
 
 export const finalizarAccion = async (id: string): Promise<void> => {
-    await RestAPI.patch(`${new ApiUrls().ACCION}/${id}/finalizar`, {}, "Error al finalizar acción");
+    await RestAPI.patch(`${new ApiUrls().ACCION}/${id}/finalizar`, {}, tCrm("accion.errorAlFinalizarAccion"));
 };

@@ -10,6 +10,7 @@ import { getAccion, postAccion } from "../infraestructura.ts";
 import "./CrearAccion.css";
 import { metaNuevaAccion, nuevaAccionVacia } from "./crear.ts";
 import { NuevaAccion } from "./diseño.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearAccion = ({
   publicar,
@@ -18,6 +19,7 @@ export const CrearAccion = ({
   publicar: ProcesarEvento;
   modeloVacio?: NuevaAccion;
 }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(metaNuevaAccion, modeloVacio);
 
   const crear_ = useCallback(async () => {
@@ -36,22 +38,22 @@ export const CrearAccion = ({
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nueva Acción"
+      titulo={t("accion.nuevaAccion")}
       onCerrar={cancelar}
     >
       <div className="CrearAccion">
         <quimera-formulario>
-          <QInput label="Descripción" {...uiProps("descripcion")} />
+          <QInput label={t("accion.descripcion")} {...uiProps("descripcion")} />
           <TipoAccion {...uiProps("tipo")} />
-          <QInput label="Fecha" {...uiProps("fecha")} />
+          <QInput label={t("accion.fecha")} {...uiProps("fecha")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("accion.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("accion.cancelar")}
           </QBoton>
         </div>
       </div>

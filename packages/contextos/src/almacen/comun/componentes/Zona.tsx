@@ -4,6 +4,7 @@ import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { getZonas } from "../../zona/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type ZonaProps = Omit<QAutocompletarProps, "obtenerOpciones" | "label"> & { label?: string };
 
@@ -16,7 +17,7 @@ export const Zona = ({
   enlace = PLANTILLA_FICHA.zona,
     valor,
     nombre = "zona_id",
-    label = "Zona",
+    label = tAlmacen("comun.zona"),
     onChange,
     ...props
 }: ZonaProps) => {

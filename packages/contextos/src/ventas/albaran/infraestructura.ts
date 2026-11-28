@@ -27,6 +27,7 @@ import {
   QueryNuevaLinea
 } from "./diseño.ts";
 import { getTraza } from "#/comun/componentes/traza/infraestructura.ts";
+import { tVentas } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().ALBARAN;
 
@@ -112,7 +113,7 @@ export const getAlbaran: GetAlbaran = async (id) => {
 };
 
 export const getReportAlbaran: GetReportAlbaran = async (id) =>
-  RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del albarán");
+  RestAPI.blob(`${baseUrl}/${id}/report`, tVentas("albaran.errores.report"));
 
 export const getAlbaranes: GetAlbaranes = async (
   filtro: Filtro,
@@ -131,7 +132,7 @@ export const postAlbaran: PostAlbaran = async (albaran) => {
     cliente: payloadCambioCliente(albaran),
     empresa_id: albaran.empresa_id || empresaActual(),
   };
-  return await RestAPI.post(baseUrl, payload, "Error al guardar albarán").then((respuesta) => respuesta.id);
+  return await RestAPI.post(baseUrl, payload, tVentas("albaran.errores.guardar")).then((respuesta) => respuesta.id);
 };
 
 export const getLineas: GetLineasAlbaran = async (id) =>
@@ -146,7 +147,7 @@ export const postLinea: PostLinea = async (id, linea) => {
   const lineaApi = peticionNuevaLineaApi(linea);
   const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea`, {
     lineas: [lineaApi],
-  }, "Error al crear línea de albarán");
+  }, tVentas("albaran.errores.crearLinea"));
   const miRespuesta = respuesta as unknown as NuevaLineaVentaApiRes[];
   const lineaActualizada = respuestaNuevaLineaApi(linea, miRespuesta[0]);
   return { ...lineaActualizada, id: miRespuesta[0].id } as unknown as typeof linea;
@@ -156,7 +157,7 @@ export const queryNuevaLinea: QueryNuevaLinea = async (id, linea) => {
   const lineaApi = peticionNuevaLineaApi(linea);
   const respuesta = await RestAPI.query<NuevaLineaVentaApiReq, NuevaLineaVentaApiRes>(
     `${baseUrl}/${id}/nueva_linea`, lineaApi,
-    "Error al obtener la nueva línea de albarán")
+    tVentas("albaran.errores.obtenerLinea"))
   const lineaActualizada = respuestaNuevaLineaApi(linea, respuesta);
   return lineaActualizada;
 }
@@ -169,7 +170,7 @@ export const patchArticuloLinea: PatchArticuloLinea = async (id, lineaId, refere
       },
     },
   }
-  await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, "Error al actualizar la línea del albarán");
+  await RestAPI.patch(`${baseUrl}/${id}/linea/${lineaId}`, payload, tVentas("albaran.errores.cambiarLinea"));
 }
 
 export const patchLinea: PatchLinea = async (id, linea) => {
@@ -185,7 +186,7 @@ export const patchLinea: PatchLinea = async (id, linea) => {
       comision: linea.por_comision,
     },
   }
-  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar la línea del albarán");
+  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("albaran.errores.cambiarLinea"));
 }
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
@@ -194,13 +195,13 @@ export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad
       cantidad: cantidad,
     },
   }
-  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar la línea del albarán");
+  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, tVentas("albaran.errores.cambiarLinea"));
 }
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
   await RestAPI.patch(`${baseUrl}/${id}/linea/borrar`, {
     lineas: [lineaId]
-  }, "Error al borrar la línea del albarán");
+  }, tVentas("albaran.errores.borrarLinea"));
 }
 
 export const patchAlbaran = async (id: string, albaran: Albaran) => {
@@ -229,18 +230,18 @@ export const patchAlbaran = async (id: string, albaran: Albaran) => {
   };
 
   await RestAPI.patch(`${baseUrl}/${id}`, payload,
-    'Error al guardar el albarán'
+    tVentas("albaran.errores.guardar")
   );
 };
 
 export const patchCambiarCliente: PatchClienteAlbaran = async (id, cambio) => {
   await RestAPI.patch(`${baseUrl}/${id}`, {
     cambios: { cliente: payloadCambioCliente(cambio) }
-  }, "Error al cambiar cliente del albarán");
+  }, tVentas("albaran.errores.cambiarCliente"));
 };
 
 export const borrarAlbaran = async (id: string) => {
-  await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar albarán");
+  await RestAPI.delete(`${baseUrl}/${id}`, tVentas("albaran.errores.borrar"));
 }
 
 export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
@@ -248,7 +249,7 @@ export const patchCambiarDescuento = async (id: string, dto_porcentual: number):
     cambios: {
       por_descuento: dto_porcentual,
     }
-  }, "Error al cambiar descuento del albarán");
+  }, tVentas("albaran.errores.cambiarDescuento"));
 };
 
 export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
@@ -259,14 +260,14 @@ export const patchCambiarDivisa: PatchCambiarDivisa = async (id, cambio) => {
         tasa_conversion: cambio.tasa_conversion,
       }
     }
-  }, "Error al cambiar divisa del albarán");
+  }, tVentas("albaran.errores.cambiarDivisa"));
 };
 
 export const patchFacturarAlbaran: PatchFacturarAlbaran = async (id) => {
   const respuesta = (await RestAPI.patch(
     `${baseUrl}/${id}/facturar`,
     {},
-    "Error al facturar el albarán"
+    tVentas("albaran.errores.facturar")
   )) as unknown as
     | { datos: { factura_id: string; codigo?: string } }
     | { factura_id: string; codigo?: string };
@@ -281,7 +282,7 @@ export const patchCambiarAgente: PatchCambiarAgente = async (id, cambio) => {
       agente_id: cambio.agente_id,
       por_comision: cambio.por_comision,
     }
-  }, "Error al cambiar agente del albarán");
+  }, tVentas("albaran.errores.cambiarAgente"));
 };
 
 export const getTrazaAlbaran = (id: string): Promise<unknown> => getTraza(`${baseUrl}/${id}`);

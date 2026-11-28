@@ -7,6 +7,7 @@ import { CrearCuentaCodigoBalance } from "../../crear_cuenta/CrearCuentaCodigoBa
 import { CodigoBalance, FormatoBalance } from "../../diseño.ts";
 import { CuentasLista } from "./CuentasLista.tsx";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 /**
  * Orquestador de las cuentas de un código de balance (`co_cuentascb` o
@@ -21,6 +22,7 @@ export const CuentasCodigoBalance = ({
     formato: FormatoBalance;
     codigoBalance: CodigoBalance;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, {
         estado: "INICIAL",
         formato,
@@ -39,12 +41,12 @@ export const CuentasCodigoBalance = ({
     return (
         <div className="CuentasCodigoBalance">
             <div className="botones maestro-botones">
-                <QBoton onClick={() => emitir("alta_cuenta_solicitada")}>Nueva cuenta</QBoton>
+                <QBoton onClick={() => emitir("alta_cuenta_solicitada")}>{t("codigo_balance.nuevaCuenta")}</QBoton>
                 <QBoton onClick={() => emitir("cambio_cuenta_solicitado")} deshabilitado={!activa}>
-                    Editar
+                    {t("codigo_balance.editar")}
                 </QBoton>
                 <QBoton onClick={() => emitir("baja_cuenta_solicitada")} deshabilitado={!activa}>
-                    Borrar
+                    {t("codigo_balance.borrar")}
                 </QBoton>
             </div>
             <CuentasLista cuentas={cuentas} seleccionada={activa?.id} publicar={emitir} />

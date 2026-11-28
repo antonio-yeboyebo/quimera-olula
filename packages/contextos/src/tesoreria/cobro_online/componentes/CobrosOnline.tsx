@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { CobroOnline, GetCobrosOnline } from "../diseño.ts";
 import { TEXTO_ESTADO, VARIANTE_ESTADO, textoIncidencia } from "../dominio.ts";
 import "./CobrosOnline.css";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /**
  * Cobros con tarjeta de un documento: estado de cada enlace y lo que haya que
@@ -13,6 +14,7 @@ import "./CobrosOnline.css";
  * `recarga` cambia para volver a leerlos (p.ej. al cerrar el modal del enlace).
  */
 export const CobrosOnline = ({ getCobros, recarga = 0 }: { getCobros: GetCobrosOnline; recarga?: number }) => {
+    const t = useTTesoreria();
     const [cobros, setCobros] = useState<CobroOnline[]>([]);
 
     useEffect(() => {
@@ -30,7 +32,7 @@ export const CobrosOnline = ({ getCobros, recarga = 0 }: { getCobros: GetCobrosO
 
     return (
         <section className="CobrosOnline">
-            <h3>Cobros con tarjeta</h3>
+            <h3>{t("cobro_online.cobrosConTarjeta")}</h3>
             <ul>
                 {cobros.map((cobro) => (
                     <li key={cobro.id}>
@@ -41,8 +43,8 @@ export const CobrosOnline = ({ getCobros, recarga = 0 }: { getCobros: GetCobrosO
                             <span className="importe">{formatearMoneda(cobro.importe, cobro.divisaId)}</span>
                             <span className="fecha">
                                 {cobro.pagadoEn
-                                    ? `Pagado el ${formatearFechaHoraString(cobro.pagadoEn)}`
-                                    : `Creado el ${formatearFechaHoraString(cobro.creadoEn)}`}
+                                    ? t("cobro_online.pagadoElPagadoen", { pagadoEn: formatearFechaHoraString(cobro.pagadoEn) })
+                                    : t("cobro_online.creadoElCreadoen", { creadoEn: formatearFechaHoraString(cobro.creadoEn) })}
                             </span>
                             {cobro.modo === "test" && <QEtiqueta variante="gris">test</QEtiqueta>}
                             {cobro.urlPanel && (
@@ -51,9 +53,9 @@ export const CobrosOnline = ({ getCobros, recarga = 0 }: { getCobros: GetCobrosO
                                     href={cobro.urlPanel}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    title="Abrir el pago en el panel de Stripe"
+                                    title={t("cobro_online.abrirElPagoEnElPanel")}
                                 >
-                                    Ver en Stripe
+                                    {t("cobro_online.verEnStripe")}
                                     <QIcono nombre="arriba_derecha" tamaño="sm" />
                                 </a>
                             )}

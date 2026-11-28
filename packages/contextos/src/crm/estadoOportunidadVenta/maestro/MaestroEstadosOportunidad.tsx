@@ -11,8 +11,11 @@ import { EstadoOportunidad } from "../diseño.ts";
 import { metaTablaEstadoOportunidad } from "./maestro.ts";
 import "./MaestroEstadosOportunidad.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
+import { textoEstadoBaseOportunidad } from "../../comun/valores/texto_opcion.ts";
 
 export const MaestroEstadosOportunidad = () => {
+  const t = useTCrm();
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "INICIAL",
     estados_oportunidad: listaActivaEntidadesInicial<EstadoOportunidad>(),
@@ -31,7 +34,7 @@ export const MaestroEstadosOportunidad = () => {
       <MaestroDetalle<EstadoOportunidad>
         Maestro={
           <>
-            <h2>Estados de Oportunidad de Venta</h2>
+            <h2>{t("estadoOportunidadVenta.estadosDeOportunidadDeVenta")}</h2>
 
             <Listado<EstadoOportunidad>
               metaTabla={metaTablaEstadoOportunidad}
@@ -41,7 +44,7 @@ export const MaestroEstadosOportunidad = () => {
                   descripcion={estado.descripcion}
                   valorDefecto={estado.valorDefecto}
                   derecha={<span>{`${estado.probabilidad}%`}</span>}
-                  abajoDerecha={<span>{estado.estadobase}</span>}
+                  abajoDerecha={<span>{textoEstadoBaseOportunidad(estado.estadobase)}</span>}
                 />
               )}
               criteria={ctx.estados_oportunidad.criteria}
@@ -56,7 +59,7 @@ export const MaestroEstadosOportunidad = () => {
                       emitir("creacion_de_estado_oportunidad_solicitada")
                     }
                   >
-                    Nuevo
+                    {t("estadoOportunidadVenta.nuevo")}
                   </QBoton>
                 </div>
               )}

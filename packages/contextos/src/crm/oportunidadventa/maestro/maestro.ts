@@ -7,14 +7,15 @@ import {
 import { OportunidadVenta } from "../diseño.ts";
 import { getOportunidadesVenta, patchOportunidadVenta } from "../infraestructura.ts";
 import { ContextoMaestroOportunidades, EstadoMaestroOportunidades } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 
 export const metaTablaOportunidadVenta: MetaTabla<OportunidadVenta> = [
-    { id: "probabilidad", cabecera: "Probabilidad", tipo: "numero" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "nombre_cliente", cabecera: "Cliente" },
-    { id: "importe", cabecera: "Total", tipo: "moneda" },
-    { id: "fecha_cierre", cabecera: "Fecha Cierre", tipo: "fecha" },
+    { id: "probabilidad", get cabecera() { return tCrm("oportunidadventa.probabilidad2"); }, tipo: "numero" },
+    { id: "descripcion", get cabecera() { return tCrm("oportunidadventa.descripcion"); } },
+    { id: "nombre_cliente", get cabecera() { return tCrm("oportunidadventa.cliente"); } },
+    { id: "importe", get cabecera() { return tCrm("oportunidadventa.total"); }, tipo: "moneda" },
+    { id: "fecha_cierre", get cabecera() { return tCrm("oportunidadventa.fechaCierre"); }, tipo: "fecha" },
 ];
 
 type ProcesarOportunidades = ProcesarContexto<EstadoMaestroOportunidades, ContextoMaestroOportunidades>;

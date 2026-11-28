@@ -10,6 +10,7 @@ import {
     PatchPais,
     PostPais,
 } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 const baseUrl = ApiUrls.COMUN_PAIS;
 
@@ -79,14 +80,14 @@ export const getPaisesMaestro: GetPaisesMaestro = async (criteria) =>
 export const getPais: GetPais = async (id) => RestAPI.getItem<Pais, PaisApi>(urlPais(id), paisDesdeApi);
 
 export const postPais: PostPais = async (nuevo) => {
-    const respuesta = await RestAPI.post(baseUrl, nuevoPaisAApi(nuevo), "Error al crear el país");
+    const respuesta = await RestAPI.post(baseUrl, nuevoPaisAApi(nuevo), tComun("paises.errorAlCrearElPais"));
     return String(respuesta.id);
 };
 
 export const patchPais: PatchPais = async (id, cambios) => {
-    await RestAPI.patch(urlPais(id), cambiosPaisAApi(cambios), "Error al guardar el país");
+    await RestAPI.patch(urlPais(id), cambiosPaisAApi(cambios), tComun("paises.errorAlGuardarElPais"));
 };
 
 export const deletePais: DeletePais = async (id) => {
-    await RestAPI.delete(urlPais(id), "Error al borrar el país");
+    await RestAPI.delete(urlPais(id), tComun("paises.errorAlBorrarElPais"));
 };

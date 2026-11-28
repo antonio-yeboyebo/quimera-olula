@@ -4,12 +4,14 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { useCallback, useContext, useState } from "react";
 import { mensajeRevisados } from "../dominio.ts";
 import { revisarLotes } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * «Revisar todos»: recalcula las cantidades de todos los lotes con sus movimientos, tras
  * confirmarlo. Al terminar, recarga el listado y dice cuántos ha revisado.
  */
 export const RevisarTodosLotes = ({ recargar }: { recargar: () => Promise<void> }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const [confirmando, setConfirmando] = useState(false);
     const [revisando, setRevisando] = useState(false);
@@ -33,16 +35,16 @@ export const RevisarTodosLotes = ({ recargar }: { recargar: () => Promise<void> 
     return (
         <>
             <QBoton variante="borde" deshabilitado={revisando} onClick={() => setConfirmando(true)}>
-                {revisando ? "Revisando..." : "Revisar todos"}
+                {revisando ? t("lote.revisando") : t("lote.revisarTodos")}
             </QBoton>
             {mensaje && <span className="nota-lote" role="status">{mensaje}</span>}
             {confirmando && (
                 <QModalConfirmacion
                     nombre="revisarTodosLotes"
                     abierto={true}
-                    titulo="Revisar todos los lotes"
-                    mensaje="Se recalcularán con sus movimientos las cantidades de todos los lotes (en almacén y, con producción, total, usada, reservada, por recibir, disponible y estado). Puede tardar si hay muchos lotes. ¿Continuar?"
-                    labelAceptar="Revisar"
+                    titulo={t("lote.revisarTodosLosLotes")}
+                    mensaje={t("lote.seRecalcularanConSusMovimientosLas")}
+                    labelAceptar={t("lote.revisar")}
                     onCerrar={() => setConfirmando(false)}
                     onAceptar={revisar}
                 />

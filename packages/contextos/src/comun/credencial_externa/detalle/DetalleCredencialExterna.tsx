@@ -19,6 +19,7 @@ import "./DetalleCredencialExterna.css";
 import { getMaquina } from "./maquina.js";
 import { TabGeneral } from "./TabGeneral.js";
 import { TabInformacion } from "./TabInformacion.js";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 /**
  * Componente detalle de una credencial de terceros.
@@ -35,6 +36,7 @@ export const DetalleCredencialExterna = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTComun();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCredencialExternaInicial,
@@ -94,12 +96,12 @@ export const DetalleCredencialExterna = ({
 
     const acciones = [
         {
-            texto: "Editar credencial",
+            texto: t("credencialExterna.editarCredencial"),
             onClick: () => emitir("rotacion_solicitada"),
             deshabilitado: !puede("comun.credencial_externa"),
         },
         {
-            texto: credencial.activo ? "Desactivar" : "Activar",
+            texto: credencial.activo ? t("credencialExterna.desactivar") : t("credencialExterna.activar"),
             onClick: () => emitir("activo_alternado_solicitado"),
             deshabilitado: !puede("comun.credencial_externa"),
         },
@@ -109,7 +111,7 @@ export const DetalleCredencialExterna = ({
         // sí (Telegram caído, OLULA_URL cambiada...) y sin esto no habría forma de
         // reintentarla sin rotar el secreto solo para forzar el efecto.
         ...(esConectorTelegram ? [{
-            texto: "Reconectar",
+            texto: t("credencialExterna.reconectar"),
             onClick: reconectar,
             deshabilitado: !puede("comun.credencial_externa"),
         }] : []),
@@ -117,7 +119,7 @@ export const DetalleCredencialExterna = ({
         // cobra y da de alta el webhook si falta (al guardar se intenta solo, pero
         // puede fallar sin que lo veas: OLULA_URL sin configurar, Stripe caído...).
         ...(esConectorStripe ? [{
-            texto: "Probar conexión",
+            texto: t("credencialExterna.probarConexion"),
             onClick: probarConexionStripe,
             deshabilitado: !puede("comun.credencial_externa"),
         }] : []),
@@ -126,12 +128,12 @@ export const DetalleCredencialExterna = ({
         // normal (solo client_id/client_secret), hace falta este paso para que la
         // credencial quede activa y usable por las tools de Drive/Calendar.
         ...(esConectorGoogle ? [{
-            texto: "Conectar con Google",
+            texto: t("credencialExterna.conectarConGoogle"),
             onClick: conectarGoogle,
             deshabilitado: !puede("comun.credencial_externa"),
         }] : []),
         {
-            texto: "Borrar",
+            texto: t("credencialExterna.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("comun.credencial_externa"),
             advertencia: true,
@@ -152,11 +154,11 @@ export const DetalleCredencialExterna = ({
                     <ResultadoConexionStripe conexion={conexionStripe} />
                 )}
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("credencialExterna.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label="Información"
+                    <Tab label={t("credencialExterna.informacion")}
                         key="tab-info"
                         children={<TabInformacion credencial={credencial} />}
                     />,
@@ -184,22 +186,21 @@ const ResultadoConexionStripe = ({ conexion }: { conexion: ConexionStripe }) => 
     const conWebhook = conexion.webhooks[conexion.modo];
     const avisos = [
         ...(conexion.modoForzado
-            ? ["Este entorno no es de producción: cobra siempre en modo test."]
+            ? [tComun("credencialExterna.esteEntornoNoEsDeProduccion")]
             : []),
         ...(conWebhook
             ? []
-            : ["No hay webhook dado de alta: Olula no podrá apuntar los cobros."]),
+            : [tComun("credencialExterna.noHayWebhookDadoDeAlta")]),
         ...(conexion.cuenta.cobrosActivos
             ? []
-            : ["La cuenta todavía no tiene los cobros activados en Stripe."]),
+            : [tComun("credencialExterna.laCuentaTodaviaNoTieneLos")]),
         ...(conexion.cuentaCobros || getConfiguracionCredenciales().sinCuentaBancaria
             ? []
-            : ["Falta la cuenta donde se apuntan los cobros: los recibos pagados no se marcarán solos. Elígela en «Editar credencial»."]),
+            : [tComun("credencialExterna.faltaLaCuentaDondeSeApuntan")]),
     ];
     return (
         <QAviso variante={avisos.length ? "advertencia" : "info"}>
-            Conectado a <strong>{conexion.cuenta.nombre}</strong> ({conexion.cuenta.id}) en
-            modo {conexion.modo}.{conWebhook ? " Webhook dado de alta." : ""}
+            {tComun("credencialExterna.conectadoA")}{" "}<strong>{conexion.cuenta.nombre}</strong> ({conexion.cuenta.id}{tComun("credencialExterna.enModo")}{" "}{conexion.modo}.{conWebhook ? tComun("credencialExterna.webhookDadoDeAlta") : ""}
             {avisos.map((aviso) => <div key={aviso}>{aviso}</div>)}
         </QAviso>
     );

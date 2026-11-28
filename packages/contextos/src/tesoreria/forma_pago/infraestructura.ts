@@ -11,6 +11,7 @@ import {
     PlazoFormaPago,
     PostFormaPago,
 } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().FORMA_PAGO;
 
@@ -67,17 +68,17 @@ export const getFormaPago: GetFormaPago = async (id) =>
 
 export const postFormaPago: PostFormaPago = async (nueva) => {
     const respuesta = await RestAPI.post(
-        baseUrl, nuevaFormaPagoAApi(nueva), "Error al crear la forma de pago"
+        baseUrl, nuevaFormaPagoAApi(nueva), tTesoreria("forma_pago.errorAlCrearLaFormaDe")
     );
     return String(respuesta.id);
 };
 
 export const patchFormaPago: PatchFormaPago = async (id, cambios) => {
     await RestAPI.patch(
-        urlFormaPago(id), cambiosFormaPagoAApi(cambios), "Error al guardar la forma de pago"
+        urlFormaPago(id), cambiosFormaPagoAApi(cambios), tTesoreria("forma_pago.errorAlGuardarLaFormaDe")
     );
 };
 
 export const deleteFormaPago: DeleteFormaPago = async (id) => {
-    await RestAPI.delete(urlFormaPago(id), "Error al borrar la forma de pago");
+    await RestAPI.delete(urlFormaPago(id), tTesoreria("forma_pago.errorAlBorrarLaFormaDe"));
 };

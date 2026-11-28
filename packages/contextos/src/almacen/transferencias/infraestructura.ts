@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { transformarCriteria } from "@olula/lib/dominio.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { ActualizarLineaTransferenciaStock, ActualizarTransferenciaStock, CrearLineaTransferenciaStock, CrearTransferenciaStock, EliminarLineaTransferenciaStock, EliminarTransferenciaStock, LineaTransferenciaStock, LineaTransferenciaStock_API, NuevaLineaTransferenciaStock, NuevaLineaTransferenciaStock_API, NuevaTransferenciaStock, NuevaTransferenciaStock_API, ObtenerLineasTransferenciaStock, ObtenerLineaTransferenciaStock, ObtenerTransferenciasStock, ObtenerTransferenciaStock, TransferenciaStock, TransferenciaStock_API } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 const baseUrlTransferencias = `/almacen/transferencia`;
 
@@ -59,7 +60,7 @@ export const obtenerTransferenciasStock: ObtenerTransferenciasStock = async (
 };
 
 export const crearTransferenciaStock: CrearTransferenciaStock = async (transferencia) => {
-    return await RestAPI.post(baseUrlTransferencias, nuevaTransferenciaStockToAPI(transferencia), "Error al guardar la transferencia").then(
+    return await RestAPI.post(baseUrlTransferencias, nuevaTransferenciaStockToAPI(transferencia), tAlmacen("transferencias.errorAlGuardarLaTransferencia")).then(
         (respuesta) => respuesta.id
     );
 };
@@ -69,11 +70,11 @@ export const actualizarTransferenciaStock: ActualizarTransferenciaStock = async 
     const transferencia_limpia = Object.fromEntries(
         Object.entries(transferenciaAPI).map(([k, v]) => [k, v ?? ""])
     );
-    await RestAPI.patch(`${baseUrlTransferencias}/${id}`, transferencia_limpia, "Error al guardar actualizar la transferencia " + id);
+    await RestAPI.patch(`${baseUrlTransferencias}/${id}`, transferencia_limpia, tAlmacen("transferencias.errorAlGuardarActualizarLaTransferencia", { id }));
 };
 
 export const eliminarTransferenciaStock: EliminarTransferenciaStock = async (id) => {
-    await RestAPI.delete(`${baseUrlTransferencias}/${id}`, "Error al borrar la transferencia " + id);
+    await RestAPI.delete(`${baseUrlTransferencias}/${id}`, tAlmacen("transferencias.errorAlBorrarLaTransferenciaId", { id }));
 }
 
 // LINEAS
@@ -129,7 +130,7 @@ export const obtenerLineasTransferenciaStock: ObtenerLineasTransferenciaStock = 
 };
 
 export const crearLineaTransferenciaStock: CrearLineaTransferenciaStock = async (id, linea) => {
-    return await RestAPI.post(`${baseUrlTransferencias}/${id}/linea`, nuevaLineaTransferenciaStockToAPI(linea), "Error al guardar la línea de transferencia").then(
+    return await RestAPI.post(`${baseUrlTransferencias}/${id}/linea`, nuevaLineaTransferenciaStockToAPI(linea), tAlmacen("transferencias.errorAlGuardarLaLineaDe")).then(
         (respuesta) => respuesta.id
     );
 };
@@ -139,9 +140,9 @@ export const actualizarLineaTransferenciaStock: ActualizarLineaTransferenciaStoc
     const linea_limpia = Object.fromEntries(
         Object.entries(lineaAPI).map(([k, v]) => [k, v ?? ""])
     );
-    await RestAPI.patch(`${baseUrlTransferencias}/${id}/linea/${idLinea}`, linea_limpia, "Error al guardar actualizar la línea de transferencia " + id + "/" + idLinea);
+    await RestAPI.patch(`${baseUrlTransferencias}/${id}/linea/${idLinea}`, linea_limpia, tAlmacen("transferencias.errorAlGuardarActualizarLaLinea", { id, idLinea }));
 };
 
 export const eliminarLineaTransferenciaStock: EliminarLineaTransferenciaStock = async (id, idLinea) => {
-    await RestAPI.delete(`${baseUrlTransferencias}/${id}/linea/${idLinea}`, "Error al borrar la línea de transferencia " + id + "/" + idLinea);
+    await RestAPI.delete(`${baseUrlTransferencias}/${id}/linea/${idLinea}`, tAlmacen("transferencias.errorAlBorrarLaLineaDe", { id, idLinea }));
 };

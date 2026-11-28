@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { ClaseAlmacenamiento } from "../diseño.ts";
 import { deleteClaseAlmacenamiento } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const BorrarClaseAlmacenamiento = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarClaseAlmacenamiento = ({
     clase: ClaseAlmacenamiento;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const borrar_ = useCallback(async () => {
         await deleteClaseAlmacenamiento(clase.id);
         publicar("clase_almacenamiento_borrada", clase.id);
@@ -25,8 +27,8 @@ export const BorrarClaseAlmacenamiento = ({
         <QModalConfirmacion
             nombre="borrarClaseAlmacenamiento"
             abierto={true}
-            titulo="Borrar clase de almacenamiento"
-            mensaje={`¿Está seguro de que desea borrar la clase de almacenamiento "${clase.codigo}"?`}
+            titulo={t("clase_almacenamiento.borrarClaseDeAlmacenamiento")}
+            mensaje={t("clase_almacenamiento.estaSeguroDeQueDeseaBorrar", { codigo: clase.codigo })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

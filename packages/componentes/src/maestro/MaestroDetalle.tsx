@@ -5,6 +5,7 @@ import { QModal } from "../moleculas/qmodal.tsx";
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { MaestroDetalleProps as MaestroDetalleBaseProps } from "./diseño.tsx";
 import "./MaestroDetalle.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 type MaestroDetalleConIdProps<T extends Entidad> = Omit<
   MaestroDetalleBaseProps<T>,
@@ -16,6 +17,7 @@ type MaestroDetalleConIdProps<T extends Entidad> = Omit<
 export function MaestroDetalle<T extends Entidad>(
   props: MaestroDetalleConIdProps<T>
 ) {
+  const t = useTComponentes();
   const {
     seleccionada,
     Maestro,
@@ -34,9 +36,9 @@ export function MaestroDetalle<T extends Entidad>(
   useControlPantalla("detalle", () => ({
     describir: () => ({ tipo: "detalle", id: "" }),
     ejecutar: (accion) => {
-      if (accion !== "cerrar" || !onCerrarDetalle) return { ok: false, mensaje: "No puedo cerrar este detalle." };
+      if (accion !== "cerrar" || !onCerrarDetalle) return { ok: false, mensaje: t("ui.maestro.noPuedoCerrarEsteDetalle") };
       onCerrarDetalle();
-      return { ok: true, mensaje: "Detalle cerrado." };
+      return { ok: true, mensaje: t("ui.maestro.detalleCerrado") };
     },
   }), haySeleccion && !!onCerrarDetalle && modoDisposicion !== "modal");
   const tipoLayout =

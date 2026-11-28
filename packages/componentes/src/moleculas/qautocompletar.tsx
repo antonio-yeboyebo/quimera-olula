@@ -1,3 +1,4 @@
+import { useTComponentes } from "../i18n/textos.ts";
 import { useEffect, useRef, useState } from "react";
 import { Etiqueta, FormFieldProps } from "../atomos/_forminput.tsx";
 import { EnlaceFicha } from "../atomos/qenlace_ficha.tsx";
@@ -55,6 +56,7 @@ export const QAutocompletar = <T extends OpcionBase = OpcionBase>({
   permitirValorLibre = false,
   ...props
 }: QAutocompletarProps<T>) => {
+  const t = useTComponentes();
   const attrs = {
     nombre,
   };
@@ -211,7 +213,7 @@ export const QAutocompletar = <T extends OpcionBase = OpcionBase>({
               <EnlaceFicha
                 href={enlaceHref}
                 className="enlace-solo-lectura"
-                etiqueta={`Abrir ${props.label ?? "ficha"}`}
+                etiqueta={t("campos.abrir", { que: props.label ?? t("campos.ficha") })}
               />
             )}
           </span>
@@ -251,7 +253,7 @@ export const QAutocompletar = <T extends OpcionBase = OpcionBase>({
             type="button"
             className="autocompletar-limpiar"
             onClick={manejarLimpiar}
-            aria-label="Limpiar selección"
+            aria-label={t("campos.limpiarSeleccion")}
             tabIndex={-1}
           >
             ×
@@ -261,7 +263,7 @@ export const QAutocompletar = <T extends OpcionBase = OpcionBase>({
           <EnlaceFicha
             href={enlaceHref}
             className="autocompletar-enlace"
-            etiqueta={`Abrir ${props.label ?? "ficha"}`}
+            etiqueta={t("campos.abrir", { que: props.label ?? t("campos.ficha") })}
             tabIndex={-1}
           />
         )}

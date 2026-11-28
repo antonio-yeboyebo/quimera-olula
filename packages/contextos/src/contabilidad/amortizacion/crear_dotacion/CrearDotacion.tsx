@@ -10,6 +10,7 @@ import { useCallback, useMemo } from "react";
 import { Amortizacion } from "../diseño.ts";
 import { metaNuevaDotacion, nuevaDotacionVacia } from "../dominio.ts";
 import { postDotacion } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Alta de una dotación desde la ficha (`co_dotaciones`). Lo que se deja
  * vacío lo propone el servidor como Eneboo: periodo siguiente, cuota del
@@ -23,6 +24,7 @@ export const CrearDotacion = ({
     onCreada: () => void;
     onCancelar: () => void;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(nuevaDotacionVacia, []);
     const { modelo, uiProps, valido } = useModelo(metaNuevaDotacion, inicial);
 
@@ -34,16 +36,16 @@ export const CrearDotacion = ({
     const [crear, cancelar] = useForm(crear_, onCancelar);
 
     return (
-        <QModal abierto={true} nombre="crearDotacion" titulo="Nueva dotación" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearDotacion" titulo={t("amortizacion.nuevaDotacion")} onCerrar={cancelar}>
             <div className="CrearDotacion">
-                <p>Asiento en el ejercicio {ejercicioActual()}. Vacío: valores propuestos.</p>
+                <p>{t("amortizacion.asientoEnElEjercicioValorVacio", { valor: ejercicioActual() })}</p>
                 <quimera-formulario>
-                    <QInput label="Importe" {...uiProps("importe")} />
-                    <QDate label="Fecha del asiento" {...uiProps("fecha")} />
-                    <QCheckbox label="Ignorar contabilidad (sin asiento)" {...uiProps("noGenerarAsiento")} />
+                    <QInput label={t("amortizacion.importe")} {...uiProps("importe")} />
+                    <QDate label={t("amortizacion.fechaDelAsiento")} {...uiProps("fecha")} />
+                    <QCheckbox label={t("amortizacion.ignorarContabilidadSinAsiento")} {...uiProps("noGenerarAsiento")} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
-                    <QBoton onClick={crear} deshabilitado={!valido}>Crear</QBoton>
+                    <QBoton onClick={crear} deshabilitado={!valido}>{t("amortizacion.crear")}</QBoton>
                 </div>
             </div>
         </QModal>

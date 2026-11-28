@@ -8,6 +8,7 @@ import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Factura } from "../../diseño.ts";
 import { editable, EstadoFactura } from "../diseño.ts";
 import "./TabCliente.css";
+import { useTVentas } from "../../../i18n/index.ts";
 
 interface TabClienteProps {
   factura: HookModelo<Factura>;
@@ -20,6 +21,7 @@ export const TabCliente = ({
   estado,
   publicar = async () => {},
 }: TabClienteProps) => {
+  const t = useTVentas();
   const { modelo } = factura;
   const clienteEditable = editable(modelo);
 
@@ -38,7 +40,7 @@ export const TabCliente = ({
         />
         <QInput
           nombre="id_fiscal"
-          label="ID Fiscal"
+          label={t("documento.detalle.idFiscal")}
           valor={modelo.cliente.id_fiscal}
           soloLectura={true}
         />
@@ -46,7 +48,7 @@ export const TabCliente = ({
         {clienteEditable && (
           <div className="TabCliente-accion">
             <BotonCambiar
-              titulo="Cambiar cliente y dirección"
+              titulo={t("documento.detalle.cambiarCliente")}
               onClick={() => publicar("cambio_cliente_solicitado")}
             />
           </div>
@@ -54,7 +56,7 @@ export const TabCliente = ({
 
         <QInput
           soloLectura={true}
-          label="Dirección"
+          label={t("documento.detalle.direccion")}
           nombre="direccion_cliente"
           valor={formatearDireccionVenta(modelo.cliente.direccion)}
         />

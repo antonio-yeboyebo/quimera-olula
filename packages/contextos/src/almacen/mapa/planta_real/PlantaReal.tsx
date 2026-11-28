@@ -7,6 +7,7 @@ import {
     geometriaEnPlanta, letraModulo, ParadaEnElemento, PASO_PLANTA, puntoEnPlanta, resumenModulo, resumenUbicacion,
     rotuloPasillo, todosLosPasillos, tonoModulo, tonoUbicacion, ubicacionesPorModulo, usoElemento,
 } from "../dominio.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 type Props = {
     mapa: MapaAlmacen;
@@ -51,6 +52,7 @@ export const PlantaReal = ({
     mapa, planta, capa, paleta, zonaId, pasilloId, ubicacionId, recorrido, paradasElementos = [], trazado, onPasillo,
     onUbicacion, edicion,
 }: Props) => {
+    const tx = useTAlmacen();
     const zonaDe = new Map(mapa.zonas.flatMap((z) => z.pasillos.map((p) => [p.pasilloId, z.zonaId])));
     const svg = useRef<SVGSVGElement>(null);
     const [arrastre, setArrastre] = useState<{
@@ -147,7 +149,7 @@ export const PlantaReal = ({
                 viewBox={`${-margen} ${-margen} ${planta.ancho + margen * 2} ${planta.largo + margen * 2}`}
                 style={{ maxWidth: (planta.ancho + margen * 2) * PX_POR_METRO }}
                 role="group"
-                aria-label={`Planta de la nave, ${planta.ancho} × ${planta.largo} m`}
+                aria-label={tx("mapa.plantaDeLaNaveAnchoLargo", { ancho: planta.ancho, largo: planta.largo })}
                 onPointerMove={mover}
                 onPointerUp={soltar}
                 onPointerCancel={() => setArrastre(null)}
@@ -167,7 +169,7 @@ export const PlantaReal = ({
                     const pieza: ElegidoPlanta = { tipo: "ELEMENTO", indice };
                     const elegidoEl = mismo(edicion?.elegido ?? null, pieza);
                     const uso = usoElemento(mapa, el);
-                    const textoUso = uso.salida && uso.entrada ? "salida y entrada" : uso.salida ? "salida" : uso.entrada ? "entrada" : "";
+                    const textoUso = uso.salida && uso.entrada ? tx("mapa.salidaYEntrada") : uso.salida ? "salida" : uso.entrada ? "entrada" : "";
                     const conFichas = el.ubicaciones.length > 0;
                     return (
                         <g key={indice}>
@@ -179,7 +181,7 @@ export const PlantaReal = ({
                                     role: "button",
                                     "aria-pressed": elegidoEl,
                                     tabIndex: 0,
-                                    "aria-label": `${el.nombre}. Flechas para moverlo`,
+                                    "aria-label": tx("mapa.nombreFlechasParaMoverlo", { nombre: el.nombre }),
                                     onPointerDown: empezar(pieza),
                                     onKeyDown: teclas(pieza),
                                     onClick: (e: { stopPropagation: () => void }) => e.stopPropagation(),
@@ -194,7 +196,7 @@ export const PlantaReal = ({
                                     <tspan className="mapa-elemento-uso" x={el.x + el.ancho / 2} dy={0.8}>{textoUso}</tspan>
                                 )}
                             </text>
-                            <title>{`${el.nombre} (${el.ancho} × ${el.largo} m)${textoUso ? `, punto de ${textoUso}` : ""}`}</title>
+                            <title>{`${el.nombre} (${el.ancho} × ${el.largo} m)${textoUso ? tx("mapa.puntoDeTextouso", { textoUso }) : ""}`}</title>
                         </g>
                         {conFichas && (
                             <g className="mapa-elemento-fichas" transform={desplazamiento(pieza)}>
@@ -258,7 +260,7 @@ export const PlantaReal = ({
                                     role: "button",
                                     "aria-pressed": elegido,
                                     tabIndex: 0,
-                                    "aria-label": `Pasillo ${rotulo}. Flechas para moverlo`,
+                                    "aria-label": tx("mapa.pasilloRotuloFlechasParaMoverlo", { rotulo }),
                                     onPointerDown: empezar(pieza),
                                     onKeyDown: teclas(pieza),
                                     onClick: (e: { stopPropagation: () => void }) => e.stopPropagation(),
@@ -354,7 +356,7 @@ export const PlantaReal = ({
                     <g key={r.secuencia} className={`mapa-parada mapa-parada-${r.accion.toLowerCase()}`}>
                         <circle cx={r.x} cy={r.y} r={0.65} />
                         <text x={r.x} y={r.y}>{r.secuencia}</text>
-                        <title>{`${r.secuencia}. ${textoAccionParada[r.accion]} en ${r.ubicacion}`}</title>
+                        <title>{tx("mapa.secuenciaValorEnUbicacion", { secuencia: r.secuencia, valor: textoAccionParada[r.accion], ubicacion: r.ubicacion })}</title>
                     </g>
                 ))}
 
@@ -365,7 +367,7 @@ export const PlantaReal = ({
                 </defs>
             </svg>
             <p className="mapa-planta-escala">
-                Nave de {planta.ancho} × {planta.largo} m · rejilla de 1 m (marcada cada 5 m)
+                {tx("mapa.naveDeAnchoLargoMRejilla", { ancho: planta.ancho, largo: planta.largo })}
             </p>
         </div>
     );

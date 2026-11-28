@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { DireccionProveedor, Proveedor } from "../diseño.ts";
 import { direccionProveedorCompleta } from "../dominio.ts";
 import { deleteDireccionProveedor } from "../infraestructura.ts";
@@ -15,6 +16,7 @@ export const BorrarDireccionProveedor = ({
     direccion: DireccionProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const borrar_ = useCallback(async () => {
         await deleteDireccionProveedor(proveedor.id, direccion.id);
         publicar("direccion_borrada", direccion.id);
@@ -31,8 +33,8 @@ export const BorrarDireccionProveedor = ({
         <QModalConfirmacion
             nombre="borrarDireccionProveedor"
             abierto={true}
-            titulo="Borrar dirección"
-            mensaje={`¿Está seguro de que desea borrar la dirección ${direccionProveedorCompleta(direccion)}?`}
+            titulo={t("proveedor.direcciones.borrarTitulo")}
+            mensaje={t("proveedor.direcciones.borrarMensaje", { direccion: direccionProveedorCompleta(direccion) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

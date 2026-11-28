@@ -9,6 +9,7 @@ import { DevolverSobrante } from "../../devolver_sobrante/DevolverSobrante.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../../diseño.ts";
 import { EstadoOrdenAlmacen } from "../maquina.ts";
 import { LineasOrdenLista } from "./LineasOrdenLista.tsx";
+import { tAlmacen } from "../../../../i18n/index.ts";
 
 export const LineasOrden = ({
     orden,
@@ -30,19 +31,19 @@ export const LineasOrden = ({
                     onClick={() => publicar("alta_linea_solicitada")}
                     deshabilitado={!orden.abierta}
                 >
-                    Nueva línea
+                    {tAlmacen("orden.nuevaLinea")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("cambio_linea_solicitado")}
                     deshabilitado={!lineas.activo || !orden.abierta}
                 >
-                    Editar
+                    {tAlmacen("orden.editar")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("baja_linea_solicitada")}
                     deshabilitado={!lineas.activo || !orden.abierta}
                 >
-                    Borrar
+                    {tAlmacen("orden.borrar")}
                 </QBoton>
             </div>
             <LineasOrdenLista

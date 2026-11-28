@@ -12,6 +12,7 @@ import {
     metaNuevoLibroFacturasRecibidas,
     nuevoLibroFacturasRecibidasInicial,
 } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearLibroFacturasRecibidas = ({
     publicar,
@@ -22,6 +23,7 @@ export const CrearLibroFacturasRecibidas = ({
 }) => {
     // Memoizado: useModelo reinicia el formulario cada vez que cambia la
     // identidad del inicial, así que pasarlo en línea entra en bucle.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoLibroFacturasRecibidasInicial(ejercicioId),
         [ejercicioId]
@@ -51,7 +53,7 @@ export const CrearLibroFacturasRecibidas = ({
         <QModal
             abierto={true}
             nombre="crearLibroFacturasRecibidas"
-            titulo="Nuevo libro de facturas recibidas"
+            titulo={t("libro_facturas_recibidas.nuevoLibroDeFacturasRecibidas")}
             onCerrar={cancelar}
         >
             <div className="CrearLibroFacturasRecibidas">
@@ -67,7 +69,7 @@ export const CrearLibroFacturasRecibidas = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("libro_facturas_recibidas.crear")}
                     </QBoton>
                 </div>
             </div>

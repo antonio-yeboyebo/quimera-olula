@@ -4,6 +4,7 @@ import { Factura, LineaFactura } from "../../diseño.ts";
 import { EditarLinea } from "../../editar_linea/EditarLinea.tsx";
 import { editable } from "../diseño.ts";
 import { LineasLista } from "./LineasLista.tsx";
+import { useTVentas } from "../../../i18n/index.ts";
 export const Lineas = ({
   factura,
   lineaActiva,
@@ -15,19 +16,20 @@ export const Lineas = ({
   estadoFactura: string;
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
+  const t = useTVentas();
   const acciones = [
     {
-      texto: "Nueva",
+      texto: t("documento.lineas.nueva"),
       onClick: () => publicar("alta_linea_solicitada"),
     },
     {
-      texto: "Editar",
+      texto: t("documento.lineas.editar"),
       onClick: () => publicar("cambio_linea_solicitado"),
       deshabilitado: !lineaActiva,
     },
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => publicar("baja_linea_solicitada"),
       deshabilitado: !lineaActiva,

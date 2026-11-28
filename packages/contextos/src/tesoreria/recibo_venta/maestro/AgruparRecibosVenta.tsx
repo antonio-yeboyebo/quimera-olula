@@ -4,6 +4,7 @@ import { formatearMoneda } from "@olula/lib/dominio.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { ReciboVenta } from "../diseño.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 const lineas = (recibos: ReciboVenta[]): string[] =>
   recibos.map(
@@ -21,6 +22,7 @@ export const AgruparRecibosVenta = ({
   recibos: ReciboVenta[];
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const agrupar_ = useCallback(
     async () => publicar("agrupado_confirmado"),
     [publicar]
@@ -38,10 +40,10 @@ export const AgruparRecibosVenta = ({
     recibos.length === 1 ? "recibo" : "recibos"
   }`;
 
-  const cabecera = `Se creará un recibo de grupo por ${formatearMoneda(
+  const cabecera = t("recibo_venta.seCrearaUnReciboDeGrupo", { total: formatearMoneda(
     total,
     "EUR"
-  )} que agrupará ${cuantos}. Los recibos originales se mantienen.`;
+  ), cuantos });
 
   // const herencia = recibos.length
   //   ? `El grupo hereda cliente, divisa, forma de pago y fechas de ${recibos[0].codigo}.`
@@ -52,11 +54,11 @@ export const AgruparRecibosVenta = ({
     <QModalConfirmacion
       nombre="agruparRecibosVenta"
       abierto={true}
-      titulo="Agrupar recibos"
+      titulo={t("recibo_venta.agruparRecibos")}
       mensaje={[cabecera, "", ...lineas(recibos), "", herencia].join("\n")}
       onCerrar={cancelar}
       onAceptar={agrupar}
-      labelAceptar="Agrupar"
+      labelAceptar={t("recibo_venta.agrupar")}
     />
   );
 };

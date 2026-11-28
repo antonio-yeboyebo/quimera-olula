@@ -4,6 +4,7 @@ import { formatearMoneda } from "@olula/lib/dominio.js";
 import { CandidatoListaConciliacion, MovimientoBancario } from "../../diseño.js";
 import { diferenciaSeleccion, seleccionCuadra, sumaSeleccion } from "../../dominio.js";
 import { TarjetaCandidato } from "./TarjetaCandidato.js";
+import { tTesoreria } from "../../../i18n/index.ts";
 
 /**
  * Candidatos reunidos para conciliarlos juntos: su suma frente al importe del movimiento
@@ -28,7 +29,7 @@ export const SeleccionCandidatos = ({
 
     return (
         <section className="seleccion-candidatos">
-            <h4>Conciliar juntos</h4>
+            <h4>{tTesoreria("conciliacion.conciliarJuntos")}</h4>
             <ul className="lista-candidatos">
                 {seleccion.map((c) => (
                     <TarjetaCandidato key={c.id} candidato={c} movimiento={movimiento} divisa={divisa}
@@ -37,24 +38,24 @@ export const SeleccionCandidatos = ({
             </ul>
             <dl className="seleccion-candidatos-totales">
                 <div>
-                    <dt>Seleccionado</dt>
+                    <dt>{tTesoreria("conciliacion.seleccionado")}</dt>
                     <dd>{formatearMoneda(sumaSeleccion(seleccion), divisa)}</dd>
                 </div>
                 <div>
-                    <dt>Movimiento</dt>
+                    <dt>{tTesoreria("conciliacion.movimiento")}</dt>
                     <dd>{formatearMoneda(Math.abs(movimiento.importe), divisa)}</dd>
                 </div>
                 <div className={cuadra ? "cuadra" : "descuadra"}>
-                    <dt>{diferencia < 0 ? "Sobra" : "Falta"}</dt>
+                    <dt>{diferencia < 0 ? tTesoreria("conciliacion.sobra") : tTesoreria("conciliacion.falta")}</dt>
                     <dd>{formatearMoneda(Math.abs(diferencia), divisa)}</dd>
                 </div>
             </dl>
             <div className="botones">
                 <QBoton variante="texto" onClick={() => publicar("seleccion_vaciada")}>
-                    Vaciar
+                    {tTesoreria("conciliacion.vaciar")}
                 </QBoton>
                 <QBoton deshabilitado={bloqueado || !cuadra} onClick={() => publicar("seleccion_solicitada")}>
-                    Conciliar {seleccion.length}
+                    {tTesoreria("conciliacion.conciliarLength", { length: seleccion.length })}
                 </QBoton>
             </div>
         </section>

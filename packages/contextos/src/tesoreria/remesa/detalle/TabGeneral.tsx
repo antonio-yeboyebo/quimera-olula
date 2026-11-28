@@ -2,6 +2,8 @@ import { CuentaBancaria } from "#/tesoreria/comun/componentes/cuenta_bancaria.ts
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
 import "./TabGeneral.css";
+import { tTesoreria } from "../../i18n/index.ts";
+import { textoEstado } from "../../comun/estados.ts";
 
 interface TabGeneralProps {
     form: FormModelo;
@@ -14,17 +16,17 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
     return (
         <div className="TabGeneral">
             <quimera-formulario>
-                <QInput label="Fecha" {...uiProps("fecha")} />
-                <QInput label="Fecha de cargo" {...uiProps("fechaCargo")} />
-                <QInput label="Estado" {...uiProps("estado")} />
+                <QInput label={tTesoreria("remesa.fecha")} {...uiProps("fecha")} />
+                <QInput label={tTesoreria("remesa.fechaDeCargo")} {...uiProps("fechaCargo")} />
+                <QInput label={tTesoreria("remesa.estado")} {...uiProps("estado")} valor={textoEstado(String(uiProps("estado").valor ?? ""))} />
                 <CuentaBancaria
-                    label="Cuenta"
+                    label={tTesoreria("remesa.cuenta")}
                     {...uiProps("cuentaId", "descripcionCuenta")}
                     soloLectura
                 />
-                <QInput label="Total" {...uiProps("total")} />
-                <QInput label="Divisa" {...uiProps("divisaId")} />
-                <QInput label="Empresa" {...uiProps("empresaId")} />
+                <QInput label={tTesoreria("remesa.total")} {...uiProps("total")} />
+                <QInput label={tTesoreria("remesa.divisa")} {...uiProps("divisaId")} />
+                <QInput label={tTesoreria("remesa.empresa")} {...uiProps("empresaId")} />
             </quimera-formulario>
         </div>
     );

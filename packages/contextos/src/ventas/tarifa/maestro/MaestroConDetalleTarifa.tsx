@@ -13,11 +13,12 @@ import { DetalleTarifa } from "../detalle/DetalleTarifa.js";
 import { Tarifa } from "../diseño.js";
 import "./MaestroConDetalleTarifa.css";
 import { getMaquina } from "./maquina.js";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 
-const metaTablaTarifa: MetaTabla<Tarifa> = [
-    { id: 'id', cabecera: 'Código' },
-    { id: 'nombre', cabecera: 'Nombre', esTitulo: true },
-    { id: 'divisa', cabecera: 'Divisa' },
+const metaTablaTarifa = (): MetaTabla<Tarifa> => [
+    { id: 'id', cabecera: tVentas("tarifa.maestro.codigo") },
+    { id: 'nombre', cabecera: tVentas("tarifa.maestro.nombre"), esTitulo: true },
+    { id: 'divisa', cabecera: tVentas("tarifa.maestro.divisa") },
 ];
 
 /**
@@ -27,6 +28,7 @@ const metaTablaTarifa: MetaTabla<Tarifa> = [
 const criteriaBase: Criteria = { ...criteriaDefecto, orden: ["id", "ASC"] };
 
 export const MaestroConDetalleTarifa = () => {
+    const t = useTVentas();
 
     const criteriaPorDefecto = useMemo(() => criteriaBase, []);
 
@@ -52,9 +54,9 @@ export const MaestroConDetalleTarifa = () => {
             <MaestroDetalle<Tarifa>
                 Maestro={
                     <>
-                        <h2>Tarifas</h2>
+                        <h2>{t("tarifa.maestro.titulo")}</h2>
                         <Listado<Tarifa>
-                            metaTabla={metaTablaTarifa}
+                            metaTabla={metaTablaTarifa()}
                             criteria={tarifas.criteria}
                             modoInicial="tabla"
                             tarjeta={TarjetaTarifa}
@@ -64,7 +66,7 @@ export const MaestroConDetalleTarifa = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_tarifa_solicitado")}>
-                                        Nueva Tarifa
+                                        {t("tarifa.maestro.nueva")}
                                     </QBoton>
                                 </div>
                             )}

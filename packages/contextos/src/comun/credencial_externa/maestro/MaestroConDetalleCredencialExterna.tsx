@@ -11,6 +11,7 @@ import { CredencialExterna } from "../diseño.js";
 import "./MaestroConDetalleCredencialExterna.css";
 import { getMaquina } from "./maquina.js";
 import { RejillaCredenciales } from "./RejillaCredenciales.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Componente principal: rejillas de tiles (LLM / Conectores) + detalle de
@@ -20,6 +21,7 @@ import { RejillaCredenciales } from "./RejillaCredenciales.js";
  */
 export const MaestroConDetalleCredencialExterna = () => {
 
+    const t = useTComun();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -68,32 +70,32 @@ export const MaestroConDetalleCredencialExterna = () => {
     return (
         <div className="CredencialExterna">
             {avisoOauth === "conectado" && (
-                <QAviso variante="info">Cuenta de Google conectada correctamente.</QAviso>
+                <QAviso variante="info">{t("credencialExterna.cuentaDeGoogleConectadaCorrectamente")}</QAviso>
             )}
             {avisoOauth === "error" && (
                 <QAviso variante="error">
-                    No se ha podido completar la conexión con Google — vuelve a intentarlo.
+                    {t("credencialExterna.noSeHaPodidoCompletarLa")}
                 </QAviso>
             )}
             <MaestroDetalle<CredencialExterna>
                 Maestro={
                     <>
-                        <h2>Credenciales</h2>
+                        <h2>{t("credencialExterna.credenciales")}</h2>
                         <RejillaCredenciales
-                            titulo="Modelo de IA"
+                            titulo={t("credencialExterna.modeloDeIa")}
                             credenciales={llm}
                             onSeleccion={(payload) => emitir("credencial_externa_seleccionada", payload)}
                             onCrear={() => emitir("creacion_solicitada", "llm")}
                             puedeCrear={puedeCrear}
-                            textoCrear="Configurar LLM"
+                            textoCrear={t("credencialExterna.configurarLlm")}
                         />
                         <RejillaCredenciales
-                            titulo="Conectores"
+                            titulo={t("credencialExterna.conectores")}
                             credenciales={conectores}
                             onSeleccion={(payload) => emitir("credencial_externa_seleccionada", payload)}
                             onCrear={() => emitir("creacion_solicitada", "conector")}
                             puedeCrear={puedeCrear}
-                            textoCrear="Nuevo conector"
+                            textoCrear={t("credencialExterna.nuevoConector")}
                         />
                     </>
                 }

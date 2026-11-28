@@ -5,9 +5,11 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { useCallback, useContext, useState } from "react";
 import { fechaAApi, postDeshacerDotaciones } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Borra las dotaciones (y sus asientos) con fecha desde la indicada. */
 export const DeshacerDotaciones = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTContabilidad();
     const { intentar } = useContext(ContextoError);
     const hoy = new Date();
     const [fecha, setFecha] = useState<Date>(new Date(hoy.getFullYear(), hoy.getMonth(), 1, 12));
@@ -20,12 +22,12 @@ export const DeshacerDotaciones = ({ publicar }: { publicar: EmitirEvento }) => 
         try {
             const r = await intentar(() => postDeshacerDotaciones(fecha));
             setMensaje(r.totalDotaciones === 0
-                ? "No había dotaciones desde esa fecha"
-                : `Se han borrado ${r.totalDotaciones} dotaciones por un total de ${r.importe.toLocaleString("es-ES", { minimumFractionDigits: 2 })}`);
+                ? t("amortizacion.noHabiaDotacionesDesdeEsaFecha")
+                : t("amortizacion.seHanBorradoTotaldotacionesDotacionesPor", { totalDotaciones: r.totalDotaciones, toLocaleString: r.importe.toLocaleString("es-ES", { minimumFractionDigits: 2 }) }));
         } finally {
             setOcupado(false);
         }
-    }, [fecha, intentar, ocupado]);
+    }, [fecha, intentar, ocupado, t]);
 
     const cerrar = useCallback(
         () => publicar(mensaje ? "dotaciones_deshechas" : "deshacer_cancelado"),
@@ -33,20 +35,19 @@ export const DeshacerDotaciones = ({ publicar }: { publicar: EmitirEvento }) => 
     );
 
     return (
-        <QModal abierto={true} nombre="deshacerDotaciones" titulo="Deshacer dotaciones"
+        <QModal abierto={true} nombre="deshacerDotaciones" titulo={t("amortizacion.deshacerDotaciones")}
             onCerrar={cerrar}>
             <div className="DeshacerDotaciones">
                 {!mensaje && (
                     <>
-                        <p>Se borrarán las dotaciones con fecha de asiento igual o posterior a la
-                            indicada, junto con sus asientos.</p>
+                        <p>{t("amortizacion.seBorraranLasDotacionesConFecha")}</p>
                         <quimera-formulario>
-                            <QDate label="Desde" nombre="fecha_desde" valor={fechaAApi(fecha)}
+                            <QDate label={t("amortizacion.desde")} nombre="fecha_desde" valor={fechaAApi(fecha)}
                                 onChange={(valor) => valor && setFecha(new Date(`${valor}T12:00:00`))} />
                         </quimera-formulario>
                         <div className="botones maestro-botones">
                             <QBoton onClick={deshacer} deshabilitado={ocupado}>
-                                {ocupado ? "Borrando…" : "Deshacer"}
+                                {ocupado ? t("amortizacion.borrando") : t("amortizacion.deshacer")}
                             </QBoton>
                         </div>
                     </>
@@ -55,7 +56,7 @@ export const DeshacerDotaciones = ({ publicar }: { publicar: EmitirEvento }) => 
                     <>
                         <p>{mensaje}</p>
                         <div className="botones maestro-botones">
-                            <QBoton onClick={cerrar}>Aceptar</QBoton>
+                            <QBoton onClick={cerrar}>{t("amortizacion.aceptar")}</QBoton>
                         </div>
                     </>
                 )}

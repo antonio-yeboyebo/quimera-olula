@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { EstadoLead } from "../diseño.ts";
 import { deleteEstadoLead } from "../infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const BorrarEstadoLead = ({
   publicar,
@@ -12,6 +13,7 @@ export const BorrarEstadoLead = ({
   estado_lead: EstadoLead;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const borrar_ = useCallback(async () => {
     await deleteEstadoLead(estado_lead.id);
 
@@ -29,8 +31,8 @@ export const BorrarEstadoLead = ({
     <QModalConfirmacion
       nombre="confirmarBorrarEstadoLead"
       abierto={true}
-      titulo="Confirmar borrado"
-      mensaje={`¿Está seguro de que desea borrar este Estado de Lead?`}
+      titulo={t("estadoLead.confirmarBorrado")}
+      mensaje={t("estadoLead.estaSeguroDeQueDeseaBorrar")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

@@ -14,12 +14,14 @@ import { OportunidadVenta } from "../../diseño.ts";
 import { crearPresupuestoOportunidad } from "../../infraestructura.ts";
 import { getMaquina } from "./maquina.ts";
 import { metaTablaPresupuesto } from "./presupuestos.ts";
+import { useTCrm } from "../../../i18n/index.ts";
 
 export const Presupuestos = ({
   oportunidad,
 }: {
   oportunidad: HookModelo<OportunidadVenta>;
 }) => {
+  const t = useTCrm();
   const navigate = useNavigate();
   const [cargando, setCargando] = useState(false);
 
@@ -70,11 +72,11 @@ export const Presupuestos = ({
           <QuimeraAcciones
             acciones={[
               {
-                texto: "Nuevo",
+                texto: t("oportunidadventa.nuevo"),
                 onClick: () => crearPresupuesto(),
               },
               {
-                texto: "Editar",
+                texto: t("oportunidadventa.editar"),
                 onClick: () => {
                   if (ctx.presupuestos.activo?.id) {
                     navigate(
@@ -85,7 +87,7 @@ export const Presupuestos = ({
                 deshabilitado: !ctx.presupuestos.activo,
               },
               {
-                texto: "Borrar",
+                texto: t("oportunidadventa.borrar"),
                 onClick: () => emitir("borrado_presupuesto_solicitado"),
                 deshabilitado: !ctx.presupuestos.activo,
               },

@@ -19,6 +19,7 @@ import {
     EstadoActividadUbicacion,
     CaraUbicacion,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export interface StockUbicacionItemApi {
     id: string;
@@ -136,18 +137,18 @@ export const getUbicaciones: GetUbicaciones = async (
 
 export const postUbicacion: PostUbicacion = async (ubicacion) => {
     const apiUbicacion = nuevaUbicacionToApi(ubicacion);
-    return await RestAPI.post(baseUrlUbicacion, apiUbicacion, "Error al guardar Ubicación").then(
+    return await RestAPI.post(baseUrlUbicacion, apiUbicacion, tAlmacen("ubicacion.errorAlGuardarUbicacion")).then(
         (respuesta) => respuesta.id
     );
 };
 
 export const patchUbicacion: PatchUbicacion = async (id, ubicacion) => {
     const apiUbicacion = ubicacionToApi(ubicacion as Ubicacion);
-    await RestAPI.patch(`${baseUrlUbicacion}/${id}`, apiUbicacion, "Error al guardar Ubicación");
+    await RestAPI.patch(`${baseUrlUbicacion}/${id}`, apiUbicacion, tAlmacen("ubicacion.errorAlGuardarUbicacion"));
 };
 
 export const deleteUbicacion: DeleteUbicacion = async (id) => {
-    await RestAPI.delete(`${baseUrlUbicacion}/${id}`, "Error al borrar Ubicación");
+    await RestAPI.delete(`${baseUrlUbicacion}/${id}`, tAlmacen("ubicacion.errorAlBorrarUbicacion"));
 };
 
 export const baseUrlStockUbicacion = `/almacen/stock_ubicacion`;

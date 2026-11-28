@@ -7,6 +7,7 @@ import { CrearArticuloTarifa } from "../../crear_linea/CrearArticuloTarifa.js";
 import { ArticuloTarifa, Tarifa } from "../../diseño.js";
 import { EstadoDetalleTarifa } from "../diseño.js";
 import { ArticulosTarifaLista } from "./ArticulosTarifaLista.js";
+import { useTVentas } from "../../../i18n/index.ts";
 
 /**
  * Orquestador del sub-recurso: lista de precios por artículo de la tarifa,
@@ -27,18 +28,19 @@ export const ArticulosTarifa = ({
     estado: EstadoDetalleTarifa;
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     return (
         <>
-            <h3>Artículos de la tarifa</h3>
+            <h3>{t("tarifa.articulos.titulo")}</h3>
             <div className="botones maestro-botones">
                 <QBoton onClick={() => publicar("alta_articulo_solicitada")}>
-                    Añadir artículo
+                    {t("tarifa.articulos.anadir")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("cambio_articulo_solicitado")}
                     deshabilitado={!articulos.activo}
                 >
-                    Cambiar precio
+                    {t("tarifa.articulos.cambiarPrecio")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("baja_articulo_solicitada")}

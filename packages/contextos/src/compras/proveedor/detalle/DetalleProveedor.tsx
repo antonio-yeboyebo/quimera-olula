@@ -26,6 +26,7 @@ import { apiAgendaProveedor } from "../infraestructura.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabComercial } from "./TabComercial.tsx";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const DetalleProveedor = ({
   id,
@@ -34,6 +35,7 @@ export const DetalleProveedor = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTCompras();
   const { ctx, emitir } = useMaquina(
     getMaquina,
     contextoDetalleProveedorInicial,
@@ -64,13 +66,13 @@ export const DetalleProveedor = ({
   const accionesProveedor = [
     {
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("comun.botones.borrar"),
       onClick: () => emitir("borrado_solicitado"),
       advertencia: true,
     },
     proveedor.deBaja
-      ? { texto: "Dar de alta", onClick: () => emitir("alta_solicitada") }
-      : { texto: "Dar de baja", onClick: () => emitir("baja_solicitada") },
+      ? { texto: t("proveedor.detalle.darDeAlta"), onClick: () => emitir("alta_solicitada") }
+      : { texto: t("proveedor.detalle.darDeBaja"), onClick: () => emitir("baja_solicitada") },
   ];
 
   return (
@@ -89,17 +91,17 @@ export const DetalleProveedor = ({
           children={[
             <Tab
               key="tab-general"
-              label="General"
+              label={t("proveedor.detalle.pestanas.general")}
               children={<TabGeneral form={formModelo} proveedor={proveedor} />}
             />,
             <Tab
               key="tab-comercial"
-              label="Comercial"
+              label={t("proveedor.detalle.pestanas.comercial")}
               children={<TabComercial form={formModelo} />}
             />,
             <Tab
               key="tab-direcciones"
-              label="Direcciones"
+              label={t("proveedor.detalle.pestanas.direcciones")}
               children={
                 <DireccionesProveedor
                   proveedor={proveedor}
@@ -111,14 +113,14 @@ export const DetalleProveedor = ({
             />,
             <Tab
               key="tab-articulos"
-              label="Artículos"
+              label={t("proveedor.detalle.pestanas.articulos")}
               children={
                 <ArticulosProveedor articulos={articulos} publicar={emitir} />
               }
             />,
             <Tab
               key="tab-cuentas"
-              label="Cuentas bancarias"
+              label={t("proveedor.detalle.pestanas.cuentas")}
               children={
                 <CuentasBancoProveedor
                   proveedor={proveedor}
@@ -132,7 +134,7 @@ export const DetalleProveedor = ({
               ? [
                   <Tab
                     key="tab-agenda"
-                    label="Agenda"
+                    label={t("proveedor.detalle.pestanas.agenda")}
                     children={
                       <div className="detalle-cliente-tab-contenido">
                         <TabCrmContactos entidadId={proveedor.id} api={apiAgendaProveedor} />
@@ -145,7 +147,7 @@ export const DetalleProveedor = ({
               ? [
                   <Tab
                     key="tab-documentos"
-                    label="Documentos"
+                    label={t("proveedor.detalle.pestanas.documentos")}
                     children={<TabDocumentos proveedorId={proveedor.id} />}
                   />,
                 ]
@@ -154,7 +156,7 @@ export const DetalleProveedor = ({
               ? [
                   <Tab
                     key="tab-contabilidad"
-                    label="Contabilidad"
+                    label={t("proveedor.detalle.pestanas.contabilidad")}
                     children={
                       <TabContabilidad
                         tipo="proveedor"

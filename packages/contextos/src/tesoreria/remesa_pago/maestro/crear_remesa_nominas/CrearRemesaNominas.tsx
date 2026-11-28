@@ -11,6 +11,7 @@ import { NominaRemesable } from "../../diseño.js";
 import { getNominasRemesables } from "../../infraestructura.js";
 import { NuevaRemesaNominas } from "../diseño.js";
 import "./CrearRemesaNominas.css";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 type FechaPagoForm = { fechaPago: Date };
 
@@ -25,6 +26,7 @@ const metaFechaPago: MetaModelo<FechaPagoForm> = {
  * ninguna remesa, la cuenta de cargo y la fecha prevista de pago.
  */
 export const CrearRemesaNominas = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTTesoreria();
   const [nominas, setNominas] = useState<NominaRemesable[] | null>(null);
   const [elegidas, setElegidas] = useState<string[]>([]);
   const [cuentaId, setCuentaId] = useState("");
@@ -67,24 +69,24 @@ export const CrearRemesaNominas = ({ publicar }: { publicar: EmitirEvento }) => 
     <QModal
       abierto={true}
       nombre="crear_remesa_nominas"
-      titulo="Nueva remesa de nóminas"
+      titulo={t("remesa_pago.nuevaRemesaDeNominas")}
       onCerrar={cancelar}
     >
       <div className="CrearRemesaNominas">
         <quimera-formulario>
           <CuentaBancariaSelect
             nombre="cuenta_id"
-            label="Cuenta de cargo"
+            label={t("remesa_pago.cuentaDeCargo")}
             valor={cuentaId}
             onChange={(opcion) => setCuentaId(opcion?.valor ?? "")}
           />
-          <QDate label="Fecha de pago prevista" {...uiProps("fechaPago")} />
+          <QDate label={t("remesa_pago.fechaDePagoPrevista")} {...uiProps("fechaPago")} />
         </quimera-formulario>
 
         {nominas === null ? (
-          <p>Cargando nóminas…</p>
+          <p>{t("remesa_pago.cargandoNominas")}</p>
         ) : todas.length === 0 ? (
-          <p>No hay nóminas emitidas pendientes de remesar.</p>
+          <p>{t("remesa_pago.noHayNominasEmitidasPendientesDe")}</p>
         ) : (
           <ul className="nominas-remesables">
             {todas.map((nomina) => (
@@ -107,13 +109,13 @@ export const CrearRemesaNominas = ({ publicar }: { publicar: EmitirEvento }) => 
 
         <div className="botones maestro-botones">
           <span className="total-remesa">
-            {`${elegidas.length} nóminas · ${formatearMoneda(total, "EUR")}`}
+            {t("remesa_pago.lengthNominasTotal", { length: elegidas.length, total: formatearMoneda(total, "EUR") })}
           </span>
           <QBoton
             onClick={crear}
             deshabilitado={!cuentaId || !valido || elegidas.length === 0}
           >
-            Crear remesa
+            {t("remesa_pago.crearRemesa")}
           </QBoton>
         </div>
       </div>

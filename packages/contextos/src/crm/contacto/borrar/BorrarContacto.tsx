@@ -4,6 +4,7 @@ import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useCallback } from "react";
 import { Contacto } from "../diseño.ts";
 import { deleteContacto } from "../infraestructura.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const BorrarContacto = ({
   publicar,
@@ -12,6 +13,7 @@ export const BorrarContacto = ({
   contacto: Contacto;
   publicar: ProcesarEvento;
 }) => {
+  const t = useTCrm();
   const borrar_ = useCallback(async () => {
     await deleteContacto(contacto.id);
 
@@ -29,8 +31,8 @@ export const BorrarContacto = ({
     <QModalConfirmacion
       nombre="borrarContacto"
       abierto={true}
-      titulo="Borrar contacto"
-      mensaje={`¿Está seguro de que desea borrar este contacto?`}
+      titulo={t("contacto.borrarContacto")}
+      mensaje={t("contacto.estaSeguroDeQueDeseaBorrar")}
       onCerrar={cancelar}
       onAceptar={borrar}
     />

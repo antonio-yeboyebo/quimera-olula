@@ -9,10 +9,12 @@ import { useCallback, useMemo } from "react";
 import { CamposFormaPago } from "../detalle/CamposFormaPago.tsx";
 import { metaNuevaFormaPago, nuevaFormaPagoVacia } from "../dominio.ts";
 import { postFormaPago } from "../infraestructura.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /** Alta de forma de pago. Nace con un plazo de 0 días y el 100 % (lo que
  * propone Eneboo al añadir el primer plazo); se cambia con «Editar plazos». */
 export const CrearFormaPago = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTTesoreria();
     const inicial = useMemo(nuevaFormaPagoVacia, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevaFormaPago, inicial);
@@ -29,15 +31,15 @@ export const CrearFormaPago = ({ publicar }: { publicar: EmitirEvento }) => {
     const focus = useFocus();
 
     return (
-        <QModal abierto={true} nombre="crearFormaPago" titulo="Nueva forma de pago" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="crearFormaPago" titulo={t("forma_pago.nuevaFormaDePago")} onCerrar={cancelar}>
             <div className="CrearFormaPago">
                 <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} ref={focus} />
+                    <QInput label={t("forma_pago.codigo")} {...uiProps("id")} ref={focus} />
                     <CamposFormaPago uiProps={uiProps} />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("forma_pago.crear")}
                     </QBoton>
                 </div>
             </div>

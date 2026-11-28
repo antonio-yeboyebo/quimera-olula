@@ -5,6 +5,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { ejercicioActual } from "#/contabilidad/asiento/dominio.ts";
 import { GrupoEpigrafe } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroGrupoEpigrafe = 'INICIAL' | 'CREANDO';
 
@@ -14,9 +15,9 @@ export type ContextoMaestroGrupoEpigrafe = {
 };
 
 export const metaTablaGrupoEpigrafe: MetaTabla<GrupoEpigrafe> = [
-    { id: 'codigo', cabecera: 'Código' },
-    { id: 'descripcion', cabecera: 'Descripción' },
-    { id: 'ejercicioId', cabecera: 'Ejercicio' },
+    { id: 'codigo', get cabecera() { return tContabilidad("grupo_epigrafe.codigo"); } },
+    { id: 'descripcion', get cabecera() { return tContabilidad("grupo_epigrafe.descripcion"); } },
+    { id: 'ejercicioId', get cabecera() { return tContabilidad("grupo_epigrafe.ejercicio"); } },
 ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -25,7 +26,7 @@ export const metaFiltroGrupoEpigrafe: MetaFiltro = {
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("grupo_epigrafe.ejercicio"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["ejercicio_id", "eq", valor as string];
@@ -34,7 +35,7 @@ export const metaFiltroGrupoEpigrafe: MetaFiltro = {
     codigo: {
         id: "codigo",
         campo: "codigo",
-        label: "Código",
+        get label() { return tContabilidad("grupo_epigrafe.codigo"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["codigo", "~", valor as string];
@@ -43,7 +44,7 @@ export const metaFiltroGrupoEpigrafe: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tContabilidad("grupo_epigrafe.descripcion"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["descripcion", "~", valor as string];

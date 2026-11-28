@@ -15,6 +15,7 @@ import {
     PayloadRenumerarAsientos,
     ResultadoRenumeracionAsientos,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.ASIENTO;
@@ -146,7 +147,7 @@ export const postAsientoManual: PostAsientoManual = async (nuevo) => {
             documento: nuevo.documento || null,
             partidas: nuevo.partidas.map(partidaManualAApi),
         },
-        "Error al crear asiento manual"
+        tContabilidad("asiento.errorAlCrearAsientoManual")
     );
     return {
         id: String((respuesta as unknown as { id: number }).id ?? respuesta.id),
@@ -166,7 +167,7 @@ export const patchAsientoManual: PatchAsientoManual = async (id, cambios) => {
     const respuesta = (await RestAPI.patch(
         `${baseUrl}/${id}`,
         body,
-        "Error al modificar asiento manual"
+        tContabilidad("asiento.errorAlModificarAsientoManual")
     )) as { id?: number; numero?: number } | void;
 
     return {
@@ -176,7 +177,7 @@ export const patchAsientoManual: PatchAsientoManual = async (id, cambios) => {
 };
 
 export const deleteAsientoManual: DeleteAsientoManual = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar asiento manual");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("asiento.errorAlBorrarAsientoManual"));
 };
 
 interface ResultadoRenumeracionAsientosApi {
@@ -212,7 +213,7 @@ export const patchRenumerarAsientos: PatchRenumerarAsientos = async (payload) =>
     const respuesta = (await RestAPI.patch(
         renumerarUrl,
         payloadRenumerarAApi(payload),
-        "Error al renumerar asientos"
+        tContabilidad("asiento.errorAlRenumerarAsientos")
     )) as unknown as ResultadoRenumeracionAsientosApi | { datos: ResultadoRenumeracionAsientosApi };
 
     const datos =

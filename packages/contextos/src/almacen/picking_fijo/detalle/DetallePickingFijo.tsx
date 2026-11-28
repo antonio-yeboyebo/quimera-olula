@@ -15,6 +15,7 @@ import { patchPickingFijo } from "../infraestructura.ts";
 import { contextoDetallePickingFijoInicial } from "./detalle.ts";
 import "./DetallePickingFijo.css";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (p: PickingFijo) => `${p.articuloId} en ${p.ubicacion}`;
 
@@ -25,6 +26,7 @@ export const DetallePickingFijo = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetallePickingFijoInicial, publicar);
@@ -64,32 +66,32 @@ export const DetallePickingFijo = ({
         >
             <div className="DetallePickingFijo">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                    <QBoton onClick={() => emitir("borrado_solicitado")}>{t("picking_fijo.borrar")}</QBoton>
                 </div>
                 <dl>
-                    <dt>Artículo</dt>
+                    <dt>{t("picking_fijo.articulo")}</dt>
                     <dd>
-                        <ValorConEnlace href={urlFicha.articulo(pickingFijo.articuloId)} etiqueta={`Abrir artículo ${pickingFijo.articuloId}`}>
+                        <ValorConEnlace href={urlFicha.articulo(pickingFijo.articuloId)} etiqueta={t("picking_fijo.abrirArticuloArticuloid", { articuloId: pickingFijo.articuloId })}>
                             {pickingFijo.articuloId} - {pickingFijo.articulo}
                         </ValorConEnlace>
                     </dd>
-                    <dt>Ubicación</dt>
+                    <dt>{t("picking_fijo.ubicacion")}</dt>
                     <dd>
-                        <ValorConEnlace href={urlFicha.ubicacion(pickingFijo.ubicacionId)} etiqueta={`Abrir ubicación ${pickingFijo.ubicacion}`}>
+                        <ValorConEnlace href={urlFicha.ubicacion(pickingFijo.ubicacionId)} etiqueta={t("picking_fijo.abrirUbicacionUbicacion", { ubicacion: pickingFijo.ubicacion })}>
                             {pickingFijo.ubicacion}
                         </ValorConEnlace>
                     </dd>
-                    <dt>Stock</dt>
+                    <dt>{t("picking_fijo.stock")}</dt>
                     <dd>
-                        <ValorConEnlace href={urlListado.stockDeArticulo(pickingFijo.articuloId)} etiqueta={`Ver el stock de ${pickingFijo.articuloId}`}>
+                        <ValorConEnlace href={urlListado.stockDeArticulo(pickingFijo.articuloId)} etiqueta={t("picking_fijo.verElStockDeArticuloid", { articuloId: pickingFijo.articuloId })}>
                             {pickingFijo.stock}
                         </ValorConEnlace>
                     </dd>
                 </dl>
                 <quimera-formulario>
-                    <QInput label="Mínimo" {...modelo.uiProps("minimo")} />
-                    <QInput label="Máximo" {...modelo.uiProps("maximo")} />
-                    <QInput label="Unidad de reposición" {...modelo.uiProps("unidadReposicion")} />
+                    <QInput label={t("picking_fijo.minimo")} {...modelo.uiProps("minimo")} />
+                    <QInput label={t("picking_fijo.maximo")} {...modelo.uiProps("maximo")} />
+                    <QInput label={t("picking_fijo.unidadDeReposicion")} {...modelo.uiProps("unidadReposicion")} />
                 </quimera-formulario>
             </div>
 

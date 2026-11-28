@@ -25,23 +25,24 @@ import {
 import { CrearOrden } from "../crear/CrearOrden.tsx";
 import { DetalleOrden } from "../detalle/DetalleOrden.tsx";
 import { ContextoMaestroOrden, getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const OPCIONES_RESPONSABLE = [
-    { valor: "libres", descripcion: "Libres" },
-    { valor: "mios", descripcion: "Míos" },
+    { valor: "libres", get descripcion() { return tAlmacen("orden.libres"); } },
+    { valor: "mios", get descripcion() { return tAlmacen("orden.mios"); } },
 ];
 
 const OPCIONES_TIPO = [
-    { valor: "ENTRADA", descripcion: "Entrada" },
-    { valor: "SALIDA", descripcion: "Salida" },
-    { valor: "TRASPASO", descripcion: "Traspaso" },
+    { valor: "ENTRADA", get descripcion() { return tAlmacen("orden.entrada"); } },
+    { valor: "SALIDA", get descripcion() { return tAlmacen("orden.salida"); } },
+    { valor: "TRASPASO", get descripcion() { return tAlmacen("orden.traspaso"); } },
 ];
 
 const metaFiltroOrden: MetaFiltro = {
     almacen: filtroAlmacen(),
     estado: {
         id: "estado",
-        label: "Estado",
+        get label() { return tAlmacen("orden.estado"); },
         tipo: "multiseleccion",
         opciones: opcionesEstadoOrden,
         filtro: filtroEstadoOrden,
@@ -50,7 +51,7 @@ const metaFiltroOrden: MetaFiltro = {
     tipo: {
         id: "tipo",
         campo: "tipo",
-        label: "Tipo",
+        get label() { return tAlmacen("orden.tipo"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             return ["tipo", "=", valor as string];
@@ -62,19 +63,19 @@ const metaFiltroOrden: MetaFiltro = {
         },
         render: (valor, onChange) => (
             <QSelect
-                label="Tipo"
+                label={tAlmacen("orden.tipo")}
                 nombre="tipo"
                 valor={(valor as string) ?? ""}
                 onChange={(opcion) => onChange(opcion?.valor ?? "")}
                 opciones={OPCIONES_TIPO}
-                placeholder="Todos"
+                placeholder={tAlmacen("orden.todos")}
             />
         ),
     },
     responsable: {
         id: "responsable",
         campo: "responsable_id",
-        label: "Responsable",
+        get label() { return tAlmacen("orden.responsable"); },
         filtro: (valor) => {
             if (!valor || valor === "") return null;
             if (valor === "libres") return ["responsable_id", "null"];
@@ -93,12 +94,12 @@ const metaFiltroOrden: MetaFiltro = {
         },
         render: (valor, onChange) => (
             <QSelect
-                label="Responsable"
+                label={tAlmacen("orden.responsable")}
                 nombre="responsable"
                 valor={(valor as string) ?? ""}
                 onChange={(opcion) => onChange(opcion?.valor ?? "")}
                 opciones={OPCIONES_RESPONSABLE}
-                placeholder="Todos"
+                placeholder={tAlmacen("orden.todos")}
             />
         ),
     },
@@ -106,9 +107,9 @@ const metaFiltroOrden: MetaFiltro = {
 
 const metaTablaOrden: MetaTabla<ItemOrdenAlmacen> = [
     { id: "id", cabecera: "ID" },
-    { id: "descripcion", cabecera: "Orden" },
-    { id: "fecha", cabecera: "Fecha", tipo:"fecha" },
-    { id: "estado", cabecera: "Estado", render: (orden: ItemOrdenAlmacen) => {
+    { id: "descripcion", get cabecera() { return tAlmacen("orden.orden"); } },
+    { id: "fecha", get cabecera() { return tAlmacen("orden.fecha"); }, tipo:"fecha" },
+    { id: "estado", get cabecera() { return tAlmacen("orden.estado"); }, render: (orden: ItemOrdenAlmacen) => {
         const variante =
             orden.estado === "PENDIENTE" ? "error"
             : orden.estado === "EN_CURSO" ? "advertencia"
@@ -116,7 +117,7 @@ const metaTablaOrden: MetaTabla<ItemOrdenAlmacen> = [
             : "exito";
         return <QEtiqueta variante={variante}>{orden.estado}</QEtiqueta>;
     }},
-    { id: "idResponsable", cabecera: "Responsable"},
+    { id: "idResponsable", get cabecera() { return tAlmacen("orden.responsable"); }},
 ];
 
 const criteriaOrdenesAbiertas = (): Criteria => ({
@@ -127,6 +128,7 @@ const criteriaOrdenesAbiertas = (): Criteria => ({
 });
 
 export const MaestroOrden = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(criteriaOrdenesAbiertas, []);
     const { id, criteria } = getUrlParams();
     const criteriaInicial = criteriaInicialSga(criteria, criteriaBase);
@@ -153,7 +155,7 @@ export const MaestroOrden = () => {
                 modoDisposicion="maestro-50"
                 Maestro={
                     <>
-                        <h2>Órdenes</h2>
+                        <h2>{t("orden.ordenes")}</h2>
                         <Listado<ItemOrdenAlmacen>
                             metaTabla={metaTablaOrden}
                             metaFiltro={metaFiltroOrden}
@@ -166,13 +168,13 @@ export const MaestroOrden = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_modulo_solicitado")}>
-                                        Nueva orden
+                                        {t("orden.nuevaOrden2")}
                                     </QBoton>
                                     <QBoton
                                         onClick={() => emitir("adquirir_solicitado")}
                                         deshabilitado={!puedeAdquirir}
                                     >
-                                        Adquirir
+                                        {t("orden.adquirir")}
                                     </QBoton>
                                 </div>
                             )}

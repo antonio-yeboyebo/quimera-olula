@@ -17,6 +17,7 @@ import { metaTablaAccion } from "./maestro.ts";
 import "./MaestroAcciones.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaAccionRapida } from "./TarjetaAccionRapida.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 const criteriaBaseAcciones = {
   ...criteriaDefecto,
@@ -27,6 +28,7 @@ const criteriaBaseAcciones = {
 };
 
 export const MaestroAcciones = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
 
   const criteriaInicial =
@@ -52,7 +54,7 @@ export const MaestroAcciones = () => {
       <MaestroDetalle<Accion>
         Maestro={
           <>
-            <h2>Acciones</h2>
+            <h2>{t("accion.acciones")}</h2>
 
             <Listado<Accion>
               metaTabla={metaTablaAccion}
@@ -60,7 +62,7 @@ export const MaestroAcciones = () => {
                 ...getMetaFiltroDefecto(metaTablaAccion),
                 tipo: {
                   id: "tipo",
-                  label: "Tipo",
+                  label: t("accion.tipo"),
                   tipo: "multiseleccion",
                   opciones: opcionesTipoAccion,
                   filtro: (v) => {
@@ -74,7 +76,7 @@ export const MaestroAcciones = () => {
                 },
                 estado: {
                   id: "estado",
-                  label: "Estado",
+                  label: t("accion.estado"),
                   tipo: "multiseleccion",
                   opciones: opcionesEstadoAccion,
                   filtro: (v) => {
@@ -100,7 +102,7 @@ export const MaestroAcciones = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_accion_solicitada")}
                   >
-                    Nueva
+                    {t("accion.nueva")}
                   </QBoton>
                 </div>
               )}

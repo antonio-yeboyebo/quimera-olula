@@ -19,6 +19,7 @@ import {
     metaNuevaLinea,
     nuevaLineaInicial
 } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export type CrearLineaProps = {
     idPedido: string;
@@ -33,6 +34,7 @@ export const CrearLinea = (props: CrearLineaProps) => {
 };
 
 export const CrearLineaBase = ({ idPedido, publicar }: CrearLineaProps) => {
+    const t = useTVentas();
 
     // Callback para campos QInput (cantidad…): se dispara en blur via evaluarCambio.
     // Solo llama al servidor si el campo está en camposConCambiosServidor.
@@ -81,7 +83,7 @@ export const CrearLineaBase = ({ idPedido, publicar }: CrearLineaProps) => {
         <QModal
             abierto={true}
             nombre="crear_linea_pedido"
-            titulo="Crear línea"
+            titulo={t("documento.formLinea.crear")}
             onCerrar={cancelar}
         >
             <div className="CrearLinea">
@@ -94,9 +96,9 @@ export const CrearLineaBase = ({ idPedido, publicar }: CrearLineaProps) => {
                         nombre="idArticulo_nueva_linea_pedido"
                         onChange={onArticuloCambiado}
                     />
-                    <QInput label="Cantidad" {...lineaArticulo.uiProps("cantidad")} />
-                    <QInput label="PVP unitario" {...lineaArticulo.uiProps("pvpUnitario")} />
-                    <QInput label="Total" {...lineaArticulo.uiProps("pvpTotal")} />
+                    <QInput label={t("documento.formLinea.cantidad")} {...lineaArticulo.uiProps("cantidad")} />
+                    <QInput label={t("documento.formLinea.pvpUnitario")} {...lineaArticulo.uiProps("pvpUnitario")} />
+                    <QInput label={t("documento.formLinea.total")} {...lineaArticulo.uiProps("pvpTotal")} />
 
                     <div className="mostrar-mas-fila">
                         <button
@@ -104,24 +106,24 @@ export const CrearLineaBase = ({ idPedido, publicar }: CrearLineaProps) => {
                             className="mostrar-mas-btn"
                             onClick={() => setMostrarMas((v) => !v)}
                         >
-                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                            {mostrarMas ? t("documento.formLinea.menosOpciones") : t("documento.formLinea.masOpciones")}
                         </button>
                     </div>
 
                     {mostrarMas && (
                         <>
                             <div className="seccion-separador">Descuento</div>
-                            <QInput label="% Descuento" {...lineaArticulo.uiProps("dtoPorcentual")} />
-                            <QInput label="Dto. lineal" {...lineaArticulo.uiProps("dtoLineal")} />
+                            <QInput label={t("documento.formLinea.descuento")} {...lineaArticulo.uiProps("dtoPorcentual")} />
+                            <QInput label={t("documento.formLinea.dtoLineal")} {...lineaArticulo.uiProps("dtoLineal")} />
 
                             <div className="seccion-separador">Impuestos</div>
                             <GrupoIvaProducto {...lineaArticulo.uiProps("idGrupoIvaProducto")} soloLectura={!libre} />
-                            <QInput label="% IVA" {...lineaArticulo.uiProps("tipoIva")} soloLectura />
-                            <QInput label="% R.Equivalencia" {...lineaArticulo.uiProps("tipoRecargo")} soloLectura />
+                            <QInput label={t("documento.formLinea.iva")} {...lineaArticulo.uiProps("tipoIva")} soloLectura />
+                            <QInput label={t("documento.formLinea.recargo")} {...lineaArticulo.uiProps("tipoRecargo")} soloLectura />
                             {ivaIncluidoActivo &&
-                                <QCheckbox label="IVA incluido" {...lineaArticulo.uiProps("ivaIncluido")} soloLectura={!libre} />
+                                <QCheckbox label={t("documento.formLinea.ivaIncluido")} {...lineaArticulo.uiProps("ivaIncluido")} soloLectura={!libre} />
                             }
-                            <QInput label="% I.R.P.F." {...lineaArticulo.uiProps("tipoIrpf")} />
+                            <QInput label={t("documento.formLinea.irpf")} {...lineaArticulo.uiProps("tipoIrpf")} />
                         </>
                     )}
                 </quimera-formulario>

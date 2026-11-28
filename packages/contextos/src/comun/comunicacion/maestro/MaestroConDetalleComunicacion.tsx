@@ -18,6 +18,7 @@ import { metaTablaComunicacion } from "./diseño.ts";
 import "./MaestroConDetalleComunicacion.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaComunicacion } from "./TarjetaComunicacion.tsx";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 const criteriaBaseComunicaciones = {
   ...criteriaDefecto,
@@ -28,7 +29,7 @@ const criteriaBaseComunicaciones = {
 const metaFiltroComunicacion: MetaFiltro = {
   estado: {
     id: "estado",
-    label: "Estado",
+    get label() { return tComun("comunicacion.estado"); },
     filtro: (valor) => (valor ? ["estado", "=", valor as string] : null),
     render: (valor, onChange) => (
       <EstadoComunicacion
@@ -41,13 +42,14 @@ const metaFiltroComunicacion: MetaFiltro = {
   },
   fechaEnvio: {
     id: "fechaEnvio",
-    label: "Fecha",
+    get label() { return tComun("comunicacion.fecha"); },
     tipo: "intervalo_fechas",
     filtro: (valor) => filtroFechas("fechaEnvio", valor),
   },
 };
 
 export const MaestroConDetalleComunicacion = () => {
+  const t = useTComun();
   const { id, criteria } = getUrlParams();
   const criteriaInicial = {
     ...criteria,
@@ -81,7 +83,7 @@ export const MaestroConDetalleComunicacion = () => {
       <MaestroDetalle<Comunicacion>
         Maestro={
           <>
-            <h2>Comunicaciones</h2>
+            <h2>{t("comunicacion.comunicaciones")}</h2>
             <Listado<Comunicacion>
               metaTabla={metaTablaComunicacion}
               metaFiltro={metaFiltroComunicacion}

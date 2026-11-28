@@ -13,6 +13,7 @@ import {
 } from "../dominio.js";
 import { postArticuloTarifa } from "../infraestructura.js";
 import "./CrearArticuloTarifa.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Modal de alta de un precio de artículo dentro de la tarifa.
@@ -31,6 +32,7 @@ export const CrearArticuloTarifa = ({
   tarifa: Tarifa;
   publicar: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const inicial = useMemo(nuevoArticuloTarifaVacio, []);
 
   const { modelo, uiProps, valido } = useModelo(
@@ -66,7 +68,7 @@ export const CrearArticuloTarifa = ({
             autoFocus
           />
           <QInput
-            label="Precio"
+            label={t("tarifa.articulos.precio")}
             {...uiProps("precio")}
             divisa={tarifa.divisaId || "EUR"}
             tipo="moneda"
@@ -74,7 +76,7 @@ export const CrearArticuloTarifa = ({
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Añadir
+            {t("tarifa.articulos.anadirBoton")}
           </QBoton>
         </div>
       </div>

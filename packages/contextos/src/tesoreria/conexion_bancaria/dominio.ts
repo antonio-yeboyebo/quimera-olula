@@ -6,6 +6,7 @@ import {
     SubcuentasPrestamo,
     TipoProductoBancario,
 } from "./diseño.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 export const conexionBancariaVacia: ConexionBancaria = {
     id: "",
@@ -21,8 +22,8 @@ export const conexionBancariaVacia: ConexionBancaria = {
 };
 
 export const ETIQUETA_ESTADO_CONEXION_BANCARIA: Record<EstadoConexionBancaria, string> = {
-    activa: "Activa",
-    requiere_reautenticacion: "Requiere reautenticación",
+    get activa() { return tTesoreria("conexion_bancaria.activa"); },
+    get requiere_reautenticacion() { return tTesoreria("conexion_bancaria.requiereReautenticacion"); },
 };
 
 export const etiquetaEstadoConexionBancaria = (estado: EstadoConexionBancaria): string =>
@@ -36,13 +37,13 @@ export const requiereReautenticacion = (conexion: ConexionBancaria): boolean =>
  * nombre (p.ej. justo tras el alta, antes de que se resuelva del todo).
  */
 export const nombreInstitucion = (conexion: ConexionBancaria): string =>
-    conexion.institucionNombre ?? conexion.institucionId ?? "Banco sin identificar";
+    conexion.institucionNombre ?? conexion.institucionId ?? tTesoreria("conexion_bancaria.bancoSinIdentificar");
 
 export const TIPOS_PRODUCTO_BANCARIO: TipoProductoBancario[] = ["accounts", "loans"];
 
 const ETIQUETA_TIPO_PRODUCTO: Record<TipoProductoBancario, string> = {
-    accounts: "Cuentas",
-    loans: "Préstamos",
+    get accounts() { return tTesoreria("conexion_bancaria.cuentas"); },
+    get loans() { return tTesoreria("conexion_bancaria.prestamos"); },
 };
 
 export const etiquetaTipoProducto = (tipo: TipoProductoBancario): string => ETIQUETA_TIPO_PRODUCTO[tipo];

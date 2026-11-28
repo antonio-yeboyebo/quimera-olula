@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { Lead } from "../../diseño.ts";
 import { patchLead } from "../../infraestructura.ts";
 import "./CambiarDireccionLead.css";
+import { useTCrm } from "../../../i18n/index.ts";
 
 const metaDireccionLead: MetaModelo<Lead> = {
   campos: {
@@ -28,6 +29,7 @@ export const CambiarDireccionLead = ({
   lead: HookModelo<Lead>;
   onCerrar: () => void;
 }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(metaDireccionLead, lead.modelo);
 
   const guardar_ = useCallback(async () => {
@@ -42,20 +44,20 @@ export const CambiarDireccionLead = ({
     <QModal
       abierto={true}
       nombre="cambiarDireccionLead"
-      titulo="Dirección"
+      titulo={t("lead.direccion")}
       onCerrar={cancelar}
     >
       <div className="CambiarDireccionLead">
         <quimera-formulario>
-          <QInput label="Dirección" {...uiProps("direccion")} />
-          <QInput label="Ciudad" {...uiProps("ciudad")} />
-          <QInput label="Código Postal" {...uiProps("cod_postal")} />
-          <QInput label="Provincia" {...uiProps("provincia")} />
-          <PaisSelector label="País" {...uiProps("pais_id", "pais")} />
+          <QInput label={t("lead.direccion")} {...uiProps("direccion")} />
+          <QInput label={t("lead.ciudad")} {...uiProps("ciudad")} />
+          <QInput label={t("lead.codigoPostal")} {...uiProps("cod_postal")} />
+          <QInput label={t("lead.provincia")} {...uiProps("provincia")} />
+          <PaisSelector label={t("lead.pais")} {...uiProps("pais_id", "pais")} />
         </quimera-formulario>
         <div className="botones maestro-botones">
           <QBoton onClick={guardar} deshabilitado={!valido}>
-            Guardar
+            {t("lead.guardar")}
           </QBoton>
         </div>
       </div>

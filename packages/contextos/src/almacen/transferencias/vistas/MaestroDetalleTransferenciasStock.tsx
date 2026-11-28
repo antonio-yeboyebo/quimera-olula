@@ -13,14 +13,15 @@ import {
 } from "../maquina_listado_transferencias_stock.ts";
 import { CrearTransferenciaStock } from "./CrearTransferenciaStock.tsx";
 import { DetalleTransferenciaStock } from "./DetalleTransferenciaStock.tsx";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaTransferenciaStock: MetaTabla<TransferenciaStock> = [
   { id: "id", cabecera: "ID" },
-  { id: "nombre_origen", cabecera: "Origen" },
-  { id: "nombre_destino", cabecera: "Destino" },
+  { id: "nombre_origen", get cabecera() { return tAlmacen("transferencias.origen"); } },
+  { id: "nombre_destino", get cabecera() { return tAlmacen("transferencias.destino"); } },
   {
     id: "fecha",
-    cabecera: "Fecha",
+    get cabecera() { return tAlmacen("transferencias.fecha"); },
     render: (v) =>
       new Date(v.fecha).toLocaleString(undefined, {
         month: "2-digit",
@@ -33,6 +34,7 @@ const metaTablaTransferenciaStock: MetaTabla<TransferenciaStock> = [
 ];
 
 export const MaestroDetalleTransferenciasStock = () => {
+  const t = useTAlmacen();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -57,9 +59,9 @@ export const MaestroDetalleTransferenciasStock = () => {
         layout="TABLA"
         Maestro={
           <>
-            <h2>Transferencias</h2>
+            <h2>{t("transferencias.transferencias")}</h2>
             <div className="maestro-botones">
-              <QBoton onClick={() => emitir("crear")}>Nueva</QBoton>
+              <QBoton onClick={() => emitir("crear")}>{t("transferencias.nueva")}</QBoton>
             </div>
             <Listado<TransferenciaStock>
               metaTabla={metaTablaTransferenciaStock}

@@ -2,6 +2,7 @@ import { QSelect, QSelectProps } from "@olula/componentes/atomos/qselect.tsx";
 import { Orden } from "@olula/lib/diseño.ts";
 import { useEffect, useState } from "react";
 import { getFamilias } from "../../familia/infraestructura.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type FamiliaProps = Omit<QSelectProps, "opciones" | "label" | "nombre"> & {
   label?: string;
@@ -18,7 +19,7 @@ const sinFamilia: OpcionFamilia = { valor: "", descripcion: "—" };
 export const Familia = ({
   valor,
   nombre = "familia_id",
-  label = "Familia",
+  label = tAlmacen("comun.familia"),
   onChange,
   ...props
 }: FamiliaProps) => {

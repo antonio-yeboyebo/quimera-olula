@@ -7,10 +7,11 @@ import {
 import { EstadoLead } from "../diseño.ts";
 import { getEstadosLead } from "../infraestructura.ts";
 import { ContextoMaestroEstadosLead, EstadoMaestroEstadosLead } from "./diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 export const metaTablaEstadoLead: MetaTabla<EstadoLead> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
+    { id: "id", get cabecera() { return tCrm("estadoLead.codigo"); } },
+    { id: "descripcion", get cabecera() { return tCrm("estadoLead.descripcion"); } },
 ];
 
 type ProcesarEstadosLead = ProcesarContexto<EstadoMaestroEstadosLead, ContextoMaestroEstadosLead>;

@@ -14,11 +14,12 @@ import { CampoFlujo, camposPendientes, Flujo, flujoPorDefecto } from "../../paso
 import { SelectorFlujo } from "../selector_flujo/SelectorFlujo.tsx";
 import { nuevaLineaOrdenDesdeOrden } from "./crear_linea.ts";
 import { getMetaNuevaLineaOrden } from "./diseño.ts";
+import { tAlmacen, useTAlmacen } from "../../../i18n/index.ts";
 
 const meta = getMetaNuevaLineaOrden();
 
 const etiqueta = (flujo: Flujo | null, campo: CampoFlujo, texto: string) =>
-    flujo?.campos[campo] === "opcional" ? `${texto} (opcional)` : texto;
+    flujo?.campos[campo] === "opcional" ? tAlmacen("orden.textoOpcional", { texto }) : texto;
 
 export const CrearLineaOrden = ({
     publicar,
@@ -27,6 +28,7 @@ export const CrearLineaOrden = ({
     publicar: EmitirEvento;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const [flujo, setFlujo] = useState<Flujo | null>(() => flujoPorDefecto(orden));
 
     const lineaInicial = useMemo(
@@ -77,52 +79,52 @@ export const CrearLineaOrden = ({
         <QModal
             abierto={true}
             nombre="crearLineaOrden"
-            titulo="Nueva línea"
+            titulo={t("orden.nuevaLinea")}
             onCerrar={cancelar}
         >
             <div className="CrearLineaOrden">
                 <quimera-formulario>
                     <SelectorFlujo tipo={orden.tipo} valor={flujo?.codigo ?? null} onChange={setFlujo} />
                     <Sku {...uiProps("sku")} />
-                    <QInput label="Cantidad prevista" {...uiProps("cantidadPrevista")} />
+                    <QInput label={t("orden.cantidadPrevista")} {...uiProps("cantidadPrevista")} />
                     {usa("paletOrigen") && (
-                        <Caja {...uiProps("idCajaOrigen")} label="Palé origen" nombre="idCajaOrigen" />
+                        <Caja {...uiProps("idCajaOrigen")} label={t("orden.paleOrigen2")} nombre="idCajaOrigen" />
                     )}
                     {usa("ubicacionOrigen") && (
                         <Ubicacion
                             {...uiProps("idUbicacionOrigen")}
-                            label={etiqueta(flujo, "ubicacionOrigen", "Ubicación origen")}
+                            label={etiqueta(flujo, "ubicacionOrigen", t("orden.ubicacionOrigen2"))}
                             nombre="idUbicacionOrigen"
                         />
                     )}
                     {usa("cajaOrigen") && (
                         <Caja
                             {...uiProps("idCajaOrigen")}
-                            label={etiqueta(flujo, "cajaOrigen", "Caja origen")}
+                            label={etiqueta(flujo, "cajaOrigen", t("orden.cajaOrigen2"))}
                             nombre="idCajaOrigen"
                         />
                     )}
                     {usa("ubicacionDestino") && (
                         <Ubicacion
                             {...uiProps("idUbicacionDestino")}
-                            label={etiqueta(flujo, "ubicacionDestino", "Ubicación destino")}
+                            label={etiqueta(flujo, "ubicacionDestino", t("orden.ubicacionDestino2"))}
                             nombre="idUbicacionDestino"
                         />
                     )}
                     {usa("cajaDestino") && (
                         <Caja
                             {...uiProps("idCajaDestino")}
-                            label={etiqueta(flujo, "cajaDestino", "Caja destino")}
+                            label={etiqueta(flujo, "cajaDestino", t("orden.cajaDestino2"))}
                             nombre="idCajaDestino"
                         />
                     )}
                 </quimera-formulario>
                 {pendientes.length > 0 && (
-                    <p className="q-texto-secundario">Falta: {pendientes.join(", ")}</p>
+                    <p className="q-texto-secundario">{t("orden.faltaValor", { valor: pendientes.join(", ") })}</p>
                 )}
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!puedeGuardar}>
-                        Guardar
+                        {t("orden.guardar")}
                     </QBoton>
                 </div>
             </div>

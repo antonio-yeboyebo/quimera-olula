@@ -13,8 +13,10 @@ import { DetalleStock } from "../detalle/DetalleStock.tsx";
 import { StockItem } from "../diseño.ts";
 import { metaTablaStock } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 export const MaestroConDetalleStock = () => {
+    const t = useTAlmacen();
     const { id, criteria } = getUrlParams();
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -34,7 +36,7 @@ export const MaestroConDetalleStock = () => {
             <MaestroDetalle<StockItem>
                 Maestro={
                     <>
-                        <h2>Stock</h2>
+                        <h2>{t("stock.stock")}</h2>
                         <Listado<StockItem>
                             metaTabla={metaTablaStock}
                             metaFiltro={metaFiltro}
@@ -61,7 +63,7 @@ const metaFiltro: MetaFiltro = {
     articulo: {
         id: "articulo",
         campo: "articulo_id",
-        label: "Artículo",
+        get label() { return tAlmacen("stock.articulo"); },
         filtro: (v) => (v ? ["articulo_id", "=", v as string] : null),
         render: (valor, onChange) => (
             <Articulo
@@ -73,13 +75,13 @@ const metaFiltro: MetaFiltro = {
     almacen: filtroAlmacen(),
     fisica: {
         id: "fisica",
-        label: "Cantidad física",
+        get label() { return tAlmacen("stock.cantidadFisica"); },
         tipo: "intervalo_numeros",
         filtro: (valor) => filtroNumeros("cantidad", valor),
     },
     disponible: {
         id: "disponible",
-        label: "Disponible",
+        get label() { return tAlmacen("stock.disponible"); },
         tipo: "intervalo_numeros",
         filtro: (valor) => filtroNumeros("disponible", valor),
     }

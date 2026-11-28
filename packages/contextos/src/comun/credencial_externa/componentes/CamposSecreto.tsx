@@ -4,6 +4,7 @@ import { CuentaBancariaSelect } from "#/tesoreria/comun/componentes/cuenta_banca
 import { SecretoCredencialExterna, TipoAuthCredencialExterna } from "../diseño.js";
 import { getConfiguracionCredenciales } from "../configuracion.js";
 import { buscarProveedorConocido } from "../dominio.js";
+import { tComun } from "../../i18n/index.ts";
 
 interface CamposSecretoProps {
     proveedor: string;
@@ -67,7 +68,7 @@ export const CamposSecreto = ({ proveedor, tipoAuth, valor, onChange }: CamposSe
         case "api_key":
             return (
                 <QInput
-                    label="API key"
+                    label={tComun("credencialExterna.apiKey")}
                     tipo="contraseña"
                     nombre="api_key"
                     valor={valor.api_key ?? ""}
@@ -77,7 +78,7 @@ export const CamposSecreto = ({ proveedor, tipoAuth, valor, onChange }: CamposSe
         case "bearer":
             return (
                 <QInput
-                    label="Token"
+                    label={tComun("credencialExterna.token")}
                     tipo="contraseña"
                     nombre="token"
                     valor={valor.token ?? ""}
@@ -88,13 +89,13 @@ export const CamposSecreto = ({ proveedor, tipoAuth, valor, onChange }: CamposSe
             return (
                 <>
                     <QInput
-                        label="Usuario"
+                        label={tComun("credencialExterna.usuario")}
                         nombre="usuario"
                         valor={valor.usuario ?? ""}
                         onChange={set("usuario")}
                     />
                     <QInput
-                        label="Contraseña"
+                        label={tComun("credencialExterna.contrasena")}
                         tipo="contraseña"
                         nombre="password"
                         valor={valor.password ?? ""}
@@ -106,13 +107,13 @@ export const CamposSecreto = ({ proveedor, tipoAuth, valor, onChange }: CamposSe
             return (
                 <>
                     <QInput
-                        label="Client ID"
+                        label={tComun("credencialExterna.clientId")}
                         nombre="client_id"
                         valor={valor.client_id ?? ""}
                         onChange={set("client_id")}
                     />
                     <QInput
-                        label="Client secret"
+                        label={tComun("credencialExterna.clientSecret")}
                         tipo="contraseña"
                         nombre="client_secret"
                         valor={valor.client_secret ?? ""}

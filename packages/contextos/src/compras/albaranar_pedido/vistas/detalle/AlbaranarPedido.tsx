@@ -9,12 +9,14 @@ import { metaAlbaranarPedido } from "../../dominio.ts";
 import { contextoVacio } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { LineasAlbaranar } from "./lineas/LineasAlbaranar.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const AlbaranarPedido = ({
     publicar = async () => {},
 }: {
     publicar?: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const navigate = useNavigate();
     const params = useParams();
     const pedidoId = params.id;
@@ -42,13 +44,13 @@ export const AlbaranarPedido = ({
             <div className="albaranar2-bloque">
             <div className="botones maestro-botones">
                 <QBoton onClick={() => emitir("marcar_todo")}>
-                    Recibir todo
+                    {t("albaranarPedido.recibirTodo")}
                 </QBoton>
                 <QBoton
                     onClick={() => emitir("albaranar_solicitado")}
                     deshabilitado={!albaranado.valido || estado !== "LISTO"}
                 >
-                    Albaranar
+                    {t("albaranarPedido.albaranar")}
                 </QBoton>
             </div>
 
@@ -66,21 +68,21 @@ export const AlbaranarPedido = ({
                 <QModal
                     nombre="albaranCreado"
                     abierto={true}
-                    titulo="Albarán creado"
+                    titulo={t("albaranarPedido.creadoTitulo")}
                     onCerrar={() => emitir("albaranado_cerrado")}
                 >
-                    <p>Albarán <strong>{ctx.albaranCreado.codigo}</strong> creado correctamente.</p>
+                    <p>{t("albaranarPedido.creado", { codigo: ctx.albaranCreado.codigo })}</p>
                     <div className="botones maestro-botones">
                         <QBoton
                             variante="texto"
                             onClick={() => navigate("/compras/pedido")}
                         >
-                            Volver a pedidos
+                            {t("albaranarPedido.volver")}
                         </QBoton>
                         <QBoton
                             onClick={() => navigate(`/compras/albaran?id=${ctx.albaranCreado!.id}`)}
                         >
-                            Ir al albarán {ctx.albaranCreado.codigo}
+                            {t("albaranarPedido.irAlbaran", { codigo: ctx.albaranCreado.codigo })}
                         </QBoton>
                     </div>
                 </QModal>

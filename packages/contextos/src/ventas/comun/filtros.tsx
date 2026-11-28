@@ -6,9 +6,13 @@ import {
 } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { Agente } from "./componentes/agente.tsx";
 import { Cliente } from "./componentes/cliente.tsx";
+import { tVentas } from "../i18n/index.ts";
 
 /**
  * Filtros compartidos por los maestros de ventas.
+ *
+ * La etiqueta es un getter: sale en el idioma activo cuando se pinta (también
+ * al copiarlos con `{ ...filtroX }` dentro de un componente).
  *
  * Los de entidad no declaran `tipo`: convertirCampoHaciaUI transformaría el valor
  * y no llegaría intacto al selector.
@@ -16,7 +20,9 @@ import { Cliente } from "./componentes/cliente.tsx";
 
 export const filtroCliente: MetaCampoFiltro = {
   id: "cliente_id",
-  label: "Cliente",
+  get label() {
+    return tVentas("comun.filtros.cliente");
+  },
   filtro: (v) => (v ? ["cliente_id", "=", v as string] : null),
   render: (valor, onChange) => (
     <Cliente
@@ -29,7 +35,9 @@ export const filtroCliente: MetaCampoFiltro = {
 
 export const filtroAgente: MetaCampoFiltro = {
   id: "agente_id",
-  label: "Agente",
+  get label() {
+    return tVentas("comun.filtros.agente");
+  },
   filtro: (v) => (v ? ["agente_id", "=", v as string] : null),
   render: (valor, onChange) => (
     <Agente
@@ -43,7 +51,9 @@ export const filtroAgente: MetaCampoFiltro = {
 
 export const filtroProvincia: MetaCampoFiltro = {
   id: "provincia_id",
-  label: "Provincia",
+  get label() {
+    return tVentas("comun.filtros.provincia");
+  },
   filtro: (v) => (v ? ["provincia_id", "=", v as string] : null),
   render: (valor, onChange) => (
     <ProvinciaSelector
@@ -56,7 +66,9 @@ export const filtroProvincia: MetaCampoFiltro = {
 
 export const filtroAlmacen: MetaCampoFiltro = {
   id: "almacen_id",
-  label: "Almacén",
+  get label() {
+    return tVentas("comun.filtros.almacen");
+  },
   filtro: (v) => (v ? ["almacen_id", "=", v as string] : null),
   render: (valor, onChange) => (
     <Almacen
@@ -70,14 +82,18 @@ export const filtroAlmacen: MetaCampoFiltro = {
 
 export const filtroCodigo: MetaCampoFiltro = {
   id: "codigo",
-  label: "Código",
+  get label() {
+    return tVentas("comun.filtros.codigo");
+  },
   tipo: "texto",
   filtro: (v) => (v ? ["codigo", "~", v as string] : null),
 };
 
 export const filtroFechaDocumento: MetaCampoFiltro = {
   id: "fecha",
-  label: "Fecha",
+  get label() {
+    return tVentas("comun.filtros.fecha");
+  },
   tipo: "intervalo_fechas",
   filtro: (v) => filtroFechas("fecha", v),
 };

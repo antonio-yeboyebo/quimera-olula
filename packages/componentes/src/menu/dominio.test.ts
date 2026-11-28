@@ -7,8 +7,11 @@ import {
   buscarPantallas,
   normalizar,
   partesCoincidencia,
+  traducirPantalla,
   urlActiva,
 } from "./dominio.ts";
+import { cambiarIdioma } from "@olula/lib/i18n/i18n.ts";
+import { nombreMenu } from "../i18n/textos.ts";
 
 const menu: ElementoMenu[] = [
   // Así llega Inicio desde crearMenu: grupo con url y sin subelementos
@@ -99,6 +102,22 @@ describe("menú lateral y búsqueda rápida", () => {
       "Transferencias de stock",
     ]);
     expect(buscarPantallas(pantallas, "zzz")).toEqual([]);
+  });
+
+  test("en inglés busca por el nombre traducido y también por el español", async () => {
+    await cambiarIdioma("en");
+    try {
+      const pantallas = aplanarMenu(menu, todo).map((p) => traducirPantalla(p, nombreMenu));
+      const clientes = pantallas.find((p) => p.url === "/ventas/cliente");
+      expect(clientes).toMatchObject({ nombre: "Customers", grupo: "Sales" });
+      expect(buscarPantallas(pantallas, "custom")[0].nombre).toBe("Customers");
+      expect(buscarPantallas(pantallas, "clientes")[0]).toMatchObject({
+        nombre: "Customers",
+        aliasCoincide: "Clientes",
+      });
+    } finally {
+      await cambiarIdioma("es");
+    }
   });
 
   test("recientes: sin repetir y con máximo", () => {

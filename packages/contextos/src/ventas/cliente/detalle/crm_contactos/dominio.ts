@@ -1,12 +1,14 @@
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo } from "@olula/lib/dominio.js";
+import { tLib } from "@olula/lib/i18n/textos.ts";
+import { tVentas } from "../../../i18n/index.ts";
 import { CrmContacto, NuevoCrmContacto } from "../../diseño.ts";
 import { ContextoCrmContactos, EstadoCrmContactos } from "./diseño.ts";
 
 // Longitudes de las columnas de crm_contactos (crm_contactos.mtd).
 const longitud = (campo: keyof NuevoCrmContacto, maximo: number) =>
     (modelo: NuevoCrmContacto) =>
-        String(modelo[campo] ?? "").length <= maximo || `Como mucho ${maximo} caracteres`;
+        String(modelo[campo] ?? "").length <= maximo || tLib("validacion.longitudMaxima", { maximo });
 
 const camposContacto = {
     nombre: { requerido: true, validacion: longitud("nombre", 100) },
@@ -30,13 +32,14 @@ export const nuevoCrmContactoVacio: NuevoCrmContacto = {
     observaciones: '',
 }
 
-export const metaTablaCrmContactos = [
-    { id: "id", cabecera: "Código" },
-    { id: "nombre", cabecera: "Nombre" },
-    { id: "cargo", cabecera: "Cargo" },
-    { id: "email", cabecera: "Email" },
-    { id: "telefono1", cabecera: "Teléfono 1" },
-    { id: "telefono2", cabecera: "Teléfono 2" },
+/** Columnas de la agenda, en el idioma activo (se piden al pintar). */
+export const metaTablaCrmContactos = () => [
+    { id: "id", cabecera: tVentas("cliente.agenda.codigo") },
+    { id: "nombre", cabecera: tVentas("cliente.agenda.nombre") },
+    { id: "cargo", cabecera: tVentas("cliente.agenda.cargo") },
+    { id: "email", cabecera: tVentas("cliente.agenda.email") },
+    { id: "telefono1", cabecera: tVentas("cliente.agenda.telefono1") },
+    { id: "telefono2", cabecera: tVentas("cliente.agenda.telefono2") },
 ];
 
 

@@ -1,6 +1,7 @@
 import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import React, { useEffect, useRef, useState } from "react";
 import estilos from "./tabs.module.css";
+import { useTComponentes } from "../../i18n/textos.ts";
 
 interface TabProps {
   label: string;
@@ -23,6 +24,7 @@ const Tab: React.FC<TabProps> = ({ children }) => {
 };
 
 const Tabs: React.FC<TabsProps> = ({ children, className, tabInicial = 0, onCambio }) => {
+  const t = useTComponentes();
   const [activeTab, setActivaInterna] = React.useState(tabInicial);
   const setActiveTab = (nueva: number) => {
     setActivaInterna(nueva);
@@ -43,16 +45,16 @@ const Tabs: React.FC<TabsProps> = ({ children, className, tabInicial = 0, onCamb
       activa: indice,
     }),
     ejecutar: (accion, parametros) => {
-      if (accion !== "seleccionar") return { ok: false, mensaje: "No sé hacer eso con las pestañas." };
+      if (accion !== "seleccionar") return { ok: false, mensaje: t("ui.detalle.noSeHacerEsoConLas") };
       const etiqueta = typeof parametros.pestana === "string" ? parametros.pestana.toLowerCase() : null;
       const destino = etiqueta !== null
         ? tabs.findIndex((tab) => tab.props.label.toLowerCase() === etiqueta)
         : Number(parametros.indice);
       if (!Number.isInteger(destino) || destino < 0 || destino >= tabs.length || tabs[destino].props.deshabilitado) {
-        return { ok: false, mensaje: "No encuentro esa pestaña." };
+        return { ok: false, mensaje: t("ui.detalle.noEncuentroEsaPestana") };
       }
       setActiveTab(destino);
-      return { ok: true, mensaje: `Pestaña ${tabs[destino].props.label}.` };
+      return { ok: true, mensaje: t("ui.detalle.pestanaLabel", { label: tabs[destino].props.label }) };
     },
   }));
 

@@ -11,6 +11,8 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useState } from "react";
 import { getCliente, postCliente } from "../infraestructura.ts";
 import "./CrearCliente.css";
+import { useTVentas } from "../../i18n/index.ts";
+import { opcionesTipoVia } from "../crear_direccion/dominio.ts";
 import { metaNuevoCliente, nuevoClienteVacio } from "./dominio.ts";
 
 interface CrearClienteProps {
@@ -22,6 +24,7 @@ export const CrearCliente = ({
   publicar = async () => {},
   onCancelar = () => {},
 }: CrearClienteProps) => {
+  const t = useTVentas();
   /* Lazy initializer: referencia estable para useModelo y empresa ya puesta en el
      primer render. */
   const [inicial] = useState(() => conEmpresaActual(nuevoClienteVacio));
@@ -31,14 +34,7 @@ export const CrearCliente = ({
   const [mostrarErrorCiudad, setMostrarErrorCiudad] = useState(false);
   const direccion = nuevoCliente.subModelo("direccion");
 
-  const opciones = [
-    { valor: "Calle", descripcion: "Calle" },
-    { valor: "Avenida", descripcion: "Avenida" },
-    { valor: "Plaza", descripcion: "Plaza" },
-    { valor: "Paseo", descripcion: "Paseo" },
-    { valor: "Camino", descripcion: "Camino" },
-    { valor: "Carretera", descripcion: "Carretera" },
-  ];
+  const opciones = opcionesTipoVia();
 
   const guardar_ = useCallback(async () => {
     const id = await postCliente(nuevoCliente.modelo);
@@ -56,24 +52,24 @@ export const CrearCliente = ({
     <QModal
       abierto={true}
       nombre="crear_cliente"
-      titulo="Nuevo Cliente"
+      titulo={t("cliente.crear.titulo")}
       onCerrar={cancelar}
     >
       <>
         <quimera-formulario>
           <QInput
-            label="Nombre"
+            label={t("cliente.campos.nombre")}
             autoSeleccion={true}
             {...nuevoCliente.uiProps("nombre")}
           />
 
           <TipoIdFiscal {...nuevoCliente.uiProps("tipo_id_fiscal")} />
 
-          <QInput label="ID Fiscal" {...nuevoCliente.uiProps("id_fiscal")} />
+          <QInput label={t("cliente.crear.idFiscal")} {...nuevoCliente.uiProps("id_fiscal")} />
         </quimera-formulario>
         {!nuevoCliente.modelo.empresa_id && (
           <QAviso>
-            Sin empresa activa. Selecciónala en la cabecera para poder guardar.
+            {t("cliente.crear.sinEmpresa")}
           </QAviso>
         )}
 
@@ -99,7 +95,7 @@ export const CrearCliente = ({
               setMostrarDireccion(true);
             }}
           >
-            Añadir dirección
+            {t("cliente.crear.anadirDireccion")}
           </QBoton>
         ) : (
           <QBoton
@@ -110,20 +106,20 @@ export const CrearCliente = ({
               setMostrarDireccion(false);
             }}
           >
-            Quitar dirección
+            {t("cliente.crear.quitarDireccion")}
           </QBoton>
         )}
 
         {mostrarDireccion && (
           <quimera-formulario>
             <QSelect
-              label="Tipo de Vía"
+              label={t("cliente.direccion.tipoVia")}
               opciones={opciones}
               {...direccion.uiProps("tipo_via")}
             />
 
             <QInput
-              label="Nombre de vía"
+              label={t("cliente.direccion.nombreVia")}
               {...direccion.uiProps("nombre_via")}
               textoValidacion={
                 mostrarErrorNombreVia
@@ -136,15 +132,15 @@ export const CrearCliente = ({
               }}
             />
 
-            <QInput label="Número" {...direccion.uiProps("numero")} />
+            <QInput label={t("cliente.direccion.numero")} {...direccion.uiProps("numero")} />
 
             <QInput
-              label="Otros (piso, puerta...)"
+              label={t("cliente.direccion.otrosDetalle")}
               {...direccion.uiProps("otros")}
             />
 
             <QInput
-              label="Ciudad"
+              label={t("cliente.direccion.ciudad")}
               {...direccion.uiProps("ciudad")}
               textoValidacion={
                 mostrarErrorCiudad
@@ -158,20 +154,20 @@ export const CrearCliente = ({
             />
 
             <QInput
-              label="Código postal"
+              label={t("cliente.direccion.codPostalLargo")}
               {...direccion.uiProps("cod_postal")}
             />
 
-            <QInput label="Provincia" {...direccion.uiProps("provincia")} />
+            <QInput label={t("cliente.direccion.provincia")} {...direccion.uiProps("provincia")} />
 
-            <QInput label="País" {...direccion.uiProps("pais_id")} />
+            <QInput label={t("cliente.direccion.pais")} {...direccion.uiProps("pais_id")} />
 
             <QInput
-              label="Apartado de correos"
+              label={t("cliente.direccion.apartadoLargo")}
               {...direccion.uiProps("apartado")}
             />
 
-            <QInput label="Teléfono" {...direccion.uiProps("telefono")} />
+            <QInput label={t("cliente.direccion.telefono")} {...direccion.uiProps("telefono")} />
           </quimera-formulario>
         )}
 
@@ -180,11 +176,11 @@ export const CrearCliente = ({
             onClick={guardar}
             deshabilitado={nuevoCliente.valido === false}
           >
-            Guardar
+            {t("cliente.botones.guardar")}
           </QBoton>
 
           <QBoton tipo="reset" variante="texto" onClick={cancelar}>
-            Cancelar
+            {t("cliente.botones.cancelar")}
           </QBoton>
         </div>
       </>

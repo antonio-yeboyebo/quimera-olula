@@ -10,18 +10,19 @@ import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.ts";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.ts";
 import { useEffect, useMemo } from "react";
+import { tCompras, useTCompras } from "#/compras/i18n/index.ts";
 import { CrearArticulo } from "../crear/CrearArticulo.tsx";
 import { DetalleArticulo } from "../detalle/DetalleArticulo.tsx";
 import { Articulo } from "../diseño.ts";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaArticulo } from "./TarjetaArticulo.tsx";
 
-const metaTablaArticulo: MetaTabla<Articulo> = [
-  { id: "id", cabecera: "Referencia" },
-  { id: "descripcion", cabecera: "Descripción" },
+const metaTablaArticulo = (t = tCompras): MetaTabla<Articulo> => [
+  { id: "id", cabecera: t("comun.campos.referencia") },
+  { id: "descripcion", cabecera: t("comun.campos.descripcion") },
   {
     id: "descripcion_familia",
-    cabecera: "Familia",
+    cabecera: t("articulo.maestro.familia"),
     render: (a) => a.descripcionFamilia,
   },
 ];
@@ -35,21 +36,21 @@ const criteriaArticulosCompra = (): Criteria => ({
   paginacion: { ...criteriaDefecto.paginacion },
 });
 
-const metaFiltroArticulo: MetaFiltro = {
+const metaFiltroArticulo = (t = tCompras): MetaFiltro => ({
   id: {
     id: "id",
-    label: "Referencia",
+    label: t("comun.campos.referencia"),
     filtro: (v) => (v ? ["id", "~", v as string] : null),
   },
   descripcion: {
     id: "descripcion",
-    label: "Descripción",
+    label: t("comun.campos.descripcion"),
     filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
   },
   familia_id: filtroFamilia,
   se_compra: {
     id: "se_compra",
-    label: "Solo comprables",
+    label: t("articulo.maestro.soloComprables"),
     tipo: "checkbox",
     filtro: (v) => (v === "true" ? ["se_compra", "=", "true"] : null),
     fromFiltro: (filtro) =>
@@ -61,7 +62,7 @@ const metaFiltroArticulo: MetaFiltro = {
   },
   sin_stock: {
     id: "sin_stock",
-    label: "Sin stock",
+    label: t("articulo.maestro.sinStock"),
     tipo: "checkbox",
     filtro: (v) => (v === "true" ? ["sin_stock", "=", "false"] : null),
     fromFiltro: (filtro) =>
@@ -71,9 +72,12 @@ const metaFiltroArticulo: MetaFiltro = {
         ? "true"
         : "",
   },
-};
+});
 
 export const MaestroConDetalleArticulo = () => {
+  const t = useTCompras();
+  const metaTabla = useMemo(() => metaTablaArticulo(t), [t]);
+  const metaFiltro = useMemo(() => metaFiltroArticulo(t), [t]);
   const criteriaBase = useMemo(criteriaArticulosCompra, []);
 
   const { id, criteria } = getUrlParams();
@@ -98,10 +102,10 @@ export const MaestroConDetalleArticulo = () => {
       <MaestroDetalle<Articulo>
         Maestro={
           <>
-            <h2>Artículos</h2>
+            <h2>{t("articulo.maestro.titulo")}</h2>
             <Listado<Articulo>
-              metaTabla={metaTablaArticulo}
-              metaFiltro={metaFiltroArticulo}
+              metaTabla={metaTabla}
+              metaFiltro={metaFiltro}
               tarjeta={TarjetaArticulo}
               criteria={articulos.criteria}
               modoInicial="tabla"
@@ -111,7 +115,7 @@ export const MaestroConDetalleArticulo = () => {
               renderAcciones={() => (
                 <div className="maestro-botones">
                   <QBoton onClick={() => emitir("crear_articulo_solicitado")}>
-                    Nuevo Artículo
+                    {t("articulo.maestro.nuevo")}
                   </QBoton>
                 </div>
               )}

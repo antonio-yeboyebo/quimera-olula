@@ -1,6 +1,7 @@
 import { ReactNode, useId, useMemo, useState } from "react";
 import { QIcono } from "../atomos/qicono.tsx";
 import "./qacordeon.css";
+import { useTComponentes } from "../i18n/textos.ts";
 
 export type QAcordeonCabeceraContexto = {
   abierto: boolean;
@@ -33,6 +34,7 @@ export const QAcordeon = ({
   onAbiertoCambiado,
   permitirCerrar = false,
 }: QAcordeonProps) => {
+  const t = useTComponentes();
   const acordeonId = useId();
   const primerItemHabilitado = useMemo(
     () => items.find((item) => !item.deshabilitado)?.id ?? null,
@@ -102,7 +104,7 @@ export const QAcordeon = ({
                     aria-expanded={abierto}
                     aria-controls={panelId}
                     aria-label={
-                      abierto ? "Contraer sección" : "Expandir sección"
+                      abierto ? t("ui.moleculas.contraerSeccion") : t("ui.moleculas.expandirSeccion")
                     }
                     disabled={item.deshabilitado}
                     onClick={() => cambiarAbierto(item.id)}

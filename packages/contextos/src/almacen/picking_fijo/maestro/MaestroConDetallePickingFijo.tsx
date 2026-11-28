@@ -15,14 +15,15 @@ import { CrearPickingFijo } from "../crear/CrearPickingFijo.tsx";
 import { DetallePickingFijo } from "../detalle/DetallePickingFijo.tsx";
 import { PickingFijo } from "../diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 const metaTablaPickingFijo: MetaTabla<PickingFijo> = [
-    { id: "articulo", cabecera: "Artículo", render: (p) => `${p.articuloId} - ${p.articulo}`, enlace: (p) => urlFicha.articulo(p.articuloId) },
-    { id: "ubicacion", cabecera: "Ubicación", enlace: (p) => urlFicha.ubicacion(p.ubicacionId) },
-    { id: "minimo", cabecera: "Mínimo", tipo: "numero" },
-    { id: "maximo", cabecera: "Máximo", tipo: "numero" },
-    { id: "unidadReposicion", cabecera: "Unidad", tipo: "numero" },
-    { id: "stock", cabecera: "Stock", tipo: "numero" },
+    { id: "articulo", get cabecera() { return tAlmacen("picking_fijo.articulo"); }, render: (p) => `${p.articuloId} - ${p.articulo}`, enlace: (p) => urlFicha.articulo(p.articuloId) },
+    { id: "ubicacion", get cabecera() { return tAlmacen("picking_fijo.ubicacion"); }, enlace: (p) => urlFicha.ubicacion(p.ubicacionId) },
+    { id: "minimo", get cabecera() { return tAlmacen("picking_fijo.minimo"); }, tipo: "numero" },
+    { id: "maximo", get cabecera() { return tAlmacen("picking_fijo.maximo"); }, tipo: "numero" },
+    { id: "unidadReposicion", get cabecera() { return tAlmacen("picking_fijo.unidad"); }, tipo: "numero" },
+    { id: "stock", get cabecera() { return tAlmacen("picking_fijo.stock"); }, tipo: "numero" },
 ];
 
 const metaFiltroPickingFijo: MetaFiltro = {
@@ -31,6 +32,7 @@ const metaFiltroPickingFijo: MetaFiltro = {
 };
 
 export const MaestroConDetallePickingFijo = () => {
+    const t = useTAlmacen();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { id, criteria } = getUrlParams();
@@ -55,7 +57,7 @@ export const MaestroConDetallePickingFijo = () => {
             <MaestroDetalle<PickingFijo>
                 Maestro={
                     <>
-                        <h2>Picking fijo</h2>
+                        <h2>{t("picking_fijo.pickingFijo")}</h2>
                         <Listado<PickingFijo>
                             metaTabla={metaTablaPickingFijo}
                             metaFiltro={metaFiltroPickingFijo}
@@ -68,7 +70,7 @@ export const MaestroConDetallePickingFijo = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_picking_fijo_solicitado")}>
-                                        Nuevo picking fijo
+                                        {t("picking_fijo.nuevoPickingFijo")}
                                     </QBoton>
                                 </div>
                             )}
@@ -92,7 +94,7 @@ const TarjetaPickingFijo = (p: PickingFijo) => (
     <div className="tarjeta-picking-fijo" key={p.id}>
         <div>{p.articuloId} - {p.articulo}</div>
         <div>{p.ubicacion}</div>
-        <div>Mín. {p.minimo} / Máx. {p.maximo} / Unidad {p.unidadReposicion}</div>
-        <div>Stock {p.stock}</div>
+        <div>{tAlmacen("picking_fijo.minMinimoMaxMaximoUnidadUnidadreposicion", { minimo: p.minimo, maximo: p.maximo, unidadReposicion: p.unidadReposicion })}</div>
+        <div>{tAlmacen("picking_fijo.stockStock", { stock: p.stock })}</div>
     </div>
 );

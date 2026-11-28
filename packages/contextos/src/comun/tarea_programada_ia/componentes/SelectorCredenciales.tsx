@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CredencialExterna } from "../../credencial_externa/diseño.js";
 import { getCredencialesExterna } from "../../credencial_externa/infraestructura.js";
 import "./SelectorCredenciales.css";
+import { useTComun } from "../../i18n/index.ts";
 
 interface SelectorCredencialesProps {
     valor: string[];
@@ -18,6 +19,7 @@ interface SelectorCredencialesProps {
  * personales del usuario actual (ver credencial_externa/dominio.ts).
  */
 export const SelectorCredenciales = ({ valor, onChange }: SelectorCredencialesProps) => {
+    const t = useTComun();
     const [credenciales, setCredenciales] = useState<CredencialExterna[]>([]);
 
     useEffect(() => {
@@ -32,9 +34,9 @@ export const SelectorCredenciales = ({ valor, onChange }: SelectorCredencialesPr
 
     return (
         <div className="SelectorCredenciales">
-            <span className="SelectorCredenciales-etiqueta">Credenciales permitidas</span>
+            <span className="SelectorCredenciales-etiqueta">{t("tareaProgramadaIa.credencialesPermitidas")}</span>
             {credenciales.length === 0 && (
-                <p className="SelectorCredenciales-vacio">No hay credenciales externas dadas de alta.</p>
+                <p className="SelectorCredenciales-vacio">{t("tareaProgramadaIa.noHayCredencialesExternasDadasDe")}</p>
             )}
             {credenciales.map((credencial) => (
                 <QInput

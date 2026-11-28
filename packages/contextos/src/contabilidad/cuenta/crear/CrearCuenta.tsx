@@ -8,6 +8,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postCuenta } from "../infraestructura.ts";
 import { metaNuevaCuenta, nuevaCuentaInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearCuenta = ({
     publicar,
@@ -18,6 +19,7 @@ export const CrearCuenta = ({
 }) => {
     // Memoizado: useModelo reinicia el formulario cada vez que cambia la
     // identidad del inicial, así que pasarlo en línea entra en bucle.
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevaCuentaInicial(ejercicioId),
         [ejercicioId]
@@ -46,29 +48,29 @@ export const CrearCuenta = ({
         <QModal
             abierto={true}
             nombre="crearCuenta"
-            titulo="Nueva cuenta PGC"
+            titulo={t("cuenta.nuevaCuentaPgc")}
             onCerrar={cancelar}
         >
             <div className="CrearCuenta">
                 <quimera-formulario>
                     <QInput
-                        label="Ejercicio"
+                        label={t("cuenta.ejercicio")}
                         nombre="ejercicioId"
                         valor={cuenta.ejercicioId}
                         soloLectura
                     />
                     <QInput
-                        label="Código epígrafe"
+                        label={t("cuenta.codigoEpigrafe")}
                         {...uiProps("codigoEpigrafe")}
                         ref={focus}
                     />
-                    <QInput label="Código cuenta" {...uiProps("codigo")} />
-                    <QInput label="Descripción" {...uiProps("nombre")} />
+                    <QInput label={t("cuenta.codigoCuenta")} {...uiProps("codigo")} />
+                    <QInput label={t("cuenta.descripcion")} {...uiProps("nombre")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("cuenta.crear")}
                     </QBoton>
                 </div>
             </div>

@@ -25,6 +25,7 @@ import {
     nuevaCredencialExternaVaciaConector,
     nuevaCredencialExternaVaciaLlm,
 } from "./crear.js";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Modal de alta de credencial de terceros.
@@ -46,6 +47,7 @@ export const CrearCredencialExterna = ({
     categoriaFiltro: CategoriaCredencialExterna;
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const { empresaFija } = getConfiguracionCredenciales();
     // Referencia estable (ver useModelo); con empresa fija ya viene rellena.
     const inicial = useMemo(() => {
@@ -86,14 +88,14 @@ export const CrearCredencialExterna = ({
         <QModal
             abierto={true}
             nombre="crearCredencialExterna"
-            titulo={categoriaFiltro === "llm" ? "Nuevo modelo de IA" : "Nuevo conector"}
+            titulo={categoriaFiltro === "llm" ? t("credencialExterna.nuevoModeloDeIa") : t("credencialExterna.nuevoConector")}
             onCerrar={cancelar}
         >
             <div className="CrearCredencialExterna">
                 <quimera-formulario>
-                    <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
+                    <QInput label={t("credencialExterna.nombre")} {...uiProps("nombre")} ref={focus} />
                     <QSelect
-                        label="Proveedor"
+                        label={t("credencialExterna.proveedor")}
                         nombre="proveedor_conocido"
                         valor={esOtroProveedor ? OTRO_PROVEEDOR : credencial.proveedor}
                         opciones={opcionesProveedor}
@@ -109,7 +111,7 @@ export const CrearCredencialExterna = ({
                         }}
                     />
                     {esOtroProveedor && (
-                        <QInput label="Nombre del proveedor" {...proveedorProps} />
+                        <QInput label={t("credencialExterna.nombreDelProveedor")} {...proveedorProps} />
                     )}
                     {!empresaFija && (
                         <Empresa
@@ -119,19 +121,19 @@ export const CrearCredencialExterna = ({
                     )}
                     {categoriaFiltro === "conector" && (
                         <QSelect
-                            label="Ámbito"
+                            label={t("credencialExterna.ambito")}
                             nombre="ambito"
                             valor={credencial.personal ? "personal" : "empresa"}
                             opciones={[
-                                { valor: "empresa", descripcion: "Toda la empresa" },
-                                { valor: "personal", descripcion: "Solo para mí" },
+                                { valor: "empresa", descripcion: t("credencialExterna.todaLaEmpresa") },
+                                { valor: "personal", descripcion: t("credencialExterna.soloParaMi") },
                             ]}
                             onChange={(opcion) => personalProps.onChange?.(opcion?.valor === "personal")}
                         />
                     )}
                     {esOtroProveedor && (
                         <QSelect
-                            label="Tipo de autenticación"
+                            label={t("credencialExterna.tipoDeAutenticacion")}
                             {...tipoAuthProps}
                             opciones={OPCIONES_TIPO_AUTH}
                             onChange={(opcion) => {
@@ -156,7 +158,7 @@ export const CrearCredencialExterna = ({
                             !secretoCompleto(credencial.proveedor, credencial.tipoAuth as TipoAuthCredencialExterna, secreto)
                         }
                     >
-                        Crear
+                        {t("credencialExterna.crear")}
                     </QBoton>
                 </div>
             </div>

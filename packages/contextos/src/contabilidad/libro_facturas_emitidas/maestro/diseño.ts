@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { LibroFacturasEmitidas } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroLibroFacturasEmitidas = "INICIAL" | "CREANDO";
 
@@ -14,10 +15,10 @@ export type ContextoMaestroLibroFacturasEmitidas = {
 
 export const metaTablaLibroFacturasEmitidas: MetaTabla<LibroFacturasEmitidas> =
     [
-        { id: "descripcion", cabecera: "Descripción" },
-        { id: "ejercicioId", cabecera: "Ejercicio" },
-        { id: "fechaDesde", cabecera: "Desde" },
-        { id: "fechaHasta", cabecera: "Hasta" },
+        { id: "descripcion", get cabecera() { return tContabilidad("libro_facturas_emitidas.descripcion"); } },
+        { id: "ejercicioId", get cabecera() { return tContabilidad("libro_facturas_emitidas.ejercicio"); } },
+        { id: "fechaDesde", get cabecera() { return tContabilidad("libro_facturas_emitidas.desde"); } },
+        { id: "fechaHasta", get cabecera() { return tContabilidad("libro_facturas_emitidas.hasta"); } },
     ];
 
 /** Filtro explícito: el metaFiltro por defecto usaría el `id` camelCase de la
@@ -26,7 +27,7 @@ export const metaFiltroLibroFacturasEmitidas: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tContabilidad("libro_facturas_emitidas.descripcion"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null
@@ -35,7 +36,7 @@ export const metaFiltroLibroFacturasEmitidas: MetaFiltro = {
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("libro_facturas_emitidas.ejercicio"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null

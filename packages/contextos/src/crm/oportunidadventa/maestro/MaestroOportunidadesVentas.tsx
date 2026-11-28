@@ -27,8 +27,10 @@ import "./MaestroOportunidadesVenta.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaOportunidadVenta } from "./TarjetaOportunidadVenta.tsx";
 import { TarjetaOportunidadVentaKanban } from "./TarjetaOportunidadVentaKanban.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroOportunidades = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
   const modoUrl = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
@@ -161,7 +163,7 @@ export const MaestroOportunidades = () => {
       <MaestroDetalle<OportunidadVenta>
         Maestro={
           <>
-            <h2>Oportunidades de Venta</h2>
+            <h2>{t("oportunidadventa.oportunidadesDeVenta")}</h2>
 
             <Listado<OportunidadVenta>
               metaTabla={metaTablaOportunidadVenta}
@@ -169,7 +171,7 @@ export const MaestroOportunidades = () => {
                 ...getMetaFiltroDefecto(metaTablaOportunidadVenta),
                 estado_id: {
                   id: "estado_id",
-                  label: "Estado",
+                  label: t("oportunidadventa.estado"),
                   tipo: "multiseleccion",
                   opciones:
                     crearOpcionesFiltroEstadoOportunidad(estadosOportunidad),
@@ -213,7 +215,7 @@ export const MaestroOportunidades = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_oportunidad_solicitada")}
                   >
-                    Nueva
+                    {t("oportunidadventa.nueva")}
                   </QBoton>
                 </div>
               )}

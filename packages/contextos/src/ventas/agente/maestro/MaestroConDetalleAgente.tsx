@@ -12,18 +12,20 @@ import { DetalleAgente } from "../detalle/DetalleAgente.js";
 import { Agente } from "../diseño.js";
 import { getMaquina } from "./maquina.js";
 import { TarjetaAgente } from "./TarjetaAgente.tsx";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 
-const metaTablaAgente: MetaTabla<Agente> = [
-    { id: 'id', cabecera: 'ID' },
-    { id: 'nombre', cabecera: 'Nombre' },
-    { id: 'id_fiscal', cabecera: 'Id Fiscal' },
-    { id: 'por_comision', cabecera: '% Comisión', tipo: 'numero' },
-    { id: 'telefono', cabecera: 'Teléfono' },
-    { id: 'email', cabecera: 'Email' },
-    { id: 'ciudad', cabecera: 'Ciudad' },
+const metaTablaAgente = (): MetaTabla<Agente> => [
+    { id: 'id', cabecera: tVentas("agente.maestro.id") },
+    { id: 'nombre', cabecera: tVentas("agente.maestro.nombre") },
+    { id: 'id_fiscal', cabecera: tVentas("agente.maestro.idFiscal") },
+    { id: 'por_comision', cabecera: tVentas("agente.maestro.comision"), tipo: 'numero' },
+    { id: 'telefono', cabecera: tVentas("agente.maestro.telefono") },
+    { id: 'email', cabecera: tVentas("agente.maestro.email") },
+    { id: 'ciudad', cabecera: tVentas("agente.maestro.ciudad") },
 ];
 
 export const MaestroConDetalleAgente = () => {
+    const t = useTVentas();
 
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
@@ -49,9 +51,9 @@ export const MaestroConDetalleAgente = () => {
             <MaestroDetalle<Agente>
                 Maestro={
                     <>
-                        <h2>Agentes comerciales</h2>
+                        <h2>{t("agente.maestro.titulo")}</h2>
                         <Listado<Agente>
-                            metaTabla={metaTablaAgente}
+                            metaTabla={metaTablaAgente()}
                             criteria={agentes.criteria}
                             modoInicial="tabla"
                             tarjeta={TarjetaAgente}
@@ -61,7 +63,7 @@ export const MaestroConDetalleAgente = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_agente_solicitado")}>
-                                        Nuevo agente
+                                        {t("agente.maestro.nuevo")}
                                     </QBoton>
                                 </div>
                             )}

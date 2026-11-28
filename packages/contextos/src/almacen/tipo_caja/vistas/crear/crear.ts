@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.js";
 import { NuevoTipoCaja } from "../../diseño.js";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 export const metaNuevoTipoCaja: MetaModelo<NuevoTipoCaja> = {
     campos: {
@@ -16,7 +17,7 @@ export const metaNuevoTipoCaja: MetaModelo<NuevoTipoCaja> = {
     },
     validacion: (modelo: NuevoTipoCaja) => {
         if (modelo.sku && !modelo.capacidad) {
-            return "La capacidad es requerida";
+            return tAlmacen("tipo_caja.laCapacidadEsRequerida");
         }
         return true;
     }

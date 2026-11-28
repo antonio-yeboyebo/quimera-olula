@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { RegularizacionIva } from "../diseño.ts";
 import { etiquetaRegularizacionIva } from "../dominio.ts";
 import { deleteRegularizacionIva } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const BorrarRegularizacionIva = ({
     publicar,
@@ -13,6 +14,7 @@ export const BorrarRegularizacionIva = ({
     regularizacion: RegularizacionIva;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteRegularizacionIva(regularizacion.id);
         publicar("regularizacion_iva_borrada", regularizacion);
@@ -29,8 +31,8 @@ export const BorrarRegularizacionIva = ({
         <QModalConfirmacion
             nombre="borrarRegularizacionIva"
             abierto={true}
-            titulo="Borrar regularización de IVA"
-            mensaje={`¿Confirma borrar la ${etiquetaRegularizacionIva(regularizacion)}? Se borrará también su asiento y el periodo dejará de estar bloqueado.`}
+            titulo={t("regularizacion_iva.borrarRegularizacionDeIva")}
+            mensaje={t("regularizacion_iva.confirmaBorrarLaRegularizacionSeBorrara", { regularizacion: etiquetaRegularizacionIva(regularizacion) })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

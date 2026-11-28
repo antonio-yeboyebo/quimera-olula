@@ -8,6 +8,7 @@ import {
     PatchEstadoOportunidad,
     PostEstadoOportunidad,
 } from "./diseño.ts";
+import { tCrm } from "../i18n/index.ts";
 
 const baseUrlEstadoOportunidadVenta = `/crm/estado_oportunidad_venta`;
 
@@ -50,15 +51,15 @@ export const getEstadosOportunidad: GetEstadosOportunidad = async (filtro, orden
 
 export const postEstadoOportunidad: PostEstadoOportunidad = async (estado) => {
     const payload = estadoOportunidadToAPI(estado);
-    return await RestAPI.post(baseUrlEstadoOportunidadVenta, payload, "Error al guardar el estado de oportunidad de venta").then((respuesta) => respuesta.id);
+    return await RestAPI.post(baseUrlEstadoOportunidadVenta, payload, tCrm("estadoOportunidadVenta.errorAlGuardarElEstadoDe")).then((respuesta) => respuesta.id);
 };
 
 export const patchEstadoOportunidad: PatchEstadoOportunidad = async (id, estado) => {
     const payload = estadoOportunidadToAPI(estado);
-    await RestAPI.patch(`${baseUrlEstadoOportunidadVenta}/${id}`, payload, "Error al guardar el estado de oportunidad de venta");
+    await RestAPI.patch(`${baseUrlEstadoOportunidadVenta}/${id}`, payload, tCrm("estadoOportunidadVenta.errorAlGuardarElEstadoDe"));
 };
 
 export const deleteEstadoOportunidad: DeleteEstadoOportunidad = async (id) =>
-    await RestAPI.delete(`${baseUrlEstadoOportunidadVenta}/${id}`, "Error al borrar el estado de oportunidad de venta");
+    await RestAPI.delete(`${baseUrlEstadoOportunidadVenta}/${id}`, tCrm("estadoOportunidadVenta.errorAlBorrarElEstadoDe"));
 
-export const marcarPorDefectoEstadoOportunidad = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoOportunidadVenta}/${id}/pordefecto`, {}, "Error al marcar por defecto el estado de oportunidad de venta");
+export const marcarPorDefectoEstadoOportunidad = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoOportunidadVenta}/${id}/pordefecto`, {}, tCrm("estadoOportunidadVenta.errorAlMarcarPorDefectoEl"));

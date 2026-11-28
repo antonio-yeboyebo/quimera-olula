@@ -7,18 +7,19 @@ import {
     FormatoBalance,
     NuevaCuentaCodigoBalance,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export const NATURALEZAS = [
-    { valor: "A", descripcion: "Activo" },
-    { valor: "P", descripcion: "Patrimonio neto y pasivo" },
-    { valor: "PG", descripcion: "Pérdidas y ganancias" },
-    { valor: "IG", descripcion: "Ingresos y gastos" },
+    { valor: "A", get descripcion() { return tContabilidad("codigo_balance.activo"); } },
+    { valor: "P", get descripcion() { return tContabilidad("codigo_balance.patrimonioNetoYPasivo"); } },
+    { valor: "PG", get descripcion() { return tContabilidad("codigo_balance.perdidasYGanancias"); } },
+    { valor: "IG", get descripcion() { return tContabilidad("codigo_balance.ingresosYGastos"); } },
 ];
 
 export const SIGNOS = [
-    { valor: "Ambos", descripcion: "Ambos" },
-    { valor: "Positivo", descripcion: "Positivo (saldo deudor)" },
-    { valor: "Negativo", descripcion: "Negativo (saldo acreedor)" },
+    { valor: "Ambos", get descripcion() { return tContabilidad("codigo_balance.ambos"); } },
+    { valor: "Positivo", get descripcion() { return tContabilidad("codigo_balance.positivoSaldoDeudor"); } },
+    { valor: "Negativo", get descripcion() { return tContabilidad("codigo_balance.negativoSaldoAcreedor"); } },
 ];
 
 /** Longitud de `codcuenta` en `co_cuentascb` / `co_cuentascbba`. */
@@ -56,7 +57,7 @@ export const metaCodigoBalance: MetaModelo<CodigoBalance> = {
         naturaleza: { requerido: true },
         nivel2: {
             requerido: false,
-            validacion: (c) => nivel2Valido(c.nivel2) || "Debe ser un número",
+            validacion: (c) => nivel2Valido(c.nivel2) || tContabilidad("codigo_balance.debeSerUnNumero"),
         },
     },
 };
@@ -90,31 +91,22 @@ export const criteriaCuentasDeCodigo = (codigoBalanceId: string): Criteria => ({
 });
 
 export const ETIQUETA_FORMATO: Record<FormatoBalance, string> = {
-    normal: "Cuentas normales",
-    abreviado: "Cuentas de balance abreviado",
+    get normal() { return tContabilidad("codigo_balance.cuentasNormales"); },
+    get abreviado() { return tContabilidad("codigo_balance.cuentasDeBalanceAbreviado"); },
 };
 
 /** Avisos de los botones de regeneración de Eneboo (co_mastercodbalances08). */
 export const AVISO_REGENERACION: Record<AlcanceRegeneracion, { titulo: string; mensaje: string }> = {
     todo: {
-        titulo: "Regenerar códigos de balance",
-        mensaje:
-            "A continuación se regenerarán los códigos de balance 2008 y las " +
-            "cuentas por código de balance (normal y abreviado). Se perderán " +
-            "los cambios hechos a mano. ¿Desea continuar?",
+        get titulo() { return tContabilidad("codigo_balance.regenerarCodigosDeBalance"); },
+        get mensaje() { return tContabilidad("codigo_balance.aContinuacionSeRegeneraranLosCodigos"); },
     },
     cuentas: {
-        titulo: "Regenerar cuentas por código de balance",
-        mensaje:
-            "A continuación se regenerarán las correspondencias entre cuentas y " +
-            "códigos de balance. Las cuentas informadas manualmente deberán " +
-            "volver a introducirse. ¿Desea continuar?",
+        get titulo() { return tContabilidad("codigo_balance.regenerarCuentasPorCodigoDeBalance"); },
+        get mensaje() { return tContabilidad("codigo_balance.aContinuacionSeRegeneraranLasCorresponde"); },
     },
     cuentas_abreviado: {
-        titulo: "Regenerar cuentas por código de balance abreviado",
-        mensaje:
-            "A continuación se regenerarán las correspondencias entre cuentas y " +
-            "códigos de balance abreviado. Las cuentas informadas manualmente " +
-            "deberán volver a introducirse. ¿Desea continuar?",
+        get titulo() { return tContabilidad("codigo_balance.regenerarCuentasPorCodigoDeBalance2"); },
+        get mensaje() { return tContabilidad("codigo_balance.aContinuacionSeRegeneraranLasCorresponde2"); },
     },
 };

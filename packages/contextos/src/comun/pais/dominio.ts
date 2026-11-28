@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { CambiosPais, DatosPais, NuevoPais, Pais } from "./diseño.ts";
+import { tComun } from "../i18n/index.ts";
 
 export const REGLA_PAIS = "comun.pais";
 
@@ -24,7 +25,7 @@ export const etiquetaPais = (p: Pais): string => (p.nombre ? `${p.id} — ${p.no
 /** `paises.qs`: no se puede exigir la validación del CIF/NIF sin código ISO. */
 const validarExigir = (p: DatosPais) =>
     !p.exigirValidacion || !!p.codiso.trim() ||
-    "Establezca el código I.S.O. antes de exigir la validación";
+    tComun("paises.establezcaElCodigoISO");
 
 const campos = {
     nombre: { requerido: false, maximo: 100 },

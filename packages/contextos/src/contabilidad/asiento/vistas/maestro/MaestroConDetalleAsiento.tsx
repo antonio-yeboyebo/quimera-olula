@@ -14,6 +14,7 @@ import { DetalleAsiento } from "../detalle/DetalleAsiento.tsx";
 import { RenumerarAsientos } from "../renumerar/RenumerarAsientos.tsx";
 import { metaTablaAsiento } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 const criteriaAsientosDefecto = (): Criteria => ({
     ...criteriaDefecto,
@@ -22,6 +23,7 @@ const criteriaAsientosDefecto = (): Criteria => ({
 });
 
 export const MaestroConDetalleAsiento = () => {
+    const t = useTContabilidad();
     const criteriaBase = useMemo(criteriaAsientosDefecto, []);
     const { id, criteria } = getUrlParams();
     const criteriaInicial = criteria.filtro.length > 0 ? criteria : criteriaBase;
@@ -48,7 +50,7 @@ export const MaestroConDetalleAsiento = () => {
     const ejercicioRenumerar = ejercicioIdParaRenumerar(ctx.asientos.criteria);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los asientos contables.</p>;
+        return <p>{t("asiento.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -57,7 +59,7 @@ export const MaestroConDetalleAsiento = () => {
                 seleccionada={ctx.asientos.activo}
                 Maestro={
                     <>
-                        <h2>Diario de asientos</h2>
+                        <h2>{t("asiento.diarioDeAsientos")}</h2>
                         <Listado<ItemAsiento>
                             metaTabla={metaTablaAsiento}
                             criteria={ctx.asientos.criteria}
@@ -67,20 +69,20 @@ export const MaestroConDetalleAsiento = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_asiento_solicitado")}>
-                                        Nuevo asiento manual
+                                        {t("asiento.nuevoAsientoManual")}
                                     </QBoton>
                                     <QBoton
                                         variante="borde"
                                         onClick={() => emitir("crear_asiento_desde_plantilla_solicitado")}
                                     >
-                                        Desde plantilla
+                                        {t("asiento.desdePlantilla")}
                                     </QBoton>
                                     {renumerable && (
                                         <QBoton
                                             variante="borde"
                                             onClick={() => emitir("renumerar_asientos_solicitado")}
                                         >
-                                            Renumerar asientos
+                                            {t("asiento.renumerarAsientos")}
                                         </QBoton>
                                     )}
                                 </div>

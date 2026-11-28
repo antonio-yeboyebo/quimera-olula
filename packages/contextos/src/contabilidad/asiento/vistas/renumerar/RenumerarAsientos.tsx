@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
 import { mensajeConfirmacionRenumerarAsientos } from "../../dominio.ts";
 import { patchRenumerarAsientos } from "../../infraestructura.ts";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 export const RenumerarAsientos = ({
     ejercicioId,
@@ -12,6 +13,7 @@ export const RenumerarAsientos = ({
     ejercicioId: string;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const renumerar_ = useCallback(async () => {
         const resultado = await patchRenumerarAsientos({ ejercicioId });
         publicar("asientos_renumerados", resultado);
@@ -25,9 +27,9 @@ export const RenumerarAsientos = ({
         <QModalConfirmacion
             nombre="renumerarAsientos"
             abierto={true}
-            titulo="Renumerar asientos"
+            titulo={t("asiento.renumerarAsientos")}
             mensaje={mensajeConfirmacionRenumerarAsientos(ejercicioId)}
-            labelAceptar="Renumerar"
+            labelAceptar={t("asiento.renumerar")}
             onCerrar={cancelar}
             onAceptar={renumerar}
         />

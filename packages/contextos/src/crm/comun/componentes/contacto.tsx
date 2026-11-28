@@ -1,6 +1,7 @@
 import { getContactos } from "#/crm/contacto/infraestructura.ts";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
 import { Criteria } from "@olula/lib/diseño.ts";
+import { tCrm } from "../../i18n/index.ts";
 
 interface ContactoSelectorProps {
   descripcion?: string;
@@ -16,7 +17,7 @@ export const ContactoSelector = ({
   descripcion = "",
   valor,
   nombre = "contacto_id",
-  label = "Seleccionar contacto",
+  label = tCrm("comun.seleccionarContacto"),
   deshabilitado = false,
   enlace = "/crm/contacto?id={id}",
   onChange,

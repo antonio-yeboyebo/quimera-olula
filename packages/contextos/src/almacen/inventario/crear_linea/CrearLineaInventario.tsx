@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { Inventario } from "../diseño.ts";
 import { postLineaInventario } from "../infraestructura.ts";
 import { metaNuevaLineaInventario, nuevaLineaInventarioVacia } from "./crear_linea.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearLineaInventario = ({
     inventario,
@@ -17,6 +18,7 @@ export const CrearLineaInventario = ({
     inventario: Inventario;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const inicial = useMemo(nuevaLineaInventarioVacia, []);
 
     const { modelo, uiProps, valido } = useModelo(metaNuevaLineaInventario, inicial);
@@ -37,19 +39,19 @@ export const CrearLineaInventario = ({
         <QModal
             abierto={true}
             nombre="crearLineaInventario"
-            titulo={`Nueva línea del inventario ${inventario.id}`}
+            titulo={t("inventario.nuevaLineaDelInventarioId", { id: inventario.id })}
             onCerrar={cancelar}
         >
             <div className="CrearLineaInventario">
                 <quimera-formulario>
                     <Articulo {...uiProps("articuloId")} />
-                    <QInput label="Cantidad contada" {...uiProps("cantidad")} />
-                    <QInput label="Motivo" {...uiProps("motivo")} />
+                    <QInput label={t("inventario.cantidadContada")} {...uiProps("cantidad")} />
+                    <QInput label={t("inventario.motivo")} {...uiProps("motivo")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("inventario.crear")}
                     </QBoton>
                 </div>
             </div>

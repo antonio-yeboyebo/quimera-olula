@@ -3,7 +3,8 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { useContext, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useMenuControl } from "../plantilla/useMenuControl.ts";
-import { aplanarMenu, PantallaMenu, urlActiva } from "./dominio.ts";
+import { nombreMenu, useTComponentes } from "../i18n/textos.ts";
+import { aplanarMenu, PantallaMenu, traducirPantalla, urlActiva } from "./dominio.ts";
 
 const MAX_RECIENTES = 3;
 
@@ -16,9 +17,15 @@ export const usePantallasMenu = () => {
   const { pathname } = useLocation();
   const { favoritos, recientes } = useMenuControl();
 
+  // Nombres en el idioma activo (se busca por ellos y también por el español).
+  const t = useTComponentes();
   const pantallas = useMemo(
-    () => aplanarMenu(menu, (regla) => puedeAlguna(regla)),
-    [menu]
+    () =>
+      aplanarMenu(menu, (regla) => puedeAlguna(regla)).map((p) =>
+        traducirPantalla(p, nombreMenu)
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `t` cambia con el idioma
+    [menu, t]
   );
   const porUrl = useMemo(
     () => new Map(pantallas.map((p) => [p.url, p])),

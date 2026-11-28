@@ -10,6 +10,7 @@ import {
     reciboAsociadoMovimientoBancario,
     varianteEstadoMovimientoBancario,
 } from "../dominio.js";
+import { tTesoreria } from "../../i18n/index.ts";
 
 /**
  * Los `id` son nombres de campo del API: al pulsar una cabecera se ordena por
@@ -20,11 +21,11 @@ import {
  * react-refresh/only-export-components en este fichero.
  */
 export const metaTablaMovimientoBancario: MetaTabla<MovimientoBancario> = [
-    { id: "fecha", cabecera: "Fecha", tipo: "fecha" },
-    { id: "concepto", cabecera: "Concepto" },
+    { id: "fecha", get cabecera() { return tTesoreria("conciliacion.fecha"); }, tipo: "fecha" },
+    { id: "concepto", get cabecera() { return tTesoreria("conciliacion.concepto"); } },
     {
         id: "importe",
-        cabecera: "Importe",
+        get cabecera() { return tTesoreria("conciliacion.importe"); },
         tipo: "moneda",
         render: (movimiento) => (
             <span className={esIngresoMovimientoBancario(movimiento) ? "importe-ingreso" : "importe-cargo"}>
@@ -34,7 +35,7 @@ export const metaTablaMovimientoBancario: MetaTabla<MovimientoBancario> = [
     },
     {
         id: "saldo_tras",
-        cabecera: "Saldo",
+        get cabecera() { return tTesoreria("conciliacion.saldo"); },
         tipo: "moneda",
         render: (movimiento) =>
             movimiento.saldo !== null ? (
@@ -47,14 +48,14 @@ export const metaTablaMovimientoBancario: MetaTabla<MovimientoBancario> = [
     },
     {
         id: "estado",
-        cabecera: "Estado",
+        get cabecera() { return tTesoreria("conciliacion.estado"); },
         render: (movimiento) => (
             <div className="celda-estado-movimiento-bancario">
                 <QEtiqueta variante={varianteEstadoMovimientoBancario(movimiento.estado)}>
                     {etiquetaEstadoConConciliaciones(movimiento)}
                 </QEtiqueta>
                 {movimiento.requiereRevision && (
-                    <QEtiqueta variante="advertencia">Revisar</QEtiqueta>
+                    <QEtiqueta variante="advertencia">{tTesoreria("conciliacion.revisar")}</QEtiqueta>
                 )}
                 {movimiento.pendiente && (
                     <QIcono
@@ -68,9 +69,9 @@ export const metaTablaMovimientoBancario: MetaTabla<MovimientoBancario> = [
     },
     {
         id: "num_items_conciliacion",
-        cabecera: "Conciliación",
+        get cabecera() { return tTesoreria("conciliacion.conciliacion"); },
         render: reciboAsociadoMovimientoBancario,
     },
-    { id: "contraparte", cabecera: "Contraparte", render: (m) => m.contraparte ?? "—" },
-    { id: "nombre_cuenta", cabecera: "Cuenta", render: cuentaMovimientoBancario },
+    { id: "contraparte", get cabecera() { return tTesoreria("conciliacion.contraparte"); }, render: (m) => m.contraparte ?? "—" },
+    { id: "nombre_cuenta", get cabecera() { return tTesoreria("conciliacion.cuenta"); }, render: cuentaMovimientoBancario },
 ];

@@ -8,6 +8,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { CajaProveedorArticulo, NuevaCajaProveedor } from "../diseño.ts";
 import { patchCajaProveedor } from "../infraestructura.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const metaCaja: MetaModelo<NuevaCajaProveedor> = {
     campos: {
@@ -27,6 +28,7 @@ export const CambiarCajaProveedor = ({
     caja: CajaProveedorArticulo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const inicial: NuevaCajaProveedor = useMemo(() => ({
         descripcion: caja.tipoCaja,
         cantidad: caja.cantidad,
@@ -49,16 +51,16 @@ export const CambiarCajaProveedor = ({
         <QModal
             abierto={true}
             nombre="cambiarCajaProveedor"
-            titulo="Editar caja"
+            titulo={t("articulo.editarCaja")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
+                <QInput label={t("articulo.descripcion")} {...uiProps("descripcion")} />
+                <QInput label={t("articulo.cantidad")} {...uiProps("cantidad")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={guardar} deshabilitado={!valido}>
-                    Guardar
+                    {t("articulo.guardar")}
                 </QBoton>
             </div>
         </QModal>

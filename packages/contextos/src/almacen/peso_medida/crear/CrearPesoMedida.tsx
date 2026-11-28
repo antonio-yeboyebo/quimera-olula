@@ -10,8 +10,10 @@ import { metaNuevoPesoMedida, nuevoPesoMedidaVacio } from "../dominio.ts";
 import { postPesoMedida } from "../infraestructura.ts";
 import { MagnitudPesoMedida } from "../MagnitudPesoMedida.tsx";
 import "./CrearPesoMedida.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CrearPesoMedida = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaNuevoPesoMedida, nuevoPesoMedidaVacio);
 
     const crear_ = useCallback(async () => {
@@ -32,20 +34,20 @@ export const CrearPesoMedida = ({ publicar }: { publicar: EmitirEvento }) => {
         <QModal
             abierto={true}
             nombre="crearPesoMedida"
-            titulo="Nueva unidad de peso o medida"
+            titulo={t("peso_medida.nuevaUnidadDePesoOMedida")}
             onCerrar={cancelar}
         >
             <div className="CrearPesoMedida">
                 <quimera-formulario>
-                    <QInput label="Abreviatura" {...uiProps("id")} maxLength={10} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} maxLength={100} />
+                    <QInput label={t("peso_medida.abreviatura")} {...uiProps("id")} maxLength={10} ref={focus} />
+                    <QInput label={t("peso_medida.descripcion")} {...uiProps("descripcion")} maxLength={100} />
                     <MagnitudPesoMedida {...uiProps("magnitud")} />
-                    <QInput label="Factor de conversión" {...uiProps("factorConversion")} />
+                    <QInput label={t("peso_medida.factorDeConversion")} {...uiProps("factorConversion")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("peso_medida.crear")}
                     </QBoton>
                 </div>
             </div>

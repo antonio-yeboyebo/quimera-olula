@@ -14,6 +14,7 @@ import { CuentasCodigoBalance } from "./cuentas/CuentasCodigoBalance.tsx";
 import { contextoDetalleCodigoBalanceInicial, guardarCodigoBalance } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { TabGeneral } from "./TabGeneral.tsx";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `co_codbalances08.ui`: datos del código, pestaña de
  * cuentas normales (`co_cuentascb`) y pestaña de balance abreviado
@@ -25,6 +26,7 @@ export const DetalleCodigoBalance = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleCodigoBalanceInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -48,7 +50,7 @@ export const DetalleCodigoBalance = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("codigo_balance.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !puede("contabilidad.asiento"),
             advertencia: true,
@@ -68,11 +70,11 @@ export const DetalleCodigoBalance = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("codigo_balance.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} codigoBalance={codigoBalance} />}
                     />,
-                    <Tab label="Cuentas normales"
+                    <Tab label={t("codigo_balance.cuentasNormales")}
                         key="tab-cuentas"
                         children={
                             <CuentasCodigoBalance
@@ -82,14 +84,14 @@ export const DetalleCodigoBalance = ({
                             />
                         }
                     />,
-                    <Tab label="Cuentas de balance abreviado"
+                    <Tab label={t("codigo_balance.cuentasDeBalanceAbreviado")}
                         key="tab-cuentas-abreviado"
                         children={
                             <>
                                 <quimera-formulario>
-                                    <QInput label="Código nivel 4" nombre="nivel4ba"
+                                    <QInput label={t("codigo_balance.codigoNivel4")} nombre="nivel4ba"
                                         valor={codigoBalance.nivel4} soloLectura />
-                                    <QInput label="Descripción balance abreviado"
+                                    <QInput label={t("codigo_balance.descripcionBalanceAbreviado")}
                                         {...formModelo.uiProps("descripcion4ba")} />
                                 </quimera-formulario>
                                 <CuentasCodigoBalance

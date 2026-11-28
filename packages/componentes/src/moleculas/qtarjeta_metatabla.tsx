@@ -1,11 +1,12 @@
-import { ContenidoConEnlace } from "../atomos/qenlace_ficha.tsx";
-import { etiquetaEnlace } from "../atomos/url_enlace.ts";
 import { Entidad } from "@olula/lib/diseño.ts";
 import { ReactNode, useMemo } from "react";
+import { ContenidoConEnlace } from "../atomos/qenlace_ficha.tsx";
 import { MetaColumna, MetaTabla, obtenerCols } from "../atomos/qtablacontrolada.tsx";
+import { etiquetaEnlace } from "../atomos/url_enlace.ts";
+import { useTComponentes } from "../i18n/textos.ts";
 import { QTarjetaGenerica } from "./qtarjeta_generica.tsx";
-import { valorColumna } from "./valor_columna.tsx";
 import "./qtarjeta_metatabla.css";
+import { valorColumna } from "./valor_columna.tsx";
 
 type Prioridad = "alta" | "media" | "baja";
 
@@ -84,6 +85,7 @@ export const QTarjetaMetatabla = <T extends Entidad>({
   mostrarTodosInicialmente = false,
   placeholderVacio = "—",
 }: QTarjetaMetatablaProps<T>) => {
+  const t = useTComponentes();
   const cols = obtenerCols(metaTabla);
 
   const renderCampo = (
@@ -149,7 +151,7 @@ export const QTarjetaMetatabla = <T extends Entidad>({
         columnasResto.length > 0 && (
           <section
             className="qtarjeta-metatabla-detalle"
-            aria-label="Campos adicionales"
+            aria-label={t("ui.moleculas.camposAdicionales")}
           >
             {columnasResto.map((columna) => renderCampo(columna, true))}
           </section>

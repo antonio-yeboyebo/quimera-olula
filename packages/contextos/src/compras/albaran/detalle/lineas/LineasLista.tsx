@@ -4,6 +4,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { LineaAlbaran } from "../../diseño.ts";
 import { metaTablaLineaAlbaran } from "./metatabla_linea_albaran.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const LineasLista = ({
     lineas,
@@ -17,9 +18,11 @@ export const LineasLista = ({
     seleccionada?: string;
     acciones?: Parameters<typeof QuimeraAcciones>[0]["acciones"];
     publicar: EmitirEvento;
-}) => (
+}) => {
+    const t = useTCompras();
+    return (
     <ListadoSemiControlado
-        metaTabla={metaTablaLineaAlbaran(divisa)}
+        metaTabla={metaTablaLineaAlbaran(divisa, t)}
         entidades={lineas}
         totalEntidades={lineas.length}
         cargando={false}
@@ -36,4 +39,5 @@ export const LineasLista = ({
             ) : null
         }
     />
-);
+    );
+};

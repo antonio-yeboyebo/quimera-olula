@@ -15,6 +15,7 @@ import {
 } from "../infraestructura.ts";
 import { metaTablaPartidasSubcuenta } from "./meta.ts";
 import "./TabContabilidad.css";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Pestaña «Contabilidad» de las fichas de cliente y proveedor (Eneboo
  * clientes.ui / proveedores.ui): subcuenta elegida arriba y, encima de sus
@@ -32,6 +33,7 @@ export const TabContabilidad = ({
      * aún no tiene subcuentas por ejercicio. */
     codigoSubcuenta?: string | null;
 }) => {
+    const t = useTContabilidad();
     const [subcuentas, setSubcuentas] = useState<SubcuentaTercero[]>([]);
     const [cargandoSubcuentas, setCargandoSubcuentas] = useState(true);
     const [activa, setActiva] = useState<SubcuentaTercero | null>(null);
@@ -87,13 +89,13 @@ export const TabContabilidad = ({
         <div className="TabContabilidad">
             <quimera-formulario>
                 <QInput
-                    label="Subcuenta"
+                    label={t("subcuentas_tercero.subcuenta")}
                     nombre="codigo_subcuenta"
                     valor={activa?.codigoSubcuenta ?? codigoSubcuenta ?? ""}
                     deshabilitado
                 />
                 <QInput
-                    label="Descripción"
+                    label={t("subcuentas_tercero.descripcion")}
                     nombre="descripcion_subcuenta"
                     valor={activa?.descripcion ?? ""}
                     deshabilitado
@@ -101,7 +103,7 @@ export const TabContabilidad = ({
             </quimera-formulario>
             <div className="TabContabilidad-partidas">
                 <QSelect
-                    label="Subcuenta por ejercicio"
+                    label={t("subcuentas_tercero.subcuentaPorEjercicio")}
                     nombre="subcuenta_ejercicio"
                     valor={activa?.id ?? ""}
                     opciones={opcionesSubcuentas(subcuentas)}
@@ -129,7 +131,7 @@ export const TabContabilidad = ({
                 <QModal
                     nombre="asientoDePartida"
                     abierto
-                    titulo={`Asiento ${asiento.numero}`}
+                    titulo={t("subcuentas_tercero.asientoNumero", { numero: asiento.numero })}
                     onCerrar={() => cerrarAsiento(false)}
                 >
                     <DetalleAsiento

@@ -24,6 +24,7 @@ import {
   metaTablaIncidencia,
 } from "./maestro.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 const ordenPorPrioridad = ["prioridad", "ASC"] as unknown as Orden;
 
@@ -40,6 +41,7 @@ const criteriaBaseIncidencias = {
 };
 
 export const MaestroIncidencias = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
 
   const criteriaInicial =
@@ -65,7 +67,7 @@ export const MaestroIncidencias = () => {
       <MaestroDetalle<Incidencia>
         Maestro={
           <>
-            <h2>Incidencias</h2>
+            <h2>{t("incidencia.incidencias")}</h2>
 
             <Listado<Incidencia>
               metaTabla={metaTablaIncidencia}
@@ -73,14 +75,14 @@ export const MaestroIncidencias = () => {
                 ...getMetaFiltroDefecto(metaTablaIncidencia),
                 estado: {
                   id: "estado",
-                  label: "Estado",
+                  label: t("incidencia.estado"),
                   tipo: "multiseleccion",
                   opciones: opcionesEstadoIncidencia,
                   filtro: crearFiltroEstadoIncidencia,
                 },
                 prioridad: {
                   id: "prioridad",
-                  label: "Prioridad",
+                  label: t("incidencia.prioridad"),
                   filtro: (v) => filtroTextos("prioridad", v),
                   render: (valor, onChange) => (
                     <PrioridadIncidencia
@@ -91,7 +93,7 @@ export const MaestroIncidencias = () => {
                 },
                 tipo_incidencia: {
                   id: "tipo_incidencia",
-                  label: "Tipo",
+                  label: t("incidencia.tipo"),
                   filtro: (v) => filtroTextos("tipo_incidencia", v),
                   render: (valor, onChange) => (
                     <TipoIncidencia
@@ -112,7 +114,7 @@ export const MaestroIncidencias = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_incidencia_solicitada")}
                   >
-                    Nueva
+                    {t("incidencia.nueva")}
                   </QBoton>
                 </div>
               )}

@@ -3,6 +3,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useNavigate } from "react-router";
 import { ResultadoAlbaranar } from "./diseño.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const ResultadoAlbaranado = ({
     resultado,
@@ -11,6 +12,7 @@ export const ResultadoAlbaranado = ({
     resultado: ResultadoAlbaranar;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const navigate = useNavigate();
 
     const cerrar = () => publicar("resultado_albaranado_cerrado");
@@ -21,15 +23,13 @@ export const ResultadoAlbaranado = ({
         <QModal
             nombre="resultadoAlbaranadoCompra"
             abierto={true}
-            titulo="Resultado del albaranado"
+            titulo={t("pedido.resultado.titulo")}
             onCerrar={cerrar}
         >
             <div className="mensaje">
                 {creados.length === 0
-                    ? "No se ha generado ningún albarán."
-                    : creados.length === 1
-                        ? "Se ha generado 1 albarán."
-                        : `Se han generado ${creados.length} albaranes.`}
+                    ? t("pedido.resultado.ninguno")
+                    : t("pedido.resultado.generados", { count: creados.length })}
             </div>
             {creados.length > 0 && (
                 <ul>
@@ -39,7 +39,7 @@ export const ResultadoAlbaranado = ({
                                 variante="texto"
                                 onClick={() => navigate(`/compras/albaran?id=${albaran.id}`)}
                             >
-                                {`${albaran.etiqueta} — Ir al albarán ${albaran.codigo}`}
+                                {t("pedido.resultado.irAlbaran", { etiqueta: albaran.etiqueta, codigo: albaran.codigo })}
                             </QBoton>
                         </li>
                     ))}
@@ -47,7 +47,7 @@ export const ResultadoAlbaranado = ({
             )}
             {fallidos.length > 0 && (
                 <>
-                    <div className="mensaje">No se han podido albaranar:</div>
+                    <div className="mensaje">{t("pedido.resultado.fallidos")}</div>
                     <ul>
                         {fallidos.map((fallo, indice) => (
                             <li key={indice}>{fallo}</li>
@@ -56,7 +56,7 @@ export const ResultadoAlbaranado = ({
                 </>
             )}
             <div className="botones">
-                <QBoton onClick={cerrar}>Aceptar</QBoton>
+                <QBoton onClick={cerrar}>{t("comun.botones.aceptar")}</QBoton>
             </div>
         </QModal>
     );

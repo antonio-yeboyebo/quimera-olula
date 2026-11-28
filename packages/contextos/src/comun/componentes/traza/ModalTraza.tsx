@@ -7,6 +7,7 @@ import { grafoDesdeTraza, urlDocumento } from "./dominio.ts";
 import { GrafoTraza } from "./GrafoTraza.tsx";
 import { PanelDocumentoTraza } from "./PanelDocumentoTraza.tsx";
 import "./traza.css";
+import { useTComun } from "../../i18n/index.ts";
 
 /**
  * Documentos relacionados con el que está abierto: de dónde viene y qué se ha
@@ -22,6 +23,7 @@ export const ModalTraza = ({
   getTraza: GetTraza;
   onCerrar: () => void;
 }) => {
+  const t = useTComun();
   const navigate = useNavigate();
   const { app } = useContext(FactoryCtx);
   const urls = (app.Comun?.traza_urls ?? {}) as UrlsTraza;
@@ -53,10 +55,10 @@ export const ModalTraza = ({
   };
 
   return (
-    <QModal nombre="trazaDocumentos" abierto={true} titulo="Documentos relacionados" onCerrar={onCerrar}>
+    <QModal nombre="trazaDocumentos" abierto={true} titulo={t("componentes.documentosRelacionados")} onCerrar={onCerrar}>
       <div className="traza-documentos">
-        {error && <p className="traza-mensaje">No se han podido cargar los documentos relacionados.</p>}
-        {!error && !grafo && <p className="traza-mensaje">Cargando documentos relacionados…</p>}
+        {error && <p className="traza-mensaje">{t("componentes.noSeHanPodidoCargarLos")}</p>}
+        {!error && !grafo && <p className="traza-mensaje">{t("componentes.cargandoDocumentosRelacionados")}</p>}
         {grafo && nodo && (
           <>
             <GrafoTraza grafo={grafo} seleccionado={nodo.clave} onSeleccionar={setSeleccionado} />

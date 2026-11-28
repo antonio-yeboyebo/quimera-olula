@@ -1,6 +1,7 @@
 import { Proveedor } from "#/compras/comun/componentes/proveedor.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
+import { tTesoreria } from "../../i18n/index.ts";
 
 type UiProps = FormModelo["uiProps"];
 
@@ -13,8 +14,8 @@ export const CamposBanco = ({
     nombreProveedor?: string;
 }) => (
     <>
-        <QInput label="Nombre" {...uiProps("nombre")} />
-        <Proveedor label="Acreedor" descripcion={nombreProveedor} {...uiProps("proveedorId")} />
-        <QInput label="BIC por defecto" {...uiProps("bicDefecto")} />
+        <QInput label={tTesoreria("banco.nombre")} {...uiProps("nombre")} />
+        <Proveedor label={tTesoreria("banco.acreedor")} descripcion={nombreProveedor} {...uiProps("proveedorId")} />
+        <QInput label={tTesoreria("banco.bicPorDefecto")} {...uiProps("bicDefecto")} />
     </>
 );

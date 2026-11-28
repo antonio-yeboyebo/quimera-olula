@@ -17,20 +17,21 @@ import { IaMemoria } from "../diseño.js";
 import { getEstadoRagIaMemoria } from "../infraestructura.js";
 import "./MaestroConDetalleIaMemoria.css";
 import { getMaquina } from "./maquina.js";
+import { tComun, useTComun } from "../../i18n/index.ts";
 
 /**
  * Metadatos para renderizar la tabla del listado de memorias.
  */
 const etiquetaOrigen = (iaMemoria: IaMemoria) =>
     iaMemoria.origen === 'fichero'
-        ? <QEtiqueta variante="primario">Fichero</QEtiqueta>
-        : <QEtiqueta variante="exito">Texto</QEtiqueta>;
+        ? <QEtiqueta variante="primario">{tComun("iaMemoria.fichero")}</QEtiqueta>
+        : <QEtiqueta variante="exito">{tComun("iaMemoria.texto")}</QEtiqueta>;
 
 const metaTablaIaMemoria: MetaTabla<IaMemoria> = [
-    { id: 'titulo', cabecera: 'Título' },
-    { id: 'origen', cabecera: 'Origen', render: etiquetaOrigen },
-    { id: 'activo', cabecera: 'Activo', tipo: 'booleano' },
-    { id: 'actualizadoEn', cabecera: 'Actualizado', tipo: 'fecha' },
+    { id: 'titulo', get cabecera() { return tComun("iaMemoria.titulo"); } },
+    { id: 'origen', get cabecera() { return tComun("iaMemoria.origen"); }, render: etiquetaOrigen },
+    { id: 'activo', get cabecera() { return tComun("iaMemoria.activo"); }, tipo: 'booleano' },
+    { id: 'actualizadoEn', get cabecera() { return tComun("iaMemoria.actualizado"); }, tipo: 'fecha' },
 ];
 
 /**
@@ -38,6 +39,7 @@ const metaTablaIaMemoria: MetaTabla<IaMemoria> = [
  */
 export const MaestroConDetalleIaMemoria = () => {
 
+    const t = useTComun();
     const criteriaBase = useMemo(() => criteriaDefecto, []);
 
     const { layout, cambiarLayout } = useLayout("TARJETA");
@@ -71,15 +73,13 @@ export const MaestroConDetalleIaMemoria = () => {
         <div className="IaMemoria">
             {!ragDisponible && (
                 <QAviso variante="advertencia">
-                    La búsqueda semántica no está disponible en este servidor (falta la
-                    extensión pgvector) — puedes seguir creando y editando memorias, pero
-                    el asistente no podrá buscarlas por relevancia.
+                    {t("iaMemoria.laBusquedaSemanticaNoEstaDisponible")}
                 </QAviso>
             )}
             <MaestroDetalle<IaMemoria>
                 Maestro={
                     <>
-                        <h2>Memoria del asistente</h2>
+                        <h2>{t("iaMemoria.memoriaDelAsistente")}</h2>
                         <div className="maestro-botones">
                             <span
                                 className="cambio-modo-icono"
@@ -103,7 +103,7 @@ export const MaestroConDetalleIaMemoria = () => {
                                 puede("comun.ia_memoria") && (
                                     <div className="maestro-botones">
                                         <QBoton onClick={() => emitir("creacion_solicitada")}>
-                                            Nueva memoria
+                                            {t("iaMemoria.nuevaMemoria")}
                                         </QBoton>
                                     </div>
                                 )
@@ -140,7 +140,7 @@ const TarjetaIaMemoria = (iaMemoria: IaMemoria) => {
             <div className="tarjeta-ia-memoria-badges">
                 {etiquetaOrigen(iaMemoria)}
                 <div className={`tarjeta-ia-memoria-estado ${iaMemoria.activo ? "estado-activo" : "estado-inactivo"}`}>
-                    {iaMemoria.activo ? "Activo" : "Inactivo"}
+                    {iaMemoria.activo ? tComun("iaMemoria.activo") : tComun("iaMemoria.inactivo")}
                 </div>
             </div>
         </div>

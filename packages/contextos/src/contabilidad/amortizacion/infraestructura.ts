@@ -20,6 +20,7 @@ import {
     ResultadoGeneracion,
     ValoresInforme,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.AMORTIZACION;
@@ -285,17 +286,17 @@ export const getAmortizacion: GetAmortizacion = async (id) =>
 
 export const postAmortizacion = async (nueva: NuevaAmortizacion): Promise<string> => {
     const respuesta = await RestAPI.post(
-        baseUrl, nuevaAmortizacionAApi(nueva), "Error al crear la amortización");
+        baseUrl, nuevaAmortizacionAApi(nueva), tContabilidad("amortizacion.errorAlCrearLaAmortizacion"));
     return String(respuesta.id);
 };
 
 export const patchAmortizacion = async (id: string, cambios: CambiosAmortizacion): Promise<void> => {
     await RestAPI.patch(
-        urlAmortizacion(id), cambiosAmortizacionAApi(cambios), "Error al guardar la amortización");
+        urlAmortizacion(id), cambiosAmortizacionAApi(cambios), tContabilidad("amortizacion.errorAlGuardarLaAmortizacion"));
 };
 
 export const deleteAmortizacion = async (id: string): Promise<void> => {
-    await RestAPI.delete(urlAmortizacion(id), "Error al borrar la amortización");
+    await RestAPI.delete(urlAmortizacion(id), tContabilidad("amortizacion.errorAlBorrarLaAmortizacion"));
 };
 
 export const getDotaciones = async (amortizacionId: string): Promise<Dotacion[]> =>
@@ -311,11 +312,11 @@ export const postDotacion = async (
         ...(nueva.importe !== null ? { importe: nueva.importe } : {}),
         ...(nueva.fecha ? { fecha: fechaAApi(nueva.fecha) } : {}),
         no_generar_asiento: nueva.noGenerarAsiento,
-    }, "Error al crear la dotación");
+    }, tContabilidad("amortizacion.errorAlCrearLaDotacion"));
 };
 
 export const deleteDotacion = async (id: string): Promise<void> => {
-    await RestAPI.delete(`${urls.AMORTIZACION_DOTACION}/${id}`, "Error al borrar la dotación");
+    await RestAPI.delete(`${urls.AMORTIZACION_DOTACION}/${id}`, tContabilidad("amortizacion.errorAlBorrarLaDotacion"));
 };
 
 const resultadoDesdeApi = (api: {
@@ -340,7 +341,7 @@ export const postGenerarDotaciones = async (
 ): Promise<ResultadoGeneracion> => {
     const respuesta = await RestAPI.post(urls.AMORTIZACION_GENERAR_DOTACIONES, {
         ejercicio_id: ejercicioId, fecha_limite: fechaAApi(fechaLimite),
-    }, "Error al generar las dotaciones");
+    }, tContabilidad("amortizacion.errorAlGenerarLasDotaciones"));
     return resultadoDesdeApi(respuesta as unknown as Parameters<typeof resultadoDesdeApi>[0]);
 };
 
@@ -349,7 +350,7 @@ export const postDeshacerDotaciones = async (
 ): Promise<{ totalDotaciones: number; importe: number }> => {
     const respuesta = await RestAPI.post(urls.AMORTIZACION_DESHACER_DOTACIONES, {
         fecha_desde: fechaAApi(fechaDesde),
-    }, "Error al deshacer las dotaciones") as unknown as { total_dotaciones: number; importe: number };
+    }, tContabilidad("amortizacion.errorAlDeshacerLasDotaciones")) as unknown as { total_dotaciones: number; importe: number };
     return { totalDotaciones: respuesta.total_dotaciones, importe: respuesta.importe };
 };
 
@@ -358,11 +359,11 @@ export const patchCerrarAmortizacion = async (
 ): Promise<void> => {
     await RestAPI.patch(`${urlAmortizacion(id)}/cerrar`, {
         fecha_cierre: fechaAApi(fechaCierre), ejercicio_id: ejercicioId,
-    }, "Error al cerrar la amortización");
+    }, tContabilidad("amortizacion.errorAlCerrarLaAmortizacion"));
 };
 
 export const patchReabrirAmortizacion = async (id: string): Promise<void> => {
-    await RestAPI.patch(`${urlAmortizacion(id)}/reabrir`, {}, "Error al reabrir la amortización");
+    await RestAPI.patch(`${urlAmortizacion(id)}/reabrir`, {}, tContabilidad("amortizacion.errorAlReabrirLaAmortizacion"));
 };
 
 export const getRegularizaciones = async (amortizacionId: string): Promise<RegularizacionValor[]> =>
@@ -378,13 +379,13 @@ export const postRegularizacion = async (
         fecha: fechaAApi(nueva.fecha),
         descripcion: nueva.descripcion.trim() || null,
         importe: nueva.importe,
-    }, "Error al crear la regularización de valor");
+    }, tContabilidad("amortizacion.errorAlCrearLaRegularizacionDe"));
 };
 
 export const deleteRegularizacion = async (id: string): Promise<void> => {
     await RestAPI.delete(
         `${urls.AMORTIZACION_REGULARIZACION_VALOR}/${id}`,
-        "Error al borrar la regularización de valor");
+        tContabilidad("amortizacion.errorAlBorrarLaRegularizacionDe"));
 };
 
 export const getPartidasCompra = async (
@@ -397,22 +398,22 @@ export const getPartidasCompra = async (
 
 export const postAsociarPartida = async (amortizacionId: string, partidaId: string): Promise<void> => {
     await RestAPI.post(`${urlAmortizacion(amortizacionId)}/partida_compra`,
-        { partida_id: Number(partidaId) }, "Error al asociar la factura");
+        { partida_id: Number(partidaId) }, tContabilidad("amortizacion.errorAlAsociarLaFactura"));
 };
 
 export const deleteQuitarPartida = async (amortizacionId: string, partidaId: string): Promise<void> => {
     await RestAPI.delete(`${urlAmortizacion(amortizacionId)}/partida_compra/${partidaId}`,
-        "Error al quitar la factura");
+        tContabilidad("amortizacion.errorAlQuitarLaFactura"));
 };
 
 export const getInformeAmortizaciones = async (filtro: FiltroInforme): Promise<InformeAmortizaciones> => {
     const respuesta = await RestAPI.get<{ datos: InformeAmortizacionesApi }>(
         `${urls.AMORTIZACION_INFORME}?${parametrosInforme(filtro)}`,
-        "Error al calcular el informe de amortizaciones");
+        tContabilidad("amortizacion.errorAlCalcularElInformeDe"));
     return informeDesdeApi(respuesta.datos);
 };
 
 export const getReportAmortizaciones = async (filtro: FiltroInforme): Promise<Blob> =>
     RestAPI.blob(
         `${urls.AMORTIZACION_INFORME_REPORT}?${parametrosInforme(filtro)}`,
-        "Error al descargar el PDF de amortizaciones");
+        tContabilidad("amortizacion.errorAlDescargarElPdfDe"));

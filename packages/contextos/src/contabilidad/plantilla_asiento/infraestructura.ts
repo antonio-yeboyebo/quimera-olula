@@ -22,6 +22,7 @@ import {
     TipoDocumentoOrigen,
     ValoresPartidaPlantilla,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const urls = new ApiUrls();
 const baseUrl = urls.PLANTILLA_ASIENTO;
@@ -176,7 +177,7 @@ export const postPlantillaAsiento: PostPlantillaAsiento = async (nueva) => {
             descripcion: nueva.descripcion,
             concatenar: nulo(nueva.concatenar),
         },
-        "Error al crear la plantilla de asiento"
+        tContabilidad("plantilla_asiento.errorAlCrearLaPlantillaDe")
     );
     return String(respuesta.id);
 };
@@ -185,18 +186,18 @@ export const patchPlantillaAsiento: PatchPlantillaAsiento = async (id, cambios) 
     const api: Record<string, string | null> = {};
     if (cambios.descripcion !== undefined) api.descripcion = cambios.descripcion;
     if (cambios.concatenar !== undefined) api.concatenar = nulo(cambios.concatenar);
-    await RestAPI.patch(url(id), api, "Error al guardar la plantilla de asiento");
+    await RestAPI.patch(url(id), api, tContabilidad("plantilla_asiento.errorAlGuardarLaPlantillaDe"));
 };
 
 export const deletePlantillaAsiento: DeletePlantillaAsiento = async (id) => {
-    await RestAPI.delete(url(id), "Error al borrar la plantilla de asiento");
+    await RestAPI.delete(url(id), tContabilidad("plantilla_asiento.errorAlBorrarLaPlantillaDe"));
 };
 
 export const postPartidaPlantilla: PostPartidaPlantilla = async (id, nueva) => {
     const respuesta = await RestAPI.post(
         `${url(id)}/partida`,
         partidaPlantillaAApi(nueva),
-        "Error al crear la partida"
+        tContabilidad("plantilla_asiento.errorAlCrearLaPartida")
     );
     return String(respuesta.id);
 };
@@ -205,12 +206,12 @@ export const patchPartidaPlantilla: PatchPartidaPlantilla = async (id, partidaId
     await RestAPI.patch(
         urlPartida(id, partidaId),
         partidaPlantillaAApi(cambios),
-        "Error al guardar la partida"
+        tContabilidad("plantilla_asiento.errorAlGuardarLaPartida")
     );
 };
 
 export const deletePartidaPlantilla: DeletePartidaPlantilla = async (id, partidaId) => {
-    await RestAPI.delete(urlPartida(id, partidaId), "Error al borrar la partida");
+    await RestAPI.delete(urlPartida(id, partidaId), tContabilidad("plantilla_asiento.errorAlBorrarLaPartida"));
 };
 
 // --- Asiento desde plantilla ----------------------------------------------
@@ -307,7 +308,7 @@ export const calcularAsientoDesdePlantilla: CalcularAsientoDesdePlantilla = asyn
     >(
         urls.ASIENTO_DESDE_PLANTILLA_CALCULAR,
         peticionAsientoDesdePlantillaAApi(peticion),
-        "Error al calcular el asiento"
+        tContabilidad("plantilla_asiento.errorAlCalcularElAsiento")
     );
     return resultadoCalculoDesdeApi(respuesta);
 };
@@ -319,7 +320,7 @@ export const postAsientoDesdePlantilla: PostAsientoDesdePlantilla = async (petic
     >(
         urls.ASIENTO_DESDE_PLANTILLA,
         peticionAsientoDesdePlantillaAApi(peticion),
-        "Error al crear el asiento"
+        tContabilidad("plantilla_asiento.errorAlCrearElAsiento")
     );
     return { id: String(respuesta.id), numero: respuesta.numero };
 };

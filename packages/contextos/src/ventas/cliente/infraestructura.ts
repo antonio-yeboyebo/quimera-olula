@@ -1,3 +1,4 @@
+import { tVentas } from "../i18n/index.ts";
 import UrlsCrmClass from "@olula/ctx/crm/comun/urls.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts";
@@ -107,7 +108,7 @@ export const patchCliente: PatchCliente = async (id, cliente) =>
       copiasfactura: cliente.copiasfactura,
       grupo_id: cliente.grupo_id,
     },
-  }, "Error al guardar el cliente");
+  }, tVentas("cliente.errores.guardar"));
 
 export const darDeBajaCliente = async (id: string, fecha: Date) =>
   await RestAPI.patch(`${UrlsVentas.CLIENTE}/${id}`, {
@@ -115,7 +116,7 @@ export const darDeBajaCliente = async (id: string, fecha: Date) =>
       de_baja: true,
       fecha_baja: fecha,
     },
-  }, "Error al dar de baja el cliente");
+  }, tVentas("cliente.errores.darDeBaja"));
 
 export const darDeAltaCliente = async (id: string) =>
   await RestAPI.patch(`${UrlsVentas.CLIENTE}/${id}`, {
@@ -123,13 +124,13 @@ export const darDeAltaCliente = async (id: string) =>
       de_baja: false,
       fecha_baja: null,
     },
-  }, "Error al dar de alta el cliente");
+  }, tVentas("cliente.errores.darDeAlta"));
 
 export const deleteCliente = async (id: string): Promise<void> =>
-  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${id}`, "Error al borrar cliente");
+  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${id}`, tVentas("cliente.errores.borrar"));
 
 export const postCliente: PostCliente = async (cliente) =>
-  await RestAPI.post(UrlsVentas.CLIENTE, cliente, "Error al guardar el cliente").then((respuesta) => respuesta.id);
+  await RestAPI.post(UrlsVentas.CLIENTE, cliente, tVentas("cliente.errores.guardar")).then((respuesta) => respuesta.id);
 
 export const getDireccion = async (clienteId: string, direccionId: string): Promise<DirCliente> =>
   await RestAPI.get<{ datos: DirClienteAPI }>(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}`).then((respuesta) =>
@@ -148,24 +149,24 @@ export const postDireccion = async (clienteId: string, direccion: NuevaDireccion
       ...direccion,
     }
   }
-  return await RestAPI.post(`${UrlsVentas.CLIENTE}/${clienteId}/direccion`, payload, "Error al guardar dirección").then((respuesta) => respuesta.id);
+  return await RestAPI.post(`${UrlsVentas.CLIENTE}/${clienteId}/direccion`, payload, tVentas("cliente.errores.guardarDireccion")).then((respuesta) => respuesta.id);
 }
 
 export const setDirFacturacion = async (clienteId: string, direccionId: string): Promise<void> =>
-  RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}/facturacion`, {}, "Error al establecer dirección de facturación");
+  RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}/facturacion`, {}, tVentas("cliente.errores.direccionFacturacion"));
 
 export const setDirEnvio = async (clienteId: string, direccionId: string): Promise<void> =>
-  RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}/envio`, {}, "Error al establecer dirección de envío");
+  RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}/envio`, {}, tVentas("cliente.errores.direccionEnvio"));
 
 
 export const actualizarDireccion = async (clienteId: string, direccion: DirCliente): Promise<void> =>
   RestAPI.patch(
     `${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccion.id}`
-    , { direccion: dirClienteToAPI(direccion) }, "Error al actualizar dirección"
+    , { direccion: dirClienteToAPI(direccion) }, tVentas("cliente.errores.actualizarDireccion")
   );
 
 export const deleteDireccion = async (clienteId: string, direccionId: string): Promise<void> =>
-  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}`, "Error al borrar dirección");
+  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${clienteId}/direccion/${direccionId}`, tVentas("cliente.errores.borrarDireccion"));
 
 
 export const getCuentasBanco = async (clienteId: string): Promise<CuentaBanco[]> =>
@@ -183,24 +184,24 @@ export const patchCuentaBanco = async (clienteId: string, cuenta: CuentaBanco): 
       iban: normalizarIban(cuenta.iban),
     },
   };
-  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_banco/${cuenta.id}`, payload, "Error al actualizar cuenta bancaria");
+  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_banco/${cuenta.id}`, payload, tVentas("cliente.errores.actualizarCuenta"));
 };
 
 export const deleteCuentaBanco = async (clienteId: string, cuentaId: string): Promise<void> =>
-  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_banco/${cuentaId}`, "Error al borrar cuenta bancaria");
+  await RestAPI.delete(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_banco/${cuentaId}`, tVentas("cliente.errores.borrarCuenta"));
 
 export const desmarcarCuentaDomiciliacion = async (clienteId: string): Promise<void> =>
-  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_domiciliacion`, { "cuenta_id": "" }, "Error al desmarcar cuenta domiciliación");
+  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_domiciliacion`, { "cuenta_id": "" }, tVentas("cliente.errores.desmarcarDomiciliacion"));
 
 export const domiciliarCuenta = async (clienteId: string, cuentaId: string): Promise<void> => {
   const payload = {
     cuenta_id: cuentaId,
   };
-  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_domiciliacion`, payload, "Error al domiciliar cuenta");
+  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_domiciliacion`, payload, tVentas("cliente.errores.domiciliar"));
 };
 
 export const asignarCuentaRemesa = async (clienteId: string, cuentaId: string): Promise<void> =>
-  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_remesa`, { cuenta_remesa: cuentaId }, "Error al asignar la cuenta de remesa");
+  await RestAPI.patch(`${UrlsVentas.CLIENTE}/${clienteId}/cuenta_remesa`, { cuenta_remesa: cuentaId }, tVentas("cliente.errores.cuentaRemesa"));
 
 export type CuentaBancoAPI = {
   id: string;

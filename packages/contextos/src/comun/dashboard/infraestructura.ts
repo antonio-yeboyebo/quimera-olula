@@ -10,6 +10,7 @@ import {
   ResumenDashboard,
 } from "./diseño.ts";
 import { queryConsulta } from "./dominio.ts";
+import { tComun } from "../i18n/index.ts";
 
 const URL = "/comun/dashboard";
 
@@ -70,7 +71,7 @@ export type NuevoDashboard = {
 };
 
 export const crearDashboard = async (nuevo: NuevoDashboard): Promise<string> => {
-  const { id } = await RestAPI.post(URL, nuevo, "Error al crear el dashboard");
+  const { id } = await RestAPI.post(URL, nuevo, tComun("dashboard.errorAlCrearElDashboard"));
   return id;
 };
 
@@ -79,16 +80,16 @@ export type CambiosDashboard = Partial<
 >;
 
 export const cambiarDashboard = (id: string, cambios: CambiosDashboard) =>
-  RestAPI.patch(urlDashboard(id), cambios, "Error al guardar el dashboard");
+  RestAPI.patch(urlDashboard(id), cambios, tComun("dashboard.errorAlGuardarElDashboard"));
 
 export const borrarDashboard = (id: string) =>
-  RestAPI.delete(urlDashboard(id), "Error al borrar el dashboard");
+  RestAPI.delete(urlDashboard(id), tComun("dashboard.errorAlBorrarElDashboard"));
 
 export const getAgregado = async (
   consulta: ConsultaComponente
 ): Promise<RespuestaAgregado> => {
   if (!RE_RECURSO.test(consulta.recurso)) {
-    throw new Error(`Recurso no válido: ${consulta.recurso}`);
+    throw new Error(tComun("dashboard.recursoNoValidoRecurso", { recurso: consulta.recurso }));
   }
   return RestAPI.get<RespuestaAgregado>(
     `/comun/agregado/${encodeURIComponent(consulta.recurso)}${queryConsulta(consulta)}`
@@ -110,7 +111,7 @@ export const getRecursos = (): Promise<RecursoAgregable[]> => {
 /** El motivo que da el servidor cuando no puede proponer (400, texto o JSON de texto). */
 const motivoError = (error: unknown): string => {
   const descripcion = (error as { descripcion?: string })?.descripcion;
-  if (!descripcion) return "No se ha podido preguntar a la IA. Inténtalo de nuevo.";
+  if (!descripcion) return tComun("dashboard.noSeHaPodidoPreguntarA");
   try {
     const texto = JSON.parse(descripcion);
     return typeof texto === "string" ? texto : descripcion;

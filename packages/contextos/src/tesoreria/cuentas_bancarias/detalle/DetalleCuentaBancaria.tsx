@@ -17,6 +17,7 @@ import {
 } from "./detalle.js";
 import "./DetalleCuentaBancaria.css";
 import { getMaquina } from "./maquina.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const DetalleCuentaBancaria = ({
     id,
@@ -26,6 +27,7 @@ export const DetalleCuentaBancaria = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleCuentaBancariaInicial,
@@ -55,7 +57,7 @@ export const DetalleCuentaBancaria = ({
 
     const accionesCuenta = [
         {
-            texto: "Borrar",
+            texto: t("cuentas_bancarias.borrar"),
             onClick: () => publicar("borrado_solicitado"),
             advertencia: true,
         },
@@ -74,24 +76,24 @@ export const DetalleCuentaBancaria = ({
                 {puede("tesoreria.conciliacion") && (
                     <div className="botones">
                         <QBoton variante="borde" enlace={`/tesoreria/cuentas_bancarias/${cuenta.id}/conciliacion`}>
-                            Conciliación bancaria
+                            {t("cuentas_bancarias.conciliacionBancaria")}
                         </QBoton>
                     </div>
                 )}
                 <quimera-formulario>
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("cuentas_bancarias.descripcion")} {...uiProps("descripcion")} />
                     <QInput label="IBAN" {...uiProps("iban")} />
-                    <QInput label="Empresa" {...uiProps("empresaId")} />
-                    <QCheckbox label="Obsoleta" {...uiProps("obsoleta")} />
+                    <QInput label={t("cuentas_bancarias.empresa")} {...uiProps("empresaId")} />
+                    <QCheckbox label={t("cuentas_bancarias.obsoleta")} {...uiProps("obsoleta")} />
 
                     {/* Calculados por el servidor a partir del IBAN */}
-                    <QInput label="Código de cuenta" {...uiProps("codigoCuenta")} soloLectura />
-                    <QInput label="País" {...uiProps("paisId")} soloLectura />
-                    <QInput label="Dígito control" {...uiProps("digitoControl")} soloLectura />
-                    <QInput label="Número de cuenta" {...uiProps("cuenta")} soloLectura />
-                    <QInput label="BIC / SWIFT" {...uiProps("bic")} soloLectura />
-                    <QInput label="Entidad" {...uiProps("entidad")} soloLectura />
-                    <QInput label="Agencia" {...uiProps("agencia")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.codigoDeCuenta")} {...uiProps("codigoCuenta")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.pais")} {...uiProps("paisId")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.digitoControl")} {...uiProps("digitoControl")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.numeroDeCuenta")} {...uiProps("cuenta")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.bicSwift")} {...uiProps("bic")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.entidad")} {...uiProps("entidad")} soloLectura />
+                    <QInput label={t("cuentas_bancarias.agencia")} {...uiProps("agencia")} soloLectura />
                 </quimera-formulario>
             </div>
 

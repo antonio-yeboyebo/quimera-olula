@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { PrecioArticulo } from "../diseño.ts";
 import { descripcionPrecioArticulo, textoTramo } from "../dominio.ts";
 import { deletePrecioArticulo } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const BorrarPrecioArticulo = ({
     precio,
@@ -13,6 +14,7 @@ export const BorrarPrecioArticulo = ({
     precio: PrecioArticulo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTVentas();
     const borrar_ = useCallback(async () => {
         await deletePrecioArticulo(precio.id);
         publicar("precio_borrado", precio.id);
@@ -26,8 +28,8 @@ export const BorrarPrecioArticulo = ({
         <QModalConfirmacion
             nombre="confirmarBorrarPrecioArticulo"
             abierto={true}
-            titulo="Borrar precio por artículo"
-            mensaje={`¿Seguro que quiere borrar el precio de ${descripcionPrecioArticulo(precio)} (cantidad: ${textoTramo(precio).toLowerCase()})?`}
+            titulo={t("precioArticulo.borrar.titulo")}
+            mensaje={t("precioArticulo.borrar.mensaje", { articulo: descripcionPrecioArticulo(precio), tramo: textoTramo(precio).toLowerCase() })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

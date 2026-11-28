@@ -9,6 +9,7 @@ import { BorrarFuenteLead } from "../borrar/BorrarFuenteLead.tsx";
 import { fuenteLeadVacia, metaFuenteLead } from "./detalle.ts";
 import "./DetalleFuenteLead.css";
 import { getMaquina } from "./maquina.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const DetalleFuenteLead = ({
   id,
@@ -17,6 +18,7 @@ export const DetalleFuenteLead = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTCrm();
   const params = useParams();
 
   const fuenteLeadId = id ?? params.id;
@@ -55,12 +57,12 @@ export const DetalleFuenteLead = ({
             vertical
             acciones={[
               {
-                texto: "Marcar por defecto",
+                texto: t("fuenteLead.marcarPorDefecto"),
                 onClick: () => emitir("marcar_fuente_lead_por_defecto"),
                 deshabilitado: modelo.valorDefecto,
               },
               {
-                texto: "Borrar",
+                texto: t("fuenteLead.borrar"),
                 onClick: () => emitir("borrado_fuente_lead_solicitado"),
                 advertencia: true,
               },
@@ -68,7 +70,7 @@ export const DetalleFuenteLead = ({
           />
 
           <quimera-formulario>
-            <QInput label="Descripción" {...uiProps("descripcion")} />
+            <QInput label={t("fuenteLead.descripcion")} {...uiProps("descripcion")} />
           </quimera-formulario>
 
           {modificado && (
@@ -77,14 +79,14 @@ export const DetalleFuenteLead = ({
                 onClick={() => emitir("fuente_lead_cambiada", modelo)}
                 deshabilitado={!valido}
               >
-                Guardar
+                {t("fuenteLead.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
                 variante="texto"
                 onClick={() => emitir("edicion_fuente_lead_cancelada")}
               >
-                Cancelar
+                {t("fuenteLead.cancelar")}
               </QBoton>
             </div>
           )}

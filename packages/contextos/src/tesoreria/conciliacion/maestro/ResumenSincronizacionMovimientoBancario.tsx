@@ -4,6 +4,7 @@ import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { ResumenSincronizacionMovimientoBancario as ResumenSincronizacion } from "../diseño.js";
 import "./ResumenSincronizacionMovimientoBancario.css";
+import { tTesoreria } from "../../i18n/index.ts";
 
 export const ResumenSincronizacionMovimientoBancario = ({
     resumen,
@@ -17,26 +18,24 @@ export const ResumenSincronizacionMovimientoBancario = ({
     return (
         <QModal
             nombre="resumenSincronizacionMovimientoBancario"
-            titulo="Resultado de la sincronización"
+            titulo={tTesoreria("conciliacion.resultadoDeLaSincronizacion")}
             abierto={true}
             onCerrar={cerrar}
         >
             <div className="ResumenSincronizacionMovimientoBancario">
                 <p>
-                    {resumen.conexiones} conexión{resumen.conexiones === 1 ? "" : "es"} sincronizada
-                    {resumen.conexiones === 1 ? "" : "s"}: {resumen.nuevos} nuevos, {resumen.modificados}{" "}
-                    modificados, {resumen.eliminados} eliminados.
+                    {tTesoreria("conciliacion.resumenConexiones", { count: resumen.conexiones })}{" "}
+                    {tTesoreria("conciliacion.resumenCambios", { nuevos: resumen.nuevos, modificados: resumen.modificados, eliminados: resumen.eliminados })}
                 </p>
                 <p>
-                    Conciliación automática: {resumen.conciliados} casados y {resumen.conCandidatos} con
-                    candidatos para revisar
+                    {tTesoreria("conciliacion.resumenAutomatica", { conciliados: resumen.conciliados, conCandidatos: resumen.conCandidatos })}
                     {resumen.conciliadosIa + resumen.conCandidatosIa > 0 &&
-                        ` (la IA ha casado ${resumen.conciliadosIa} y propuesto candidatos en ${resumen.conCandidatosIa})`}.
+                        tTesoreria("conciliacion.resumenIa", { conciliadosIa: resumen.conciliadosIa, conCandidatosIa: resumen.conCandidatosIa })}.
                 </p>
 
                 {resumen.erroresConciliacion.length > 0 && (
                     <>
-                        <QAviso variante="advertencia">No se han podido conciliar:</QAviso>
+                        <QAviso variante="advertencia">{tTesoreria("conciliacion.noSeHanPodidoConciliar")}</QAviso>
                         <ul className="errores-sincronizacion">
                             {resumen.erroresConciliacion.map((error, indice) => <li key={indice}>{error}</li>)}
                         </ul>
@@ -46,23 +45,22 @@ export const ResumenSincronizacionMovimientoBancario = ({
                 {resumen.errores.length > 0 && (
                     <>
                         <QAviso variante="error">
-                            Se han producido errores en {resumen.errores.length} conexión
-                            {resumen.errores.length === 1 ? "" : "es"}:
+                            {tTesoreria("conciliacion.resumenErrores", { count: resumen.errores.length })}
                         </QAviso>
                         <ul className="errores-sincronizacion">
                             {resumen.errores.map((error, indice) => (
                                 <li key={`${error.conexionId}-${indice}`}>
-                                    <strong>{error.institucionNombre ?? "Banco sin identificar"}:</strong>{" "}
+                                    <strong>{error.institucionNombre ?? tTesoreria("conciliacion.bancoSinIdentificar")}:</strong>{" "}
                                     {error.error}
                                     {error.requiereReautenticacion && (
                                         <>
-                                            {" "}— hay que volver a autenticar la conexión.{" "}
+                                            {" "}{tTesoreria("conciliacion.hayQueVolverAAutenticarLa")}{" "}
                                             <QBoton
                                                 tamaño="pequeño"
                                                 variante="borde"
                                                 enlace={`/tesoreria/conexion_bancaria?id=${encodeURIComponent(error.conexionId)}`}
                                             >
-                                                Ir a la conexión
+                                                {tTesoreria("conciliacion.irALaConexion")}
                                             </QBoton>
                                         </>
                                     )}
@@ -73,7 +71,7 @@ export const ResumenSincronizacionMovimientoBancario = ({
                 )}
 
                 <div className="botones maestro-botones">
-                    <QBoton onClick={cerrar}>Cerrar</QBoton>
+                    <QBoton onClick={cerrar}>{tTesoreria("conciliacion.cerrar")}</QBoton>
                 </div>
             </div>
         </QModal>

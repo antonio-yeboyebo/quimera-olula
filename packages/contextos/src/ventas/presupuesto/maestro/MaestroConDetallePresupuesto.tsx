@@ -9,7 +9,7 @@ import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   filtroAgente,
   filtroAlmacen,
@@ -27,20 +27,24 @@ import "./MaestroConDetallePresupuesto.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaMaestroPresupuesto } from "./TarjetaMaestroPresupuesto.tsx";
 import { etiquetaEstadoPresupuesto, widgetsPresupuesto } from "../dominio.ts";
+import { tVentas, useTVentas } from "../../i18n/index.ts";
 
 const SIN_APROBAR = "true";
 const APROBADO = "false";
 
 const filtroSinAprobar: ClausulaFiltro[] = [["editable", "=", SIN_APROBAR]];
 
-const campoFiltroAprobado: MetaFiltro = {
+const campoFiltroAprobado = (): MetaFiltro => ({
   editable: {
     id: "editable",
-    label: "Estado",
+    label: tVentas("documento.maestro.estado"),
     tipo: "multiseleccion",
     opciones: [
-      { valor: SIN_APROBAR, descripcion: "Pendiente" },
-      { valor: APROBADO, descripcion: "Aprobado" },
+      {
+        valor: SIN_APROBAR,
+        descripcion: tVentas("presupuesto.estado.pendiente"),
+      },
+      { valor: APROBADO, descripcion: tVentas("presupuesto.estado.aprobado") },
     ],
     filtro: (valor) => {
       const elegidos = (valor as string[]) ?? [];
@@ -48,9 +52,13 @@ const campoFiltroAprobado: MetaFiltro = {
       return ["editable", "=", elegidos[0]];
     },
   },
-};
+});
 
 export const MaestroConDetallePresupuesto = () => {
+  const t = useTVentas();
+  // Se recalculan al cambiar de idioma (t cambia).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const widgets = useMemo(() => widgetsPresupuesto(), [t]);
   const { id, criteria } = getUrlParams();
   const criteriaInicial =
     criteria.filtro.length === 0
@@ -72,12 +80,12 @@ export const MaestroConDetallePresupuesto = () => {
   const metaTablaPresupuesto = [
     {
       id: "estado",
-      cabecera: "Estado",
+      cabecera: t("documento.maestro.estado"),
       render: (presupuesto: Presupuesto) => (
         <EtiquetaEstado {...etiquetaEstadoPresupuesto(presupuesto)} />
       ),
     },
-    ...metaTablaBase,
+    ...metaTablaBase(),
   ] as MetaTabla<Presupuesto>;
 
   const metaFiltroPresupuesto: MetaFiltro = {
@@ -86,7 +94,7 @@ export const MaestroConDetallePresupuesto = () => {
     agente_id: filtroAgente,
     fecha: filtroFechaDocumento,
     almacen_id: filtroAlmacen,
-    ...campoFiltroAprobado,
+    ...campoFiltroAprobado(),
   };
 
   return (
@@ -94,11 +102,11 @@ export const MaestroConDetallePresupuesto = () => {
       <MaestroDetalle<Presupuesto>
         Maestro={
           <>
-            <h2>Presupuestos</h2>
+            <h2>{t("presupuesto.maestro.titulo")}</h2>
             <Listado<Presupuesto>
               metaTabla={metaTablaPresupuesto}
               metaFiltro={metaFiltroPresupuesto}
-              widgets={widgetsPresupuesto}
+              widgets={widgets}
               tarjeta={TarjetaMaestroPresupuesto}
               criteria={ctx.presupuestos.criteria}
               entidades={ctx.presupuestos.lista}
@@ -109,7 +117,7 @@ export const MaestroConDetallePresupuesto = () => {
                   <QBoton
                     onClick={() => emitir("crear_presupuesto_solicitado")}
                   >
-                    Nuevo Presupuesto
+                    {t("presupuesto.maestro.nuevo")}
                   </QBoton>
                 </div>
               )}

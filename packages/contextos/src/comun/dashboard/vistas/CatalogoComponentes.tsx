@@ -1,7 +1,17 @@
 import { TipoComponente } from "../diseño.ts";
 import { CATALOGO } from "../dominio.ts";
+import { tComun } from "../../i18n/index.ts";
 
 const GRUPOS = ["Indicadores", "Gráficos", "Datos", "Otros"] as const;
+
+/** Título del grupo en el idioma activo. */
+const tituloGrupo = (grupo: (typeof GRUPOS)[number]) =>
+  ({
+    Indicadores: tComun("dashboard.indicadores"),
+    Gráficos: tComun("dashboard.graficos"),
+    Datos: tComun("dashboard.datos"),
+    Otros: tComun("dashboard.otros"),
+  })[grupo];
 
 /**
  * Panel «Añadir componente» del modo edición. Lo que aún no está, se anuncia; la
@@ -17,13 +27,13 @@ export const CatalogoComponentes = ({
   onElegir: (tipo: TipoComponente) => void;
 }) => (
   <aside className="catalogo-componentes" aria-labelledby="catalogo-componentes-titulo">
-    <h2 id="catalogo-componentes-titulo">Añadir componente</h2>
+    <h2 id="catalogo-componentes-titulo">{tComun("dashboard.anadirComponente")}</h2>
     {lleno && (
-      <p className="catalogo-componentes-lleno">Has llegado al máximo de componentes.</p>
+      <p className="catalogo-componentes-lleno">{tComun("dashboard.hasLlegadoAlMaximoDeComponentes")}</p>
     )}
     {GRUPOS.map((grupo) => (
       <section key={grupo}>
-        <h3>{grupo}</h3>
+        <h3>{tituloGrupo(grupo)}</h3>
         <ul>
           {CATALOGO.filter(
             (d) => d.grupo === grupo && (conIA || d.tipo !== "pregunta_ia")
@@ -36,7 +46,7 @@ export const CatalogoComponentes = ({
               >
                 <strong>
                   {d.nombre}
-                  {!d.disponible && <span className="catalogo-componentes-pronto">pronto</span>}
+                  {!d.disponible && <span className="catalogo-componentes-pronto">{tComun("dashboard.pronto")}</span>}
                 </strong>
                 <span>{d.descripcion}</span>
               </button>

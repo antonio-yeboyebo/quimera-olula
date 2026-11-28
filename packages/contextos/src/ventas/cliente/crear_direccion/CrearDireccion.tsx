@@ -7,6 +7,7 @@ import { ProcesarEvento } from "@olula/lib/useMaquina.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useContext, useState } from "react";
 import { postDireccion } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 import { metaNuevaDireccion, nuevaDireccionVacia } from "./dominio.ts";
 
 export const CrearDireccion = ({
@@ -16,6 +17,7 @@ export const CrearDireccion = ({
   clienteId: string;
   publicar: ProcesarEvento;
 }) => {
+  const t = useTVentas();
   const { intentar } = useContext(ContextoError);
   const { modelo, uiProps, valido, set } = useModelo(
     metaNuevaDireccion,
@@ -37,30 +39,30 @@ export const CrearDireccion = ({
   return (
     <div className="CrearDireccion">
       <quimera-formulario>
-        <QInput label="Tipo de Vía" {...uiProps("tipo_via")} ref={focus} />
-        <QInput label="Nombre de la Vía" {...uiProps("nombre_via")} />
-        <QInput label="Número" {...uiProps("numero")} />
-        <QInput label="Otros" {...uiProps("otros")} />
-        <QInput label="Apdo. Correos" {...uiProps("apartado")} />
-        <QInput label="Cód. Postal" {...uiProps("cod_postal")} />
-        <QInput label="Ciudad" {...uiProps("ciudad")} />
-        <QInput label="Provincia" {...uiProps("provincia")} />
+        <QInput label={t("cliente.direccion.tipoVia")} {...uiProps("tipo_via")} ref={focus} />
+        <QInput label={t("cliente.direccion.nombreVia")} {...uiProps("nombre_via")} />
+        <QInput label={t("cliente.direccion.numero")} {...uiProps("numero")} />
+        <QInput label={t("cliente.direccion.otros")} {...uiProps("otros")} />
+        <QInput label={t("cliente.direccion.apartado")} {...uiProps("apartado")} />
+        <QInput label={t("cliente.direccion.codPostal")} {...uiProps("cod_postal")} />
+        <QInput label={t("cliente.direccion.ciudad")} {...uiProps("ciudad")} />
+        <QInput label={t("cliente.direccion.provincia")} {...uiProps("provincia")} />
         <PaisSelector
-          label="País"
+          label={t("cliente.direccion.pais")}
           nombre="direccion/pais_id"
           valor={modelo.pais_id}
           onChange={(opcion) =>
             set({ ...modelo, pais_id: opcion?.valor ?? "" })
           }
         />
-        <QInput label="Teléfono" {...uiProps("telefono")} />
+        <QInput label={t("cliente.direccion.telefono")} {...uiProps("telefono")} />
       </quimera-formulario>
       <div className="botones maestro-botones">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("cliente.botones.guardar")}
         </QBoton>
         <QBoton tipo="reset" variante="texto" onClick={cancelar}>
-          Cancelar
+          {t("cliente.botones.cancelar")}
         </QBoton>
       </div>
     </div>

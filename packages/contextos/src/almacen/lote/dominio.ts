@@ -1,17 +1,18 @@
 import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { FormEtiquetaLote, FormatoEtiquetaLote, Lote, OpcionesEtiquetaLote } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const ESTADOS_LOTE = [
-    { valor: "PTE", descripcion: "Pendiente" },
-    { valor: "TERMINADO", descripcion: "Terminado" },
+    { valor: "PTE", get descripcion() { return tAlmacen("lote.pendiente"); } },
+    { valor: "TERMINADO", get descripcion() { return tAlmacen("lote.terminado"); } },
 ];
 
 /** Píldora del estado del lote: pendiente de recibir o terminado. */
 export const etiquetaEstadoLote = (estado: string | null | undefined): EstadoEtiqueta =>
     estado === "TERMINADO"
-        ? { texto: "Terminado", tono: "completado" }
+        ? { texto: tAlmacen("lote.terminado"), tono: "completado" }
         : estado === "PTE"
-            ? { texto: "Pendiente", tono: "pendiente" }
+            ? { texto: tAlmacen("lote.pendiente"), tono: "pendiente" }
             : { texto: estado || "—", tono: "borrador" };
 
 /** Cantidad en formato español (hasta 3 decimales); vacía si no hay. */
@@ -43,11 +44,11 @@ export const textoArticulo = (lote: Pick<Lote, "sku" | "articulo">): string =>
 
 /** Mensaje tras «Revisar lote» o «Revisar todos». */
 export const mensajeRevisados = (revisados: number): string =>
-    revisados === 1 ? "Se ha revisado 1 lote." : `Se han revisado ${formatearCantidad(revisados)} lotes.`;
+    revisados === 1 ? tAlmacen("lote.seHaRevisado1Lote") : tAlmacen("lote.seHanRevisadoRevisadosLotes", { revisados: formatearCantidad(revisados) });
 
 export const FORMATOS_ETIQUETA_LOTE: { valor: FormatoEtiquetaLote; descripcion: string }[] = [
-    { valor: "3x9", descripcion: "3 × 9 cm" },
-    { valor: "2,5x6", descripcion: "2,5 × 6 cm" },
+    { valor: "3x9", get descripcion() { return tAlmacen("lote.t39Cm"); } },
+    { valor: "2,5x6", get descripcion() { return tAlmacen("lote.t256Cm"); } },
 ];
 
 export const MAX_COPIAS_ETIQUETA = 500;
@@ -65,13 +66,13 @@ const numeroTecleado = (texto: string): number => {
 export const opcionesEtiquetaDesdeForm = (form: FormEtiquetaLote): OpcionesEtiquetaLote | string => {
     const copias = Number(form.copias.trim());
     if (!Number.isInteger(copias) || copias < 1 || copias > MAX_COPIAS_ETIQUETA) {
-        return `Las copias deben ser un número entero de 1 a ${MAX_COPIAS_ETIQUETA}`;
+        return tAlmacen("lote.lasCopiasDebenSerUnNumero", { MAX_COPIAS_ETIQUETA });
     }
-    if (!FORMATOS_ETIQUETA_LOTE.some((f) => f.valor === form.formato)) return "Formato de etiqueta no válido";
+    if (!FORMATOS_ETIQUETA_LOTE.some((f) => f.valor === form.formato)) return tAlmacen("lote.formatoDeEtiquetaNoValido");
     let cantidad: number | null = null;
     if (form.cantidad.trim() !== "") {
         cantidad = numeroTecleado(form.cantidad);
-        if (Number.isNaN(cantidad) || cantidad < 0) return "La cantidad debe ser un número positivo";
+        if (Number.isNaN(cantidad) || cantidad < 0) return tAlmacen("lote.laCantidadDebeSerUnNumero");
     }
     return { copias, formato: form.formato, cantidad };
 };
@@ -84,4 +85,4 @@ export const queryEtiquetaLote = (opciones: OpcionesEtiquetaLote): string => {
 };
 
 /** Nombre del PDF de etiquetas (el que da el servidor). */
-export const nombreEtiquetaLote = (id: string): string => `etiqueta-lote-${id}.pdf`;
+export const nombreEtiquetaLote = (id: string): string => tAlmacen("lote.etiquetaLoteIdPdf", { id });

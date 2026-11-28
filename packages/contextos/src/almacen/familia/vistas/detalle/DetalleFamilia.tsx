@@ -16,6 +16,7 @@ import { BorrarFamilia } from "./BorrarFamilia.tsx";
 import "./DetalleFamilia.css";
 import { familiaVacia, metaFamilia } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 const titulo = (familia: Familia) => familia.descripcion as string;
 
@@ -26,6 +27,7 @@ export const DetalleFamilia = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTAlmacen();
   const params = useParams();
   const familiaId = id ?? params.id;
   const { intentar } = useContext(ContextoError);
@@ -69,16 +71,16 @@ export const DetalleFamilia = ({
       {!!ctx.familia.id && (
         <>
           <div className="maestro-botones ">
-            <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
+            <QBoton onClick={() => emitir("borrar")}>{t("familia.borrar")}</QBoton>
           </div>
           <div className="DetalleFamilia">
             <Tabs
               children={[
-                <Tab key="general" label="General">
+                <Tab key="general" label={t("familia.general")}>
                   <quimera-formulario>
-                    <QInput label="Código" {...familia.uiProps("id")} />
+                    <QInput label={t("familia.codigo")} {...familia.uiProps("id")} />
                     <QInput
-                      label="Descripción"
+                      label={t("familia.descripcion")}
                       {...familia.uiProps("descripcion")}
                     />
                     {plugin("pesos_medidas") === "activo" && (
@@ -92,7 +94,7 @@ export const DetalleFamilia = ({
           {familia.modificado && (
             <div className="botones maestro-botones">
               <QBoton onClick={guardar} deshabilitado={!familia.valido}>
-                Guardar
+                {t("familia.guardar")}
               </QBoton>
               <QBoton
                 tipo="reset"
@@ -100,7 +102,7 @@ export const DetalleFamilia = ({
                 onClick={cancelar}
                 deshabilitado={!familia.modificado}
               >
-                Cancelar
+                {t("familia.cancelar")}
               </QBoton>
             </div>
           )}

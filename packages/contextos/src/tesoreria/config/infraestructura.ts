@@ -2,6 +2,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import ApiUrls from "../comun/urls.js";
 import { ConfigTesoreria, GetConfigTesoreria, PatchConfigTesoreria } from "./diseño.ts";
 import { configTesoreriaPorDefecto, conRemesasPago, flagsDesdeModo, modoDesdeFlags } from "./dominio.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 interface ConfigTesoreriaApi {
     pago_diferido: boolean;
@@ -63,6 +64,6 @@ const actualizarConfigEnSesion = (api: ConfigTesoreriaApi): void => {
 
 export const patchConfigTesoreria: PatchConfigTesoreria = async (config) => {
     const cambios = configTesoreriaAApi(config);
-    await RestAPI.patch(baseUrl, { cambios }, "Error al guardar la configuración de tesorería");
+    await RestAPI.patch(baseUrl, { cambios }, tTesoreria("config.errorAlGuardarLaConfiguracionDe"));
     actualizarConfigEnSesion(cambios);
 };

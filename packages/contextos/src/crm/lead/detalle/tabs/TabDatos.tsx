@@ -9,8 +9,10 @@ import { useState } from "react";
 import { Lead } from "../../diseño.ts";
 import { CambiarDireccionLead } from "./CambiarDireccionLead.tsx";
 import "./TabDatos.css";
+import { useTCrm } from "../../../i18n/index.ts";
 
 export const TabDatos = ({ lead }: { lead: HookModelo<Lead> }) => {
+  const t = useTCrm();
   const { uiProps, modelo } = lead;
   const [editandoDireccion, setEditandoDireccion] = useState(false);
 
@@ -38,27 +40,27 @@ export const TabDatos = ({ lead }: { lead: HookModelo<Lead> }) => {
         <FuenteLead {...uiProps("fuente_id")} />
         <ContactoSelector
           {...uiProps("contacto_id")}
-          label="Contacto"
+          label={t("lead.contacto")}
           valor={modelo.contacto_id ?? ""}
           descripcion={modelo.contacto?.nombre ?? modelo.contacto_id ?? ""}
         />
-        <QInput label="Nombre" {...uiProps("nombre")} />
-        <QInput label="CIF/NIF" {...uiProps("id_fiscal")} />
-        <QInput label="Teléfono 1" {...uiProps("telefono_1")} />
-        <QInput label="Teléfono 2" {...uiProps("telefono_2")} />
-        <QInput label="Email" {...uiProps("email")} />
+        <QInput label={t("lead.nombre")} {...uiProps("nombre")} />
+        <QInput label={t("lead.cifNif")} {...uiProps("id_fiscal")} />
+        <QInput label={t("lead.telefono1")} {...uiProps("telefono_1")} />
+        <QInput label={t("lead.telefono2")} {...uiProps("telefono_2")} />
+        <QInput label={t("lead.email")} {...uiProps("email")} />
         <section className="lead-direccion-resumen">
-          <div className="lead-direccion-resumen-label">Dirección</div>
+          <div className="lead-direccion-resumen-label">{t("lead.direccion")}</div>
           <div className="lead-direccion-resumen-contenido">
             <span>
-              {direccionSinDefinir ? "Dirección sin definir" : direccionResumen}
+              {direccionSinDefinir ? t("lead.direccionSinDefinir") : direccionResumen}
             </span>
             <QBoton
               tamaño="pequeño"
               variante="texto"
               onClick={() => setEditandoDireccion(true)}
             >
-              Editar
+              {t("lead.editar")}
             </QBoton>
           </div>
         </section>

@@ -12,8 +12,10 @@ import { metaTablaContacto } from "./maestro.ts";
 import "./MaestroContactos.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaContacto } from "./TarjetaContacto.tsx";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const MaestroContactos = () => {
+  const t = useTCrm();
   const { id, criteria } = getUrlParams();
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroContactos = () => {
       <MaestroDetalle<Contacto>
         Maestro={
           <>
-            <h2>Contactos</h2>
+            <h2>{t("contacto.contactos")}</h2>
 
             <Listado<Contacto>
               metaTabla={metaTablaContacto}
@@ -48,7 +50,7 @@ export const MaestroContactos = () => {
                   <QBoton
                     onClick={() => emitir("creacion_de_contacto_solicitada")}
                   >
-                    Nuevo
+                    {t("contacto.nuevo")}
                   </QBoton>
                 </div>
               )}

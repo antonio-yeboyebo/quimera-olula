@@ -16,6 +16,7 @@ import { PagarRemesa } from "./pagar/PagarRemesa.js";
 import { PagosRemesa } from "./pagos/PagosRemesa.js";
 import { RecibosRemesa } from "./recibos/RecibosRemesa.js";
 import { TabGeneral } from "./TabGeneral.js";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 export const DetalleRemesa = ({
     id,
@@ -25,6 +26,7 @@ export const DetalleRemesa = ({
     publicar?: EmitirEvento;
 }) => {
 
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoDetalleRemesaInicial,
@@ -40,7 +42,7 @@ export const DetalleRemesa = ({
 
     if (!ctx.remesa.id) return null;
 
-    const titulo = (r: Remesa) => `Remesa de cobro ${r.id}`;
+    const titulo = (r: Remesa) => t("remesa.remesaDeCobroId", { id: r.id });
 
     return (
         <Detalle
@@ -53,7 +55,7 @@ export const DetalleRemesa = ({
             <div className="DetalleRemesa">
                 <QuimeraAcciones
                     acciones={[{
-                        texto: "Fichero bancario",
+                        texto: t("remesa.ficheroBancario"),
                         onClick: () => emitir("fichero_solicitado"),
                         deshabilitado: ctx.remesa.recibos.length === 0,
                     }]}
@@ -61,16 +63,16 @@ export const DetalleRemesa = ({
                 />
 
                 <Tabs children={[
-                    <Tab label="General"
+                    <Tab label={t("remesa.general")}
                         key="tab-general"
                         children={<TabGeneral form={formModelo} />}
                     />,
-                    <Tab label={`Recibos (${ctx.remesa.recibos.length})`}
+                    <Tab label={t("remesa.recibosLength", { length: ctx.remesa.recibos.length })}
                         key="tab-recibos"
                         children={<RecibosRemesa recibos={ctx.remesa.recibos} />}
                     />,
                     configuracion("tesoreria.pago_diferido") && (
-                        <Tab label={`Pagos (${ctx.remesa.pagos.length})`}
+                        <Tab label={t("remesa.pagosLength", { length: ctx.remesa.pagos.length })}
                             key="tab-pagos"
                             children={<PagosRemesa remesa={ctx.remesa} publicar={emitir} />}
                         />

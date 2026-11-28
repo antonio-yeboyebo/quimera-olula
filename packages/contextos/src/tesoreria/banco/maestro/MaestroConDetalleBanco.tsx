@@ -11,10 +11,12 @@ import { Banco } from "../diseño.ts";
 import { REGLA_BANCO } from "../dominio.ts";
 import { criteriaBancosDefecto, metaFiltroBanco, metaTablaBanco } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /** Bancos (Eneboo `formaspago.ui` con su tabla de plazos). */
 export const MaestroConDetalleBanco = () => {
 
+    const t = useTTesoreria();
     const criteriaInicial = useMemo(criteriaBancosDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleBanco = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver los bancos.</p>;
+        return <p>{t("banco.noTienesPermisoParaVerLos")}</p>;
     }
 
     return (
@@ -42,7 +44,7 @@ export const MaestroConDetalleBanco = () => {
                 seleccionada={bancos.activo}
                 Maestro={
                     <>
-                        <h2>Bancos</h2>
+                        <h2>{t("banco.bancos")}</h2>
                         <Listado<Banco>
                             metaTabla={metaTablaBanco}
                             metaFiltro={metaFiltroBanco}
@@ -54,7 +56,7 @@ export const MaestroConDetalleBanco = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_banco_solicitado")}>
-                                        Nuevo banco
+                                        {t("banco.nuevoBanco")}
                                     </QBoton>
                                 </div>
                             )}

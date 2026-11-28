@@ -2,6 +2,7 @@ import { albaranarPedidos } from "#/compras/albaran/infraestructura.ts";
 import { Criteria, ProcesarContexto } from "@olula/lib/diseño.ts";
 import { accionesListaActivaEntidades, ProcesarListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.ts";
 import { Pedido } from "../diseño.ts";
+import { tCompras } from "#/compras/i18n/index.ts";
 import { pedidoAlbaranable } from "../dominio.ts";
 import { getPedido, getPedidos } from "../infraestructura.ts";
 import { ContextoMaestroPedido, EstadoMaestroPedido } from "./diseño.ts";
@@ -58,7 +59,7 @@ export const agruparPorProveedor = (ids: string[], pedidos: Pedido[]): GrupoAlba
 
     pedidosDe(ids, pedidos).forEach((pedido) => {
         const clave = pedido.proveedorId || pedido.nombreProveedor || "";
-        const etiqueta = pedido.nombreProveedor || pedido.proveedorId || "Sin proveedor";
+        const etiqueta = pedido.nombreProveedor || pedido.proveedorId || tCompras("pedido.albaranar.sinProveedor");
         const grupo = grupos.get(clave) ?? { etiqueta, ids: [] };
         grupos.set(clave, { ...grupo, ids: [...grupo.ids, pedido.id] });
     });

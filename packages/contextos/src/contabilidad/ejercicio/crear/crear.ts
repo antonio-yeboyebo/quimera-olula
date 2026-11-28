@@ -1,5 +1,6 @@
 import { MetaModelo } from "@olula/lib/dominio.js";
 import { NuevoEjercicio } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export const metaNuevoEjercicio: MetaModelo<NuevoEjercicio> = {
     campos: {
@@ -13,11 +14,11 @@ export const metaNuevoEjercicio: MetaModelo<NuevoEjercicio> = {
     },
     validacion: (m) => {
         if (m.fechaInicio > m.fechaFin) {
-            return "La fecha de inicio del ejercicio debe ser menor que la de fin";
+            return tContabilidad("ejercicio.laFechaDeInicioDelEjercicio");
         }
         const digitos = Number(m.digitosSubcuenta);
         if (!m.ejercicioOrigenPgc && (digitos < 5 || digitos > 15)) {
-            return "La longitud de la subcuenta debe estar entre 5 y 15 caracteres";
+            return tContabilidad("ejercicio.laLongitudDeLaSubcuentaDebe");
         }
         return true;
     },

@@ -7,6 +7,7 @@ import {
   RecursoAgregable,
   RespuestaAgregado,
 } from "../../diseño.ts";
+import { useTComun } from "../../../i18n/index.ts";
 
 type FilaDashboard = Entidad & Record<string, string | number | boolean | null>;
 
@@ -74,6 +75,7 @@ export const Tabla = ({
   respuesta: RespuestaAgregado;
   recurso: RecursoAgregable | undefined;
 }) => {
+  const t = useTComun();
   const navegar = useNavigate();
   const recursoId = componente.consultas[0]?.recurso ?? "";
   const ruta = rutaRecurso(recurso, recursoId);
@@ -101,7 +103,7 @@ export const Tabla = ({
       />
       {respuesta.truncado && ruta && (
         <Link className="dashboard-tabla-mas" to={ruta}>
-          Ver las {respuesta.total_grupos}
+          {t("dashboard.verLas")}{" "}{respuesta.total_grupos}
           {recurso ? ` en ${recurso.descripcion.split(" (")[0]}` : ""} →
         </Link>
       )}

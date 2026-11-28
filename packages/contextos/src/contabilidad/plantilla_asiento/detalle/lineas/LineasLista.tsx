@@ -4,13 +4,14 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { PartidaPlantilla } from "../../diseño.ts";
 import { resumenConcepto, resumenImporte, resumenSubcuenta } from "../../dominio.ts";
+import { tContabilidad } from "../../../i18n/index.ts";
 
 const metaTablaPartidas: MetaTabla<PartidaPlantilla> = [
-    { id: "numeroOrden", cabecera: "Nº" },
-    { id: "codigoSubcuenta", cabecera: "Subcuenta", render: resumenSubcuenta },
-    { id: "debeHaber", cabecera: "D/H" },
-    { id: "importe", cabecera: "Importe", render: resumenImporte },
-    { id: "concepto", cabecera: "Concepto", render: resumenConcepto },
+    { id: "numeroOrden", get cabecera() { return tContabilidad("plantilla_asiento.n"); } },
+    { id: "codigoSubcuenta", get cabecera() { return tContabilidad("plantilla_asiento.subcuenta"); }, render: resumenSubcuenta },
+    { id: "debeHaber", get cabecera() { return tContabilidad("plantilla_asiento.dH"); } },
+    { id: "importe", get cabecera() { return tContabilidad("plantilla_asiento.importe"); }, render: resumenImporte },
+    { id: "concepto", get cabecera() { return tContabilidad("plantilla_asiento.concepto"); }, render: resumenConcepto },
 ];
 
 export const LineasLista = ({

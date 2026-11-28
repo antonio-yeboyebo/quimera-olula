@@ -26,6 +26,7 @@ import {
 import { CampoImporte } from "./CampoImporte.tsx";
 import "./EditorPartidasManual.css";
 import { useDivisasPartidas } from "./useDivisasPartidas.ts";
+import { useTContabilidad } from "../../../i18n/index.ts";
 
 export const EditorPartidasManual = ({
     partidas,
@@ -36,6 +37,7 @@ export const EditorPartidasManual = ({
     ejercicioId: string;
     onChange: (partidas: PartidaManualInput[]) => void;
 }) => {
+    const t = useTContabilidad();
     const { divisaEmpresa, divisas } = useDivisasPartidas(ejercicioId);
     const opcionesDivisa = divisas.map((d) => ({ valor: d.id, descripcion: d.id }));
 
@@ -119,13 +121,13 @@ export const EditorPartidasManual = ({
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Subcuenta</th>
-                        <th>Debe</th>
-                        <th>Haber</th>
-                        <th>Divisa</th>
-                        <th>Tasa conv.</th>
-                        <th>Concepto</th>
-                        <th>IVA</th>
+                        <th>{t("asiento.subcuenta")}</th>
+                        <th>{t("asiento.debe")}</th>
+                        <th>{t("asiento.haber")}</th>
+                        <th>{t("asiento.divisa")}</th>
+                        <th>{t("asiento.tasaConv")}</th>
+                        <th>{t("asiento.concepto")}</th>
+                        <th>{t("asiento.iva")}</th>
                         <th />
                     </tr>
                 </thead>
@@ -199,7 +201,7 @@ export const EditorPartidasManual = ({
                                     onClick={() => quitar(i)}
                                     deshabilitado={partidas.length <= 2}
                                 >
-                                    Quitar
+                                    {t("asiento.quitar")}
                                 </QBoton>
                             </td>
                         </tr>
@@ -207,18 +209,18 @@ export const EditorPartidasManual = ({
                             <tr className="EditorPartidasManual-filaIva">
                                 <td colSpan={8}>
                                     <div className="EditorPartidasManual-ivaCampos">
-                                        <CampoImporte label="Base imponible" nombre={`base-${i}`} valor={p.baseImponible ?? 0} onChange={(v) => actualizar(
+                                        <CampoImporte label={t("asiento.baseImponible")} nombre={`base-${i}`} valor={p.baseImponible ?? 0} onChange={(v) => actualizar(
                                                     i,
                                                     "baseImponible",
                                                     v
                                                 )} />
-                                        <CampoImporte label="% IVA" nombre={`ivapct-${i}`} valor={p.ivaPct ?? 21} onChange={(v) => actualizar(
+                                        <CampoImporte label={t("asiento.iva2")} nombre={`ivapct-${i}`} valor={p.ivaPct ?? 21} onChange={(v) => actualizar(
                                                     i,
                                                     "ivaPct",
                                                     v
                                                 )} />
                                         <QInput
-                                            label="Casilla 303"
+                                            label={t("asiento.casilla303")}
                                             nombre={`casilla-${i}`}
                                             valor={p.casilla303 ?? ""}
                                             onChange={(v) =>
@@ -227,7 +229,7 @@ export const EditorPartidasManual = ({
                                             opcional
                                         />
                                         <QInput
-                                            label="Grupo IVA neg."
+                                            label={t("asiento.grupoIvaNeg")}
                                             nombre={`givaneg-${i}`}
                                             valor={
                                                 p.grupoIvaNegocioId ?? "GENERAL"
@@ -242,7 +244,7 @@ export const EditorPartidasManual = ({
                                             opcional
                                         />
                                         <SubcuentaSelector
-                                            label="Contrapartida"
+                                            label={t("asiento.contrapartida")}
                                             nombre={`contrapartida-${i}`}
                                             ejercicioId={ejercicioId}
                                             valor={
@@ -283,8 +285,8 @@ export const EditorPartidasManual = ({
                             <tr className="EditorPartidasManual-filaDivisa">
                                 <td colSpan={8}>
                                     <div className="EditorPartidasManual-ivaCampos">
-                                        <CampoImporte label="Debe Moneda Extranjera" nombre={`debeme-${i}`} valor={p.debeMe ?? 0} onChange={(v) => transformar(i, (q) => cambiarDebeMe(q, v))} />
-                                        <CampoImporte label="Haber Moneda Extranjera" nombre={`haberme-${i}`} valor={p.haberMe ?? 0} onChange={(v) => transformar(i, (q) => cambiarHaberMe(q, v))} />
+                                        <CampoImporte label={t("asiento.debeMonedaExtranjera")} nombre={`debeme-${i}`} valor={p.debeMe ?? 0} onChange={(v) => transformar(i, (q) => cambiarDebeMe(q, v))} />
+                                        <CampoImporte label={t("asiento.haberMonedaExtranjera")} nombre={`haberme-${i}`} valor={p.haberMe ?? 0} onChange={(v) => transformar(i, (q) => cambiarHaberMe(q, v))} />
                                     </div>
                                 </td>
                             </tr>
@@ -294,14 +296,14 @@ export const EditorPartidasManual = ({
                 })}
             </table>
             <div className="EditorPartidasManual-pie">
-                <QBoton onClick={anadir}>Añadir partida</QBoton>
+                <QBoton onClick={anadir}>{t("asiento.anadirPartida")}</QBoton>
                 <span>
-                    Debe: {totalDebe(partidas).toFixed(2)} · Haber:{" "}
+                    {t("asiento.debe2")}{" "}{totalDebe(partidas).toFixed(2)}{" "}{t("asiento.haber2")}{" "}
                     {totalHaber(partidas).toFixed(2)}
                     {!cuadrado && (
                         <strong className="descuadre">
                             {" "}
-                            · Descuadre: {descuadre.toFixed(2)}
+                            {t("asiento.descuadre")}{" "}{descuadre.toFixed(2)}
                         </strong>
                     )}
                 </span>

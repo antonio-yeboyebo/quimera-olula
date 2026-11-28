@@ -4,13 +4,14 @@ import { Criteria, ProcesarContexto } from "@olula/lib/diseño.js";
 import { accionesListaEntidades, ProcesarListaEntidades } from "@olula/lib/ListaEntidades.js";
 import { getOportunidadesVentaLead } from "../../infraestructura.ts";
 import { ContextoOportunidadesLead, EstadoOportunidadesLead } from "./diseño.ts";
+import { tCrm } from "../../../i18n/index.ts";
 
 export const metaTablaOportunidades: MetaTabla<OportunidadVenta> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "nombre_cliente", cabecera: "Cliente" },
-    { id: "importe", cabecera: "Total", tipo: "moneda" },
-    { id: "fecha_cierre", cabecera: "Fecha Cierre", tipo: "fecha" },
+    { id: "id", get cabecera() { return tCrm("lead.codigo"); } },
+    { id: "descripcion", get cabecera() { return tCrm("lead.descripcion"); } },
+    { id: "nombre_cliente", get cabecera() { return tCrm("lead.cliente"); } },
+    { id: "importe", get cabecera() { return tCrm("lead.total"); }, tipo: "moneda" },
+    { id: "fecha_cierre", get cabecera() { return tCrm("lead.fechaCierre"); }, tipo: "fecha" },
 ];
 
 type ProcesarOportunidades = ProcesarContexto<EstadoOportunidadesLead, ContextoOportunidadesLead>;

@@ -7,17 +7,18 @@ import {
     ParametrosGenerarUbicaciones,
     Pasillo,
 } from "./diseño.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 export const carasPasillo: { valor: CarasPasillo; descripcion: string }[] = [
-    { valor: "AMBAS", descripcion: "Ambas" },
-    { valor: "IZQUIERDA", descripcion: "Izquierda" },
-    { valor: "DERECHA", descripcion: "Derecha" },
+    { valor: "AMBAS", get descripcion() { return tAlmacen("pasillo.ambas"); } },
+    { valor: "IZQUIERDA", get descripcion() { return tAlmacen("pasillo.izquierda"); } },
+    { valor: "DERECHA", get descripcion() { return tAlmacen("pasillo.derecha"); } },
 ];
 
 export const accesosPasillo: { valor: AccesosPasillo; descripcion: string }[] = [
-    { valor: "AMBOS_EXTREMOS", descripcion: "Ambos extremos" },
-    { valor: "FRENTE", descripcion: "Solo por el frente (módulo 1)" },
-    { valor: "FONDO", descripcion: "Solo por el fondo (último módulo)" },
+    { valor: "AMBOS_EXTREMOS", get descripcion() { return tAlmacen("pasillo.ambosExtremos"); } },
+    { valor: "FRENTE", get descripcion() { return tAlmacen("pasillo.soloPorElFrenteModulo1"); } },
+    { valor: "FONDO", get descripcion() { return tAlmacen("pasillo.soloPorElFondoUltimoModulo"); } },
 ];
 
 export const descripcionCaras = (caras: string): string =>
@@ -51,31 +52,31 @@ export const caraDeModulo = (modulo: number): "IZQUIERDA" | "DERECHA" =>
 
 /** Devuelve `true` si es válido o el mensaje del primer error. */
 export const validarPasillo = (m: Pick<NuevoPasillo, "codigo" | "orden" | "modulos">): string | true => {
-    if (sinTexto(m.codigo)) return "El código es obligatorio";
-    if (m.codigo.length > 10) return "El código admite como máximo 10 caracteres";
-    if (!esEntero(m.orden) || m.orden < 0) return "El orden debe ser un entero mayor o igual que 0";
-    if (!esEntero(m.modulos) || m.modulos <= 0) return "Los módulos por cara deben ser un entero mayor que 0";
+    if (sinTexto(m.codigo)) return tAlmacen("pasillo.elCodigoEsObligatorio");
+    if (m.codigo.length > 10) return tAlmacen("pasillo.elCodigoAdmiteComoMaximo10");
+    if (!esEntero(m.orden) || m.orden < 0) return tAlmacen("pasillo.elOrdenDebeSerUnEntero");
+    if (!esEntero(m.modulos) || m.modulos <= 0) return tAlmacen("pasillo.losModulosPorCaraDebenSer");
     return true;
 };
 
 /** Devuelve `true` si es válido o el mensaje del primer error. */
 export const validarGenerarUbicaciones = (p: ParametrosGenerarUbicaciones): string | true => {
-    if (!esEntero(p.nivelDesde) || p.nivelDesde < 0) return "El nivel inicial debe ser un entero mayor o igual que 0";
-    if (!esEntero(p.nivelHasta) || p.nivelHasta < 0) return "El nivel final debe ser un entero mayor o igual que 0";
-    if (p.nivelHasta < p.nivelDesde) return "El nivel final no puede ser menor que el inicial";
-    if (!esEntero(p.huecosPorNivel) || p.huecosPorNivel < 1) return "Los huecos por nivel deben ser un entero mayor o igual que 1";
+    if (!esEntero(p.nivelDesde) || p.nivelDesde < 0) return tAlmacen("pasillo.elNivelInicialDebeSerUn");
+    if (!esEntero(p.nivelHasta) || p.nivelHasta < 0) return tAlmacen("pasillo.elNivelFinalDebeSerUn");
+    if (p.nivelHasta < p.nivelDesde) return tAlmacen("pasillo.elNivelFinalNoPuedeSer");
+    if (!esEntero(p.huecosPorNivel) || p.huecosPorNivel < 1) return tAlmacen("pasillo.losHuecosPorNivelDebenSer");
     const desde = p.moduloDesde;
     const hasta = p.moduloHasta;
-    if (desde !== null && (!esEntero(desde) || desde <= 0)) return "El módulo inicial debe ser un entero mayor que 0";
-    if (hasta !== null && (!esEntero(hasta) || hasta <= 0)) return "El módulo final debe ser un entero mayor que 0";
-    if (desde !== null && hasta !== null && hasta < desde) return "El módulo final no puede ser menor que el inicial";
+    if (desde !== null && (!esEntero(desde) || desde <= 0)) return tAlmacen("pasillo.elModuloInicialDebeSerUn");
+    if (hasta !== null && (!esEntero(hasta) || hasta <= 0)) return tAlmacen("pasillo.elModuloFinalDebeSerUn");
+    if (desde !== null && hasta !== null && hasta < desde) return tAlmacen("pasillo.elModuloFinalNoPuedeSer");
     return true;
 };
 
 export const mensajeUbicacionesGeneradas = (creadas: number): string => {
-    if (creadas === 0) return "No se ha creado ninguna ubicación: ya existían todas.";
-    if (creadas === 1) return "Se ha creado 1 ubicación.";
-    return `Se han creado ${creadas} ubicaciones.`;
+    if (creadas === 0) return tAlmacen("pasillo.noSeHaCreadoNingunaUbicacion");
+    if (creadas === 1) return tAlmacen("pasillo.seHaCreado1Ubicacion");
+    return tAlmacen("pasillo.seHanCreadoCreadasUbicaciones", { creadas });
 };
 
 export const pasilloVacio = (): Pasillo => ({

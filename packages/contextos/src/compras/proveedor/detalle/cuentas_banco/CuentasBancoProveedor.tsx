@@ -7,6 +7,7 @@ import { CrearCuentaBancoProveedor } from "../../crear_cuenta_banco/CrearCuentaB
 import { CuentaBancoProveedor, Proveedor } from "../../diseño.ts";
 import { EstadoDetalleProveedor } from "../diseño.ts";
 import { CuentasBancoLista } from "./CuentasBancoLista.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CuentasBancoProveedor = ({
     proveedor,
@@ -19,6 +20,7 @@ export const CuentasBancoProveedor = ({
     estado: EstadoDetalleProveedor;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const activa = cuentas.activo;
     const esCuentaPago = !!activa && activa.id === proveedor.cuentaPagoId;
 
@@ -26,30 +28,30 @@ export const CuentasBancoProveedor = ({
         <>
             <div className="botones maestro-botones">
                 <QBoton onClick={() => publicar("alta_cuenta_solicitada")}>
-                    Nueva cuenta
+                    {t("proveedor.cuentas.nueva")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("cambio_cuenta_solicitado")}
                     deshabilitado={!activa}
                 >
-                    Editar
+                    {t("comun.botones.editar")}
                 </QBoton>
                 <QBoton
                     onClick={() => publicar("baja_cuenta_solicitada")}
                     deshabilitado={!activa}
                 >
-                    Borrar
+                    {t("comun.botones.borrar")}
                 </QBoton>
                 {esCuentaPago ? (
                     <QBoton onClick={() => publicar("cuenta_pago_desasignada")}>
-                        Quitar cuenta de pago
+                        {t("proveedor.cuentas.quitarPago")}
                     </QBoton>
                 ) : (
                     <QBoton
                         onClick={() => publicar("cuenta_pago_solicitada")}
                         deshabilitado={!activa}
                     >
-                        Marcar como cuenta de pago
+                        {t("proveedor.cuentas.marcarPago")}
                     </QBoton>
                 )}
             </div>

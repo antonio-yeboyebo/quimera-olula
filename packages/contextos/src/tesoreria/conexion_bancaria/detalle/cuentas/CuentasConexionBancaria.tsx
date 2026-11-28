@@ -9,6 +9,7 @@ import { CuentaBancariaSelect } from "#/tesoreria/comun/componentes/cuenta_banca
 import { CuentaConexionBancaria } from "../../diseño.js";
 import { patchCuentaConexionBancaria } from "../../infraestructura.js";
 import "./CuentasConexionBancaria.css";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 /**
  * Cuentas expuestas por el proveedor bancario dentro de una conexión. No hay
@@ -26,6 +27,7 @@ export const CuentasConexionBancaria = ({
     cuentas: CuentaConexionBancaria[];
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
 
     const guardarCuenta = useCallback(
@@ -44,16 +46,16 @@ export const CuentasConexionBancaria = ({
     );
 
     const metaTablaCuentas: MetaTabla<CuentaConexionBancaria> = [
-        { id: "nombre", cabecera: "Cuenta en el banco" },
+        { id: "nombre", cabecera: t("conexion_bancaria.cuentaEnElBanco") },
         {
             id: "mascara",
-            cabecera: "Nº cuenta",
+            cabecera: t("conexion_bancaria.nCuenta"),
             render: (c) => (c.mascara ? `····${c.mascara}` : "-"),
         },
         { id: "iban", cabecera: "IBAN", render: (c) => c.iban ?? "-" },
         {
             id: "cuentaBancoId",
-            cabecera: "Cuenta bancaria de la empresa",
+            cabecera: t("conexion_bancaria.cuentaBancariaDeLaEmpresa"),
             render: (c) => (
                 <CuentaBancariaSelect
                     valor={c.cuentaBancoId ?? undefined}
@@ -65,7 +67,7 @@ export const CuentasConexionBancaria = ({
         },
         {
             id: "activa",
-            cabecera: "Sincronizar",
+            cabecera: t("conexion_bancaria.sincronizar"),
             render: (c) => (
                 <QCheckbox
                     nombre={`activa_${c.id}`}

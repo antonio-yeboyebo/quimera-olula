@@ -1,6 +1,13 @@
 import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { ModalTraza } from "#/comun/componentes/traza/ModalTraza.tsx";
 import { AsientoDeDocumento } from "#/contabilidad/asiento/vistas/detalle/AsientoDeDocumento.tsx";
+import { CobrosOnline } from "#/tesoreria/cobro_online/componentes/CobrosOnline.tsx";
+import { EnlacePagoTarjeta } from "#/tesoreria/cobro_online/componentes/EnlacePagoTarjeta.tsx";
+import { pasarelaPagoActiva } from "#/tesoreria/cobro_online/dominio.ts";
+import {
+  getCobrosOnlineFactura,
+  postEnlacePagoFactura,
+} from "#/tesoreria/cobro_online/infraestructura.ts";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -10,28 +17,21 @@ import { puede } from "@olula/lib/dominio.ts";
 import { imprimir_blob } from "@olula/lib/impresion.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useEffect, useState } from "react";
-import { CobrosOnline } from "#/tesoreria/cobro_online/componentes/CobrosOnline.tsx";
-import { EnlacePagoTarjeta } from "#/tesoreria/cobro_online/componentes/EnlacePagoTarjeta.tsx";
-import { pasarelaPagoActiva } from "#/tesoreria/cobro_online/dominio.ts";
-import {
-  getCobrosOnlineFactura,
-  postEnlacePagoFactura,
-} from "#/tesoreria/cobro_online/infraestructura.ts";
 import { useParams } from "react-router";
+import { IndicadorGuardado } from "../../comun/componentes/IndicadorGuardado.tsx";
 import { CambiarAgente } from "../../comun/componentes/moleculas/CambiarAgente/CambiarAgente.tsx";
 import { CambiarDescuento } from "../../comun/componentes/moleculas/CambiarDescuento/CambiarDescuento.tsx";
 import { CambiarDivisa } from "../../comun/componentes/moleculas/CambiarDivisa/CambiarDivisa.tsx";
-import { TotalesVenta } from "../../venta/vistas/TotalesVenta.tsx";
-import { BorrarFactura } from "../borrar/BorrarFactura.tsx";
-import { Factura } from "../diseño.ts";
-import { EmitirFactura } from "../emitir/EmitirFactura.tsx";
-import { etiquetaEstadoFactura, facturaEmitible } from "../dominio.ts";
-import { IndicadorGuardado } from "../../comun/componentes/IndicadorGuardado.tsx";
 import "../../comun/estilos/campos.css";
 import "../../comun/estilos/detalle_documento.css";
+import { useTVentas } from "../../i18n/index.ts";
 import { tituloDocumentoVenta } from "../../venta/dominio.ts";
+import { TotalesVenta } from "../../venta/vistas/TotalesVenta.tsx";
 import { useDatosClaveDocumentoVenta } from "../../venta/vistas/useDatosClaveDocumentoVenta.ts";
-import { facturaVacia } from "../dominio.ts";
+import { BorrarFactura } from "../borrar/BorrarFactura.tsx";
+import { Factura } from "../diseño.ts";
+import { etiquetaEstadoFactura, facturaEmitible, facturaVacia } from "../dominio.ts";
+import { EmitirFactura } from "../emitir/EmitirFactura.tsx";
 import { getReportFactura, getTrazaFactura } from "../infraestructura.ts";
 import "./DetalleFactura.css";
 import { editable, metaFactura } from "./diseño.ts";
@@ -49,6 +49,7 @@ export const DetalleFactura = ({
   id?: string;
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const params = useParams();
   const facturaId = id ?? params.id;
 
@@ -82,7 +83,7 @@ export const DetalleFactura = ({
   const { estado, lineaActiva } = ctx;
 
   const titulo = (factura: Factura) =>
-    tituloDocumentoVenta(factura, "Nueva Factura");
+    tituloDocumentoVenta(factura, t("factura.maestro.nueva"));
 
   const estadoFactura = (factura: Factura) => (
     <EtiquetaEstado {...etiquetaEstadoFactura(factura)} />
@@ -103,40 +104,40 @@ export const DetalleFactura = ({
   const cobrableConTarjeta = ctx.factura.estadoExpedicion !== "BORRADOR";
 
   const acciones = [
-    {
+    {      
       id: "emitir",
       icono: "enviar",
-      texto: "Emitir",
+      texto: t("factura.detalle.emitir"),
       onClick: () => emitir("emitir_solicitado"),
       deshabilitado: !facturaEmitible(ctx.factura),
     },
-    {
+    {      
       id: "imprimir",
       icono: "imprimir",
-      texto: "Imprimir",
+      texto: t("documento.detalle.imprimir"),
       onClick: imprimir,
     },
     ...(pasarelaHabilitada
       ? [
-          {
+          {            
             id: "enlace_tarjeta",
             icono: "tarjeta",
-            texto: "Enlace de pago con tarjeta",
+           texto: t("factura.detalle.enlacePago"),
             onClick: () => emitir("enlace_tarjeta_solicitado"),
             deshabilitado: !cobrableConTarjeta,
           },
         ]
       : []),
-    {
+    {      
       id: "documentos_relacionados",
       icono: "relacion",
-      texto: "Documentos relacionados",
+      texto: t("documento.detalle.documentosRelacionados"),
       onClick: () => emitir("traza_solicitada"),
     },
     {
       id: "borrar",
       icono: "eliminar",
-      texto: "Borrar",
+      texto: t("documento.detalle.borrar"),
       advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: !esEditable,
@@ -169,7 +170,7 @@ export const DetalleFactura = ({
       </div>
 
       <Tabs>
-        <Tab label="Líneas">
+        <Tab label={t("documento.detalle.pestanas.lineas")}>
           <Lineas
             factura={ctx.factura}
             lineaActiva={lineaActiva}
@@ -178,19 +179,19 @@ export const DetalleFactura = ({
           />
         </Tab>
 
-        <Tab label="Cliente">
+        <Tab label={t("documento.detalle.pestanas.cliente")}>
           <TabCliente factura={factura} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Datos">
+        <Tab label={t("documento.detalle.pestanas.datos")}>
           <TabDatos factura={factura} estado={estado} publicar={emitir} />
         </Tab>
 
-        <Tab label="Observaciones">
+        <Tab label={t("documento.detalle.pestanas.observaciones")}>
           <TabObservaciones factura={factura} />
         </Tab>
 
-        <Tab label="Recibos">
+        <Tab label={t("factura.detalle.recibos")}>
           <TabRecibos facturaId={ctx.factura.id} />
           {pasarelaHabilitada && (
             <CobrosOnline
@@ -202,7 +203,7 @@ export const DetalleFactura = ({
         </Tab>
 
         {puede("contabilidad.asiento") && (
-          <Tab label="Contabilidad">
+          <Tab label={t("factura.detalle.contabilidad")}>
             <AsientoDeDocumento asientoId={ctx.factura.asiento_id ?? null} sinDatosDocumento />
           </Tab>
         )}

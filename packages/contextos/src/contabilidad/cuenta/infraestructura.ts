@@ -10,6 +10,7 @@ import {
     PatchCuenta,
     PostCuenta,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 const baseUrl = new ApiUrls().CUENTA;
 
@@ -52,7 +53,7 @@ export const postCuenta: PostCuenta = async (nuevo) => {
     const respuesta = await RestAPI.post(
         baseUrl,
         nuevaCuentaAApi(nuevo),
-        "Error al crear cuenta",
+        tContabilidad("cuenta.errorAlCrearCuenta"),
     );
     return String(respuesta.id);
 };
@@ -67,10 +68,10 @@ export const patchCuenta: PatchCuenta = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         cambiosCuentaAApi(cambios),
-        "Error al guardar cuenta",
+        tContabilidad("cuenta.errorAlGuardarCuenta"),
     );
 };
 
 export const deleteCuenta: DeleteCuenta = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar cuenta");
+    await RestAPI.delete(`${baseUrl}/${id}`, tContabilidad("cuenta.errorAlBorrarCuenta"));
 };

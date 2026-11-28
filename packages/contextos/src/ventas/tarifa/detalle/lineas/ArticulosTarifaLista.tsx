@@ -3,6 +3,7 @@ import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiCon
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ArticuloTarifa } from "../../diseño.js";
+import { tVentas } from "../../../i18n/index.ts";
 
 export const ArticulosTarifaLista = ({
     articulos,
@@ -35,7 +36,7 @@ export const ArticulosTarifaLista = ({
 };
 
 const getMetaTablaArticulos = (divisa: string): MetaTabla<ArticuloTarifa> => [
-    { id: "articuloId", cabecera: "Referencia" },
-    { id: "descripcionArticulo", cabecera: "Descripción", esTitulo: true },
-    { id: "precio", cabecera: "Precio", tipo: "moneda", divisa: divisa || "EUR" },
+    { id: "articuloId", cabecera: tVentas("tarifa.articulos.referencia") },
+    { id: "descripcionArticulo", cabecera: tVentas("tarifa.articulos.descripcion"), esTitulo: true },
+    { id: "precio", cabecera: tVentas("tarifa.articulos.precio"), tipo: "moneda", divisa: divisa || "EUR" },
 ];

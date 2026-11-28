@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { Stock } from "../diseño.ts";
 import { postRegularizacionStock } from "../infraestructura.ts";
 import { metaNuevaRegularizacionStock, nuevaRegularizacionInicial } from "./regularizar.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 /**
  * Modal de regularización del stock (fija la cantidad a una fecha y hora).
@@ -21,6 +22,7 @@ export const RegularizarStock = ({
     stock: Stock;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const inicial = useMemo(
         () => nuevaRegularizacionInicial(stock.cantidadFisica),
         [stock.cantidadFisica]
@@ -46,21 +48,21 @@ export const RegularizarStock = ({
         <QModal
             abierto={true}
             nombre="regularizarStock"
-            titulo={`Regularizar ${stock.articuloId} en ${stock.almacenId}`}
+            titulo={t("stock.regularizarArticuloidEnAlmacenid", { articuloId: stock.articuloId, almacenId: stock.almacenId })}
             onCerrar={cancelar}
         >
             <div className="RegularizarStock">
                 <quimera-formulario>
-                    <QInput label="Cantidad actual" nombre="cantidadActual" valor={String(stock.cantidadFisica)} soloLectura tipo="numero" />
-                    <QInput label="Cantidad nueva" {...uiProps("cantidad")} ref={focus} />
-                    <QInput label="Fecha" {...uiProps("fecha")} />
-                    <QInput label="Hora" {...uiProps("hora")} />
-                    <QInput label="Motivo" {...uiProps("motivo")} />
+                    <QInput label={t("stock.cantidadActual")} nombre="cantidadActual" valor={String(stock.cantidadFisica)} soloLectura tipo="numero" />
+                    <QInput label={t("stock.cantidadNueva")} {...uiProps("cantidad")} ref={focus} />
+                    <QInput label={t("stock.fecha")} {...uiProps("fecha")} />
+                    <QInput label={t("stock.hora")} {...uiProps("hora")} />
+                    <QInput label={t("stock.motivo")} {...uiProps("motivo")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={regularizar} deshabilitado={!valido}>
-                        Regularizar
+                        {t("stock.regularizar")}
                     </QBoton>
                 </div>
             </div>

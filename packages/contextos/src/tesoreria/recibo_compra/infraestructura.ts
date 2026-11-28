@@ -12,6 +12,7 @@ import {
     ReciboCompra,
 } from "./diseño.js";
 import { getTraza } from "#/comun/componentes/traza/infraestructura.ts";
+import { tTesoreria } from "../i18n/index.ts";
 
 export interface ReciboCompraApi {
     cuenta_domiciliacion_id?: string | null;
@@ -67,7 +68,7 @@ export const getReciboCompra: GetReciboCompra = async (id) => {
     return await RestAPI.getItem<ReciboCompra, ReciboCompraApi>(
         `${baseUrl}/${id}`,
         reciboCompraDesdeApi,
-        "Error al obtener el recibo de pago"
+        tTesoreria("recibo_compra.errorAlObtenerElReciboDe")
     );
 };
 
@@ -76,7 +77,7 @@ export const getRecibosCompra: GetRecibosCompra = async (criteria) => {
         baseUrl,
         criteria,
         reciboCompraDesdeApi,
-        "Error al obtener los recibos de pago"
+        tTesoreria("recibo_compra.errorAlObtenerLosRecibosDe")
     );
 };
 
@@ -100,7 +101,7 @@ export const postOrdenarPagoReciboCompra = async (
     return await RestAPI.query(
         `${baseUrl}/${id}/ordenar_pago`,
         { cuenta_banco_id: cuentaBancoId },
-        "Error al ordenar el pago al proveedor"
+        tTesoreria("recibo_compra.errorAlOrdenarElPagoAl")
     );
 };
 
@@ -117,7 +118,7 @@ export const patchPagarReciboCompra: PatchPagarReciboCompra = async (id, pago) =
     await RestAPI.patch(
         `${baseUrl}/${id}/pagar`,
         movimientoApi(pago),
-        "Error al pagar el recibo de pago"
+        tTesoreria("recibo_compra.errorAlPagarElReciboDe")
     );
 };
 
@@ -125,7 +126,7 @@ export const patchDevolverReciboCompra: PatchDevolverReciboCompra = async (id, d
     await RestAPI.patch(
         `${baseUrl}/${id}/devolver`,
         movimientoApi(devolucion),
-        "Error al devolver el recibo de pago"
+        tTesoreria("recibo_compra.errorAlDevolverElReciboDe")
     );
 };
 
@@ -134,7 +135,7 @@ export const patchAnularPagoReciboCompra: PatchAnularPagoReciboCompra = async (i
     await RestAPI.patch(
         `${baseUrl}/${id}/anular_pago`,
         {},
-        "Error al anular el último pago del recibo"
+        tTesoreria("recibo_compra.errorAlAnularElUltimoPago")
     );
 };
 
@@ -150,6 +151,6 @@ export const patchCambiarReciboCompra = async (
             cuenta_domiciliacion_id: cambios.cuentaDomiciliacionId,
             ...(cambios.importe !== undefined && { importe: String(cambios.importe) }),
         },
-        "Error al guardar el recibo"
+        tTesoreria("recibo_compra.errorAlGuardarElRecibo")
     );
 };

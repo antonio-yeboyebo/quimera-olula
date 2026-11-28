@@ -11,6 +11,7 @@ import { Albaran, LineaAlbaran } from "../diseño.ts";
 import { lineaDePedido, metaLineaAlbaran, modeloLineaAlbaran } from "../dominio.ts";
 import { patchLineaAlbaran } from "../infraestructura.ts";
 import "./CambiarLineaAlbaran.css";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CambiarLineaAlbaran = ({
     albaran,
@@ -21,6 +22,7 @@ export const CambiarLineaAlbaran = ({
     linea: LineaAlbaran;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const inicial = useMemo(() => modeloLineaAlbaran(linea), [linea]);
     const { modelo, uiProps, valido, set } = useModelo(metaLineaAlbaran, inicial);
 
@@ -42,14 +44,13 @@ export const CambiarLineaAlbaran = ({
         <QModal
             abierto={true}
             nombre="cambiarLineaAlbaranCompra"
-            titulo="Cambiar línea"
+            titulo={t("comun.lineas.cambiar")}
             onCerrar={cancelar}
         >
             <div className="CambiarLineaAlbaran">
                 {lineaDePedido(linea) && (
                     <p className="aviso-linea-pedido">
-                        Esta línea viene de un pedido: cambiar la cantidad reajusta lo
-                        recibido de ese pedido.
+                        {t("albaran.detalle.avisoLineaPedido")}
                     </p>
                 )}
                 <quimera-formulario>
@@ -62,8 +63,8 @@ export const CambiarLineaAlbaran = ({
                         onChange={(cambios) => set({ ...modelo, ...cambios })}
                         bloqueado={lineaDePedido(linea)}
                     />
-                    <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    <QInput label={t("comun.lineas.cantidad")} {...uiProps("cantidad")} />
+                    <QInput label={t("comun.lineas.costeUnitario")} {...uiProps("pvpUnitario")} />
 
                     <div className="mostrar-mas-fila">
                         <button
@@ -71,23 +72,23 @@ export const CambiarLineaAlbaran = ({
                             className="mostrar-mas-btn"
                             onClick={() => setMostrarMas((v) => !v)}
                         >
-                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                            {mostrarMas ? t("comun.lineas.menosOpciones") : t("comun.lineas.masOpciones")}
                         </button>
                     </div>
 
                     {mostrarMas && (
                         <>
-                            <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
-                            <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+                            <QInput label={t("comun.lineas.pctDescuento")} {...uiProps("dtoPorcentual")} />
+                            <QInput label={t("comun.lineas.descuentoLineal")} {...uiProps("dtoLineal")} />
                             <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
-                            <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
-                            <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
+                            <QInput label={t("comun.lineas.pctIva")} {...uiProps("tipoIva")} soloLectura />
+                            <QInput label={t("comun.lineas.pctIrpf")} {...uiProps("tipoIrpf")} />
                         </>
                     )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={cambiar} deshabilitado={!valido}>
-                        Cambiar
+                        {t("comun.botones.cambiar")}
                     </QBoton>
                 </div>
             </div>

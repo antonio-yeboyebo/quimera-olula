@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ComponenteDashboard, RespuestaAgregado } from "./diseño.ts";
 import { problemaComponente, sinDatos } from "./dominio.ts";
 import { getAgregado } from "./infraestructura.ts";
+import { useTComun } from "../i18n/index.ts";
 
 type DatosComponente = {
   respuestas: RespuestaAgregado[];
@@ -18,6 +19,7 @@ export const useDatosComponente = (
   componente: ComponenteDashboard,
   espera = 0
 ): DatosComponente => {
+  const t = useTComun();
   const [datos, setDatos] = useState<DatosComponente>({
     respuestas: [],
     cargando: !sinDatos(componente.tipo),
@@ -44,7 +46,7 @@ export const useDatosComponente = (
           setDatos({
             respuestas: [],
             cargando: false,
-            error: e instanceof Error ? e.message : "No se han podido cargar los datos",
+            error: e instanceof Error ? e.message : t("dashboard.noSeHanPodidoCargarLos"),
           });
         });
     }, espera);

@@ -2,6 +2,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { formatearFechaDate } from "@olula/lib/dominio.ts";
 import { Asiento } from "../../diseño.ts";
 import "./CabeceraAsiento.css";
+import { tContabilidad } from "../../../i18n/index.ts";
 
 /** Cabecera del asiento. `sinDatosDocumento` quita tipo de documento,
  * documento y concepto: en la pestaña Contabilidad de una factura sobran,
@@ -15,35 +16,35 @@ export const CabeceraAsiento = ({
 }) => (
     <div className="CabeceraAsiento">
         <quimera-formulario>
-            <QInput label="Ejercicio" nombre="ejercicio" valor={asiento.ejercicioId} soloLectura />
-            <QInput label="Número" nombre="numero" valor={String(asiento.numero)} soloLectura />
+            <QInput label={tContabilidad("asiento.ejercicio")} nombre="ejercicio" valor={asiento.ejercicioId} soloLectura />
+            <QInput label={tContabilidad("asiento.numero")} nombre="numero" valor={String(asiento.numero)} soloLectura />
             <QInput
-                label="Fecha"
+                label={tContabilidad("asiento.fecha")}
                 nombre="fecha"
                 valor={formatearFechaDate(asiento.fecha)}
                 soloLectura
             />
             <QInput
-                label="Origen"
+                label={tContabilidad("asiento.origen")}
                 nombre="manual"
-                valor={asiento.manual ? "Manual" : "Automático"}
+                valor={asiento.manual ? tContabilidad("asiento.manual") : tContabilidad("asiento.automatico")}
                 soloLectura
             />
             {!sinDatosDocumento && (
                 <>
                     <QInput
-                        label="Tipo de documento"
+                        label={tContabilidad("asiento.tipoDeDocumento")}
                         nombre="tipoDocumento"
                         valor={asiento.tipoDocumento}
                         soloLectura
                     />
                     <QInput
-                        label="Documento"
+                        label={tContabilidad("asiento.documento")}
                         nombre="documento"
                         valor={asiento.documento}
                         soloLectura
                     />
-                    <QInput label="Concepto" nombre="concepto" valor={asiento.concepto} soloLectura />
+                    <QInput label={tContabilidad("asiento.concepto")} nombre="concepto" valor={asiento.concepto} soloLectura />
                 </>
             )}
         </quimera-formulario>

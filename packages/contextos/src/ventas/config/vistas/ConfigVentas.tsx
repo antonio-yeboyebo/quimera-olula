@@ -6,12 +6,14 @@ import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { SiNoPreguntar } from "../diseño.ts";
 import { correoCopiasValido, opcionesSiNoPreguntar } from "../dominio.ts";
 import { getConfigVentas, patchConfigVentas } from "../infraestructura.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 /**
  * Configuración de ventas: las opciones de ventas de los datos generales de
  * facturación del escritorio (`facturac_general`).
  */
 export const ConfigVentas = () => {
+    const t = useTVentas();
     const { config, cambiar, cambiada, guardando, guardar } = useConfig(getConfigVentas, patchConfigVentas);
 
     if (!config) return null;
@@ -20,32 +22,32 @@ export const ConfigVentas = () => {
 
     return (
         <PantallaConfig
-            titulo="Configuración de ventas"
-            descripcion="Datos generales de facturación que afectan a las ventas."
+            titulo={t("config.titulo")}
+            descripcion={t("config.subtitulo")}
             onGuardar={guardar}
             cambiada={cambiada && correoValido}
             guardando={guardando}
         >
             <section className="grupo-config">
-                <h3>Documentos de facturación</h3>
+                <h3>{t("config.documentos")}</h3>
                 <QCheckbox
-                    label="Mostrar observaciones del cliente en documentos de facturación"
+                    label={t("config.mostrarObservaciones")}
                     nombre="mostrar_observaciones_cliente"
                     valor={config.mostrarObservacionesCliente}
                     onChange={(valor) => cambiar("mostrarObservacionesCliente", valor === "true")}
                 />
                 <QSelect
-                    label="Facturar albaranes como borrador"
+                    label={t("config.facturarAlbaranesBorrador")}
                     nombre="facturar_albaranes_borrador"
-                    opciones={opcionesSiNoPreguntar}
+                    opciones={opcionesSiNoPreguntar()}
                     valor={config.facturarAlbaranesBorrador}
                     onChange={(opcion) =>
                         opcion && cambiar("facturarAlbaranesBorrador", opcion.valor as SiNoPreguntar)}
                 />
                 <QSelect
-                    label="Crear facturas como borrador"
+                    label={t("config.crearFacturasBorrador")}
                     nombre="crear_facturas_borrador"
-                    opciones={opcionesSiNoPreguntar}
+                    opciones={opcionesSiNoPreguntar()}
                     valor={config.crearFacturasBorrador}
                     onChange={(opcion) =>
                         opcion && cambiar("crearFacturasBorrador", opcion.valor as SiNoPreguntar)}
@@ -54,15 +56,15 @@ export const ConfigVentas = () => {
             {/* Sin la columna `correocopias` en la BD (p. ej. almafiber) no hay copia de correos. */}
             {!config.noDisponibles?.includes("correo_copias") && (
             <section className="grupo-config">
-                <h3>Correo</h3>
+                <h3>{t("config.correo")}</h3>
                 <QInput
-                    label="Dirección para la copia de correos"
+                    label={t("config.correoCopias")}
                     nombre="correo_copias"
                     tipo="email"
                     opcional
                     valor={config.correoCopias}
                     erroneo={!correoValido}
-                    textoValidacion={correoValido ? "" : "No parece una dirección de correo"}
+                    textoValidacion={correoValido ? "" : t("config.correoNoValido")}
                     onChange={(valor) => cambiar("correoCopias", valor)}
                 />
             </section>

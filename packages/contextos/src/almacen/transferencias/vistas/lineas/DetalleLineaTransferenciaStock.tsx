@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { LineaTransferenciaStock } from "../../diseño.ts";
 import { metaLineaTransferenciaStock } from "../../dominio.ts";
 import { actualizarLineaTransferenciaStock } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const DetalleLineaTransferenciaStock = ({
   lineaInicial,
@@ -17,6 +18,7 @@ export const DetalleLineaTransferenciaStock = ({
   emitir: (evento: string, payload: unknown) => void;
   transferenciaID: string;
 }) => {
+  const t = useTAlmacen();
   const { modelo, uiProps, valido } = useModelo(
     metaLineaTransferenciaStock,
     lineaInicial
@@ -33,15 +35,15 @@ export const DetalleLineaTransferenciaStock = ({
 
   return (
     <div className="DetalleLineaTransferenciaStock">
-      <h2>Edición de línea</h2>
+      <h2>{t("transferencias.edicionDeLinea")}</h2>
 
       <quimera-formulario>
         <Articulo {...uiProps("sku", "descripcion_producto")} />
-        <QInput label="Cantidad" {...uiProps("cantidad")} />
+        <QInput label={t("transferencias.cantidad")} {...uiProps("cantidad")} />
       </quimera-formulario>
       <div className="botones maestro-botones ">
         <QBoton onClick={guardar} deshabilitado={!valido}>
-          Guardar
+          {t("transferencias.guardar")}
         </QBoton>
       </div>
     </div>

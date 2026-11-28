@@ -11,8 +11,10 @@ import { useCallback } from "react";
 import { getIncidencia, postIncidencia } from "../infraestructura.ts";
 import "./CrearIncidencia.css";
 import { metaNuevaIncidencia, nuevaIncidenciaVacia } from "./crear.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearIncidencia = ({ publicar }: { publicar: EmitirEvento }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido } = useModelo(
     metaNuevaIncidencia,
     nuevaIncidenciaVacia
@@ -34,19 +36,19 @@ export const CrearIncidencia = ({ publicar }: { publicar: EmitirEvento }) => {
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nueva Incidencia"
+      titulo={t("incidencia.nuevaIncidencia")}
       onCerrar={cancelar}
     >
       <div className="CrearIncidencia">
         <quimera-formulario>
-          <QInput label="Descripción" {...uiProps("descripcion")} />
-          <QInput label="Nombre" {...uiProps("nombre")} />
-          <QDate label="Fecha" {...uiProps("fecha")} />
+          <QInput label={t("incidencia.descripcion")} {...uiProps("descripcion")} />
+          <QInput label={t("incidencia.nombre")} {...uiProps("nombre")} />
+          <QDate label={t("incidencia.fecha")} {...uiProps("fecha")} />
           <PrioridadIncidencia {...uiProps("prioridad")} />
           <EstadoIncidencia {...uiProps("estado")} />
           <TipoIncidencia {...uiProps("tipo_incidencia")} />
           <QTextArea
-            label="Descripción larga"
+            label={t("incidencia.descripcionLarga")}
             rows={5}
             {...uiProps("descripcion_larga")}
           />
@@ -54,10 +56,10 @@ export const CrearIncidencia = ({ publicar }: { publicar: EmitirEvento }) => {
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("incidencia.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("incidencia.cancelar")}
           </QBoton>
         </div>
       </div>

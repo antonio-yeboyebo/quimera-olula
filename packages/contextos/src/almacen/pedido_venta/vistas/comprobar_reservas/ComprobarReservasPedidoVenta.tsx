@@ -7,12 +7,14 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback } from "react";
 import { comprobarReservas } from "../../infraestructura.ts";
 import { comprobarReservasVacio, metaComprobarReservas } from "./comprobar_reservas.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const ComprobarReservasPedidoVenta = ({
     publicar,
 }: {
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaComprobarReservas, comprobarReservasVacio);
 
     const comprobar_ = useCallback(async () => {
@@ -29,16 +31,16 @@ export const ComprobarReservasPedidoVenta = ({
         <QModal
             abierto={true}
             nombre="comprobarReservasPedidoVenta"
-            titulo="Comprobar disponibilidad"
+            titulo={t("pedido_venta.comprobarDisponibilidad")}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <Zona label="Zona de almacén" {...uiProps("zonaId")} />
+                <Zona label={t("pedido_venta.zonaDeAlmacen")} {...uiProps("zonaId")} />
             </quimera-formulario>
 
             <div className="botones maestro-botones">
                 <QBoton onClick={comprobar} deshabilitado={!valido}>
-                    Comprobar
+                    {t("pedido_venta.comprobar")}
                 </QBoton>
             </div>
         </QModal>

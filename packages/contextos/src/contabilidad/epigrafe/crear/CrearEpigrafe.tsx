@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { GrupoEpigrafeSelector } from "#/contabilidad/comun/componentes/GrupoEpigrafeSelector.tsx";
 import { postEpigrafe } from "../infraestructura.ts";
 import { metaNuevoEpigrafe, nuevoEpigrafeInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearEpigrafe = ({
     publicar,
@@ -17,6 +18,7 @@ export const CrearEpigrafe = ({
     publicar: EmitirEvento;
     ejercicioId: string;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevoEpigrafeInicial(ejercicioId),
         [ejercicioId]
@@ -43,19 +45,19 @@ export const CrearEpigrafe = ({
         <QModal
             abierto={true}
             nombre="crearEpigrafe"
-            titulo="Nuevo subgrupo"
+            titulo={t("epigrafe.nuevoSubgrupo")}
             onCerrar={cancelar}
         >
             <div className="CrearEpigrafe">
                 <quimera-formulario>
                     <QInput
-                        label="Ejercicio"
+                        label={t("epigrafe.ejercicio")}
                         nombre="ejercicioId"
                         valor={epigrafe.ejercicioId}
                         soloLectura
                     />
-                    <QInput label="Código" {...uiProps("codigo")} ref={focus} />
-                    <QInput label="Descripción" {...uiProps("descripcion")} />
+                    <QInput label={t("epigrafe.codigo")} {...uiProps("codigo")} ref={focus} />
+                    <QInput label={t("epigrafe.descripcion")} {...uiProps("descripcion")} />
                     <GrupoEpigrafeSelector
                         ejercicioId={ejercicioId}
                         {...uiProps("grupoId")}
@@ -70,7 +72,7 @@ export const CrearEpigrafe = ({
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("epigrafe.crear")}
                     </QBoton>
                 </div>
             </div>

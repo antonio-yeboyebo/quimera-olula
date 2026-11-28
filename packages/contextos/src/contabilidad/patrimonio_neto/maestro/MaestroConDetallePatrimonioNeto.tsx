@@ -15,11 +15,13 @@ import {
     metaTablaPatrimonioNeto,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /** Informes de estado de cambios en el patrimonio neto guardados: cada ficha
  * son los ejercicios a comparar. Se comparten con el ERP de escritorio, que
  * usa la misma tabla (`co_i_patrimonio`). */
 export const MaestroConDetallePatrimonioNeto = () => {
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaPatrimonioNetoDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -41,7 +43,7 @@ export const MaestroConDetallePatrimonioNeto = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver el estado del patrimonio neto.</p>;
+        return <p>{t("patrimonio_neto.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (
@@ -64,7 +66,7 @@ export const MaestroConDetallePatrimonioNeto = () => {
                                         emitir("crear_informe_solicitado")
                                     }
                                 >
-                                    Nuevo informe
+                                    {t("patrimonio_neto.nuevoInforme")}
                                 </QBoton>
                             </div>
                         )}

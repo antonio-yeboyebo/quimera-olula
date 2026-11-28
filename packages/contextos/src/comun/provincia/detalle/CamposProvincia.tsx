@@ -1,6 +1,7 @@
 import { PaisSelector } from "#/comun/componentes/pais/pais.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { FormModelo } from "@olula/lib/dominio.js";
+import { tComun } from "../../i18n/index.ts";
 
 type UiProps = FormModelo["uiProps"];
 
@@ -13,8 +14,8 @@ export const CamposProvincia = ({
     nombrePais?: string;
 }) => (
     <>
-        <QInput label="Provincia" {...uiProps("nombre")} />
-        <QInput label="Código" {...uiProps("codigo")} />
-        <PaisSelector label="País" descripcion={nombrePais} {...uiProps("paisId")} />
+        <QInput label={tComun("provincia.provincia")} {...uiProps("nombre")} />
+        <QInput label={tComun("provincia.codigo")} {...uiProps("codigo")} />
+        <PaisSelector label={tComun("provincia.pais")} descripcion={nombrePais} {...uiProps("paisId")} />
     </>
 );

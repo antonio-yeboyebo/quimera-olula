@@ -1,5 +1,6 @@
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../diseño.ts";
 import { DefinicionPasos, FaseLectura } from "./diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 type Def = Omit<DefinicionPasos, "codigo" | "fase" | "directo" | "serie" | "palet"> &
     Partial<Pick<DefinicionPasos, "directo" | "serie" | "palet">>;
@@ -14,76 +15,76 @@ const crear = (fase: FaseLectura, defs: Record<string, Def>): Record<string, Def
 
 export const CATALOGO_DROP: Record<string, DefinicionPasos> = crear("DROP", {
     "SKU-CANTIDAD": {
-        nombre: "SKU → Cantidad → Ubicación o caja",
-        instruccion: "lee el SKU, la cantidad y la ubicación o caja de destino",
+        get nombre() { return tAlmacen("orden.skuCantidadUbicacionOCaja"); },
+        get instruccion() { return tAlmacen("orden.leeElSkuLaCantidadY"); },
         origen: null, que: "SKU_O_LOTE", cantidad: "LEER", destino: "UBI_O_CAJA", manejoCaja: null,
     },
     "LOTE-CANTIDAD": {
-        nombre: "Lote → Cantidad → Ubicación o caja",
-        instruccion: "lee el lote, la cantidad y la ubicación o caja de destino",
+        get nombre() { return tAlmacen("orden.loteCantidadUbicacionOCaja"); },
+        get instruccion() { return tAlmacen("orden.leeElLoteLaCantidadY"); },
         origen: null, que: "LOTE", cantidad: "LEER", destino: "UBI_O_CAJA", manejoCaja: null,
     },
     "SKU_LOTE-CANTIDAD": {
-        nombre: "SKU/Lote → Cantidad",
-        instruccion: "lee el SKU, lote y cantidad",
+        get nombre() { return tAlmacen("orden.skuLoteCantidad"); },
+        get instruccion() { return tAlmacen("orden.leeElSkuLoteYCantidad"); },
         origen: null, que: "SKU_O_LOTE", cantidad: "LEER", destino: "LINEA", manejoCaja: null,
     },
     "CAJAS": {
-        nombre: "Leer cajas",
-        instruccion: "lee la caja",
+        get nombre() { return tAlmacen("orden.leerCajas"); },
+        get instruccion() { return tAlmacen("orden.leeLaCaja"); },
         origen: null, que: "LINEA", cantidad: "CAPACIDAD_CAJA_DESTINO", destino: "CAJA", manejoCaja: null,
         palet: true,
     },
     "PALET": {
-        nombre: "Leer palés",
-        instruccion: "lee el palet",
+        get nombre() { return tAlmacen("orden.leerPales"); },
+        get instruccion() { return tAlmacen("orden.leeElPalet"); },
         origen: null, que: "CAJA", cantidad: "CONTENIDO_CAJA", destino: "LINEA", manejoCaja: "COMPLETA",
         palet: true,
     },
     "CAJAS-UBICACION": {
-        nombre: "Caja → Ubicación",
-        instruccion: "lee la caja y la ubicación de destino",
+        get nombre() { return tAlmacen("orden.cajaUbicacion"); },
+        get instruccion() { return tAlmacen("orden.leeLaCajaYLaUbicacion"); },
         origen: null, que: "CAJA", cantidad: "CONTENIDO_CAJA", destino: "UBI", manejoCaja: "COMPLETA",
         serie: "QUE", palet: true,
     },
     "SKU-UBICACION": {
-        nombre: "SKU → Cantidad → Ubicación",
-        instruccion: "lee el SKU, la cantidad y la ubicación de destino",
+        get nombre() { return tAlmacen("orden.skuCantidadUbicacion"); },
+        get instruccion() { return tAlmacen("orden.leeElSkuLaCantidadY2"); },
         origen: null, que: "SKU_O_LOTE", cantidad: "LEER", destino: "UBI", manejoCaja: null,
     },
 });
 
 export const CATALOGO_PICK: Record<string, DefinicionPasos> = crear("PICK", {
     "SKU_CAJA": {
-        nombre: "Caja o SKU suelto",
-        instruccion: "lee la caja o el SKU suelto",
+        get nombre() { return tAlmacen("orden.cajaOSkuSuelto"); },
+        get instruccion() { return tAlmacen("orden.leeLaCajaOElSku"); },
         origen: "UBI_O_CAJA", que: "SKU", cantidad: "PENDIENTE", destino: "NINGUNO", manejoCaja: "EXTRAER",
     },
     "LOTE_CAJA": {
-        nombre: "Caja o lote suelto",
-        instruccion: "lee la caja o el lote suelto",
+        get nombre() { return tAlmacen("orden.cajaOLoteSuelto"); },
+        get instruccion() { return tAlmacen("orden.leeLaCajaOElLote"); },
         origen: "UBI_O_CAJA", que: "LOTE", cantidad: "PENDIENTE", destino: "NINGUNO", manejoCaja: "EXTRAER",
     },
     "LOTE-CAJAS": {
-        nombre: "Palé c/lotes → cajas etiqueta",
-        instruccion: "lee el lote de la subcaja y la nueva caja",
+        get nombre() { return tAlmacen("orden.paleCLotesCajasEtiqueta"); },
+        get instruccion() { return tAlmacen("orden.leeElLoteDeLaSubcaja"); },
         origen: "LINEA", que: "LOTE", cantidad: "CAPACIDAD_SUBCAJA", destino: "CAJA_ETIQUETA", manejoCaja: "EXTRAER",
         serie: "DESTINO",
     },
     "CAJA-CAJAS": {
-        nombre: "Palé s/lotes → cajas etiqueta",
-        instruccion: "lee el palé y las nuevas cajas",
+        get nombre() { return tAlmacen("orden.paleSLotesCajasEtiqueta"); },
+        get instruccion() { return tAlmacen("orden.leeElPaleYLasNuevas"); },
         origen: "CAJA", que: "CAJA", cantidad: "CAPACIDAD_SUBCAJA", destino: "CAJA_ETIQUETA", manejoCaja: "EXTRAER",
         serie: "DESTINO",
     },
     "CAJAS": {
-        nombre: "Recoger cajas completas",
-        instruccion: "lee la caja",
+        get nombre() { return tAlmacen("orden.recogerCajasCompletas"); },
+        get instruccion() { return tAlmacen("orden.leeLaCaja"); },
         origen: "CAJA", que: "CAJA", cantidad: "CONTENIDO_CAJA", destino: "NINGUNO", manejoCaja: "COMPLETA",
     },
     "CAJA-CANTIDAD": {
-        nombre: "Caja → Cantidad (directo)",
-        instruccion: "lee la caja y la cantidad",
+        get nombre() { return tAlmacen("orden.cajaCantidadDirecto"); },
+        get instruccion() { return tAlmacen("orden.leeLaCajaYLaCantidad"); },
         origen: "CAJA", que: "CAJA", cantidad: "LEER", destino: "LINEA", manejoCaja: "EXTRAER",
         directo: true,
     },

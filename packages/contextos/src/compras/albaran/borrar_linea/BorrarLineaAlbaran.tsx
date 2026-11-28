@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { Albaran, LineaAlbaran } from "../diseño.ts";
 import { etiquetaLinea, lineaDePedido } from "../dominio.ts";
 import { borrarLineasAlbaran } from "../infraestructura.ts";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const BorrarLineaAlbaran = ({
     albaran,
@@ -15,6 +16,7 @@ export const BorrarLineaAlbaran = ({
     linea: LineaAlbaran;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const borrar_ = useCallback(async () => {
         await borrarLineasAlbaran(albaran.id, [linea.id]);
         publicar("linea_borrada", linea.id);
@@ -28,15 +30,15 @@ export const BorrarLineaAlbaran = ({
     const [borrar, cancelar] = useForm(borrar_, cancelar_);
 
     const aviso = lineaDePedido(linea)
-        ? " Se reajustará lo recibido del pedido de origen."
+        ? t("albaran.borrar.avisoLineaPedido")
         : "";
 
     return (
         <QModalConfirmacion
             nombre="borrarLineaAlbaranCompra"
             abierto={true}
-            titulo="Borrar línea"
-            mensaje={`¿Está seguro de que desea borrar la línea "${etiquetaLinea(linea)}"?${aviso}`}
+            titulo={t("comun.lineas.borrar")}
+            mensaje={`${t("comun.lineas.borrarMensaje", { linea: etiquetaLinea(linea) })}${aviso}`}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

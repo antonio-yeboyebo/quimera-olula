@@ -1,3 +1,4 @@
+import { tCompras } from "#/compras/i18n/index.ts";
 import { empresaActual } from "#/valores/empresaActual.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import {
@@ -358,7 +359,7 @@ export const getFactura: GetFactura = async (id) =>
     await RestAPI.getItem<Factura, FacturaApi>(
         `${baseUrl}/${id}`,
         facturaDesdeApi,
-        "Error al obtener la factura"
+        tCompras("factura.errores.obtener")
     );
 
 export const getFacturas: GetFacturas = async (criteria) =>
@@ -366,14 +367,14 @@ export const getFacturas: GetFacturas = async (criteria) =>
         baseUrl,
         criteria,
         facturaDesdeApi,
-        "Error al obtener las facturas"
+        tCompras("factura.errores.obtenerLista")
     );
 
 export const postFactura: PostFactura = async (nuevaFactura) => {
     const respuesta = await RestAPI.post<NuevaFacturaApi>(
         baseUrl,
         nuevaFacturaAApi(nuevaFactura),
-        "Error al crear la factura"
+        tCompras("factura.errores.crear")
     );
     return respuesta.id;
 };
@@ -382,7 +383,7 @@ export const facturarAlbaranes: FacturarAlbaranes = async (albaranIds) => {
     const respuesta = await RestAPI.post(
         `${baseUrl}/desde-albaranes`,
         { albaran_ids: albaranIds },
-        "Error al facturar los albaranes"
+        tCompras("factura.errores.facturarAlbaranes")
     );
     const { factura_id, codigo } = respuesta as unknown as {
         factura_id: string;
@@ -395,7 +396,7 @@ export const patchFactura: PatchFactura = async (id, cambios) => {
     await RestAPI.patch(
         `${baseUrl}/${id}`,
         { cambios: cambiosFacturaAApi(cambios) },
-        "Error al guardar la factura"
+        tCompras("factura.errores.guardar")
     );
 };
 
@@ -403,7 +404,7 @@ export const patchRectificativa: PatchRectificativa = async (id, rectificativaId
     await RestAPI.patch(
         `${baseUrl}/${id}/rectificativa`,
         { rectificativa_id: rectificativaId },
-        "Error al marcar la factura rectificativa"
+        tCompras("factura.errores.rectificativa")
     );
 };
 
@@ -411,36 +412,36 @@ export const patchRegistrarFactura: PatchRegistrarFactura = async (id) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/registrar`,
         {},
-        "Error al registrar la factura"
+        tCompras("factura.errores.registrar")
     );
 };
 
 export const deleteFactura: DeleteFactura = async (id) => {
-    await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la factura");
+    await RestAPI.delete(`${baseUrl}/${id}`, tCompras("factura.errores.borrar"));
 };
 
 export const getReportFactura: GetReportFactura = async (id) =>
-    await RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report de la factura");
+    await RestAPI.blob(`${baseUrl}/${id}/report`, tCompras("factura.errores.report"));
 
 export const getLineasFactura: GetLineasFactura = async (id) =>
     await RestAPI.getLista<LineaFactura, LineaFacturaApi>(
         `${baseUrl}/${id}/linea`,
         lineaFacturaDesdeApi,
-        "Error al obtener las líneas de la factura"
+        tCompras("factura.errores.obtenerLineas")
     );
 
 export const getLineaFactura: GetLineaFactura = async (id, lineaId) =>
     await RestAPI.getItem<LineaFactura, LineaFacturaApi>(
         `${baseUrl}/${id}/linea/${lineaId}`,
         lineaFacturaDesdeApi,
-        "Error al obtener la línea"
+        tCompras("factura.errores.obtenerLinea")
     );
 
 export const postLineasFactura: PostLineasFactura = async (id, lineas) => {
     const respuesta = await RestAPI.post<{ lineas: NuevaLineaFacturaApi[] }>(
         `${baseUrl}/${id}/linea`,
         { lineas: lineas.map(nuevaLineaAApi) },
-        "Error al crear las líneas de la factura"
+        tCompras("factura.errores.crearLineas")
     );
     const { lineas: ids } = respuesta as unknown as { lineas: string[] };
     return ids;
@@ -461,7 +462,7 @@ export const queryNuevaLineaFactura: QueryNuevaLineaFactura = async (id, linea) 
     >(
         `${baseUrl}/${id}/nueva_linea`,
         queryNuevaLineaAApi(linea),
-        "Error al calcular la nueva línea de la factura"
+        tCompras("factura.errores.nuevaLinea")
     );
     return queryNuevaLineaDesdeApi(linea, respuesta);
 };
@@ -470,7 +471,7 @@ export const patchLineaFactura: PatchLineaFactura = async (id, lineaId, cambios)
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/${lineaId}`,
         { cambios: cambiosLineaAApi(cambios) },
-        "Error al actualizar la línea"
+        tCompras("factura.errores.actualizarLinea")
     );
 };
 
@@ -478,7 +479,7 @@ export const borrarLineasFactura: BorrarLineasFactura = async (id, lineas) => {
     await RestAPI.patch(
         `${baseUrl}/${id}/linea/borrar`,
         { lineas },
-        "Error al borrar las líneas de la factura"
+        tCompras("factura.errores.borrarLineas")
     );
 };
 
@@ -705,7 +706,7 @@ export const extraerFicheroFactura = async (fichero: File): Promise<ExtraccionFa
     >(
         `${baseUrl}/extraer-fichero`,
         formData,
-        "Error al leer el fichero de factura"
+        tCompras("factura.errores.leerFichero")
     );
     return {
         facturaLeida: facturaLeidaDesdeApi(respuesta.factura_leida),
@@ -722,7 +723,7 @@ export const proponerImportacion = async (
     >(
         `${baseUrl}/proponer-importacion`,
         { factura_leida: facturaLeidaAApi(facturaLeida) },
-        "Error al calcular la propuesta de importación"
+        tCompras("factura.errores.propuesta")
     );
     return propuestaImportacionDesdeApi(respuesta);
 };
@@ -731,7 +732,7 @@ export const importarFacturaLeida = async (facturaLeida: FacturaLeida): Promise<
     const respuesta = await RestAPI.post(
         `${baseUrl}/importar`,
         { factura_leida: facturaLeidaAApi(facturaLeida) },
-        "Error al importar la factura"
+        tCompras("factura.errores.importar")
     );
     return respuesta.id;
 };
@@ -743,7 +744,7 @@ export const importarDeHitl = async (
     const respuesta = await RestAPI.post(
         `${baseUrl}/importar-de-hitl/${tareaId}`,
         { factura_leida: facturaLeidaAApi(facturaLeida) },
-        "Error al importar la factura desde HITL"
+        tCompras("factura.errores.importarHitl")
     );
     return respuesta.id;
 };
@@ -763,7 +764,7 @@ export const crearArticuloConProveedor = async (
             coste: articulo.coste,
             ...(articulo.divisaId ? { divisa_id: articulo.divisaId } : {}),
         },
-        "Error al crear el artículo"
+        tCompras("factura.errores.crearArticulo")
     );
     return respuesta.id;
 };

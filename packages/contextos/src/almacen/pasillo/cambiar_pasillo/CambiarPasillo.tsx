@@ -10,6 +10,7 @@ import { Pasillo } from "../diseño.ts";
 import { accesosPasillo, carasPasillo, metaPasillo } from "../dominio.ts";
 import { patchPasillo } from "../infraestructura.ts";
 import "./CambiarPasillo.css";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const CambiarPasillo = ({
     pasillo,
@@ -18,6 +19,7 @@ export const CambiarPasillo = ({
     pasillo: Pasillo;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { modelo, uiProps, valido } = useModelo(metaPasillo, pasillo);
 
     const cambiar_ = useCallback(async () => {
@@ -33,19 +35,19 @@ export const CambiarPasillo = ({
         <QModal
             abierto={true}
             nombre="cambiarPasillo"
-            titulo={`Cambiar pasillo ${pasillo.codigo}`}
+            titulo={t("pasillo.cambiarPasilloCodigo", { codigo: pasillo.codigo })}
             onCerrar={cancelar}
         >
             <quimera-formulario>
-                <QInput label="Código" {...uiProps("codigo")} maxLength={10} />
-                <QInput label="Orden de recorrido" {...uiProps("orden")} />
-                <QSelect label="Caras" {...uiProps("caras")} opciones={carasPasillo} />
-                <QInput label="Módulos por cara" {...uiProps("modulos")} />
-                <QSelect label="Accesos" {...uiProps("accesos")} opciones={accesosPasillo} />
+                <QInput label={t("pasillo.codigo")} {...uiProps("codigo")} maxLength={10} />
+                <QInput label={t("pasillo.ordenDeRecorrido")} {...uiProps("orden")} />
+                <QSelect label={t("pasillo.caras")} {...uiProps("caras")} opciones={carasPasillo} />
+                <QInput label={t("pasillo.modulosPorCara")} {...uiProps("modulos")} />
+                <QSelect label={t("pasillo.accesos")} {...uiProps("accesos")} opciones={accesosPasillo} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={cambiar} deshabilitado={!valido}>
-                    Guardar
+                    {t("pasillo.guardar")}
                 </QBoton>
             </div>
         </QModal>

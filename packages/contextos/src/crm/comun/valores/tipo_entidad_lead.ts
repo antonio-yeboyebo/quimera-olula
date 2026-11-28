@@ -1,4 +1,5 @@
+import { tCrm } from "../../i18n/index.ts";
 export const opcionesTipoEntidadLead = [
-    { valor: "Cliente", descripcion: "Cliente" },
-    { valor: "Proveedor", descripcion: "Proveedor" },
+    { valor: "Cliente", get descripcion() { return tCrm("comun.cliente"); } },
+    { valor: "Proveedor", get descripcion() { return tCrm("comun.proveedor"); } },
 ];

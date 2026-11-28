@@ -1,12 +1,13 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useEffect, useState } from "react";
 import { LineaFactura as Linea } from "../../diseño.ts";
+import { tVentas, useTVentas } from "../../../i18n/index.ts";
 
 const validacion = (cantidadRaw: string) => {
   const cantidad = parseInt(cantidadRaw);
 
   return isNaN(cantidad) || cantidad <= 0
-    ? "Debe tener una cantidad mayor que cero."
+    ? tVentas("documento.formLinea.cantidadMayorQueCero")
     : "";
 };
 
@@ -17,6 +18,7 @@ export const EditarCantidadLinea = ({
   linea: Linea;
   onCantidadEditada: (linea: Linea, cantidad: number) => void;
 }) => {
+  const t = useTVentas();
   const [estado, setEstado] = useState("");
   const [valor, setValor] = useState(linea.cantidad.toString());
   useEffect(() => {
@@ -38,7 +40,7 @@ export const EditarCantidadLinea = ({
   return (
     <quimera-formulario>
       <QInput
-        label="Cantidad"
+        label={t("documento.formLinea.cantidad")}
         nombre="cantidad"
         valor={valor}
         erroneo={!!estado && estado.length > 0}

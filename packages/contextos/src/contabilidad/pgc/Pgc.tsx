@@ -7,6 +7,7 @@ import { MaestroConDetalleEpigrafe } from "../epigrafe/maestro/MaestroConDetalle
 import { MaestroConDetalleGrupoEpigrafe } from "../grupo_epigrafe/maestro/MaestroConDetalleGrupoEpigrafe.tsx";
 import { MaestroConDetalleSubcuenta } from "../subcuenta/maestro/MaestroConDetalleSubcuenta.tsx";
 import { indicePestanaPgc, PestanaPgc, tituloPestanaPgc } from "./pestanas.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 /**
  * Plan General Contable: una sola pantalla con las vistas del plan, incluidos
@@ -26,7 +27,7 @@ export const PantallaPgc = ({ pestanaInicial }: { pestanaInicial?: PestanaPgc })
     // crearRouter no comprueba permisos, así que la pantalla se monta aunque
     // se llegue por URL: la guarda tiene que estar aquí.
     if (!puede("contabilidad.asiento")) {
-        return <p>No tienes permiso para ver el plan general contable.</p>;
+        return <p>{tContabilidad("pgc.noTienesPermisoParaVerEl")}</p>;
     }
 
     return (

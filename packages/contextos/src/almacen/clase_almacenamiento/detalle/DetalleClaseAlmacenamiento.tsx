@@ -13,6 +13,7 @@ import { patchClaseAlmacenamiento } from "../infraestructura.ts";
 import { contextoDetalleClaseAlmacenamientoInicial } from "./detalle.ts";
 import "./DetalleClaseAlmacenamiento.css";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 const titulo = (clase: ClaseAlmacenamiento) => clase.codigo as string;
 
@@ -23,6 +24,7 @@ export const DetalleClaseAlmacenamiento = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleClaseAlmacenamientoInicial, publicar);
@@ -54,11 +56,11 @@ export const DetalleClaseAlmacenamiento = ({
         >
             <div className="DetalleClaseAlmacenamiento">
                 <div className="maestro-botones">
-                    <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                    <QBoton onClick={() => emitir("borrado_solicitado")}>{t("clase_almacenamiento.borrar")}</QBoton>
                 </div>
                 <quimera-formulario>
-                    <QInput label="Código" {...modelo.uiProps("codigo")} maxLength={10} />
-                    <QInput label="Descripción" {...modelo.uiProps("descripcion")} />
+                    <QInput label={t("clase_almacenamiento.codigo")} {...modelo.uiProps("codigo")} maxLength={10} />
+                    <QInput label={t("clase_almacenamiento.descripcion")} {...modelo.uiProps("descripcion")} />
                 </quimera-formulario>
             </div>
 

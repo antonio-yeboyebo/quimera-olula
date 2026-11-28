@@ -8,6 +8,7 @@ import { FormPartidaPlantilla } from "../comun/FormPartidaPlantilla.tsx";
 import { CamposPartidaPlantilla as Campos, PartidaPlantilla, PlantillaAsiento } from "../diseño.ts";
 import { metaPartidaPlantilla } from "../dominio.ts";
 import { patchPartidaPlantilla } from "../infraestructura.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CambiarPartidaPlantilla = ({
     plantilla,
@@ -18,6 +19,7 @@ export const CambiarPartidaPlantilla = ({
     partida: PartidaPlantilla;
     publicar: EmitirEvento;
 }) => {
+    const t = useTContabilidad();
     const { modelo, uiProps, valido } = useModelo<Campos>(metaPartidaPlantilla, partida);
 
     const cambiar_ = useCallback(async () => {
@@ -35,13 +37,13 @@ export const CambiarPartidaPlantilla = ({
         <QModal
             abierto={true}
             nombre="cambiarPartidaPlantilla"
-            titulo={`Partida ${partida.numeroOrden}`}
+            titulo={t("plantilla_asiento.partidaNumeroorden", { numeroOrden: partida.numeroOrden })}
             onCerrar={cancelar}
         >
             <FormPartidaPlantilla modelo={modelo} uiProps={uiProps} />
             <div className="botones maestro-botones">
                 <QBoton onClick={cambiar} deshabilitado={!valido}>
-                    Guardar
+                    {t("plantilla_asiento.guardar")}
                 </QBoton>
             </div>
         </QModal>

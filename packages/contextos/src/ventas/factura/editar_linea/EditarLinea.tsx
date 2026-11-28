@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from "react";
 import { LineaFactura as Linea } from "../diseño.ts";
 import "./EditarLinea.css";
 import { getModeloInicial, metaLinea, ModeloCambiarLinea } from "./dominio.ts";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const EditarLinea = ({
   publicar,
@@ -17,6 +18,7 @@ export const EditarLinea = ({
   linea: Linea;
   publicar: ProcesarEvento;
 }) => {
+  const t = useTVentas();
   const modeloInicial = useMemo(() => getModeloInicial(linea), [linea.id]);
 
   const { modelo, uiProps, valido, set } = useModelo<ModeloCambiarLinea>(metaLinea, modeloInicial);
@@ -39,7 +41,7 @@ export const EditarLinea = ({
     <QModal
       abierto={true}
       nombre="editar_linea_factura"
-      titulo="Editar línea"
+      titulo={t("documento.formLinea.editar")}
       onCerrar={cancelar}
     >
       <div className="EdicionLinea">
@@ -54,9 +56,9 @@ export const EditarLinea = ({
             bloqueado={true}
           />
 
-          <QInput label="Cantidad" {...uiProps("cantidad")} />
+          <QInput label={t("documento.formLinea.cantidad")} {...uiProps("cantidad")} />
 
-          <QInput label="Precio" {...uiProps("pvp_unitario")} />
+          <QInput label={t("documento.formLinea.precio")} {...uiProps("pvp_unitario")} />
 
           <div className="mostrar-mas-fila">
             <button
@@ -64,19 +66,19 @@ export const EditarLinea = ({
               className="mostrar-mas-btn"
               onClick={() => setMostrarMas((v) => !v)}
             >
-              {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+              {mostrarMas ? t("documento.formLinea.menosOpciones") : t("documento.formLinea.masOpciones")}
             </button>
           </div>
 
           {mostrarMas && (
             <>
-              <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
-              <QInput label="Dto. lineal" {...uiProps("dto_lineal")} />
+              <QInput label={t("documento.formLinea.descuento")} {...uiProps("dto_porcentual")} />
+              <QInput label={t("documento.formLinea.dtoLineal")} {...uiProps("dto_lineal")} />
               <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} soloLectura={!libre} />
-              <QInput label="% IVA" {...uiProps("tipo_iva")} soloLectura />
-              <QInput label="% I.R.P.F." {...uiProps("tipo_irpf")} />
-              <QInput label="% Comisión agente" {...uiProps("por_comision")} />
-              <QInput label="Importe comisión" {...uiProps("importe_comision")} />
+              <QInput label={t("documento.formLinea.iva")} {...uiProps("tipo_iva")} soloLectura />
+              <QInput label={t("documento.formLinea.irpf")} {...uiProps("tipo_irpf")} />
+              <QInput label={t("documento.formLinea.porComision")} {...uiProps("por_comision")} />
+              <QInput label={t("documento.formLinea.importeComision")} {...uiProps("importe_comision")} />
             </>
           )}
         </quimera-formulario>

@@ -12,14 +12,16 @@ import { sobranteLinea } from "../../dominio.ts";
 import { devolverSobrante } from "../../infraestructura.ts";
 import { CodigoResuelto } from "../../pasos/diseño.ts";
 import { resolverCodigo } from "../../pasos/resolver.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 type Destino = Extract<CodigoResuelto, { tipo: "caja" | "ubicacion" }>;
 
 const CampoDestino = ({ onLeido }: { onLeido: (texto: string) => void }) => {
+    const t = useTAlmacen();
     const focus = useFocus();
     return (
         <QInput
-            label="Ubicación o caja de destino"
+            label={t("orden.ubicacionOCajaDeDestino")}
             nombre="destino_devolucion"
             valor=""
             onEnterKeyUp={onLeido}
@@ -41,6 +43,7 @@ export const DevolverSobrante = ({
     linea: LineaOrdenAlmacen;
     publicar: EmitirEvento;
 }) => {
+    const t = useTAlmacen();
     const { intentar } = useContext(ContextoError);
     const sobrante = sobranteLinea(linea);
     const lotes = [...new Set(linea.lecturas.map((l) => l.loteId).filter((l): l is string => !!l))];
@@ -62,7 +65,7 @@ export const DevolverSobrante = ({
         const codigo = await resolverCodigo(texto, ["ubicacion", "caja"]);
         if (!codigo || codigo.tipo === "articulo") {
             pitidoError();
-            setError(`Código ${texto} no reconocido como ubicación o caja`);
+            setError(t("orden.codigoTextoNoReconocidoComoUbicacion", { texto }));
             setClave((k) => k + 1);
             return;
         }
@@ -87,16 +90,15 @@ export const DevolverSobrante = ({
     };
 
     return (
-        <QModal abierto={true} nombre="devolverSobrante" titulo="Devolver sobrante" onCerrar={cancelar}>
+        <QModal abierto={true} nombre="devolverSobrante" titulo={t("orden.devolverSobrante")} onCerrar={cancelar}>
             <div className="DevolverSobrante">
                 <p>
-                    {linea.sku} — {linea.articulo}: se han recogido{" "}
-                    <strong>{sobrante}</strong> de más tras un cambio en el pedido.
-                    Déjalas en una ubicación o caja y léela.
+                    {linea.sku} — {linea.articulo}{t("orden.seHanRecogido")}{" "}
+                    <strong>{sobrante}</strong>{" "}{t("orden.deMasTrasUnCambioEn")}
                 </p>
                 <quimera-formulario>
                     <QInput
-                        label="Cantidad a devolver"
+                        label={t("orden.cantidadADevolver")}
                         nombre="cantidad_devolucion"
                         tipo="numero"
                         valor={cantidad}
@@ -104,9 +106,9 @@ export const DevolverSobrante = ({
                     />
                     {lotes.length > 1 && (
                         <div>
-                            <label>Lote</label>
+                            <label>{t("orden.lote")}</label>
                             <select value={lote ?? ""} onChange={(e) => setLote(e.target.value || null)}>
-                                <option value="">Elige el lote</option>
+                                <option value="">{t("orden.eligeElLote")}</option>
                                 {lotes.map((l) => <option key={l} value={l}>{l}</option>)}
                             </select>
                         </div>
@@ -114,19 +116,19 @@ export const DevolverSobrante = ({
                     {destino ? (
                         <p>
                             <QEtiqueta variante="exito">
-                                {destino.tipo === "caja" ? `Caja ${destino.lpn}` : `Ubicación ${destino.codigo}`}
+                                {destino.tipo === "caja" ? t("orden.cajaLpn", { lpn: destino.lpn }) : t("orden.ubicacionCodigo", { codigo: destino.codigo })}
                             </QEtiqueta>{" "}
-                            <QBoton variante="borde" onClick={() => setDestino(null)}>Cambiar</QBoton>
+                            <QBoton variante="borde" onClick={() => setDestino(null)}>{t("orden.cambiar")}</QBoton>
                         </p>
                     ) : (
                         <CampoDestino key={clave} onLeido={onDestinoLeido} />
                     )}
                 </quimera-formulario>
-                {!cantidadValida && <p className="q-texto-error">La cantidad debe estar entre 0 y {sobrante}</p>}
+                {!cantidadValida && <p className="q-texto-error">{t("orden.laCantidadDebeEstarEntre0", { sobrante })}</p>}
                 {error && <p className="q-texto-error">{error}</p>}
                 <div className="botones maestro-botones">
-                    <QBoton onClick={devolver} deshabilitado={!puedeDevolver}>Devolver</QBoton>
-                    <QBoton variante="borde" onClick={cancelar}>Cancelar</QBoton>
+                    <QBoton onClick={devolver} deshabilitado={!puedeDevolver}>{t("orden.devolver")}</QBoton>
+                    <QBoton variante="borde" onClick={cancelar}>{t("orden.cancelar")}</QBoton>
                 </div>
             </div>
         </QModal>

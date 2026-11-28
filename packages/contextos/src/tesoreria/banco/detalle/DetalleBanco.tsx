@@ -16,6 +16,7 @@ import { CamposBanco } from "./CamposBanco.tsx";
 import { contextoDetalleBancoInicial, guardarBanco } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 import { SucursalesBanco } from "./sucursales/SucursalesBanco.tsx";
+import { useTTesoreria } from "../../i18n/index.ts";
 
 /** Formulario de Eneboo `bancos.ui`. */
 export const DetalleBanco = ({
@@ -25,6 +26,7 @@ export const DetalleBanco = ({
     id?: string;
     publicar?: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleBancoInicial, publicar);
 
     const autoGuardar = useCallback(
@@ -50,7 +52,7 @@ export const DetalleBanco = ({
 
     const acciones = [
         {
-            texto: "Borrar",
+            texto: t("banco.borrar"),
             onClick: () => emitir("borrado_solicitado"),
             deshabilitado: !autorizado,
             advertencia: true,
@@ -70,7 +72,7 @@ export const DetalleBanco = ({
                     <QuimeraAcciones acciones={acciones} vertical />
                 </div>
                 <quimera-formulario>
-                    <QInput label="Nº de entidad" nombre="id" valor={banco.id} soloLectura />
+                    <QInput label={t("banco.nDeEntidad")} nombre="id" valor={banco.id} soloLectura />
                     <CamposBanco uiProps={formModelo.uiProps} nombreProveedor={banco.nombreProveedor} />
                 </quimera-formulario>
                 <SucursalesBanco banco={banco} publicar={emitir} editable={autorizado} />

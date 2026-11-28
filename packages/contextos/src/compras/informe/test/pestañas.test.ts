@@ -1,7 +1,12 @@
 import { fichaAApi, fichaNueva, metaFichaInforme } from "#/comun/informe_documentos/dominio.ts";
 import { FichaInforme } from "#/comun/informe_documentos/diseño.ts";
 import { describe, expect, test } from "vitest";
-import { ALBARANES, FACTURAS, PEDIDOS, PESTAÑAS_COMPRAS } from "../pestañas.tsx";
+import { albaranes, facturas, pedidos, pestañasCompras } from "../pestañas.tsx";
+
+const PEDIDOS = pedidos();
+const ALBARANES = albaranes();
+const FACTURAS = facturas();
+const PESTAÑAS_COMPRAS = pestañasCompras();
 
 const ids = (filas: { id: string }[][]) => filas.flat().map((campo) => campo.id);
 

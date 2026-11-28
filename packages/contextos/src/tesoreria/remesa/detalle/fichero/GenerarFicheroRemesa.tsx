@@ -12,10 +12,11 @@ import {
   getFicheroRemesa,
 } from "../../infraestructura.js";
 import "./GenerarFicheroRemesa.css";
+import { tTesoreria, useTTesoreria } from "../../../i18n/index.ts";
 
 const FORMATOS = [
-  { valor: "csb19", descripcion: "CSB19 (cuaderno 19, como el ERP)" },
-  { valor: "sepa", descripcion: "SEPA adeudos directos (pain.008)" },
+  { valor: "csb19", get descripcion() { return tTesoreria("remesa.csb19Cuaderno19ComoElErp"); } },
+  { valor: "sepa", get descripcion() { return tTesoreria("remesa.sepaAdeudosDirectosPain008"); } },
 ];
 
 const descargar = (blob: Blob, nombre: string) => {
@@ -41,6 +42,7 @@ export const GenerarFicheroRemesa = ({
   remesa: Remesa;
   publicar: EmitirEvento;
 }) => {
+  const t = useTTesoreria();
   const [formato, setFormato] = useState<FormatoFicheroRemesa>("csb19");
   const [agruparPorCliente, setAgruparPorCliente] = useState(false);
   const [incluirLineas, setIncluirLineas] = useState(false);
@@ -79,13 +81,13 @@ export const GenerarFicheroRemesa = ({
   };
 
   return (
-    <QModal abierto={true} nombre="generar_fichero_remesa" titulo="Fichero bancario de la remesa" onCerrar={cerrar}>
+    <QModal abierto={true} nombre="generar_fichero_remesa" titulo={t("remesa.ficheroBancarioDeLaRemesa")} onCerrar={cerrar}>
       <div className="GenerarFicheroRemesa">
         {avisos === null ? (
           <>
             <quimera-formulario>
               <QSelect
-                label="Formato"
+                label={t("remesa.formato")}
                 nombre="formato"
                 valor={formato}
                 opciones={FORMATOS}
@@ -94,13 +96,13 @@ export const GenerarFicheroRemesa = ({
               {formato === "csb19" && (
                 <>
                   <QCheckbox
-                    label="Agrupar recibos por cliente"
+                    label={t("remesa.agruparRecibosPorCliente")}
                     nombre="agrupar_por_cliente"
                     valor={agruparPorCliente}
                     onChange={(_, evento) => setAgruparPorCliente(evento.target.checked)}
                   />
                   <QCheckbox
-                    label="Incluir las líneas de la factura"
+                    label={t("remesa.incluirLasLineasDeLaFactura")}
                     nombre="incluir_lineas"
                     valor={incluirLineas && !agruparPorCliente}
                     deshabilitado={agruparPorCliente}
@@ -111,27 +113,27 @@ export const GenerarFicheroRemesa = ({
             </quimera-formulario>
             <div className="botones maestro-botones">
               <QBoton onClick={comprobarYGenerar} deshabilitado={trabajando}>
-                Generar
+                {t("remesa.generar")}
               </QBoton>
             </div>
           </>
         ) : (
           <>
-            <p>Los siguientes recibos no tienen una domiciliación válida:</p>
+            <p>{t("remesa.losSiguientesRecibosNoTienenUna")}</p>
             <ul className="avisos-domiciliacion">
               {avisos.map((aviso, indice) => (
                 <li key={`${aviso.reciboId}-${indice}`}>
-                  Cliente: {aviso.nombreCliente} ({aviso.clienteId}), recibo {aviso.codigo}: {aviso.aviso}
+                  {t("remesa.clienteNombreclienteClienteidReciboCodig", { nombreCliente: aviso.nombreCliente, clienteId: aviso.clienteId, codigo: aviso.codigo, aviso: aviso.aviso })}
                 </li>
               ))}
             </ul>
-            <p>¿Desea continuar?</p>
+            <p>{t("remesa.deseaContinuar")}</p>
             <div className="botones maestro-botones">
               <QBoton tipo="reset" variante="texto" onClick={() => setAvisos(null)}>
-                Volver
+                {t("remesa.volver")}
               </QBoton>
               <QBoton onClick={generar} deshabilitado={trabajando}>
-                Generar de todos modos
+                {t("remesa.generarDeTodosModos")}
               </QBoton>
             </div>
           </>

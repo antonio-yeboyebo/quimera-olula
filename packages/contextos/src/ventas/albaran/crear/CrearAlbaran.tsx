@@ -17,12 +17,14 @@ import { useCallback, useState } from "react";
 import { metaNuevoAlbaran, nuevoAlbaranVacio } from "../dominio.ts";
 import { getAlbaran, postAlbaran } from "../infraestructura.ts";
 import "./CrearAlbaran.css";
+import { useTVentas } from "../../i18n/index.ts";
 
 export const CrearAlbaran = ({
   publicar = async () => {},
 }: {
   publicar?: EmitirEvento;
 }) => {
+  const t = useTVentas();
   const [modoNoRegistrado, setModoNoRegistrado] = useState(false);
   /* Lazy initializer: referencia estable para useModelo y empresa ya puesta en el
      primer render, sin depender del efecto de EmpresaActual. */
@@ -79,7 +81,7 @@ export const CrearAlbaran = ({
     <>
       <div className="modo-cliente">
         <QBoton onClick={toggleModoCliente} variante="texto" tipo="button">
-          {modoNoRegistrado ? "Cliente registrado" : "Cliente no registrado"}
+          {modoNoRegistrado ? t("documento.crear.clienteRegistrado") : t("documento.crear.clienteNoRegistrado")}
         </QBoton>
       </div>
       <div className="CrearAlbaran campos-direccion">
@@ -90,12 +92,12 @@ export const CrearAlbaran = ({
                 onChange={(id) => albaranNoRegistrado.uiProps("empresa_id").onChange(id)}
               />
               <QInput
-                label="Nombre del Cliente"
+                label={t("documento.crear.nombreCliente")}
                 {...albaranNoRegistrado.uiProps("nombre_cliente")}
                 ref={focus}
               />
               <QInput
-                label="ID Fiscal"
+                label={t("documento.detalle.idFiscal")}
                 {...albaranNoRegistrado.uiProps("id_fiscal")}
               />
               <CamposDireccionVenta uiProps={albaranNoRegistrado.uiProps} />

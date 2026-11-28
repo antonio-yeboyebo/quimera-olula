@@ -1,5 +1,6 @@
 import { QSelect } from "@olula/componentes/index.js";
 import { QAutocompletarProps } from "@olula/componentes/moleculas/qautocompletar.tsx";
+import { tContabilidad } from "../../i18n/index.ts";
 
 type OpcionFijaProps = Omit<
     QAutocompletarProps,
@@ -15,21 +16,21 @@ type OpcionFijaProps = Omit<
  * compatibilidad con los informes dados de alta desde el ERP de escritorio.
  */
 const CRITERIOS_ORDEN = [
-    { valor: "No ordenar", descripcion: "No ordenar" },
-    { valor: "Asiento", descripcion: "Asiento" },
-    { valor: "Fecha", descripcion: "Fecha" },
-    { valor: "Subcuenta", descripcion: "Subcuenta" },
+    { valor: "No ordenar", get descripcion() { return tContabilidad("comun.noOrdenar"); } },
+    { valor: "Asiento", get descripcion() { return tContabilidad("comun.asiento"); } },
+    { valor: "Fecha", get descripcion() { return tContabilidad("comun.fecha"); } },
+    { valor: "Subcuenta", get descripcion() { return tContabilidad("comun.subcuenta"); } },
 ];
 
 const SENTIDOS_ORDEN = [
-    { valor: "Ascendente", descripcion: "Ascendente" },
-    { valor: "Descendente", descripcion: "Descendente" },
+    { valor: "Ascendente", get descripcion() { return tContabilidad("comun.ascendente"); } },
+    { valor: "Descendente", get descripcion() { return tContabilidad("comun.descendente"); } },
 ];
 
 export const CriterioOrdenInforme = ({
     valor,
     nombre = "orden1",
-    label = "Criterio",
+    label = tContabilidad("comun.criterio"),
     onChange,
     ...props
 }: OpcionFijaProps) => (
@@ -46,7 +47,7 @@ export const CriterioOrdenInforme = ({
 export const SentidoOrdenInforme = ({
     valor,
     nombre = "tipoOrden1",
-    label = "Orden",
+    label = tContabilidad("comun.orden"),
     onChange,
     ...props
 }: OpcionFijaProps) => (

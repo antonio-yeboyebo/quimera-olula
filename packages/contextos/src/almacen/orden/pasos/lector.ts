@@ -11,6 +11,7 @@ import {
     TipoCodigo,
     ValoresLectura,
 } from "./diseño.ts";
+import { tAlmacen } from "../../i18n/index.ts";
 
 const error = (mensaje: string): ResultadoAplicar => ({ ok: false, error: mensaje });
 const ok = (valores: ValoresLectura): ResultadoAplicar => ({ ok: true, valores });
@@ -141,24 +142,24 @@ export const instruccionDimension = (
     switch (dimension) {
         case "origen":
             if (def.origen === "UBI" || (def.origen === "UBI_O_CAJA" && v.idCajaOrigen === null)) {
-                return "Lee la ubicación de origen";
+                return tAlmacen("orden.leeLaUbicacionDeOrigen");
             }
             if (def.origen === "UBI_O_CAJA") {
-                return def.que === "LOTE" ? "Lee la caja o el lote suelto" : "Lee la caja o el SKU suelto";
+                return def.que === "LOTE" ? tAlmacen("orden.leeLaCajaOElLote2") : tAlmacen("orden.leeLaCajaOElSku2");
             }
-            return def.cantidad === "CAPACIDAD_SUBCAJA" ? "Lee el palé de origen" : "Lee la caja de origen";
+            return def.cantidad === "CAPACIDAD_SUBCAJA" ? tAlmacen("orden.leeElPaleDeOrigen") : tAlmacen("orden.leeLaCajaDeOrigen");
         case "que":
-            if (v.lotesParaElegir) return "La caja tiene varios lotes: elige el lote";
-            if (def.que === "CAJA") return def.palet ? "Lee la caja o el palé" : "Lee la caja";
-            if (def.que === "LOTE" || v.sku) return "Lee el lote";
-            return "Lee el SKU o el lote";
+            if (v.lotesParaElegir) return tAlmacen("orden.laCajaTieneVariosLotesElige");
+            if (def.que === "CAJA") return def.palet ? tAlmacen("orden.leeLaCajaOElPale") : tAlmacen("orden.leeLaCaja2");
+            if (def.que === "LOTE" || v.sku) return tAlmacen("orden.leeElLote");
+            return tAlmacen("orden.leeElSkuOElLote2");
         case "cantidad":
-            return "Indica la cantidad";
+            return tAlmacen("orden.indicaLaCantidad");
         case "destino":
-            if (def.destino === "CAJA_ETIQUETA") return "Lee la nueva caja (etiqueta)";
-            if (def.destino === "CAJA") return def.palet ? "Lee la caja o el palé" : "Lee la caja de destino";
-            if (def.destino === "UBI") return "Lee la ubicación de destino";
-            return "Lee la ubicación (material suelto) o la caja de destino";
+            if (def.destino === "CAJA_ETIQUETA") return tAlmacen("orden.leeLaNuevaCajaEtiqueta");
+            if (def.destino === "CAJA") return def.palet ? tAlmacen("orden.leeLaCajaOElPale") : tAlmacen("orden.leeLaCajaDeDestino");
+            if (def.destino === "UBI") return tAlmacen("orden.leeLaUbicacionDeDestino");
+            return tAlmacen("orden.leeLaUbicacionMaterialSueltoO");
     }
 };
 
@@ -177,9 +178,9 @@ const errorCajaContraMaterial = (
     sku: string,
     loteId: string | null | undefined,
 ): string | null => {
-    if (caja.sku && caja.sku !== sku) return `La caja ${caja.lpn} contiene otro artículo (${caja.sku})`;
+    if (caja.sku && caja.sku !== sku) return tAlmacen("orden.laCajaLpnContieneOtroArticulo", { lpn: caja.lpn, sku: caja.sku });
     if (caja.idLote && loteId && caja.idLote !== loteId) {
-        return `La caja ${caja.lpn} contiene otro lote (${caja.idLote})`;
+        return tAlmacen("orden.laCajaLpnContieneOtroLote", { lpn: caja.lpn, idLote: caja.idLote });
     }
     return null;
 };
@@ -191,14 +192,14 @@ const aplicarArticulo = (
     codigo: Extract<CodigoResuelto, { tipo: "articulo" }>,
 ): ResultadoAplicar => {
     if (codigo.sku !== linea.sku) {
-        return error(`El artículo ${codigo.sku} no corresponde a la línea (se esperaba ${linea.sku})`);
+        return error(tAlmacen("orden.elArticuloSkuNoCorrespondeA", { sku: codigo.sku, sku2: linea.sku }));
     }
-    if (v.sku && v.sku !== codigo.sku) return error(`Se esperaba el lote del artículo ${v.sku}`);
-    if (def.que === "LOTE" && !codigo.loteId && !v.loteId) return error("Lee el código del lote");
+    if (v.sku && v.sku !== codigo.sku) return error(tAlmacen("orden.seEsperabaElLoteDelArticulo", { sku: v.sku }));
+    if (def.que === "LOTE" && !codigo.loteId && !v.loteId) return error(tAlmacen("orden.leeElCodigoDelLote"));
     if (codigo.loteId && linea.loteId && codigo.loteId !== linea.loteId) {
-        return error(`El lote ${codigo.loteId} no corresponde a la línea (se esperaba ${linea.loteId})`);
+        return error(tAlmacen("orden.elLoteLoteidNoCorrespondeA", { loteId: codigo.loteId, loteId2: linea.loteId }));
     }
-    if (codigo.loteId && !linea.porLotes) return error(`El artículo ${codigo.sku} no se controla por lotes`);
+    if (codigo.loteId && !linea.porLotes) return error(tAlmacen("orden.elArticuloSkuNoSeControla", { sku: codigo.sku }));
 
     const loteId = codigo.loteId ?? v.loteId ?? (linea.porLotes ? undefined : null);
     return ok({ ...v, sku: codigo.sku, articulo: codigo.descripcion, loteId });
@@ -212,14 +213,14 @@ const queDesdeCaja = (
     ctx: ContextoLectura,
 ): ResultadoAplicar => {
     if (caja.sku && caja.sku !== linea.sku) {
-        return error(`La caja ${caja.lpn} contiene otro artículo (${caja.sku})`);
+        return error(tAlmacen("orden.laCajaLpnContieneOtroArticulo", { lpn: caja.lpn, sku: caja.sku }));
     }
-    if (!caja.sku && !ctx.lotesEnCaja?.length) return error(`La caja ${caja.lpn} no es monoproducto`);
+    if (!caja.sku && !ctx.lotesEnCaja?.length) return error(tAlmacen("orden.laCajaLpnNoEsMonoproducto", { lpn: caja.lpn }));
 
     const base = { ...v, sku: linea.sku, articulo: linea.articulo };
     if (caja.idLote) {
         if (linea.loteId && caja.idLote !== linea.loteId) {
-            return error(`La caja ${caja.lpn} contiene otro lote (${caja.idLote})`);
+            return error(tAlmacen("orden.laCajaLpnContieneOtroLote", { lpn: caja.lpn, idLote: caja.idLote }));
         }
         return ok({ ...base, loteId: caja.idLote });
     }
@@ -227,7 +228,7 @@ const queDesdeCaja = (
         return ok({ ...base, loteId: linea.loteId ?? null });
     }
     const lotes = ctx.lotesEnCaja.filter((l) => !linea.loteId || l === linea.loteId);
-    if (lotes.length === 0) return error(`El artículo ${linea.sku} no está en la caja ${caja.lpn}`);
+    if (lotes.length === 0) return error(tAlmacen("orden.elArticuloSkuNoEstaEn", { sku: linea.sku, lpn: caja.lpn }));
     if (lotes.length === 1) return ok({ ...base, loteId: lotes[0] });
     return ok({ ...base, loteId: undefined, lotesParaElegir: lotes });
 };
@@ -245,17 +246,17 @@ const aplicarOrigen = (
 ): ResultadoAplicar => {
     if (codigo.tipo === "ubicacion") {
         if (linea.idUbicacionOrigen && codigo.id !== linea.idUbicacionOrigen) {
-            return error(`La ubicación ${codigo.codigo} no es la prevista (${linea.ubicacionOrigen ?? linea.idUbicacionOrigen})`);
+            return error(tAlmacen("orden.laUbicacionCodigoNoEsLa", { codigo: codigo.codigo, valor: linea.ubicacionOrigen ?? linea.idUbicacionOrigen }));
         }
         return ok({ ...v, idUbicacionOrigen: codigo.id, ubicacionOrigen: codigo.codigo });
     }
 
     if (codigo.tipo === "caja") {
         if (linea.idCajaOrigen && codigo.id !== linea.idCajaOrigen && !cajaVinculadaALinea(linea, codigo.id)) {
-            return error(`La caja ${codigo.lpn} no es la prevista (${linea.cajaOrigen ?? linea.idCajaOrigen})`);
+            return error(tAlmacen("orden.laCajaLpnNoEsLa", { lpn: codigo.lpn, valor: linea.cajaOrigen ?? linea.idCajaOrigen }));
         }
         if (linea.idUbicacionOrigen && codigo.idUbicacion && codigo.idUbicacion !== linea.idUbicacionOrigen) {
-            return error(`La caja ${codigo.lpn} no está en la ubicación prevista (${linea.ubicacionOrigen ?? linea.idUbicacionOrigen})`);
+            return error(tAlmacen("orden.laCajaLpnNoEstaEn", { lpn: codigo.lpn, valor: linea.ubicacionOrigen ?? linea.idUbicacionOrigen }));
         }
         const conOrigen: ValoresLectura = {
             ...v,
@@ -269,11 +270,11 @@ const aplicarOrigen = (
     }
 
     // Artículo o lote leído: se coge suelto de la ubicación de la línea.
-    if (def.origen !== "UBI_O_CAJA") return error("Lee la caja de origen");
+    if (def.origen !== "UBI_O_CAJA") return error(tAlmacen("orden.leeLaCajaDeOrigen"));
     const r = aplicarArticulo(def, linea, v, codigo);
     if (!r.ok) return r;
     if (ctx.stockSuelto !== undefined && ctx.stockSuelto <= 0) {
-        return error(`${codigo.loteId ? `El lote ${codigo.loteId}` : `El artículo ${codigo.sku}`} solo tiene stock en cajas. Lee la etiqueta de la caja.`);
+        return error(tAlmacen("orden.valorSoloTieneStockEnCajas", { valor: codigo.loteId ? tAlmacen("orden.elLoteLoteid", { loteId: codigo.loteId }) : tAlmacen("orden.elArticuloSku", { sku: codigo.sku }) }));
     }
     return ok({
         ...r.valores,
@@ -292,16 +293,16 @@ const aplicarQue = (
     codigo: CodigoResuelto,
 ): ResultadoAplicar => {
     if (codigo.tipo === "articulo") {
-        if (def.que === "CAJA") return error("Lee la caja");
+        if (def.que === "CAJA") return error(tAlmacen("orden.leeLaCaja2"));
         return aplicarArticulo(def, linea, v, codigo);
     }
-    if (codigo.tipo !== "caja") return error("Lee el código del artículo o del lote");
+    if (codigo.tipo !== "caja") return error(tAlmacen("orden.leeElCodigoDelArticuloO"));
     if (!codigo.sku) {
         if (def.palet) return ok({ ...v, palet: { id: codigo.id, lpn: codigo.lpn } });
-        return error(`La caja ${codigo.lpn} no es monoproducto`);
+        return error(tAlmacen("orden.laCajaLpnNoEsMonoproducto", { lpn: codigo.lpn }));
     }
     if (linea.idCajaOrigen && codigo.id !== linea.idCajaOrigen && !cajaVinculadaALinea(linea, codigo.id)) {
-        return error(`La caja ${codigo.lpn} no es la prevista (${linea.cajaOrigen ?? linea.idCajaOrigen})`);
+        return error(tAlmacen("orden.laCajaLpnNoEsLa", { lpn: codigo.lpn, valor: linea.cajaOrigen ?? linea.idCajaOrigen }));
     }
     const errorMaterial = errorCajaContraMaterial(codigo, linea.sku, linea.loteId);
     if (errorMaterial) return error(errorMaterial);
@@ -328,10 +329,10 @@ const aplicarDestino = (
 
     if (codigo.tipo === "ubicacion") {
         if (linea?.idCajaDestino) {
-            return error(`La línea tiene prevista la caja ${linea.cajaDestino ?? linea.idCajaDestino}`);
+            return error(tAlmacen("orden.laLineaTienePrevistaLaCaja", { valor: linea.cajaDestino ?? linea.idCajaDestino }));
         }
         if (linea?.idUbicacionDestino && codigo.id !== linea.idUbicacionDestino) {
-            return error(`La ubicación ${codigo.codigo} no es la prevista (${linea.ubicacionDestino ?? linea.idUbicacionDestino})`);
+            return error(tAlmacen("orden.laUbicacionCodigoNoEsLa", { codigo: codigo.codigo, valor: linea.ubicacionDestino ?? linea.idUbicacionDestino }));
         }
         return ok({
             ...v,
@@ -342,7 +343,7 @@ const aplicarDestino = (
         });
     }
 
-    if (codigo.tipo !== "caja" || !linea) return error("Código no válido para el destino");
+    if (codigo.tipo !== "caja" || !linea) return error(tAlmacen("orden.codigoNoValidoParaElDestino"));
 
     if (!codigo.sku && def.palet && def.destino === "CAJA") {
         return ok({ ...v, palet: { id: codigo.id, lpn: codigo.lpn } });
@@ -353,15 +354,15 @@ const aplicarDestino = (
     if (errorMaterial) return error(errorMaterial);
 
     if (def.destino === "CAJA_ETIQUETA") {
-        if (codigo.id === v.idCajaOrigen) return error("La caja etiqueta no puede ser la caja de origen");
+        if (codigo.id === v.idCajaOrigen) return error(tAlmacen("orden.laCajaEtiquetaNoPuedeSer"));
         return ok({ ...v, idCajaDestino: codigo.id, cajaDestino: codigo.lpn });
     }
 
     if (linea.idCajaDestino && codigo.id !== linea.idCajaDestino) {
-        return error(`La caja ${codigo.lpn} no es la prevista (${linea.cajaDestino ?? linea.idCajaDestino})`);
+        return error(tAlmacen("orden.laCajaLpnNoEsLa", { lpn: codigo.lpn, valor: linea.cajaDestino ?? linea.idCajaDestino }));
     }
     if (linea.idUbicacionDestino && codigo.idUbicacion && codigo.idUbicacion !== linea.idUbicacionDestino) {
-        return error(`La caja ${codigo.lpn} no está en la ubicación prevista (${linea.ubicacionDestino ?? linea.idUbicacionDestino})`);
+        return error(tAlmacen("orden.laCajaLpnNoEstaEn", { lpn: codigo.lpn, valor: linea.ubicacionDestino ?? linea.idUbicacionDestino }));
     }
     return ok({
         ...v,
@@ -387,11 +388,11 @@ export const aplicarCodigo = (
 ): ResultadoAplicar => {
     const dimension = dimensionesPendientes(def, linea, v)[0];
     if (dimension === "destino") return aplicarDestino(def, linea, v, codigo);
-    if (!linea) return error("No hay ninguna línea seleccionada");
+    if (!linea) return error(tAlmacen("orden.noHayNingunaLineaSeleccionada"));
     if (dimension === "origen") return aplicarOrigen(def, linea, v, codigo, ctx);
     if (dimension === "que") return aplicarQue(def, linea, v, codigo);
-    if (dimension === "cantidad") return error("Indica la cantidad");
-    return error("No hay nada pendiente de leer");
+    if (dimension === "cantidad") return error(tAlmacen("orden.indicaLaCantidad"));
+    return error(tAlmacen("orden.noHayNadaPendienteDeLeer"));
 };
 
 export const elegirLote = (v: ValoresLectura, loteId: string): ValoresLectura => ({

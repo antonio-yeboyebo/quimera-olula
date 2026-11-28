@@ -16,6 +16,7 @@ import {
     metaTablaAmortizacion,
 } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 /**
  * Amortizaciones (Eneboo `co_amortizaciones`, maestro
@@ -24,6 +25,7 @@ import { getMaquina } from "./maquina.ts";
  */
 export const MaestroConDetalleAmortizacion = () => {
 
+    const t = useTContabilidad();
     const criteriaInicial = useMemo(criteriaAmortizacionesDefecto, []);
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -42,7 +44,7 @@ export const MaestroConDetalleAmortizacion = () => {
     }, []);
 
     if (!autorizado) {
-        return <p>No tienes permiso para ver las amortizaciones.</p>;
+        return <p>{t("amortizacion.noTienesPermisoParaVerLas")}</p>;
     }
 
     return (
@@ -51,7 +53,7 @@ export const MaestroConDetalleAmortizacion = () => {
                 seleccionada={amortizaciones.activo}
                 Maestro={
                     <>
-                        <h2>Amortizaciones</h2>
+                        <h2>{t("amortizacion.amortizaciones")}</h2>
                         <Listado<Amortizacion>
                             metaTabla={metaTablaAmortizacion}
                             metaFiltro={metaFiltroAmortizacion}
@@ -63,15 +65,15 @@ export const MaestroConDetalleAmortizacion = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_amortizacion_solicitado")}>
-                                        Nueva amortización
+                                        {t("amortizacion.nuevaAmortizacion")}
                                     </QBoton>
                                     <QBoton variante="borde"
                                         onClick={() => emitir("generar_dotaciones_solicitado")}>
-                                        Generar dotaciones
+                                        {t("amortizacion.generarDotaciones")}
                                     </QBoton>
                                     <QBoton variante="borde"
                                         onClick={() => emitir("deshacer_dotaciones_solicitado")}>
-                                        Deshacer dotaciones
+                                        {t("amortizacion.deshacerDotaciones")}
                                     </QBoton>
                                 </div>
                             )}

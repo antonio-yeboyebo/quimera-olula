@@ -3,6 +3,7 @@ import { definicionDeLinea } from "../../pasos/catalogo.ts";
 import { FaseLectura } from "../../pasos/diseño.ts";
 import { cantidadPendiente } from "../../pasos/lector.ts";
 import { lineasConSobrante, ordenAlbaranable, sobranteLinea } from "../../dominio.ts";
+import { tAlmacen } from "../../../i18n/index.ts";
 
 export type AccionPrincipalData = {
     label: string;
@@ -30,7 +31,7 @@ const instruccionDeGrupo = (
     fase: FaseLectura,
 ): string => {
     const primera = lineas.find((l) => !isCompleta(l, orden, fase)) ?? lineas[0];
-    return (primera && definicionDeLinea(primera, orden, fase)?.instruccion) ?? "lee las líneas";
+    return (primera && definicionDeLinea(primera, orden, fase)?.instruccion) ?? tAlmacen("orden.leeLasLineas");
 };
 
 const agruparPorUbicacion = (
@@ -64,13 +65,13 @@ const getAccionPick = (
 
     const instruccionPasos = instruccionDeGrupo(grupoActual.lineas, orden, "PICK");
     const algunaLeida = grupoActual.lineas.some((l) => (l.cantidadPick ?? 0) > 0);
-    const ubicacion = grupoActual.lineas[0]?.ubicacionOrigen ?? "ubicación desconocida";
+    const ubicacion = grupoActual.lineas[0]?.ubicacionOrigen ?? tAlmacen("orden.ubicacionDesconocida");
 
     const instruccion = algunaLeida
         ? `${instruccionPasos} en ${ubicacion}`
-        : `Ve a la ubicación ${ubicacion} y ${instruccionPasos}`;
+        : tAlmacen("orden.veALaUbicacionUbicacionY", { ubicacion, instruccionPasos });
 
-    return { label: "Leer pick", instruccion, onClick: emitirPickSolicitado };
+    return { label: tAlmacen("orden.leerPick"), instruccion, onClick: emitirPickSolicitado };
 };
 
 const getAccionDrop = (
@@ -88,16 +89,16 @@ const getAccionDrop = (
 
     let instruccion: string;
     if (grupoActual.ubiId === null) {
-        instruccion = `Ve a la ubicación de drop y ${instruccionPasos}`;
+        instruccion = tAlmacen("orden.veALaUbicacionDeDrop", { instruccionPasos });
     } else {
         const ubicacion = grupoActual.lineas[0]?.ubicacionDestino ?? grupoActual.ubiId;
         instruccion = algunaLeida
             ? instruccionPasos
-            : `Ve a la ubicación ${ubicacion} y ${instruccionPasos}`;
+            : tAlmacen("orden.veALaUbicacionUbicacionY", { ubicacion, instruccionPasos });
     }
 
     return {
-        label: "Leer drop",
+        label: tAlmacen("orden.leerDrop"),
         instruccion,
         onClick: handlers.emitirDropSolicitado,
     };
@@ -111,8 +112,8 @@ export function calcularAccionPrincipal(
 
     if (orden.estado === "TERMINADA" && orden.tipo === "ENTRADA") {
         return {
-            label: "Colocar",
-            instruccion: "Recepción terminada, usa el botón Colocar para crear la orden de colocación",
+            label: tAlmacen("orden.colocar"),
+            instruccion: tAlmacen("orden.recepcionTerminadaUsaElBotonColocar"),
             onClick: handlers.emitirColocacionSolicitada,
         };
     }
@@ -123,18 +124,16 @@ export function calcularAccionPrincipal(
         const linea = conSobrante[0];
         const emitir = handlers.emitirDevolucionSobrante;
         return {
-            label: "Devolver sobrante",
-            instruccion: `El pedido ha cambiado: sobran ${sobranteLinea(linea)} de ${linea.sku} (${linea.articulo}). ` +
-                "Déjalas en una ubicación o caja y léela" +
-                (conSobrante.length > 1 ? ` (${conSobrante.length} líneas con sobrante)` : ""),
+            label: tAlmacen("orden.devolverSobrante"),
+            instruccion: tAlmacen("orden.elPedidoHaCambiadoSobranLinea", { linea: sobranteLinea(linea), sku: linea.sku, articulo: linea.articulo, valor: (conSobrante.length > 1 ? tAlmacen("orden.lengthLineasConSobrante", { length: conSobrante.length }) : "") }),
             onClick: () => emitir(linea),
         };
     }
 
     if (ordenAlbaranable(orden)) {
         return {
-            label: "Albaranar",
-            instruccion: "Salida preparada, usa el botón Albaranar para generar el albarán y terminar la orden",
+            label: tAlmacen("orden.albaranar"),
+            instruccion: tAlmacen("orden.salidaPreparadaUsaElBotonAlbaranar"),
             onClick: handlers.emitirAlbaranadoSolicitado,
         };
     }

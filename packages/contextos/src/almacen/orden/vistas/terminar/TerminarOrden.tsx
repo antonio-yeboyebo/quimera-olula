@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { OrdenAlmacen } from "../../diseño.ts";
 import { terminarOrden } from "../../infraestructura.ts";
+import { useTAlmacen } from "../../../i18n/index.ts";
 
 export const TerminarOrden = ({
     publicar,
@@ -12,6 +13,7 @@ export const TerminarOrden = ({
     publicar: EmitirEvento;
     orden: OrdenAlmacen;
 }) => {
+    const t = useTAlmacen();
     const terminar_ = useCallback(
         async () => {
             await terminarOrden(orden.id);
@@ -31,8 +33,8 @@ export const TerminarOrden = ({
         <QModalConfirmacion
             nombre="confirmarTerminarOrden"
             abierto={true}
-            titulo="Confirmar terminar orden"
-            mensaje={`¿Está seguro de que desea terminar la orden "${orden.descripcion}"?`}
+            titulo={t("orden.confirmarTerminarOrden")}
+            mensaje={t("orden.estaSeguroDeQueDeseaTerminar", { descripcion: orden.descripcion })}
             onCerrar={cancelar}
             onAceptar={terminar}
         />

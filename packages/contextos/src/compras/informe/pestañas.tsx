@@ -1,21 +1,47 @@
 import { CampoInforme, FichaInforme, PestañaInforme } from "#/comun/informe_documentos/diseño.ts";
 import { OPCIONES_INTERVALO } from "#/comun/informe_documentos/dominio.ts";
 import { ControlProveedor } from "./controles.tsx";
+import { tCompras } from "#/compras/i18n/index.ts";
 
 /**
  * Pestañas de Compras > Informes: los criterios de `i_pedidosprov`,
  * `i_albaranesprov` e `i_facturasprov` de Eneboo, en filas como en sus
  * formularios. Los nombres son los de la API.
+ *
+ * Las pestañas se piden al pintar (`pestañasCompras(t)`): las etiquetas salen en el idioma
+ * activo. El valor de las opciones es el de la API (en español); solo se traduce lo que se ve.
  */
 
-const opciones = (valores: string[]) => valores.map((valor) => ({ valor, descripcion: valor }));
+type T = typeof tCompras;
+type ClaveOpcion = Parameters<T>[0] & `informe.opciones.${string}`;
 
-const ORDENES = opciones(["No ordenar", "Código", "Cod.Proveedor", "Proveedor", "Fecha", "Total"]);
-const SENTIDOS = opciones(["Ascendente", "Descendente"]);
+const opciones = (t: T, valores: [string, ClaveOpcion][]) =>
+    valores.map(([valor, clave]) => ({ valor, descripcion: t(clave) }));
 
-const TODOS_SI_NO = opciones(["Todos", "Sí", "No"]);
+const ordenes = (t: T) => opciones(t, [
+    ["No ordenar", "informe.opciones.noOrdenar"],
+    ["Código", "informe.opciones.codigo"],
+    ["Cod.Proveedor", "informe.opciones.codProveedor"],
+    ["Proveedor", "informe.opciones.proveedor"],
+    ["Fecha", "informe.opciones.fecha"],
+    ["Total", "informe.opciones.total"],
+]);
+const sentidos = (t: T) => opciones(t, [
+    ["Ascendente", "informe.opciones.ascendente"],
+    ["Descendente", "informe.opciones.descendente"],
+]);
 
-const TIPOS_INFORME = opciones(["Moneda original", "Moneda original y euros", "Euros"]);
+const todosSiNo = (t: T) => opciones(t, [
+    ["Todos", "informe.opciones.todos"],
+    ["Sí", "informe.opciones.si"],
+    ["No", "informe.opciones.no"],
+]);
+
+const tiposInforme = (t: T) => opciones(t, [
+    ["Moneda original", "informe.opciones.monedaOriginal"],
+    ["Moneda original y euros", "informe.opciones.monedaOriginalEuros"],
+    ["Euros", "informe.opciones.euros"],
+]);
 
 const texto = (id: string, label: string): CampoInforme => ({ id, label, tipo: "texto" });
 
@@ -33,21 +59,30 @@ const combo = (id: string, label: string, valores: CampoInforme["opciones"]): Ca
     opciones: valores,
 });
 
-const filasComunes = (documento: string): CampoInforme[][] => [
-    [combo("tipo_informe", "Tipo de informe", TIPOS_INFORME)],
-    [texto("codigo_desde", `Desde ${documento} Nº`), texto("codigo_hasta", `Hasta ${documento} Nº`)],
+const filasComunes = (t: T, documento: string): CampoInforme[][] => [
+    [combo("tipo_informe", t("informe.tipoInforme"), tiposInforme(t))],
     [
-        texto("ejercicio_id", "Ejercicio"),
-        combo("intervalo", "Intervalo", OPCIONES_INTERVALO),
-        { id: "fecha_desde", label: "Fecha desde", tipo: "fecha" },
-        { id: "fecha_hasta", label: "Fecha hasta", tipo: "fecha" },
+        texto("codigo_desde", t("informe.desdeNumero", { documento })),
+        texto("codigo_hasta", t("informe.hastaNumero", { documento })),
     ],
-    [{ id: "proveedor_id", label: "Proveedor", tipo: "propio", Control: ControlProveedor }],
+    [
+        texto("ejercicio_id", t("informe.ejercicio")),
+        combo("intervalo", t("informe.intervalo"), OPCIONES_INTERVALO),
+        { id: "fecha_desde", label: t("informe.fechaDesde"), tipo: "fecha" },
+        { id: "fecha_hasta", label: t("informe.fechaHasta"), tipo: "fecha" },
+    ],
+    [{ id: "proveedor_id", label: t("comun.campos.proveedor"), tipo: "propio", Control: ControlProveedor }],
 ];
 
-const filasOrden = (documentos: string): CampoInforme[][] => [
-    [combo("orden1", `${documentos} por (1)`, ORDENES), combo("tipo_orden1", "Orden", SENTIDOS)],
-    [combo("orden2", `${documentos} por (2)`, ORDENES), combo("tipo_orden2", "Orden", SENTIDOS)],
+const filasOrden = (t: T, documentos: string): CampoInforme[][] => [
+    [
+        combo("orden1", t("informe.ordenarPor", { documentos, n: 1 }), ordenes(t)),
+        combo("tipo_orden1", t("informe.orden"), sentidos(t)),
+    ],
+    [
+        combo("orden2", t("informe.ordenarPor", { documentos, n: 2 }), ordenes(t)),
+        combo("tipo_orden2", t("informe.orden"), sentidos(t)),
+    ],
 ];
 
 const INICIAL_COMUN = {
@@ -60,30 +95,36 @@ const INICIAL_COMUN = {
 };
 
 /** «Calcular detalle», «Calcular resumen» y «Calcular resumen por líneas». */
-const MODOS_PEDIDOS: PestañaInforme["modos"] = [
-    { modo: "detalle", etiqueta: "Calcular detalle" },
-    { modo: "resumen", etiqueta: "Calcular resumen" },
-    { modo: "resumen_lineas", etiqueta: "Calcular resumen por líneas" },
+const modosPedidos = (t: T): PestañaInforme["modos"] => [
+    { modo: "detalle", etiqueta: t("informe.modos.detalle") },
+    { modo: "resumen", etiqueta: t("informe.modos.resumen") },
+    { modo: "resumen_lineas", etiqueta: t("informe.modos.resumenLineas") },
 ];
 
-export const PEDIDOS: PestañaInforme = {
+export const pedidos = (t: T = tCompras): PestañaInforme => ({
     clave: "pedidos",
-    titulo: "Pedidos",
+    titulo: t("informe.pedidos"),
     url: "/compras/informe/pedidos",
     regla: "compras.pedido",
     filas: [
-        ...filasComunes("pedido"),
+        ...filasComunes(t, t("informe.pedido")),
         [
-            combo("intervalo_entrada", "Intervalo E.", OPCIONES_INTERVALO),
-            { id: "fecha_entrada_desde", label: "Entrada desde", tipo: "fecha" },
-            { id: "fecha_entrada_hasta", label: "Entrada hasta", tipo: "fecha" },
+            combo("intervalo_entrada", t("informe.intervaloEntrada"), OPCIONES_INTERVALO),
+            { id: "fecha_entrada_desde", label: t("informe.entradaDesde"), tipo: "fecha" },
+            { id: "fecha_entrada_hasta", label: t("informe.entradaHasta"), tipo: "fecha" },
         ],
-        [combo("servido", "Servidos", opciones(["Todos", "Pendiente", "Sí", "No", "Parcial"]))],
+        [combo("servido", t("informe.servidos"), opciones(t, [
+            ["Todos", "informe.opciones.todos"],
+            ["Pendiente", "informe.opciones.pendiente"],
+            ["Sí", "informe.opciones.si"],
+            ["No", "informe.opciones.no"],
+            ["Parcial", "informe.opciones.parcial"],
+        ]))],
         [
-            casilla("mostrar_lineas", "Mostrar líneas"),
-            casilla("solo_pendientes", "Mostrar sólo líneas pendientes albaranar"),
+            casilla("mostrar_lineas", t("informe.mostrarLineas")),
+            casilla("solo_pendientes", t("informe.soloPendientes")),
         ],
-        ...filasOrden("Pedidos"),
+        ...filasOrden(t, t("informe.pedidos")),
     ],
     inicial: {
         ...INICIAL_COMUN,
@@ -92,21 +133,21 @@ export const PEDIDOS: PestañaInforme = {
         mostrar_lineas: false,
         solo_pendientes: false,
     },
-    modos: MODOS_PEDIDOS,
-};
+    modos: modosPedidos(t),
+});
 
-export const ALBARANES: PestañaInforme = {
+export const albaranes = (t: T = tCompras): PestañaInforme => ({
     clave: "albaranes",
-    titulo: "Albaranes",
+    titulo: t("informe.albaranes"),
     url: "/compras/informe/albaranes",
     regla: "compras.albaran",
     filas: [
-        ...filasComunes("albarán"),
-        [combo("pte_factura", "Pte. factura", TODOS_SI_NO)],
-        ...filasOrden("Albaranes"),
+        ...filasComunes(t, t("informe.albaran")),
+        [combo("pte_factura", t("informe.pteFactura"), todosSiNo(t))],
+        ...filasOrden(t, t("informe.albaranes")),
     ],
     inicial: { ...INICIAL_COMUN, pte_factura: "Todos" },
-};
+});
 
 const filtraImportes = (ficha: FichaInforme) => ficha.filtrar_importes === true;
 
@@ -118,30 +159,42 @@ const ajustarFacturas = (ficha: FichaInforme, campo: string): FichaInforme =>
         ? { ...ficha, importe_desde: "", importe_hasta: "" }
         : ficha;
 
-export const FACTURAS: PestañaInforme = {
+export const facturas = (t: T = tCompras): PestañaInforme => ({
     clave: "facturas",
-    titulo: "Facturas",
+    titulo: t("informe.facturas"),
     url: "/compras/informe/facturas",
     regla: "compras.factura",
     filas: [
-        ...filasComunes("factura"),
+        ...filasComunes(t, t("informe.factura")),
         [
-            combo("pte_pago", "Ptes. de pago", TODOS_SI_NO),
-            texto("serie_id", "Serie"),
-            combo("regimen_iva", "Régimen I.V.A.", opciones(["Todos", "General", "Importaciones", "UE", "Exento"])),
+            combo("pte_pago", t("informe.ptesPago"), todosSiNo(t)),
+            texto("serie_id", t("comun.campos.serie")),
+            combo("regimen_iva", t("informe.regimenIva"), opciones(t, [
+                ["Todos", "informe.opciones.todos"],
+                ["General", "informe.opciones.general"],
+                ["Importaciones", "informe.opciones.importaciones"],
+                ["UE", "informe.opciones.ue"],
+                ["Exento", "informe.opciones.exento"],
+            ])),
         ],
-        [casilla("de_abono", "Sólo facturas de abono")],
+        [casilla("de_abono", t("informe.soloAbono"))],
         [
-            casilla("filtrar_importes", "Filtrar por importe"),
-            { id: "importe_desde", label: "Desde importe", tipo: "decimal", activo: filtraImportes },
-            { id: "importe_hasta", label: "Hasta importe", tipo: "decimal", activo: filtraImportes },
+            casilla("filtrar_importes", t("informe.filtrarImporte")),
+            { id: "importe_desde", label: t("informe.desdeImporte"), tipo: "decimal", activo: filtraImportes },
+            { id: "importe_hasta", label: t("informe.hastaImporte"), tipo: "decimal", activo: filtraImportes },
         ],
         [
-            casilla("acumulado", "Acumulado"),
-            { ...combo("orden_acumulado", "Orden A.", opciones(["DESC", "ASC"])), activo: esAcumulado },
-            { id: "limite_acumulado", label: "Límite A.", tipo: "entero", activo: esAcumulado },
+            casilla("acumulado", t("informe.acumulado")),
+            {
+                ...combo("orden_acumulado", t("informe.ordenAcumulado"), [
+                    { valor: "DESC", descripcion: "DESC" },
+                    { valor: "ASC", descripcion: "ASC" },
+                ]),
+                activo: esAcumulado,
+            },
+            { id: "limite_acumulado", label: t("informe.limiteAcumulado"), tipo: "entero", activo: esAcumulado },
         ],
-        ...filasOrden("Facturas"),
+        ...filasOrden(t, t("informe.facturas")),
     ],
     inicial: {
         ...INICIAL_COMUN,
@@ -153,6 +206,7 @@ export const FACTURAS: PestañaInforme = {
         orden_acumulado: "DESC",
     },
     ajustar: ajustarFacturas,
-};
+});
 
-export const PESTAÑAS_COMPRAS: PestañaInforme[] = [PEDIDOS, ALBARANES, FACTURAS];
+/** Las pestañas de Compras > Informes en el idioma activo. */
+export const pestañasCompras = (t: T = tCompras): PestañaInforme[] => [pedidos(t), albaranes(t), facturas(t)];

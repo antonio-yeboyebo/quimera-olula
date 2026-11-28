@@ -7,17 +7,18 @@ import { CrearDotacion } from "../../crear_dotacion/CrearDotacion.tsx";
 import { Amortizacion, Dotacion } from "../../diseño.ts";
 import { esCerrada } from "../../dominio.ts";
 import { deleteDotacion, getDotaciones } from "../../infraestructura.ts";
+import { tContabilidad, useTContabilidad } from "../../../i18n/index.ts";
 
 const metaTablaDotaciones: MetaTabla<Dotacion> = [
-    { id: "fechaInicio", cabecera: "Desde", tipo: "fecha" },
-    { id: "fechaFin", cabecera: "Hasta", tipo: "fecha" },
-    { id: "fecha", cabecera: "Fecha asiento", tipo: "fecha" },
-    { id: "importe", cabecera: "Importe", tipo: "moneda" },
+    { id: "fechaInicio", get cabecera() { return tContabilidad("amortizacion.desde"); }, tipo: "fecha" },
+    { id: "fechaFin", get cabecera() { return tContabilidad("amortizacion.hasta"); }, tipo: "fecha" },
+    { id: "fecha", get cabecera() { return tContabilidad("amortizacion.fechaAsiento"); }, tipo: "fecha" },
+    { id: "importe", get cabecera() { return tContabilidad("amortizacion.importe"); }, tipo: "moneda" },
     { id: "porcentaje", cabecera: "%", tipo: "numero" },
-    { id: "acumulado", cabecera: "Acumulado", tipo: "moneda" },
-    { id: "resto", cabecera: "Resto", tipo: "moneda" },
-    { id: "numeroAsiento", cabecera: "Asiento", tipo: "numero" },
-    { id: "ejercicioAsiento", cabecera: "Ejercicio" },
+    { id: "acumulado", get cabecera() { return tContabilidad("amortizacion.acumulado"); }, tipo: "moneda" },
+    { id: "resto", get cabecera() { return tContabilidad("amortizacion.resto"); }, tipo: "moneda" },
+    { id: "numeroAsiento", get cabecera() { return tContabilidad("amortizacion.asiento"); }, tipo: "numero" },
+    { id: "ejercicioAsiento", get cabecera() { return tContabilidad("amortizacion.ejercicio"); } },
 ];
 
 type Estado = "INICIAL" | "CREANDO" | "BORRANDO";
@@ -25,6 +26,7 @@ type Estado = "INICIAL" | "CREANDO" | "BORRANDO";
 const BorrarDotacion = ({
     dotacion, onBorrada, onCancelar,
 }: { dotacion: Dotacion; onBorrada: () => void; onCancelar: () => void }) => {
+    const t = useTContabilidad();
     const borrar_ = useCallback(async () => {
         await deleteDotacion(dotacion.id);
         onBorrada();
@@ -34,8 +36,8 @@ const BorrarDotacion = ({
         <QModalConfirmacion
             nombre="borrarDotacion"
             abierto={true}
-            titulo="Borrar dotación"
-            mensaje="Se borrará la dotación y su asiento, y se recalcularán las dotaciones posteriores. ¿Desea continuar?"
+            titulo={t("amortizacion.borrarDotacion")}
+            mensaje={t("amortizacion.seBorraraLaDotacionYSu")}
             onCerrar={cancelar}
             onAceptar={borrar}
         />
@@ -52,6 +54,7 @@ export const Dotaciones = ({
     amortizacion: Amortizacion;
     onCambio: () => void;
 }) => {
+    const t = useTContabilidad();
     const [dotaciones, setDotaciones] = useState<Dotacion[]>([]);
     const [cargando, setCargando] = useState(true);
     const [activa, setActiva] = useState<Dotacion | null>(null);
@@ -82,10 +85,10 @@ export const Dotaciones = ({
             <div className="botones maestro-botones">
                 <QBoton onClick={() => setEstado("CREANDO")}
                     deshabilitado={cerrada || amortizacion.pendiente === 0}>
-                    Nueva dotación
+                    {t("amortizacion.nuevaDotacion")}
                 </QBoton>
                 <QBoton onClick={() => setEstado("BORRANDO")} deshabilitado={cerrada || !activa}>
-                    Borrar
+                    {t("amortizacion.borrar")}
                 </QBoton>
             </div>
             <QTabla

@@ -10,6 +10,7 @@ import { ibanLegible } from "../../../comun/banca.ts";
 import { TransferenciaBancaria } from "../../../comun/componentes/TransferenciaBancaria.tsx";
 import { ReciboCompra } from "../../diseño.js";
 import { OrdenPagoReciboCompraApi, postOrdenarPagoReciboCompra } from "../../infraestructura.js";
+import { useTTesoreria } from "../../../i18n/index.ts";
 
 type ModeloCuenta = { cuenta_banco_id: string; nombre_cuenta: string };
 
@@ -33,11 +34,12 @@ export const OrdenarPagoReciboCompra = ({
     recibo: ReciboCompra;
     publicar: EmitirEvento;
 }) => {
+    const t = useTTesoreria();
     const { intentar } = useContext(ContextoError);
     const { modelo, uiProps, valido } = useModelo(metaCuenta, vacio);
     const [orden, setOrden] = useState<OrdenPagoReciboCompraApi | null>(null);
 
-    const proveedor = recibo.nombreProveedor || "el proveedor";
+    const proveedor = recibo.nombreProveedor || t("recibo_compra.elProveedor");
 
     const ordenar = () => {
         intentar(async () => {
@@ -51,26 +53,25 @@ export const OrdenarPagoReciboCompra = ({
         <QModal
             abierto={true}
             nombre="ordenar_pago"
-            titulo={`Pagar a ${proveedor}`}
+            titulo={t("recibo_compra.pagarAProveedor", { proveedor })}
             onCerrar={cerrar}
         >
             <div className="OrdenarPagoReciboCompra">
                 {!orden ? (
                     <>
                         <p>
-                            La empresa pagará el recibo {recibo.codigo} a{" "}
-                            <strong>{proveedor}</strong>, en su cuenta de pago. Elige la
-                            cuenta de la empresa desde la que sale el dinero.
+                            {t("recibo_compra.laEmpresaPagaraElRecibo")}{" "}{recibo.codigo}{" "}{t("recibo_compra.a")}{" "}
+                            <strong>{proveedor}</strong>{t("recibo_compra.enSuCuentaDePagoElige")}
                         </p>
                         <quimera-formulario>
                             <CuentaBancariaSelect
-                                label="Cuenta de la empresa que envía el dinero"
+                                label={t("recibo_compra.cuentaDeLaEmpresaQueEnvia")}
                                 {...uiProps("cuenta_banco_id", "nombre_cuenta")}
                             />
                         </quimera-formulario>
                         <div className="botones maestro-botones">
                             <QBoton onClick={ordenar} deshabilitado={!valido}>
-                                Preparar pago
+                                {t("recibo_compra.prepararPago")}
                             </QBoton>
                         </div>
                     </>
@@ -85,11 +86,8 @@ export const OrdenarPagoReciboCompra = ({
                         {orden.requiere_autorizacion && orden.url ? (
                             <>
                                 <p>
-                                    El dinero no sale hasta que{" "}
-                                    <strong>{orden.ordenante.nombre}</strong> autorice la
-                                    transferencia en su banco. Al abrir el banco, entra con el
-                                    acceso de la cuenta {ibanLegible(orden.ordenante.iban)}: el
-                                    banco solo permitirá pagar desde ella.
+                                    {t("recibo_compra.elDineroNoSaleHastaQue")}{" "}
+                                    <strong>{orden.ordenante.nombre}</strong>{" "}{t("recibo_compra.autoriceLaTransferenciaEnSuBanco")}{" "}{ibanLegible(orden.ordenante.iban)}{t("recibo_compra.elBancoSoloPermitiraPagarDesde")}
                                 </p>
                                 <div className="botones maestro-botones">
                                     <QBoton
@@ -97,22 +95,22 @@ export const OrdenarPagoReciboCompra = ({
                                             window.open(orden.url ?? "", "_blank", "noopener,noreferrer")
                                         }
                                     >
-                                        Autorizar en el banco
+                                        {t("recibo_compra.autorizarEnElBanco")}
                                     </QBoton>
                                     <QBoton onClick={cerrar} variante="borde">
-                                        Cerrar
+                                        {t("recibo_compra.cerrar")}
                                     </QBoton>
                                 </div>
                             </>
                         ) : (
                             <>
                                 <p>
-                                    Pago enviado: <strong>{orden.beneficiario.nombre}</strong>{" "}
-                                    recibirá la transferencia de{" "}
+                                    {t("recibo_compra.pagoEnviado")}{" "}<strong>{orden.beneficiario.nombre}</strong>{" "}
+                                    {t("recibo_compra.recibiraLaTransferenciaDe")}{" "}
                                     <strong>{orden.ordenante.nombre}</strong>.
                                 </p>
                                 <div className="botones maestro-botones">
-                                    <QBoton onClick={cerrar}>Cerrar</QBoton>
+                                    <QBoton onClick={cerrar}>{t("recibo_compra.cerrar")}</QBoton>
                                 </div>
                             </>
                         )}

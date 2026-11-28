@@ -1,9 +1,10 @@
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
+import { tTesoreria } from "../../i18n/index.ts";
 
 /** Código QR de una URL, como imagen. Margen y corrección de errores pensados
  * para leerse con el móvil desde una pantalla. */
-export const CodigoQr = ({ url, tamaño = 280, texto = "Código QR de pago" }: {
+export const CodigoQr = ({ url, tamaño = 280, texto = tTesoreria("cobro_online.codigoQrDePago") }: {
     url: string;
     tamaño?: number;
     texto?: string;

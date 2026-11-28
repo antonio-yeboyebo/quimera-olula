@@ -3,6 +3,7 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { getClasesAlmacenamiento } from "../../clase_almacenamiento/infraestructura.ts";
+import { tAlmacen, useTAlmacen } from "../../i18n/index.ts";
 
 type ClasesAdmitidasZonaProps = Omit<Parameters<typeof QMultiCheckbox>[0], "opciones" | "label" | "nombre"> & {
     label?: string;
@@ -21,10 +22,11 @@ type OpcionClase = { valor: string; descripcion: string };
 export const ClasesAdmitidasZona = ({
     valor,
     nombre = "clasesAdmitidas",
-    label = "Clases admitidas",
+    label = tAlmacen("comun.clasesAdmitidas"),
     tipo: _tipo,
     ...props
 }: ClasesAdmitidasZonaProps) => {
+    const t = useTAlmacen();
     const [opciones, setOpciones] = useState<OpcionClase[] | null>(null);
 
     useEffect(() => {
@@ -42,9 +44,8 @@ export const ClasesAdmitidasZona = ({
             <fieldset>
                 {label}
                 <p>
-                    No hay clases de almacenamiento. Créalas en{" "}
-                    <Link to="/almacen/clases_almacenamiento">Clases de almacenamiento</Link> y aparecerán aquí
-                    para marcar las que admite la zona.
+                    {t("comun.noHayClasesDeAlmacenamientoCrealas")}{" "}
+                    <Link to="/almacen/clases_almacenamiento">{t("comun.clasesDeAlmacenamiento")}</Link>{" "}{t("comun.yApareceranAquiParaMarcarLas")}
                 </p>
             </fieldset>
         );

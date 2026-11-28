@@ -14,6 +14,7 @@ import {
     Factura,
     NuevaFactura
 } from "./diseño.ts";
+import { tVentas } from "../i18n/index.ts";
 
 /**
  * Estados que puede mandar el servidor, ya normalizados (mayúsculas y guiones
@@ -36,14 +37,9 @@ export const estadoExpedicionDesdeApi = (valor: string | null | undefined): Esta
     return ESTADOS_EXPEDICION[clave] ?? "";
 };
 
-export const descripcionEstadoExpedicion: Record<EstadoExpedicion, string> = {
-    "": "Sin expedir",
-    BORRADOR: "Borrador",
-    EMITIDA: "Emitida",
-    FIRMADA: "Firmada",
-    ERROR_FIRMA: "Error de firma",
-    PRE_VERIFACTU: "Pre Verifactu",
-};
+/** Descripción del estado de expedición en el idioma activo. */
+export const descripcionEstadoExpedicion = (estado: EstadoExpedicion): string =>
+    estado === "" ? tVentas("factura.estado.sinExpedir") : tVentas(`factura.estado.${estado}`);
 
 /**
  * Variante del plugin `estado_expedicion_factura` del servidor en la que la
@@ -81,42 +77,42 @@ export const emisionEsReintento = (factura: Factura): boolean =>
     factura.estadoExpedicion === "ERROR_FIRMA";
 
 // La columna de estado la añade el maestro, que es quien pinta el círculo.
-export const metaTablaFactura: MetaTabla<Factura> = [
+export const metaTablaFactura = (): MetaTabla<Factura> => [
     {
         id: "codigo",
         estilo: "secundario",
-        cabecera: "Código",
+        cabecera: tVentas("documento.maestro.codigo"),
         prioridad: "alta",
     },
     {
         id: "nombre_cliente",
         estilo: "destacado",
-        cabecera: "Cliente",
+        cabecera: tVentas("documento.maestro.cliente"),
         prioridad: "alta",
         render: (f) => f.cliente.nombre_cliente,
     },
     {
         id: "fecha",
-        cabecera: "Fecha",
+        cabecera: tVentas("documento.maestro.fecha"),
         tipo: "fecha",
         prioridad: "alta",
     },
     {
         id: "total",
         estilo: "destacado",
-        cabecera: "Total",
+        cabecera: tVentas("documento.maestro.total"),
         tipo: "moneda",
         prioridad: "alta",
         divisa: (factura) => factura.divisa_id,
     },
     {
         id: "nombre_agente",
-        cabecera: "Agente",
+        cabecera: tVentas("documento.maestro.agente"),
         prioridad: "baja",
     },
     {
         id: "almacen_id",
-        cabecera: "Almacén",
+        cabecera: tVentas("documento.maestro.almacen"),
         prioridad: "baja",
         render: (f) => f.nombre_almacen || f.almacen_id,
     },
@@ -140,7 +136,7 @@ export const cambioClienteFacturaVacio: CambioClienteFactura = cambioClienteVent
  * no admite cambios está completada.
  */
 export const etiquetaEstadoFactura = (factura: Factura): EstadoEtiqueta => {
-    const texto = descripcionEstadoExpedicion[factura.estadoExpedicion];
+    const texto = descripcionEstadoExpedicion(factura.estadoExpedicion);
     const { estadoExpedicion } = factura;
 
     if (estadoExpedicion === "ERROR_FIRMA") return { texto, tono: "error" };
@@ -149,8 +145,8 @@ export const etiquetaEstadoFactura = (factura: Factura): EstadoEtiqueta => {
 };
 
 /** Widgets por defecto del maestro de facturas (totales según el filtro activo). */
-export const widgetsFactura = widgetsDocumentoVenta("ventas.factura", {
-    plural: "Facturas",
-    total: "Total facturado",
-    medio: "Ticket medio",
+export const widgetsFactura = () => widgetsDocumentoVenta("ventas.factura", {
+    plural: tVentas("factura.widgets.plural"),
+    total: tVentas("factura.widgets.total"),
+    medio: tVentas("factura.widgets.medio"),
 });

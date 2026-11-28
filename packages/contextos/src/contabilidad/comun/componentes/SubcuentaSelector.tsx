@@ -2,6 +2,7 @@ import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx"
 import { Subcuenta } from "#/contabilidad/subcuenta/diseño.ts";
 import { getSubcuenta } from "#/contabilidad/subcuenta/infraestructura.ts";
 import { buscarSubcuentas, codigoYNombre } from "../busqueda_plan_contable.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 /** La opción lleva el `esIva` de la subcuenta: quien la elige necesita saber
  * si es de IVA sin volver a consultarla (ver EditorPartidasManual). */
@@ -34,7 +35,7 @@ export const SubcuentaSelector = ({
     valor,
     descripcion = "",
     nombre = "subcuenta_id",
-    label = "Subcuenta",
+    label = tContabilidad("comun.subcuenta"),
     onChange,
     ...props
 }: SubcuentaSelectorProps) => {

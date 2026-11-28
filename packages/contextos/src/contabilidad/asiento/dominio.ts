@@ -8,6 +8,7 @@ import {
     PartidaAsiento,
     PartidaManualInput,
 } from "./diseño.ts";
+import { tContabilidad } from "../i18n/index.ts";
 
 export const metaPartidaManual: MetaModelo<PartidaManualInput> = {
     campos: {
@@ -16,7 +17,7 @@ export const metaPartidaManual: MetaModelo<PartidaManualInput> = {
             requerido: true,
             // `requerido` solo rechaza null/undefined/"": el 0 de una partida
             // recién añadida hay que rechazarlo aquí.
-            validacion: (p) => (p.subcuentaId > 0 ? true : "Selecciona una subcuenta"),
+            validacion: (p) => (p.subcuentaId > 0 ? true : tContabilidad("asiento.seleccionaUnaSubcuenta")),
         },
         debe: { tipo: "numero", requerido: true, positivo: true },
         haber: { tipo: "numero", requerido: true, positivo: true },
@@ -30,7 +31,7 @@ export const metaNuevoAsientoManual: MetaModelo<NuevoAsientoManual> = {
         fecha: { requerido: true },
         concepto: {
             requerido: true,
-            validacion: (m) => (m.concepto.trim().length > 0 ? true : "Indica un concepto"),
+            validacion: (m) => (m.concepto.trim().length > 0 ? true : tContabilidad("asiento.indicaUnConcepto")),
         },
         // Opcionales e independientes: un asiento manual normal no tiene
         // documento de origen.
@@ -41,7 +42,7 @@ export const metaNuevoAsientoManual: MetaModelo<NuevoAsientoManual> = {
     validacion: (m) =>
         asientoCuadrado(m.partidas)
             ? true
-            : `El asiento está descuadrado en ${descuadrePartidas(m.partidas).toFixed(2)}`,
+            : tContabilidad("asiento.elAsientoEstaDescuadradoEnTofixed", { toFixed: descuadrePartidas(m.partidas).toFixed(2) }),
 };
 
 export const partidaManualVacia = (): PartidaManualInput => ({
@@ -128,4 +129,4 @@ export const ejercicioIdParaRenumerar = (criteria: Criteria): string =>
     ejercicioIdEnCriteria(criteria) ?? ejercicioActual();
 
 export const mensajeConfirmacionRenumerarAsientos = (ejercicioId: string): string =>
-    `Se va a proceder a renumerar todos los asientos del diario correspondientes al ejercicio:\n\n${ejercicioId}\n\nPuede tardar varios minutos si hay miles de asientos.\n\n¿Desea continuar?`;
+    tContabilidad("asiento.seVaAProcederARenumerar", { ejercicioId });

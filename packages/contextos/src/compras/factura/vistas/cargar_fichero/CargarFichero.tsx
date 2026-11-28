@@ -10,8 +10,10 @@ import {
 } from "../validar_importacion/diseño.ts";
 import { tipoFichero } from "../validar_importacion/dominio.ts";
 import { ValidarImportacionFactura } from "../validar_importacion/ValidarImportacionFactura.tsx";
+import { useTCompras } from "#/compras/i18n/index.ts";
 
 export const CargarFichero = ({ publicar }: { publicar: EmitirEvento }) => {
+    const t = useTCompras();
     const inputRef = useRef<HTMLInputElement>(null);
     const { intentar } = useContext(ContextoError);
     const [cargando, setCargando] = useState(false);
@@ -74,7 +76,7 @@ export const CargarFichero = ({ publicar }: { publicar: EmitirEvento }) => {
                 style={{ display: "none" }}
                 onChange={onFicheroSeleccionado}
             />
-            <QCargando visible={cargando} mensaje="Procesando fichero..." />
+            <QCargando visible={cargando} mensaje={t("factura.importacion.procesando")} />
             {extraccion && (
                 <ValidarImportacionFactura
                     facturaLeida={extraccion.facturaLeida}

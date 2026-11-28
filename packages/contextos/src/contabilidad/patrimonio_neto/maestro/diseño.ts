@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { PatrimonioNeto } from "../diseño.ts";
+import { tContabilidad } from "../../i18n/index.ts";
 
 export type EstadoMaestroPatrimonioNeto = "INICIAL" | "CREANDO";
 
@@ -13,10 +14,10 @@ export type ContextoMaestroPatrimonioNeto = {
 };
 
 export const metaTablaPatrimonioNeto: MetaTabla<PatrimonioNeto> = [
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "ejercicioId", cabecera: "Ejercicio actual" },
-    { id: "ejercicioAnteriorId", cabecera: "Ejercicio X-1" },
-    { id: "ejercicioAnteriorAnteriorId", cabecera: "Ejercicio X-2" },
+    { id: "descripcion", get cabecera() { return tContabilidad("patrimonio_neto.descripcion"); } },
+    { id: "ejercicioId", get cabecera() { return tContabilidad("patrimonio_neto.ejercicioActual"); } },
+    { id: "ejercicioAnteriorId", get cabecera() { return tContabilidad("patrimonio_neto.ejercicioX1"); } },
+    { id: "ejercicioAnteriorAnteriorId", get cabecera() { return tContabilidad("patrimonio_neto.ejercicioX2"); } },
 ];
 
 /** Filtro explícito: la API espera los nombres en snake_case. */
@@ -24,7 +25,7 @@ export const metaFiltroPatrimonioNeto: MetaFiltro = {
     descripcion: {
         id: "descripcion",
         campo: "descripcion",
-        label: "Descripción",
+        get label() { return tContabilidad("patrimonio_neto.descripcion"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null
@@ -33,7 +34,7 @@ export const metaFiltroPatrimonioNeto: MetaFiltro = {
     ejercicioId: {
         id: "ejercicioId",
         campo: "ejercicio_id",
-        label: "Ejercicio",
+        get label() { return tContabilidad("patrimonio_neto.ejercicio"); },
         filtro: (valor) =>
             !valor || valor === ""
                 ? null

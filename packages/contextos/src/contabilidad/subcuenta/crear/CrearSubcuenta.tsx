@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { CuentaSelector } from "#/contabilidad/comun/componentes/CuentaSelector.tsx";
 import { postSubcuenta } from "../infraestructura.ts";
 import { metaNuevaSubcuenta, nuevaSubcuentaInicial } from "./crear.ts";
+import { useTContabilidad } from "../../i18n/index.ts";
 
 export const CrearSubcuenta = ({
     publicar,
@@ -17,6 +18,7 @@ export const CrearSubcuenta = ({
     publicar: EmitirEvento;
     ejercicioId: string;
 }) => {
+    const t = useTContabilidad();
     const inicial = useMemo(
         () => nuevaSubcuentaInicial(ejercicioId),
         [ejercicioId]
@@ -43,13 +45,13 @@ export const CrearSubcuenta = ({
         <QModal
             abierto={true}
             nombre="crearSubcuenta"
-            titulo="Nueva subcuenta"
+            titulo={t("subcuenta.nuevaSubcuenta")}
             onCerrar={cancelar}
         >
             <div className="CrearSubcuenta">
                 <quimera-formulario>
                     <QInput
-                        label="Ejercicio"
+                        label={t("subcuenta.ejercicio")}
                         nombre="ejercicioId"
                         valor={subcuenta.ejercicioId}
                         soloLectura
@@ -65,16 +67,16 @@ export const CrearSubcuenta = ({
                         }
                     />
                     <QInput
-                        label="Código subcuenta"
+                        label={t("subcuenta.codigoSubcuenta")}
                         {...uiProps("codigo")}
                         ref={focus}
                     />
-                    <QInput label="Descripción" {...uiProps("nombre")} />
+                    <QInput label={t("subcuenta.descripcion")} {...uiProps("nombre")} />
                 </quimera-formulario>
 
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
+                        {t("subcuenta.crear")}
                     </QBoton>
                 </div>
             </div>

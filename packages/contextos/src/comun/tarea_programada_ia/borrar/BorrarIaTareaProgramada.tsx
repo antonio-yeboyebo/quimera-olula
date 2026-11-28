@@ -4,6 +4,7 @@ import { useForm } from "@olula/lib/useForm.js";
 import { useCallback } from "react";
 import { IaTareaProgramada } from "../diseño.js";
 import { deleteIaTareaProgramada } from "../infraestructura.js";
+import { useTComun } from "../../i18n/index.ts";
 
 export const BorrarIaTareaProgramada = ({
     publicar,
@@ -12,6 +13,7 @@ export const BorrarIaTareaProgramada = ({
     tarea: IaTareaProgramada;
     publicar: EmitirEvento;
 }) => {
+    const t = useTComun();
     const borrar_ = useCallback(
         async () => {
             await deleteIaTareaProgramada(tarea.id);
@@ -31,8 +33,8 @@ export const BorrarIaTareaProgramada = ({
         <QModalConfirmacion
             nombre="borrarIaTareaProgramada"
             abierto={true}
-            titulo="Borrar tarea programada"
-            mensaje={`¿Está seguro de que desea borrar "${tarea.nombre}"?`}
+            titulo={t("tareaProgramadaIa.borrarTareaProgramada")}
+            mensaje={t("tareaProgramadaIa.estaSeguroDeQueDeseaBorrar", { nombre: tarea.nombre })}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

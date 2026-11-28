@@ -4,6 +4,7 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { FormaPago } from "../diseño.ts";
+import { tTesoreria } from "../../i18n/index.ts";
 
 export type EstadoMaestroFormaPago = "INICIAL" | "CREANDO";
 
@@ -13,11 +14,11 @@ export type ContextoMaestroFormaPago = {
 };
 
 export const metaTablaFormaPago: MetaTabla<FormaPago> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "generaRecibos", cabecera: "Generar recibos como" },
-    { id: "cuentaId", cabecera: "Cuenta" },
-    { id: "domiciliado", cabecera: "Domiciliado", tipo: "booleano" },
+    { id: "id", get cabecera() { return tTesoreria("forma_pago.codigo"); } },
+    { id: "descripcion", get cabecera() { return tTesoreria("forma_pago.descripcion"); } },
+    { id: "generaRecibos", get cabecera() { return tTesoreria("forma_pago.generarRecibosComo"); } },
+    { id: "cuentaId", get cabecera() { return tTesoreria("forma_pago.cuenta"); } },
+    { id: "domiciliado", get cabecera() { return tTesoreria("forma_pago.domiciliado"); }, tipo: "booleano" },
 ];
 
 const filtroTexto = (campo: string, label: string) => ({
@@ -31,8 +32,8 @@ const filtroTexto = (campo: string, label: string) => ({
 });
 
 export const metaFiltroFormaPago: MetaFiltro = {
-    id: filtroTexto("id", "Código"),
-    descripcion: filtroTexto("descripcion", "Descripción"),
+    get id() { return filtroTexto("id", tTesoreria("forma_pago.codigo")); },
+    get descripcion() { return filtroTexto("descripcion", tTesoreria("forma_pago.descripcion")); },
 };
 
 export const criteriaFormasPagoDefecto = (): Criteria => ({

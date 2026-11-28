@@ -17,6 +17,7 @@ import {
   nuevaOportunidadVentaVacia,
 } from "./crear.ts";
 import { NuevaOportunidadVenta } from "./diseño.ts";
+import { useTCrm } from "../../i18n/index.ts";
 
 export const CrearOportunidadVenta = ({
   publicar,
@@ -27,6 +28,7 @@ export const CrearOportunidadVenta = ({
   modeloVacio?: NuevaOportunidadVenta;
   ocultarOrigen?: boolean;
 }) => {
+  const t = useTCrm();
   const { modelo, uiProps, valido, set } = useModelo(
     metaNuevaOportunidadVenta,
     modeloVacio
@@ -74,18 +76,18 @@ export const CrearOportunidadVenta = ({
     <QModal
       abierto={true}
       nombre="mostrar"
-      titulo="Nueva Oportunidad de Venta"
+      titulo={t("oportunidadventa.nuevaOportunidadDeVenta")}
       onCerrar={cancelar}
     >
       <div className="CrearOportunidadVenta">
         <quimera-formulario>
-          <QInput label="Descripción" {...uiProps("descripcion")} />
+          <QInput label={t("oportunidadventa.descripcion")} {...uiProps("descripcion")} />
           {!ocultarOrigen && (
             <>
               {!modelo.tarjeta_id && (
                 <Cliente
                   {...uiProps("cliente_id", "nombre_cliente")}
-                  label="Cliente"
+                  label={t("oportunidadventa.cliente")}
                   valor={modelo.cliente_id ?? ""}
                   descripcion={modelo.nombre_cliente ?? ""}
                   onChange={seleccionarCliente}
@@ -96,7 +98,7 @@ export const CrearOportunidadVenta = ({
               {!modelo.cliente_id && (
                 <LeadSelector
                   {...uiProps("tarjeta_id")}
-                  label="Lead"
+                  label={t("oportunidadventa.lead")}
                   valor={modelo.tarjeta_id ?? ""}
                   descripcion={modelo.nombre_tarjeta ?? ""}
                   onChange={seleccionarTarjeta}
@@ -107,15 +109,15 @@ export const CrearOportunidadVenta = ({
             </>
           )}
           {/* Pendiente: permitir nombre_cliente manual para clientes no registrados. */}
-          <QInput label="Total" {...uiProps("importe")} />
+          <QInput label={t("oportunidadventa.total")} {...uiProps("importe")} />
         </quimera-formulario>
 
         <div className="botones">
           <QBoton onClick={crear} deshabilitado={!valido}>
-            Guardar
+            {t("oportunidadventa.guardar")}
           </QBoton>
           <QBoton onClick={cancelar} variante="texto">
-            Cancelar
+            {t("oportunidadventa.cancelar")}
           </QBoton>
         </div>
       </div>

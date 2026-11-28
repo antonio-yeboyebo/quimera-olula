@@ -1,6 +1,7 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { NuevoPickingFijo, PickingFijo } from "./diseño.ts";
 import { sinTexto } from "#/almacen/comun/dominio.ts";
+import { tAlmacen } from "../i18n/index.ts";
 
 type CamposReposicion = Pick<NuevoPickingFijo, "minimo" | "maximo" | "unidadReposicion">;
 
@@ -12,18 +13,18 @@ const esNumero = (n: unknown): n is number => typeof n === "number" && Number.is
  * Devuelve `true` si es válido o el mensaje del primer error.
  */
 export const validarReposicionPickingFijo = (m: CamposReposicion): string | true => {
-    if (!esNumero(m.minimo) || m.minimo < 0) return "El mínimo debe ser mayor o igual que 0";
-    if (!esNumero(m.maximo) || m.maximo <= m.minimo) return "El máximo debe ser mayor que el mínimo";
+    if (!esNumero(m.minimo) || m.minimo < 0) return tAlmacen("picking_fijo.elMinimoDebeSerMayorO");
+    if (!esNumero(m.maximo) || m.maximo <= m.minimo) return tAlmacen("picking_fijo.elMaximoDebeSerMayorQue");
     if (!esNumero(m.unidadReposicion) || m.unidadReposicion <= 0)
-        return "La unidad de reposición debe ser mayor que 0";
+        return tAlmacen("picking_fijo.laUnidadDeReposicionDebeSer");
     if (m.unidadReposicion > m.maximo - m.minimo)
-        return "La unidad de reposición no puede superar máximo - mínimo";
+        return tAlmacen("picking_fijo.laUnidadDeReposicionNoPuede");
     return true;
 };
 
 export const validarNuevoPickingFijo = (m: NuevoPickingFijo): string | true => {
-    if (sinTexto(m.articuloId)) return "El artículo es obligatorio";
-    if (sinTexto(m.ubicacionId)) return "La ubicación es obligatoria";
+    if (sinTexto(m.articuloId)) return tAlmacen("picking_fijo.elArticuloEsObligatorio");
+    if (sinTexto(m.ubicacionId)) return tAlmacen("picking_fijo.laUbicacionEsObligatoria");
     return validarReposicionPickingFijo(m);
 };
 

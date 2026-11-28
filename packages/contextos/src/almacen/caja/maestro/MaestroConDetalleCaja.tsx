@@ -10,8 +10,10 @@ import { DetalleCaja } from "../detalle/DetalleCaja.js";
 import { Caja } from "../diseño.ts";
 import { metaTablaCaja } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+import { useTAlmacen } from "../../i18n/index.ts";
 
 export const MaestroConDetalleCaja = () => {
+    const t = useTAlmacen();
     const { id, criteria } = getUrlParams();
 
     const { ctx, emitir } = useMaquina(getMaquina, {
@@ -33,7 +35,7 @@ export const MaestroConDetalleCaja = () => {
             <MaestroDetalle<Caja>
                 Maestro={
                     <>
-                        <h2>Cajas</h2>
+                        <h2>{t("caja.cajas")}</h2>
                         <Listado<Caja>
                             metaTabla={metaTablaCaja}
                             criteria={cajas.criteria}
@@ -43,7 +45,7 @@ export const MaestroConDetalleCaja = () => {
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_caja_solicitado")}>
-                                        Nueva Caja
+                                        {t("caja.nuevaCaja")}
                                     </QBoton>
                                 </div>
                             )}

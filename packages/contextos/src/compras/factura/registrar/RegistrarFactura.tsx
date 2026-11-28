@@ -2,6 +2,7 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { useTCompras } from "#/compras/i18n/index.ts";
 import { Factura } from "../diseño.ts";
 
 /**
@@ -16,6 +17,7 @@ export const RegistrarFactura = ({
     factura: Factura;
     publicar: EmitirEvento;
 }) => {
+    const t = useTCompras();
     const registrar_ = useCallback(async () => {
         publicar("registro_listo");
     }, [publicar]);
@@ -31,11 +33,8 @@ export const RegistrarFactura = ({
         <QModalConfirmacion
             nombre="registrarFactura"
             abierto={true}
-            titulo="Registrar factura"
-            mensaje={
-                `¿Registrar la factura ${factura.codigo}? Dejará de ser un ` +
-                `borrador y se le asignará número definitivo.`
-            }
+            titulo={t("factura.registrar.titulo")}
+            mensaje={t("factura.registrar.mensaje", { codigo: factura.codigo })}
             onCerrar={cancelar}
             onAceptar={registrarFactura}
         />

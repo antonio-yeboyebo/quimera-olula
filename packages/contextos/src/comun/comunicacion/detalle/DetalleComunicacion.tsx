@@ -14,6 +14,7 @@ import { Comunicacion } from "../diseño.ts";
 import { comunicacionVacia } from "../dominio.ts";
 import "./DetalleComunicacion.css";
 import { getMaquina } from "./maquina.ts";
+import { useTComun } from "../../i18n/index.ts";
 
 const fechaConHora = (fecha: Date | null) => {
   if (!fecha) return "-";
@@ -44,6 +45,7 @@ export const DetalleComunicacion = ({
   id?: string;
   publicar: EmitirEvento;
 }) => {
+  const t = useTComun();
   const params = useParams();
   const comunicacionId = id ?? params.id;
 
@@ -70,7 +72,7 @@ export const DetalleComunicacion = ({
     <Detalle
       id={ctx.comunicacion.id}
       obtenerTitulo={(entidad) =>
-        (entidad as Comunicacion).asunto || "Comunicación"
+        (entidad as Comunicacion).asunto || t("comunicacion.comunicacion")
       }
       setEntidad={() => {}}
       entidad={ctx.comunicacion}
@@ -85,12 +87,12 @@ export const DetalleComunicacion = ({
             acciones={[
               {
                 icono: "ver",
-                texto: "Marcar como no leída",
+                texto: t("comunicacion.marcarComoNoLeida"),
                 onClick: () => emitir("marcado_no_leida_solicitado"),
               },
               {
                 icono: "eliminar",
-                texto: "Borrar",
+                texto: t("comunicacion.borrar"),
                 onClick: () => emitir("borrado_solicitado"),
                 advertencia: true,
               },
